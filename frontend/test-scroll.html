@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scroll Test</title>
+    <style>
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            height: 80px;
+            background: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .item {
+            height: 200px;
+            background: #f0f0f0;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Test Header (Fixed)</h1>
+        </div>
+        
+        <div class="content">
+            <div class="item">Item 1</div>
+            <div class="item">Item 2</div>
+            <div class="item">Item 3</div>
+            <div class="item">Item 4</div>
+            <div class="item">Item 5</div>
+            <div class="item">Item 6</div>
+            <div class="item">Item 7</div>
+            <div class="item">Item 8</div>
+            <div class="item">Item 9</div>
+            <div class="item">Item 10</div>
+        </div>
+    </div>
+</body>
+</html>

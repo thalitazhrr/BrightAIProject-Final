@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Telkom HSI Analytics Dashboard - Advanced Business Intelligence Platform for High Speed Internet Performance Analytics" />
+  <meta name="keywords" content="Telkom, HSI, Analytics, Dashboard, Business Intelligence, Performance, Orders, Regional Analysis" />
+  <meta name="author" content="Telkom Indonesia" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hsi-analytics.telkom.co.id/" />
+  <meta property="og:title" content="Telkom HSI Analytics Dashboard" />
+  <meta property="og:description" content="Advanced Business Intelligence Platform for Telkom HSI Performance Analytics" />
+  <meta property="og:image" content="%PUBLIC_URL%/og-image.png" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://hsi-analytics.telkom.co.id/" />
+  <meta property="twitter:title" content="Telkom HSI Analytics Dashboard" />
+  <meta property="twitter:description" content="Advanced Business Intelligence Platform for Telkom HSI Performance Analytics" />
+  <meta property="twitter:image" content="%PUBLIC_URL%/twitter-image.png" />
+
+  <!-- Preconnect to Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  
+  <!-- Favicon sizes -->
+  <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicon-16x16.png">
+  
+  <!-- iOS Safari specific -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="HSI Analytics">
+  
+  <!-- Android Chrome specific -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="HSI Analytics">
+  
+  <!-- Microsoft specific -->
+  <meta name="msapplication-TileColor" content="#3b82f6">
+  <meta name="msapplication-config" content="%PUBLIC_URL%/browserconfig.xml">
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" href="/fonts/poppins-600.woff2" as="font" type="font/woff2" crossorigin>
+  
+  <title>Telkom HSI Analytics Dashboard - BrightInsight & BrightAI</title>
+  
+  <!-- Critical CSS for faster loading -->
+  <style>
+    /* Critical CSS - Prevents FOUC */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background-color: #0f172a;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+    
+    #root {
+      min-height: 100vh;
+      width: 100%;
+    }
+    
+    /* Loading screen */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+    
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(59, 130, 246, 0.2);
+      border-left: 4px solid #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      margin-top: 20px;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    /* Hide loading screen when app loads */
+    .app-loaded .loading-screen {
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <noscript>You need to enable JavaScript to run this HSI Analytics Dashboard.</noscript>
+  
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="loading-screen">
+    <div style="text-align: center;">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Loading HSI Analytics Dashboard...</div>
+    </div>
+  </div>
+  
+  <!-- React App Root -->
+  <div id="root"></div>
+  
+  <!-- Service Worker Registration -->
+  <script>
+    // Hide loading screen when app loads
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.body.classList.add('app-loaded');
+        setTimeout(function() {
+          const loadingScreen = document.getElementById('loading-screen');
+          if (loadingScreen) {
+            loadingScreen.remove();
+          }
+        }, 500);
+      }, 1000);
+    });
+    
+    // Register service worker for PWA functionality
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('%PUBLIC_URL%/service-worker.js')
+          .then(function(registration) {
+            console.log('SW registered: ', registration);
+          })
+          .catch(function(registrationError) {
+            console.log('SW registration failed: ', registrationError);
+          });
+      });
+    }
+    
+    // Global error handler
+    window.addEventListener('error', function(e) {
+      console.error('Global error:', e.error);
+      // You can send error reports to your monitoring service here
+    });
+    
+    // Handle offline/online status
+    window.addEventListener('online', function() {
+      console.log('Connection restored');
+      // You can show a notification here
+    });
+    
+    window.addEventListener('offline', function() {
+      console.log('Connection lost');
+      // You can show an offline notification here
+    });
+  </script>
+  
+  <!-- Environment Variables for Production -->
+  <script>
+    // Set environment variables
+    window.ENV = {
+      NODE_ENV: '%NODE_ENV%',
+      API_URL: '%REACT_APP_API_URL%' || 'http://localhost:3001/api',
+      VERSION: '%REACT_APP_VERSION%' || '1.0.0'
+    };
+  </script>
+</body>
+</html>

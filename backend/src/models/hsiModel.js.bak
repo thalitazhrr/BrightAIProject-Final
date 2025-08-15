@@ -1,0 +1,322 @@
+// HSI Model - Database operations for HSI Analytics
+const { pool } = require('../config/database');
+
+class HSIModel {
+  // Initialize HSI tables for analytics
+  static async initializeTables() {
+    try {
+      // Create orders table for HSI data
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS hsi_orders (
+          id SERIAL PRIMARY KEY,
+          order_id VARCHAR(255) UNIQUE NOT NULL,
+          customer_name VARCHAR(255) NOT NULL,
+          package_name VARCHAR(255) NOT NULL,
+          regional VARCHAR(255) NOT NULL,
+          witel VARCHAR(255) NOT NULL,
+          city VARCHAR(255) NOT NULL,
+          status VARCHAR(50) DEFAULT 'pending',
+          order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          completion_date TIMESTAMP NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+
+      // Create regional_performance table for summary data
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS regional_performance (
+          id SERIAL PRIMARY KEY,
+          regional VARCHAR(255) UNIQUE NOT NULL,
+          total_orders INTEGER DEFAULT 0,
+          completed_orders INTEGER DEFAULT 0,
+          completion_rate DECIMAL(5,2) DEFAULT 0,
+          last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+
+      // Create package_analytics table
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS package_analytics (
+          id SERIAL PRIMARY KEY,
+          package_name VARCHAR(255) UNIQUE NOT NULL,
+          total_orders INTEGER DEFAULT 0,
+          active_customers INTEGER DEFAULT 0,
+          monthly_revenue DECIMAL(15,2) DEFAULT 0,
+          last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+
+      // Insert sample data if tables are empty
+      const ordersCount = await pool.query('SELECT COUNT(*) FROM hsi_orders');
+      if (parseInt(ordersCount.rows[0].count) === 0) {
+        await this.insertSampleData();
+      }
+
+      console.log('✅ HSI tables initialized successfully');
+      return true;
+    } catch (error) {
+      console.error('❌ Error initializing HSI tables:', error);
+      throw error;
+    }
+  }
+
+  // Insert sample data for demo purposes
+  static async insertSampleData() {
+    try {
+      // Sample orders data
+      const sampleOrders = [
+        // Jawa Barat
+        { order_id: 'HSI001', customer_name: 'Ahmad Suharto', package_name: 'IndiHome 50 Mbps', regional: 'Jawa Barat', witel: 'Bandung', city: 'Bandung', status: 'completed' },
+        { order_id: 'HSI002', customer_name: 'Siti Nurhaliza', package_name: 'IndiHome 100 Mbps', regional: 'Jawa Barat', witel: 'Bandung', city: 'Cimahi', status: 'completed' },
+        { order_id: 'HSI003', customer_name: 'Budi Santoso', package_name: 'IndiHome 30 Mbps', regional: 'Jawa Barat', witel: 'Bogor', city: 'Bogor', status: 'pending' },
+        
+        // DKI Jakarta
+        { order_id: 'HSI004', customer_name: 'Rina Maharani', package_name: 'IndiHome 100 Mbps', regional: 'DKI Jakarta', witel: 'Jakarta Pusat', city: 'Jakarta Pusat', status: 'completed' },
+        { order_id: 'HSI005', customer_name: 'Doni Pratama', package_name: 'IndiHome 50 Mbps', regional: 'DKI Jakarta', witel: 'Jakarta Selatan', city: 'Jakarta Selatan', status: 'completed' },
+        { order_id: 'HSI006', customer_name: 'Lilis Suryani', package_name: 'IndiHome 200 Mbps', regional: 'DKI Jakarta', witel: 'Jakarta Barat', city: 'Jakarta Barat', status: 'in_progress' },
+        
+        // Jawa Tengah
+        { order_id: 'HSI007', customer_name: 'Agus Wijaya', package_name: 'IndiHome 30 Mbps', regional: 'Jawa Tengah', witel: 'Semarang', city: 'Semarang', status: 'completed' },
+        { order_id: 'HSI008', customer_name: 'Dewi Kartika', package_name: 'IndiHome 50 Mbps', regional: 'Jawa Tengah', witel: 'Solo', city: 'Surakarta', status: 'pending' },
+        
+        // Jawa Timur
+        { order_id: 'HSI009', customer_name: 'Fajar Ramadhan', package_name: 'IndiHome 100 Mbps', regional: 'Jawa Timur', witel: 'Surabaya', city: 'Surabaya', status: 'completed' },
+        { order_id: 'HSI010', customer_name: 'Maya Sari', package_name: 'IndiHome 50 Mbps', regional: 'Jawa Timur', witel: 'Malang', city: 'Malang', status: 'completed' },
+        
+        // Sumatra Utara
+        { order_id: 'HSI011', customer_name: 'Rizki Andika', package_name: 'IndiHome 30 Mbps', regional: 'Sumatra Utara', witel: 'Medan', city: 'Medan', status: 'pending' },
+        { order_id: 'HSI012', customer_name: 'Indah Permata', package_name: 'IndiHome 50 Mbps', regional: 'Sumatra Utara', witel: 'Pematang Siantar', city: 'Pematang Siantar', status: 'in_progress' }
+      ];
+
+      for (const order of sampleOrders) {
+        const randomDaysOrder = Math.floor(Math.random() * 30);
+        const randomDaysCompletion = Math.floor(Math.random() * 15);
+        const orderDate = new Date();
+        orderDate.setDate(orderDate.getDate() - randomDaysOrder);
+        
+        let completionDate = null;
+        if (order.status === 'completed') {
+          completionDate = new Date();
+          completionDate.setDate(completionDate.getDate() - randomDaysCompletion);
+        }
+        
+        await pool.query(`
+          INSERT INTO hsi_orders (order_id, customer_name, package_name, regional, witel, city, status, order_date, completion_date)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        `, [order.order_id, order.customer_name, order.package_name, order.regional, order.witel, order.city, order.status, orderDate, completionDate]);
+      }
+
+      // Update regional performance summary
+      await this.updateRegionalPerformance();
+      
+      // Update package analytics
+      await this.updatePackageAnalytics();
+
+      console.log('✅ Sample HSI data inserted successfully');
+    } catch (error) {
+      console.error('❌ Error inserting sample data:', error);
+      throw error;
+    }
+  }
+
+  // Get dashboard overview data
+  static async getDashboardOverview() {
+    try {
+      const result = await pool.query(`
+        SELECT 
+          COUNT(*) as total_orders,
+          COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed_orders,
+          COUNT(CASE WHEN status = 'pending' THEN 1 END) as pending_orders,
+          COUNT(CASE WHEN status = 'in_progress' THEN 1 END) as in_progress_orders,
+          COUNT(DISTINCT regional) as total_regions,
+          COUNT(DISTINCT witel) as total_witels,
+          ROUND(
+            (COUNT(CASE WHEN status = 'completed' THEN 1 END)::DECIMAL / COUNT(*)) * 100, 2
+          ) as completion_rate,
+          ROUND(
+            ((COUNT(*) - LAG(COUNT(*)) OVER (ORDER BY DATE_TRUNC('month', order_date))) / 
+             LAG(COUNT(*)) OVER (ORDER BY DATE_TRUNC('month', order_date))::DECIMAL) * 100, 2
+          ) as growth_rate
+        FROM hsi_orders
+        WHERE order_date >= NOW() - INTERVAL '30 days'
+      `);
+
+      return result.rows[0];
+    } catch (error) {
+      console.error('❌ Error getting dashboard overview:', error);
+      throw error;
+    }
+  }
+
+  // Get regional performance data
+  static async getRegionalPerformance() {
+    try {
+      const result = await pool.query(`
+        SELECT 
+          regional,
+          COUNT(*) as total_orders,
+          COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed_orders,
+          ROUND(
+            (COUNT(CASE WHEN status = 'completed' THEN 1 END)::DECIMAL / COUNT(*)) * 100, 2
+          ) as completion_rate
+        FROM hsi_orders
+        GROUP BY regional
+        ORDER BY completion_rate DESC, total_orders DESC
+      `);
+
+      return result.rows;
+    } catch (error) {
+      console.error('❌ Error getting regional performance:', error);
+      throw error;
+    }
+  }
+
+  // Get package analytics data
+  static async getPackageAnalytics() {
+    try {
+      const result = await pool.query(`
+        SELECT 
+          package_name,
+          COUNT(*) as total_orders,
+          COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed_orders,
+          ROUND(
+            (COUNT(CASE WHEN status = 'completed' THEN 1 END)::DECIMAL / COUNT(*)) * 100, 2
+          ) as completion_rate
+        FROM hsi_orders
+        GROUP BY package_name
+        ORDER BY total_orders DESC
+      `);
+
+      return result.rows;
+    } catch (error) {
+      console.error('❌ Error getting package analytics:', error);
+      throw error;
+    }
+  }
+
+  // Update regional performance summary table
+  static async updateRegionalPerformance() {
+    try {
+      // Clear existing data
+      await pool.query('DELETE FROM regional_performance');
+      
+      // Insert fresh data
+      await pool.query(`
+        INSERT INTO regional_performance (regional, total_orders, completed_orders, completion_rate, last_updated)
+        SELECT 
+          regional,
+          COUNT(*) as total_orders,
+          COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed_orders,
+          ROUND(
+            (COUNT(CASE WHEN status = 'completed' THEN 1 END)::DECIMAL / COUNT(*)) * 100, 2
+          ) as completion_rate,
+          NOW()
+        FROM hsi_orders
+        GROUP BY regional
+      `);
+    } catch (error) {
+      console.error('❌ Error updating regional performance:', error);
+      throw error;
+    }
+  }
+
+  // Update package analytics summary table
+  static async updatePackageAnalytics() {
+    try {
+      // Clear existing data
+      await pool.query('DELETE FROM package_analytics');
+      
+      // Insert fresh data
+      await pool.query(`
+        INSERT INTO package_analytics (package_name, total_orders, active_customers, last_updated)
+        SELECT 
+          package_name,
+          COUNT(*) as total_orders,
+          COUNT(DISTINCT customer_name) as active_customers,
+          NOW()
+        FROM hsi_orders
+        GROUP BY package_name
+      `);
+    } catch (error) {
+      console.error('❌ Error updating package analytics:', error);
+      throw error;
+    }
+  }
+
+  // Get comprehensive dashboard data
+  static async getComprehensiveDashboardData() {
+    try {
+      const [overview, regional, packages] = await Promise.all([
+        this.getDashboardOverview(),
+        this.getRegionalPerformance(),
+        this.getPackageAnalytics()
+      ]);
+
+      return {
+        overview: {
+          totalOrders: parseInt(overview.total_orders),
+          completedOrders: parseInt(overview.completed_orders),
+          pendingOrders: parseInt(overview.pending_orders),
+          inProgressOrders: parseInt(overview.in_progress_orders),
+          totalRegions: parseInt(overview.total_regions),
+          totalWitels: parseInt(overview.total_witels),
+          completionRate: parseFloat(overview.completion_rate) || 0,
+          growthRate: parseFloat(overview.growth_rate) || 0
+        },
+        regional: regional.map(r => ({
+          regional: r.regional,
+          total_orders: parseInt(r.total_orders),
+          completion_rate: parseFloat(r.completion_rate)
+        })),
+        packages: packages.map(p => ({
+          package_name: p.package_name,
+          total_orders: parseInt(p.total_orders),
+          completion_rate: parseFloat(p.completion_rate)
+        }))
+      };
+    } catch (error) {
+      console.error('❌ Error getting comprehensive dashboard data:', error);
+      throw error;
+    }
+  }
+
+  // Get performance analytics for AI chat responses
+  static async getPerformanceInsights() {
+    try {
+      const result = await pool.query(`
+        WITH monthly_trends AS (
+          SELECT 
+            DATE_TRUNC('month', order_date) as month,
+            COUNT(*) as orders,
+            COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed
+          FROM hsi_orders 
+          WHERE order_date >= NOW() - INTERVAL '12 months'
+          GROUP BY DATE_TRUNC('month', order_date)
+          ORDER BY month
+        ),
+        regional_stats AS (
+          SELECT 
+            regional,
+            COUNT(*) as total_orders,
+            ROUND(AVG(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) * 100, 2) as avg_completion_rate
+          FROM hsi_orders
+          GROUP BY regional
+        )
+        SELECT 
+          (SELECT regional FROM regional_stats ORDER BY avg_completion_rate DESC LIMIT 1) as best_regional,
+          (SELECT regional FROM regional_stats ORDER BY avg_completion_rate ASC LIMIT 1) as worst_regional,
+          (SELECT package_name FROM hsi_orders GROUP BY package_name ORDER BY COUNT(*) DESC LIMIT 1) as popular_package,
+          (SELECT ROUND(AVG(completion_rate), 2) FROM regional_performance) as avg_completion_rate,
+          (SELECT COUNT(*) FROM hsi_orders WHERE order_date >= NOW() - INTERVAL '7 days') as weekly_orders
+      `);
+
+      return result.rows[0];
+    } catch (error) {
+      console.error('❌ Error getting performance insights:', error);
+      throw error;
+    }
+  }
+}
+
+module.exports = HSIModel;

@@ -1,0 +1,279 @@
+/* Blue Background Floating Animations with Enhanced Space Theme */
+@keyframes float0 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg); 
+  }
+  25% { 
+    transform: translate(30px, -20px) scale(1.1) rotate(90deg); 
+  }
+  50% { 
+    transform: translate(-20px, -40px) scale(0.9) rotate(180deg); 
+  }
+  75% { 
+    transform: translate(-30px, 20px) scale(1.05) rotate(270deg); 
+  }
+}
+
+@keyframes float1 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg); 
+  }
+  33% { 
+    transform: translate(-25px, 30px) scale(0.95) rotate(120deg); 
+  }
+  66% { 
+    transform: translate(40px, -15px) scale(1.08) rotate(240deg); 
+  }
+}
+
+@keyframes float2 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg); 
+  }
+  20% { 
+    transform: translate(15px, -30px) scale(1.02) rotate(72deg); 
+  }
+  40% { 
+    transform: translate(-35px, -10px) scale(0.92) rotate(144deg); 
+  }
+  60% { 
+    transform: translate(25px, 25px) scale(1.06) rotate(216deg); 
+  }
+  80% { 
+    transform: translate(-15px, 35px) scale(0.98) rotate(288deg); 
+  }
+}
+
+/* Additional floating animations for more variety */
+@keyframes float3 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg); 
+  }
+  50% { 
+    transform: translate(20px, 30px) scale(1.15) rotate(180deg); 
+  }
+}
+
+@keyframes float4 {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg); 
+  }
+  25% { 
+    transform: translate(-40px, 10px) scale(0.88) rotate(90deg); 
+  }
+  75% { 
+    transform: translate(35px, -25px) scale(1.12) rotate(270deg); 
+  }
+}
+
+/* Gentle pulse animation for some elements */
+@keyframes gentlePulse {
+  0%, 100% { 
+    opacity: 0.15; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 0.25; 
+    transform: scale(1.05); 
+  }
+}
+
+/* Subtle drift animation */
+@keyframes drift {
+  0% { 
+    transform: translateX(0) translateY(0) scale(1); 
+  }
+  25% { 
+    transform: translateX(20px) translateY(-10px) scale(1.02); 
+  }
+  50% { 
+    transform: translateX(-15px) translateY(-30px) scale(0.98); 
+  }
+  75% { 
+    transform: translateX(-25px) translateY(15px) scale(1.01); 
+  }
+  100% { 
+    transform: translateX(0) translateY(0) scale(1); 
+  }
+}
+
+/* Additional blue-themed floating animations */
+@keyframes oceanWave {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg); 
+    opacity: 0.15;
+  }
+  25% { 
+    transform: translate(40px, -20px) scale(1.1) rotate(5deg); 
+    opacity: 0.25;
+  }
+  50% { 
+    transform: translate(-30px, -50px) scale(0.9) rotate(-3deg); 
+    opacity: 0.20;
+  }
+  75% { 
+    transform: translate(-45px, 30px) scale(1.05) rotate(2deg); 
+    opacity: 0.18;
+  }
+}
+
+@keyframes blueBreeze {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1); 
+    filter: blur(2rem);
+  }
+  33% { 
+    transform: translate(-20px, 40px) scale(0.95); 
+    filter: blur(2.5rem);
+  }
+  66% { 
+    transform: translate(30px, -25px) scale(1.08); 
+    filter: blur(1.8rem);
+  }
+}
+
+@keyframes skyDrift {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg); 
+  }
+  20% { 
+    transform: translate(25px, -15px) scale(1.03) rotate(45deg); 
+  }
+  40% { 
+    transform: translate(-35px, -25px) scale(0.97) rotate(90deg); 
+  }
+  60% { 
+    transform: translate(15px, 35px) scale(1.06) rotate(135deg); 
+  }
+  80% { 
+    transform: translate(-20px, 20px) scale(0.94) rotate(180deg); 
+  }
+}
+
+/* Starry particle animations */
+@keyframes starTwinkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes starPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    opacity: 0.8;
+    transform: scale(1.1) rotate(90deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(0.9) rotate(180deg);
+  }
+  75% {
+    opacity: 0.6;
+    transform: scale(1.05) rotate(270deg);
+  }
+}
+
+@keyframes starFloat {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.4;
+  }
+  25% {
+    transform: translate(10px, -15px) rotate(45deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-8px, -25px) rotate(90deg);
+    opacity: 1;
+  }
+  75% {
+    transform: translate(-12px, 8px) rotate(135deg);
+    opacity: 0.6;
+  }
+}
+
+@keyframes starGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3), 0 0 10px rgba(147, 197, 253, 0.2);
+    opacity: 0.5;
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.8), 0 0 25px rgba(147, 197, 253, 0.6), 0 0 35px rgba(96, 165, 250, 0.4);
+    opacity: 1;
+  }
+}
+
+@keyframes particleDrift {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(100px, -100px) scale(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes cosmicDance {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translate(20px, -30px) rotate(90deg) scale(1.2);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(-15px, -50px) rotate(180deg) scale(0.8);
+    opacity: 1;
+  }
+  75% {
+    transform: translate(-35px, 10px) rotate(270deg) scale(1.1);
+    opacity: 0.5;
+  }
+}
+
+/* Utility classes for star particles */
+.star-particle {
+  position: absolute;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(147, 197, 253, 0.8) 30%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.star-small {
+  width: 2px;
+  height: 2px;
+}
+
+.star-medium {
+  width: 4px;
+  height: 4px;
+}
+
+.star-large {
+  width: 6px;
+  height: 6px;
+}
+
+.cosmic-glow {
+  position: absolute;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, rgba(147, 197, 253, 0.2) 50%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(1px);
+  pointer-events: none;
+}

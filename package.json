@@ -1,0 +1,36 @@
+{
+  "name": "telkom-hsi-brightai",
+  "version": "1.0.0",
+  "description": "Telkom HSI BrightAI - Complete Analytics & Intelligence Platform",
+  "main": "start-dev.js",
+  "scripts": {
+    "start": "node start-dev.js",
+    "backend": "cd backend && npm start",
+    "frontend": "cd frontend && npm start",
+    "install-all": "cd backend && npm install && cd ../frontend && npm install",
+    "dev": "node start-dev.js",
+    "dev-concurrent": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "build": "cd frontend && npm run build",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [
+    "telkom",
+    "hsi",
+    "analytics",
+    "ai",
+    "dashboard",
+    "brightai"
+  ],
+  "author": "Telkom HSI Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
