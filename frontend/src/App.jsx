@@ -69,7 +69,8 @@ const apiCall = async (endpoint, options = {}) => {
 
 const syncChatToDatabase = async (chat) => {
   try {
-    const response = await apiCall('/chats/sync', {
+    // Redirect to sessions/create
+    const response = await apiCall('/sessions/create', {
       method: 'POST',
       body: JSON.stringify({ chat })
     });
@@ -86,21 +87,21 @@ const loadChatsFromDatabase = async () => {
       throw new Error('Authentication required to load chats');
     }
     
-    const response = await apiCall('/chats');
+    const response = await apiCall('/sessions/active');
     
-    if (!response.success || !response.data) {
-      console.warn('Invalid response format from chats API');
+    if (!response.success || !response.active_sessions) {
+      console.warn('Invalid response format from sessions API');
       return [];
     }
     
-    return response.data.map(chat => ({
-      id: chat.id,
-      title: chat.title || 'Untitled Chat',
+    return response.active_sessions.map(session => ({
+      id: session.SESSION_ID,
+      title: session.SESSION_NAME || 'Percakapan Baru',
       messages: [],
-      lastMessage: chat.last_message || 'No messages',
-      createdAt: chat.created_at,
-      updatedAt: chat.updated_at,
-      userId: chat.user_id // Include user ID for ownership validation
+      lastMessage: `${session.MESSAGE_COUNT || 0} pesan`,
+      createdAt: session.STARTED_AT,
+      updatedAt: session.STARTED_AT,
+      userId: session.USER_ID // Include user ID for ownership validation
     }));
   } catch (error) {
     console.error('Error loading chats from database:', error);
@@ -119,7 +120,7 @@ const loadChatMessagesFromDatabase = async (chatId) => {
       throw new Error('Authentication required to load messages');
     }
     
-    const response = await apiCall(`/chats/${chatId}/messages`);
+    const response = await apiCall(`/chat/history?session_id=${chatId}`);
     
     if (!response.success || !response.data) {
       console.warn('Invalid response format from messages API');
@@ -150,15 +151,13 @@ const saveChatToDatabase = async (chat) => {
       throw new Error('Authentication required to save chat');
     }
     
-    const response = await apiCall('/chats', {
+    const response = await apiCall('/sessions/create', {
       method: 'POST',
       body: JSON.stringify({
-        id: chat.id,
-        title: chat.title,
-        lastMessage: chat.lastMessage
+        session_name: chat.title
       })
     });
-    return response.data;
+    return response.success ? response : null;
   } catch (error) {
     console.error('Error saving chat to database:', error);
     
@@ -176,11 +175,11 @@ const saveMessageToDatabase = async (chatId, message, userId) => {
       throw new Error('Authentication required to save message');
     }
     
-    const response = await apiCall(`/chats/${chatId}/messages`, {
+    const response = await apiCall(`/chat/message`, {
       method: 'POST',
       body: JSON.stringify({
         message: message.text || message.message,
-        isBot: message.isBot || false
+        sessionId: chatId
       })
     });
     return response.data;
@@ -710,7 +709,7 @@ const ChatSidebar = ({ chats, activeChat, setActiveChat, onNewChat, onDeleteChat
           } text-white rounded-xl transition-all duration-200`}
         >
           <Plus className="w-4 h-4" />
-          <span className="font-medium">New Chat</span>
+          <span className="font-medium">Percakapan Baru</span>
         </button>
         
         {/* Search Box */}
@@ -722,7 +721,7 @@ const ChatSidebar = ({ chats, activeChat, setActiveChat, onNewChat, onDeleteChat
           }`} />
           <input
             type="text"
-            placeholder="Search conversations..."
+            placeholder="Cari percakapan..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={handleSearchFocus}
@@ -1063,7 +1062,7 @@ function App() {
     const chatId = `c${Date.now().toString(36).substr(-8)}${Math.random().toString(36).substr(2, 3)}`;
     const newChat = {
       id: chatId,
-      title: 'New Chat',
+      title: 'Percakapan Baru',
       messages: [],
       lastMessage: 'Start a conversation...',
       createdAt: new Date().toISOString(),
@@ -1077,10 +1076,15 @@ function App() {
       // Save to database first to ensure it's properly created
       const savedChat = await saveChatToDatabase(newChat);
       
-      if (savedChat) {
-        setChats(prev => [newChat, ...prev]);
-        setActiveChat(newChat.id);
-        console.log('✅ New chat created successfully:', chatId);
+      if (savedChat && savedChat.session_id) {
+        // Update chat with real session ID from backend
+        const chatWithRealId = {
+          ...newChat,
+          id: savedChat.session_id
+        };
+        setChats(prev => [chatWithRealId, ...prev]);
+        setActiveChat(savedChat.session_id);
+        console.log('✅ New chat created successfully:', savedChat.session_id);
       } else {
         console.error('❌ Failed to save chat to database');
         alert('Failed to create new chat. Please try again.');

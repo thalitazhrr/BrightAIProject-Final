@@ -1,41 +1,45 @@
-// Chat Routes
+// src/routes/chatRoutes.js - Updated dengan Chat History
 const express = require('express');
-const ChatController = require('../controllers/chatController');
-const AuthController = require('../controllers/authController');
-
 const router = express.Router();
+const chatController = require('../controllers/chatController');
+const auth = require('../middleware/auth');
+const validation = require('../middleware/validation');
 
-// Apply authentication middleware to all chat routes
-router.use(AuthController.verifyToken);
+// Main chat endpoint
+router.post('/message', 
+  auth.authenticate, 
+  validation.validateChatMessage, 
+  chatController.processMessage
+);
 
-// Get all chats (user-specific)
-router.get('/', ChatController.getAllChats);
+// Get chat history
+router.get('/history', 
+  auth.authenticate, 
+  chatController.getChatHistory
+);
 
-// Search chats
-router.get('/search', ChatController.searchChats);
+// Get specific chat session
+router.get('/session/:sessionId', 
+  auth.authenticate, 
+  chatController.getChatSession
+);
 
 // Get chat statistics
-router.get('/stats', ChatController.getChatStats);
+router.get('/stats', 
+  auth.authenticate, 
+  chatController.getChatStats
+);
 
-// Get specific chat by ID
-router.get('/:chatId', ChatController.getChatById);
+// Delete chat history
+router.delete('/history', 
+  auth.authenticate, 
+  chatController.deleteChatHistory
+);
 
-// Create new chat
-router.post('/', ChatController.createChat);
-
-// Update chat
-router.put('/:chatId', ChatController.updateChat);
-
-// Delete chat
-router.delete('/:chatId', ChatController.deleteChat);
-
-// Get chat messages
-router.get('/:chatId/messages', ChatController.getChatMessages);
-
-// Add message to chat
-router.post('/:chatId/messages', ChatController.addMessage);
-
-// Sync chat (for offline/online sync)
-router.post('/sync', ChatController.syncChat);
+// Get capabilities
+router.get('/capabilities', 
+  auth.authenticate, 
+  chatController.getCapabilities
+);
 
 module.exports = router;

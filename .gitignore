@@ -11,9 +11,30 @@
 /backend/.env
 /frontend/.env
 
+# Sensitive files
+/backend/secrets/
+*password*.txt
+*secret*.txt
+
 # Logs
 *.log
 npm-debug.log*
+frontend.log
 
 # Build output
 /build
+/frontend/build
+coverage/
+dist/
+logs/
+.DS_Store
+
+# Database dumps and backups
+*.sql.backup
+*.sql.bak
+*.dmp
+
+# Cache
+.cache
+/.cache
+/backend/.cache

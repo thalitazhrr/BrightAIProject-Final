@@ -12,8 +12,7 @@ const Login = ({ onLogin, theme = 'dark' }) => {
     username: '',
     email: '',
     password: '',
-    fullName: '',
-    department: ''
+    fullName: ''
   });
 
   const handleInputChange = (e) => {
@@ -32,13 +31,12 @@ const Login = ({ onLogin, theme = 'dark' }) => {
     try {
       const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
       const payload = isLogin 
-        ? { username: formData.username, password: formData.password }
+        ? { email: formData.email || formData.username, password: formData.password }
         : {
             username: formData.username,
             email: formData.email,
             password: formData.password,
-            fullName: formData.fullName,
-            department: formData.department
+            full_name: formData.fullName
           };
 
       const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
@@ -55,15 +53,15 @@ const Login = ({ onLogin, theme = 'dark' }) => {
       if (response.ok && data.success) {
         if (isLogin) {
           // Store token and user data
-          localStorage.setItem('token', data.data.token);
-          localStorage.setItem('user', JSON.stringify(data.data.user));
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
           
           // Import and update authService
           const authService = (await import('../services/authService')).default;
-          authService.token = data.data.token;
-          authService.user = data.data.user;
+          authService.token = data.token;
+          authService.user = data.user;
           
-          onLogin(data.data.user, data.data.token);
+          onLogin(data.user, data.token);
         } else {
           // Registration successful, switch to login
           setIsLogin(true);
@@ -88,8 +86,7 @@ const Login = ({ onLogin, theme = 'dark' }) => {
       username: '',
       email: '',
       password: '',
-      fullName: '',
-      department: ''
+      fullName: ''
     });
   };
 
@@ -260,32 +257,60 @@ const Login = ({ onLogin, theme = 'dark' }) => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Username */}
-          <div>
-            <label className={`block text-sm font-medium mb-2 ${
-              theme === 'dark' ? 'text-slate-300' : 'text-gray-700'
-            }`}>
-              Nama Pengguna
-            </label>
-            <div className="relative">
-              <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
-                theme === 'dark' ? 'text-slate-400' : 'text-gray-400'
-              }`} />
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleInputChange}
-                required
-                className={`w-full pl-11 pr-4 py-3 ${
-                  theme === 'dark' 
-                    ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-400' 
-                    : 'bg-white/50 border-gray-300 text-gray-900 placeholder-gray-500'
-                } border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
-                placeholder="Masukkan nama pengguna"
-              />
+          {/* Email for login, Username for registration */}
+          {isLogin ? (
+            <div>
+              <label className={`block text-sm font-medium mb-2 ${
+                theme === 'dark' ? 'text-slate-300' : 'text-gray-700'
+              }`}>
+                Email
+              </label>
+              <div className="relative">
+                <Mail className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
+                  theme === 'dark' ? 'text-slate-400' : 'text-gray-400'
+                }`} />
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  className={`w-full pl-11 pr-4 py-3 ${
+                    theme === 'dark' 
+                      ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-400' 
+                      : 'bg-white/50 border-gray-300 text-gray-900 placeholder-gray-500'
+                  } border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
+                  placeholder="Masukkan email Anda"
+                />
+              </div>
             </div>
-          </div>
+          ) : (
+            <div>
+              <label className={`block text-sm font-medium mb-2 ${
+                theme === 'dark' ? 'text-slate-300' : 'text-gray-700'
+              }`}>
+                Username
+              </label>
+              <div className="relative">
+                <User className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
+                  theme === 'dark' ? 'text-slate-400' : 'text-gray-400'
+                }`} />
+                <input
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  required
+                  className={`w-full pl-11 pr-4 py-3 ${
+                    theme === 'dark' 
+                      ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-400' 
+                      : 'bg-white/50 border-gray-300 text-gray-900 placeholder-gray-500'
+                  } border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
+                  placeholder="Masukkan username"
+                />
+              </div>
+            </div>
+          )}
 
           {/* Email (only for registration) */}
           {!isLogin && (
@@ -344,30 +369,6 @@ const Login = ({ onLogin, theme = 'dark' }) => {
             </div>
           )}
 
-          {/* Department (only for registration) */}
-          {!isLogin && (
-            <div>
-              <label className={`block text-sm font-medium mb-2 ${
-                theme === 'dark' ? 'text-slate-300' : 'text-gray-700'
-              }`}>
-                Departemen
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  name="department"
-                  value={formData.department}
-                  onChange={handleInputChange}
-                  className={`w-full px-4 py-3 ${
-                    theme === 'dark' 
-                      ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-400' 
-                      : 'bg-white/50 border-gray-300 text-gray-900 placeholder-gray-500'
-                  } border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors`}
-                  placeholder="Masukkan departemen Anda"
-                />
-              </div>
-            </div>
-          )}
 
           {/* Password */}
           <div>

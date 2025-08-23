@@ -341,15 +341,19 @@ class TelkomApiService {
   // ===== AI CHAT ENDPOINTS =====
 
   // Send chat message to AI
-  async sendChatMessage(message, conversationHistory = [], responseType = 'operational') {
+  async sendChatMessage(message, sessionId = null) {
     try {
-      return await this.apiCall('/chat', {
+      const userId = authService.getUserId();
+      if (!userId) {
+        throw new Error('User authentication required');
+      }
+
+      return await this.apiCall('/chat/message', {
         method: 'POST',
         body: JSON.stringify({
           message,
-          conversationHistory: conversationHistory.slice(-5), // Last 5 messages for context
-          responseType,
-          sessionId: this.generateSessionId()
+          userId,
+          sessionId: sessionId || this.generateSessionId()
         })
       }, true); // Use AI base URL
     } catch (error) {
@@ -358,6 +362,79 @@ class TelkomApiService {
         success: false,
         response: 'I apologize, but I\'m currently experiencing connectivity issues. Please try again in a moment.',
         error: error.message
+      };
+    }
+  }
+
+  // Get chat history for user
+  async getChatHistory(limit = 50, offset = 0) {
+    try {
+      return await this.apiCall(`/chat/history?limit=${limit}&offset=${offset}`, {}, true);
+    } catch (error) {
+      console.error('Failed to get chat history:', error);
+      return {
+        success: false,
+        chat_history: [],
+        pagination: { limit, offset, total: 0 }
+      };
+    }
+  }
+
+  // Get specific chat session
+  async getChatSession(sessionId) {
+    try {
+      return await this.apiCall(`/chat/session/${encodeURIComponent(sessionId)}`, {}, true);
+    } catch (error) {
+      console.error('Failed to get chat session:', error);
+      return {
+        success: false,
+        session_id: sessionId,
+        chat_session: []
+      };
+    }
+  }
+
+  // Get chat statistics
+  async getChatStats(days = 30) {
+    try {
+      return await this.apiCall(`/chat/stats?days=${days}`, {}, true);
+    } catch (error) {
+      console.error('Failed to get chat stats:', error);
+      return {
+        success: false,
+        stats: {},
+        period_days: days
+      };
+    }
+  }
+
+  // Delete chat history
+  async deleteChatHistory(sessionId = null) {
+    try {
+      const body = sessionId ? { sessionId } : {};
+      return await this.apiCall('/chat/history', {
+        method: 'DELETE',
+        body: JSON.stringify(body)
+      }, true);
+    } catch (error) {
+      console.error('Failed to delete chat history:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  // Get chat capabilities
+  async getChatCapabilities() {
+    try {
+      return await this.apiCall('/chat/capabilities', {}, true);
+    } catch (error) {
+      console.error('Failed to get chat capabilities:', error);
+      return {
+        success: false,
+        capabilities: {},
+        rules: []
       };
     }
   }

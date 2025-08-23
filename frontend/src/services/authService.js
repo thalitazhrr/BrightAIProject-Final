@@ -60,22 +60,22 @@ class AuthService {
   }
 
   // Login user
-  async login(username, password) {
+  async login(email, password) {
     try {
       const response = await this.apiCall('/login', {
         method: 'POST',
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ email, password })
       });
 
       if (response.success) {
-        this.token = response.data.token;
-        this.user = response.data.user;
+        this.token = response.token;
+        this.user = response.user;
         
         // Store in localStorage
         localStorage.setItem('token', this.token);
         localStorage.setItem('user', JSON.stringify(this.user));
         
-        return response.data;
+        return { user: this.user, token: this.token };
       }
 
       throw new Error(response.error);
@@ -93,7 +93,7 @@ class AuthService {
       });
 
       if (response.success) {
-        return response.data;
+        return response;
       }
 
       throw new Error(response.error);
@@ -127,7 +127,7 @@ class AuthService {
   async getProfile() {
     try {
       const response = await this.apiCall('/profile');
-      return response.data;
+      return response.user;
     } catch (error) {
       throw error;
     }
@@ -142,9 +142,9 @@ class AuthService {
       });
 
       if (response.success) {
-        this.user = response.data;
+        this.user = response.user;
         localStorage.setItem('user', JSON.stringify(this.user));
-        return response.data;
+        return response.user;
       }
 
       throw new Error(response.error);
@@ -235,6 +235,16 @@ class AuthService {
   // Get user's full name
   getUserFullName() {
     return this.user?.full_name || this.user?.username;
+  }
+
+  // Get user ID
+  getUserId() {
+    return this.user?.user_id;
+  }
+
+  // Get username
+  getUsername() {
+    return this.user?.username;
   }
 
   // Refresh auth state from localStorage

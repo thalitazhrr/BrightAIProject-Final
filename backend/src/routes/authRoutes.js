@@ -1,41 +1,51 @@
-// Auth Routes - Authentication endpoints
+// src/routes/authRoutes.js
 const express = require('express');
 const router = express.Router();
-const AuthController = require('../controllers/authController');
+const authController = require('../controllers/authController');
+const auth = require('../middleware/auth');
 
-// Public routes (no authentication required)
-router.post('/register', AuthController.register);
-router.post('/login', AuthController.login);
-
-// Protected routes (authentication required)
-router.post('/logout', AuthController.verifyToken, AuthController.logout);
-router.get('/profile', AuthController.verifyToken, AuthController.getProfile);
-router.put('/profile', AuthController.verifyToken, AuthController.updateProfile);
-
-// Admin only routes
-router.get('/users', 
-  AuthController.verifyToken, 
-  AuthController.requireAdmin, 
-  AuthController.getAllUsers
+// Public routes
+router.post('/register', 
+  authController.validateRegister, 
+  authController.register
 );
 
-router.get('/stats', 
-  AuthController.verifyToken, 
-  AuthController.requireAdmin, 
-  AuthController.getUserStats
+router.post('/login', 
+  authController.validateLogin, 
+  authController.login
 );
 
-// Token verification endpoint
-router.get('/verify', AuthController.verifyToken, (req, res) => {
-  res.json({
-    success: true,
-    data: {
-      userId: req.user.userId,
-      username: req.user.username,
-      role: req.user.role
-    },
-    message: 'Token is valid'
-  });
-});
+// Protected routes
+router.get('/profile', 
+  auth.authenticate, 
+  authController.getProfile
+);
+
+router.put('/profile', 
+  auth.authenticate, 
+  authController.validateUpdateProfile, 
+  authController.updateProfile
+);
+
+router.put('/change-password', 
+  auth.authenticate, 
+  authController.validateChangePassword, 
+  authController.changePassword
+);
+
+router.post('/logout', 
+  auth.authenticate, 
+  authController.logout
+);
+
+router.get('/verify', 
+  auth.authenticate, 
+  (req, res) => {
+    res.json({
+      success: true,
+      user: req.user
+    });
+  }
+);
 
 module.exports = router;

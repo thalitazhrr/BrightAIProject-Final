@@ -28,7 +28,6 @@ Platform **BrightAI** adalah solusi analytics dan intelligence untuk manajemen H
 - Multi-session chat support dengan database
 
 ### 🔒 Security Features
-- Bcrypt password hashing (12-round salted)
 - Environment variables untuk JWT secrets
 - Token-based authentication dengan secure expiry
 - Input validation dan error handling
@@ -109,27 +108,6 @@ BrightAIProject/
 │
 └── data/                  # Sample HSI data
     └── SALES_ORDER.xlsx
-```
-
----
-
-## ⚙️ Environment Variables
-
-### Backend (.env)
-```bash
-# Security
-JWT_SECRET=your-super-secret-jwt-key-here
-
-# Database (PostgreSQL)
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=telkom_brightai_db
-DB_USER=postgres
-=your-db-password
-
-# Server
-PORT=3001
-NODE_ENV=development
 ```
 
 ### Frontend (.env)
