@@ -186,4 +186,42 @@ router.put('/:sessionId/end', authMiddleware.authenticate, async (req, res) => {
   }
 });
 
+// Delete specific session
+router.delete('/:sessionId', authMiddleware.authenticate, async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const userId = req.user.id;
+
+    // Verify user owns this session
+    const session = await sessionModel.findById(sessionId);
+    if (!session) {
+      return res.status(404).json({
+        success: false,
+        error: 'Session not found'
+      });
+    }
+
+    if (session.USER_ID !== userId) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied to this session'
+      });
+    }
+
+    await sessionModel.deleteSession(sessionId, userId);
+
+    res.json({
+      success: true,
+      message: 'Session deleted successfully'
+    });
+
+  } catch (error) {
+    logger.error('Delete session error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to delete session'
+    });
+  }
+});
+
 module.exports = router;

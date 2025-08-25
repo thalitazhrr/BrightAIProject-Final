@@ -1,8 +1,9 @@
 const { loadRuleDatabase } = require('../../config/databaseLoader');
+const patternMatcher = require('../../utils/patternMatcher');
 
 module.exports = {
   RULE_META: {
-    RULE_ID: 'ps_008',
+    RULE_ID: 'ps_009',
     RULE_NAME: 'channel_performance_hsi',
     DESCRIPTION: 'Analisis performa channel dalam akuisisi HSI dengan klasifikasi produk yang tepat',
     DATABASE: 'PS_SCONE_ORDER',
@@ -665,7 +666,7 @@ module.exports = {
 
   PATTERN_MATCHING: {
     checkMatch: function(userInput) {
-      const confidence = this.parent.KEYWORD_PATTERNS.calculateConfidence(userInput);
+      const confidence = patternMatcher.calculateConfidence(userInput, module.exports.KEYWORD_PATTERNS);
       const lowerInput = userInput.toLowerCase();
       
       // Determine focus area based on input patterns
@@ -692,7 +693,6 @@ module.exports = {
       };
     },
     
-    parent: this
   },
 
   CACHE_DURATION: 3600,

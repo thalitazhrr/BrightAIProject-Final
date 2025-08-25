@@ -168,8 +168,29 @@ class ChatController {
   async getChatHistory(req, res) {
     try {
       const userId = req.user.id;
-      const { limit = 50, offset = 0 } = req.query;
+      const { limit = 50, offset = 0, session_id } = req.query;
 
+      // If session_id is provided, get specific session messages
+      if (session_id) {
+        const chatSession = await chatModel.getChatBySession(session_id);
+        
+        // Check if user has access to this session
+        const userHasAccess = chatSession.some(chat => chat.USER_ID === userId);
+        if (!userHasAccess && chatSession.length > 0) {
+          return res.status(403).json({
+            success: false,
+            error: 'Access denied to this chat session'
+          });
+        }
+
+        return res.json({
+          success: true,
+          data: chatSession,
+          session_id: session_id
+        });
+      }
+
+      // Otherwise get all chat history for user
       const chatHistory = await chatModel.getChatHistory(
         userId, 
         parseInt(limit), 
@@ -261,23 +282,38 @@ class ChatController {
         const chatSession = await chatModel.getChatBySession(sessionId);
         const userOwnsSession = chatSession.some(chat => chat.USER_ID === userId);
         
-        if (!userOwnsSession) {
+        if (!userOwnsSession && chatSession.length > 0) {
           return res.status(403).json({
             success: false,
             error: 'Access denied to this chat session'
           });
         }
 
-        // Delete session (implementation would need a new method in chatModel)
-        // await chatModel.deleteSession(sessionId, userId);
+        // Delete chat messages and session
+        let chatDeleted = 0;
+        let sessionDeleted = 0;
+        
+        try {
+          chatDeleted = await chatModel.deleteSession(sessionId, userId);
+        } catch (chatError) {
+          logger.error("Error deleting chat messages:", chatError);
+          // Continue with session deletion even if chat deletion fails
+        }
+        
+        try {
+          sessionDeleted = await sessionModel.deleteSession(sessionId, userId);
+        } catch (sessionError) {
+          logger.error("Error deleting session:", sessionError);
+        }
         
         res.json({
           success: true,
           message: 'Chat session deleted successfully'
         });
       } else {
-        // Delete all user's chat history (implementation would need a new method)
-        // await chatModel.deleteUserHistory(userId);
+        // Delete all user's chat history and sessions
+        await chatModel.deleteUserHistory(userId);
+        await sessionModel.deleteUserSessions(userId);
         
         res.json({
           success: true,

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Bot, Send, MoreHorizontal, Settings, Sun, Moon,
-  ThumbsUp, Heart, Copy, Share2, Loader,
+  Bot, Send, Settings, Sun, Moon, Loader,
   User, Target, X, Trash2, LogOut, RefreshCw, Bell,
   Plus, Search, Zap, Clock, Wifi, WifiOff
 } from 'lucide-react';
@@ -11,6 +10,34 @@ import authService from './services/authService';
 import Login from './components/Login';
 import { parseMarkdownToJSX } from './utils/markdownParser';
 import './animations.css';
+
+// Error Boundary Component
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Chat message error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="text-red-500 text-sm p-2 border border-red-300 rounded">
+          Error displaying message. Please refresh the page.
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 // Chat storage helper functions - now using database only
 
@@ -94,15 +121,81 @@ const loadChatsFromDatabase = async () => {
       return [];
     }
     
-    return response.active_sessions.map(session => ({
-      id: session.SESSION_ID,
-      title: session.SESSION_NAME || 'Percakapan Baru',
-      messages: [],
-      lastMessage: `${session.MESSAGE_COUNT || 0} pesan`,
-      createdAt: session.STARTED_AT,
-      updatedAt: session.STARTED_AT,
-      userId: session.USER_ID // Include user ID for ownership validation
-    }));
+    // For each session, get the first message to create a proper title and preview
+    const chatsWithDetails = await Promise.all(
+      response.active_sessions.map(async (session) => {
+        try {
+          const messagesResponse = await apiCall(`/chat/history?session_id=${session.SESSION_ID}`);
+          const messages = messagesResponse.success && messagesResponse.data ? messagesResponse.data : [];
+          
+          // Find first user message for title
+          const firstUserMessage = messages.find(msg => msg.MESSAGE_TYPE === 'user');
+          const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
+          
+            // Create title from first user message, fallback to session name
+          let title = session.SESSION_NAME || 'Percakapan Baru';
+          if (firstUserMessage && firstUserMessage.MESSAGE) {
+            let firstMsgText = '';
+            if (typeof firstUserMessage.MESSAGE === 'string') {
+              firstMsgText = firstUserMessage.MESSAGE;
+            } else if (typeof firstUserMessage.MESSAGE === 'object') {
+              firstMsgText = firstUserMessage.MESSAGE.text || firstUserMessage.MESSAGE.message || JSON.stringify(firstUserMessage.MESSAGE);
+            } else {
+              firstMsgText = String(firstUserMessage.MESSAGE);
+            }
+            
+            if (firstMsgText && firstMsgText.trim()) {
+              title = firstMsgText.slice(0, 50);
+              if (firstMsgText.length > 50) title += '...';
+            }
+          }
+          
+          // Create preview from last message
+          let preview = `${session.MESSAGE_COUNT || 0} pesan`;
+          if (lastMessage && lastMessage.MESSAGE) {
+            let lastMsgText = '';
+            if (typeof lastMessage.MESSAGE === 'string') {
+              lastMsgText = lastMessage.MESSAGE;
+            } else if (typeof lastMessage.MESSAGE === 'object') {
+              lastMsgText = lastMessage.MESSAGE.text || lastMessage.MESSAGE.message || JSON.stringify(lastMessage.MESSAGE);
+            } else {
+              lastMsgText = String(lastMessage.MESSAGE);
+            }
+            
+            if (lastMsgText && lastMsgText.trim()) {
+              preview = lastMsgText.slice(0, 80);
+              if (lastMsgText.length > 80) preview += '...';
+            }
+          }
+          
+          return {
+            id: session.SESSION_ID,
+            title: title,
+            messages: [],
+            lastMessage: preview,
+            createdAt: session.STARTED_AT,
+            updatedAt: session.STARTED_AT,
+            userId: session.USER_ID,
+            messageCount: session.MESSAGE_COUNT || 0
+          };
+        } catch (error) {
+          console.error(`Error loading details for session ${session.SESSION_ID}:`, error);
+          // Fallback to basic session info
+          return {
+            id: session.SESSION_ID,
+            title: session.SESSION_NAME || 'Percakapan Baru',
+            messages: [],
+            lastMessage: `${session.MESSAGE_COUNT || 0} pesan`,
+            createdAt: session.STARTED_AT,
+            updatedAt: session.STARTED_AT,
+            userId: session.USER_ID,
+            messageCount: session.MESSAGE_COUNT || 0
+          };
+        }
+      })
+    );
+    
+    return chatsWithDetails;
   } catch (error) {
     console.error('Error loading chats from database:', error);
     
@@ -127,13 +220,47 @@ const loadChatMessagesFromDatabase = async (chatId) => {
       return [];
     }
     
-    return response.data.map(msg => ({
-      id: msg.id,
-      text: msg.message || msg.text,
-      isBot: msg.is_bot || msg.isBot || false,
-      timestamp: msg.created_at || msg.timestamp,
-      userId: msg.user_id || msg.userId
-    }));
+    // Enhanced message processing with safe handling
+    return response.data.map(msg => {
+      let messageText = '';
+      
+      // Safe extraction of message text
+      if (msg.MESSAGE) {
+        if (typeof msg.MESSAGE === 'string') {
+          messageText = msg.MESSAGE;
+        } else if (typeof msg.MESSAGE === 'object') {
+          // Handle object messages
+          if (msg.MESSAGE.text) {
+            messageText = msg.MESSAGE.text;
+          } else if (msg.MESSAGE.message) {
+            messageText = msg.MESSAGE.message;
+          } else if (msg.MESSAGE.response) {
+            messageText = msg.MESSAGE.response;
+          } else {
+            messageText = JSON.stringify(msg.MESSAGE, null, 2);
+          }
+        } else {
+          messageText = String(msg.MESSAGE);
+        }
+      } else if (msg.message) {
+        messageText = String(msg.message);
+      } else if (msg.text) {
+        messageText = String(msg.text);
+      } else {
+        messageText = '[Empty message]';
+      }
+      
+      return {
+        id: msg.CHAT_ID || msg.id || `msg_${Date.now()}_${Math.random()}`,
+        text: messageText,
+        isBot: msg.MESSAGE_TYPE === 'assistant',
+        timestamp: msg.CREATED_AT || msg.created_at || msg.timestamp || new Date().toISOString(),
+        userId: msg.USER_ID || msg.user_id || msg.userId,
+        ruleId: msg.RULE_ID,
+        ruleName: msg.RULE_NAME,
+        confidence: msg.CONFIDENCE
+      };
+    });
   } catch (error) {
     console.error('Error loading chat messages:', error);
     
@@ -196,8 +323,11 @@ const saveMessageToDatabase = async (chatId, message, userId) => {
 
 const deleteChatFromDatabase = async (chatId) => {
   try {
-    const response = await apiCall(`/chats/${chatId}`, {
-      method: 'DELETE'
+    const response = await apiCall('/chat/history', {
+      method: 'DELETE',
+      body: JSON.stringify({
+        sessionId: chatId
+      }),
     });
     return response.data;
   } catch (error) {
@@ -373,6 +503,7 @@ const AnimatedBackground = ({ theme }) => {
 const Sidebar = ({ activeView, setActiveView, theme, notifications }) => {
   const menuItems = [
     { id: 'ai', icon: Bot, label: 'BrightAI', badge: notifications },
+    { id: 'history', icon: Clock, label: 'Chat History', badge: null },
     { id: 'profile', icon: User, label: 'Profil', badge: null },
     { id: 'settings', icon: Settings, label: 'Pengaturan', badge: null }
   ];
@@ -644,27 +775,91 @@ const Header = ({ theme, setTheme, status, onRefresh, notifications, onNotificat
 
 
 // Chat Message Component
-const ChatMessage = ({ message, isBot, theme }) => (
-  <div className={`flex ${isBot ? 'justify-start' : 'justify-end'} mb-4`}>
-    <div className={`max-w-xs lg:max-w-md xl:max-w-lg ${
-      isBot 
-        ? theme === 'dark' 
-          ? 'bg-slate-700 text-white' 
-          : 'bg-gray-100 text-gray-900'
-        : 'bg-gradient-to-r from-blue-500 to-sky-500 text-white'
-    } rounded-2xl px-4 py-3 shadow-lg`}>
-      {isBot && (
-        <div className="flex items-center mb-2">
-          <Bot className="w-4 h-4 mr-2" />
-          <span className="text-sm font-medium">BrightAI</span>
+const ChatMessage = ({ message, isBot, theme }) => {
+  // Safe message handling
+  const safeMessage = React.useMemo(() => {
+    if (!message) return 'Empty message';
+    
+    // If message is an object, convert to string
+    if (typeof message === 'object') {
+      try {
+        // Handle specific object structures
+        if (message.text) return String(message.text);
+        if (message.message) return String(message.message);
+        if (message.response) return String(message.response);
+        
+        // Otherwise stringify
+        return JSON.stringify(message, null, 2);
+      } catch (e) {
+        return '[Complex Object - Cannot Display]';
+      }
+    }
+    
+    // Ensure it's a string
+    return String(message);
+  }, [message]);
+  
+  // Safe markdown parsing with error boundary
+  const renderMessage = React.useMemo(() => {
+    try {
+      if (isBot) {
+        // Only parse markdown for bot messages
+        const parsed = parseMarkdownToJSX(safeMessage, theme);
+        // If parsing returns null or invalid, fall back to plain text
+        if (parsed && React.isValidElement(parsed)) {
+          return parsed;
+        }
+        // Fallback to plain text with line breaks
+        return (
+          <div>
+            {safeMessage.split('\n').map((line, index) => (
+              <React.Fragment key={index}>
+                {line}
+                {index < safeMessage.split('\n').length - 1 && <br />}
+              </React.Fragment>
+            ))}
+          </div>
+        );
+      }
+      // For user messages, just display as plain text with line breaks
+      return (
+        <div>
+          {safeMessage.split('\n').map((line, index) => (
+            <React.Fragment key={index}>
+              {line}
+              {index < safeMessage.split('\n').length - 1 && <br />}
+            </React.Fragment>
+          ))}
         </div>
-      )}
-      <div className="text-sm leading-relaxed">
-        {isBot ? parseMarkdownToJSX(message, theme) : message}
+      );
+    } catch (error) {
+      console.error('Error rendering message:', error);
+      return <span className="text-red-500">[Error displaying message: {safeMessage.substring(0, 100)}...]</span>;
+    }
+  }, [safeMessage, isBot, theme]);
+  
+  return (
+    <div className={`flex ${isBot ? 'justify-start' : 'justify-end'} mb-4`}>
+      <div className={`max-w-xs lg:max-w-md xl:max-w-lg ${
+        isBot 
+          ? theme === 'dark' 
+            ? 'bg-slate-700 text-white' 
+            : 'bg-gray-100 text-gray-900'
+          : 'bg-gradient-to-r from-blue-500 to-sky-500 text-white'
+      } rounded-2xl px-4 py-3 shadow-lg`}>
+        {isBot && (
+          <div className="flex items-center mb-2">
+            <Bot className="w-4 h-4 mr-2" />
+            <span className="text-sm font-medium">BrightAI</span>
+          </div>
+        )}
+        <div className="text-sm leading-relaxed">
+          {renderMessage}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // Chat Sidebar Component
 const ChatSidebar = ({ chats, activeChat, setActiveChat, onNewChat, onDeleteChat, theme }) => {
@@ -1077,14 +1272,27 @@ function App() {
       const savedChat = await saveChatToDatabase(newChat);
       
       if (savedChat && savedChat.session_id) {
-        // Update chat with real session ID from backend
+        // Create welcome message in Indonesian
+        const welcomeMessage = {
+          id: `welcome_${Date.now()}`,
+          text: '🚀 **Selamat datang di BrightAI!**\n\nSaya adalah asisten analisis data Telkom yang dapat membantu Anda menganalisis data dari berbagai database perusahaan seperti:\n\n📊 **PS_SCONE_ORDER**: Analisis order dan sales HSI\n👥 **DAPROS_MIGRASI**: Profil dan segmentasi customer HSI\n🎯 **TARGET_ALL**: Analisis target dan performance\n💰 **MART_REV_PMS_POTS**: Analisis revenue dan billing\n📉 **CT0_NAL_EBIS**: Analisis churn dan customer lifecycle\n\n**Contoh pertanyaan yang bisa Anda ajukan:**\n• "Analisis total order HSI per regional"\n• "Bagaimana pola churn pelanggan HSI berdasarkan bandwidth?"\n• "Tren revenue HSI 6 bulan terakhir"\n• "Penetrasi HSI di wilayah Jawa Barat"\n\nSilakan ajukan pertanyaan analisis data yang Anda butuhkan! 💬',
+          isBot: true,
+          timestamp: new Date().toISOString(),
+          userId: userId
+        };
+
+        // Update chat with real session ID from backend and welcome message
         const chatWithRealId = {
           ...newChat,
-          id: savedChat.session_id
+          id: savedChat.session_id,
+          messages: [welcomeMessage],
+          lastMessage: 'Selamat datang di BrightAI! Silakan ajukan pertanyaan...',
+          title: 'Percakapan Baru - BrightAI'
         };
         setChats(prev => [chatWithRealId, ...prev]);
         setActiveChat(savedChat.session_id);
-        console.log('✅ New chat created successfully:', savedChat.session_id);
+        
+        console.log('✅ New chat created successfully with welcome:', savedChat.session_id);
       } else {
         console.error('❌ Failed to save chat to database');
         alert('Failed to create new chat. Please try again.');
@@ -1157,29 +1365,42 @@ function App() {
 
       setChats(prev => prev.map(chat => chat.id === activeChat ? updatedChat : chat));
 
-      // Save user message to database
-      await saveMessageToDatabase(activeChat, userMessageObj, userId);
-
-      // Send to AI
-      const response = await apiCall('/ai/chat', {
+      // Send to AI using correct endpoint
+      const response = await apiCall('/chat/message', {
         method: 'POST',
         body: JSON.stringify({
           message: userMessage,
-          responseType: 'operational',
-          conversationHistory: currentChatObj.messages.slice(-5), // Last 5 messages for context
-          userId: userId,
-          chatId: activeChat
+          sessionId: activeChat
         })
       });
 
-      // Add AI response to chat
-      const aiMessage = response.response || 'Sorry, I could not process your request.';
+      // Process AI response - handle various response formats safely
+      let aiMessage;
+      if (response.response) {
+        // Handle different response types
+        if (typeof response.response === 'string') {
+          aiMessage = response.response;
+        } else if (typeof response.response === 'object') {
+          try {
+            aiMessage = JSON.stringify(response.response, null, 2);
+          } catch (e) {
+            aiMessage = '[Complex Response - Cannot Display]';
+          }
+        } else {
+          aiMessage = String(response.response);
+        }
+      } else {
+        aiMessage = 'Maaf, saya tidak dapat memproses permintaan Anda saat ini. Silakan coba lagi.';
+      }
+
       const aiMessageObj = {
         id: `ai_${Date.now()}`,
         text: aiMessage,
         isBot: true,
         timestamp: new Date().toISOString(),
-        userId: userId
+        userId: userId,
+        rule_name: response.rule_name,
+        confidence: response.confidence
       };
       
       setChats(prev => prev.map(chat => 
@@ -1193,9 +1414,6 @@ function App() {
           : chat
       ));
 
-      // Save AI message to database
-      await saveMessageToDatabase(activeChat, aiMessageObj, userId);
-
     } catch (error) {
       console.error('Send message error:', error);
       
@@ -1206,10 +1424,10 @@ function App() {
         return;
       }
       
-      // Add error message
+      // Add error message in Indonesian
       const errorMessage = {
         id: `error_${Date.now()}`,
-        text: 'Sorry, I\'m having trouble connecting to the AI service. Please try again later.',
+        text: 'Maaf, saya mengalami masalah dalam terhubung ke layanan AI. Silakan coba lagi nanti.',
         isBot: true,
         timestamp: new Date().toISOString(),
         userId: userId
@@ -1220,7 +1438,7 @@ function App() {
           ? {
               ...chat,
               messages: [...chat.messages, errorMessage],
-              lastMessage: 'Connection error',
+              lastMessage: 'Kesalahan koneksi',
               updatedAt: new Date().toISOString()
             }
           : chat
@@ -1317,12 +1535,14 @@ function App() {
                 <>
                   <div className="flex-1 overflow-y-auto p-6">
                     {getCurrentChatMessages().map((message, index) => (
-                      <ChatMessage
-                        key={index}
-                        message={message.text}
-                        isBot={message.isBot}
-                        theme={theme}
-                      />
+                      <ErrorBoundary key={`msg-${index}-${message.id || 'unknown'}`}>
+                        <ChatMessage
+                          key={index}
+                          message={message.text}
+                          isBot={message.isBot}
+                          theme={theme}
+                        />
+                      </ErrorBoundary>
                     ))}
                     {isTyping && (
                       <div className="flex justify-start mb-4">
@@ -1428,6 +1648,7 @@ function App() {
             </div>
           </div>
         );
+
 
       case 'profile':
         return (

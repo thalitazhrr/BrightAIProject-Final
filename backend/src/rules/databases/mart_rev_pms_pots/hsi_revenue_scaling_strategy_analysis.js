@@ -1,4 +1,5 @@
 const { loadRuleDatabase } = require('../../config/databaseLoader');
+const patternMatcher = require('../../utils/patternMatcher');
 
 module.exports = {
   RULE_META: {
@@ -500,7 +501,7 @@ module.exports = {
 
   PATTERN_MATCHING: {
     checkMatch: function(userInput) {
-      const confidence = this.parent.KEYWORD_PATTERNS.calculateConfidence(userInput);
+      const confidence = patternMatcher.calculateConfidence(userInput, module.exports.KEYWORD_PATTERNS);
       return {
         matches: confidence >= 75,
         confidence: confidence,
@@ -509,7 +510,6 @@ module.exports = {
       };
     },
     
-    parent: this
   },
 
   CACHE_DURATION: 3600,

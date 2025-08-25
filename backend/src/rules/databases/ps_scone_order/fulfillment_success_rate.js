@@ -1,8 +1,9 @@
 const { loadRuleDatabase } = require('../../config/databaseLoader');
+const patternMatcher = require('../../utils/patternMatcher');
 
 module.exports = {
   RULE_META: {
-    RULE_ID: 'ps_005',
+    RULE_ID: 'ps_006',
     RULE_NAME: 'fulfillment_success_rate',
     DESCRIPTION: 'Tingkat keberhasilan fulfillment order HSI dengan klasifikasi produk yang tepat',
     DATABASE: 'PS_SCONE_ORDER',
@@ -847,7 +848,7 @@ module.exports = {
 
   PATTERN_MATCHING: {
     checkMatch: function(userInput) {
-      const confidence = this.parent.KEYWORD_PATTERNS.calculateConfidence(userInput);
+      const confidence = patternMatcher.calculateConfidence(userInput, module.exports.KEYWORD_PATTERNS);
       const lowerInput = userInput.toLowerCase();
       
       // Determine focus area based on input patterns
@@ -878,7 +879,6 @@ module.exports = {
       };
     },
     
-    parent: this
   },
 
   CACHE_DURATION: 3600,

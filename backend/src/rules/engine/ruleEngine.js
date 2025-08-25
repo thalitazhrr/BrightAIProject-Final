@@ -125,8 +125,35 @@ class RuleEngine {
   }
 
   getDatabaseForRule(rule) {
-    const { getDatabaseConfig } = require('../config/ruleRegistry');
-    return getDatabaseConfig(rule.DATABASE_CONFIG.TABLE);
+    try {
+      const ruleRegistry = require('../config/ruleRegistry');
+      
+      // First check if DATABASE_CONFIG exists and has required properties
+      if (!rule.DATABASE_CONFIG) {
+        logger.error(`Rule ${rule.RULE_META.RULE_ID} missing DATABASE_CONFIG`);
+        throw new Error(`Rule ${rule.RULE_META.RULE_ID} missing DATABASE_CONFIG`);
+      }
+      
+      // Check if table property exists
+      if (!rule.DATABASE_CONFIG.table) {
+        logger.error(`Rule ${rule.RULE_META.RULE_ID} DATABASE_CONFIG missing table property`);
+        logger.debug(`DATABASE_CONFIG contents:`, rule.DATABASE_CONFIG);
+        throw new Error(`Rule ${rule.RULE_META.RULE_ID} DATABASE_CONFIG missing table property`);
+      }
+      
+      const dbConfig = ruleRegistry.getDatabaseConfig(rule.DATABASE_CONFIG.table);
+      
+      if (!dbConfig) {
+        logger.error(`No database configuration found for table: ${rule.DATABASE_CONFIG.table}`);
+        throw new Error(`No database configuration found for table: ${rule.DATABASE_CONFIG.table}`);
+      }
+      
+      return dbConfig;
+      
+    } catch (error) {
+      logger.error(`Error getting database for rule ${rule.RULE_META.RULE_ID}:`, error);
+      throw error;
+    }
   }
 
   generateCacheKey(userInput) {

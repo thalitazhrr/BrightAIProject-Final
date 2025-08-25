@@ -7,7 +7,7 @@ class TelkomApiService {
   constructor() {
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
     this.baseURL = process.env.REACT_APP_TELKOM_URL || `${apiUrl}/api/telkom`;
-    this.aiBaseURL = process.env.REACT_APP_AI_URL || `${apiUrl}/api/ai`;
+    this.aiBaseURL = process.env.REACT_APP_AI_URL || `${apiUrl}/api/chat`;
     this.timeout = 15000; // Increased to 15 seconds for real data
     this.retryAttempts = 2; // Increased retry attempts for better reliability
     this.retryDelay = 500; // 500ms base delay

@@ -86,6 +86,34 @@ async function getConnection(database = 'DWHNAS') {
   }
 }
 
+async function processClobData(row) {
+  const processedRow = {};
+  
+  for (const [key, value] of Object.entries(row)) {
+    if (value && typeof value === 'object' && value.constructor && value.constructor.name === 'Lob') {
+      try {
+        // Read CLOB data
+        let clobData = '';
+        value.setEncoding('utf8');
+        
+        const chunks = [];
+        for await (const chunk of value) {
+          chunks.push(chunk);
+        }
+        clobData = chunks.join('');
+        processedRow[key] = clobData;
+      } catch (err) {
+        logger.error(`Error reading CLOB for ${key}:`, err);
+        processedRow[key] = '[Error reading CLOB data]';
+      }
+    } else {
+      processedRow[key] = value;
+    }
+  }
+  
+  return processedRow;
+}
+
 async function executeQuery(query, binds = [], database = 'DWHNAS') {
   let connection;
   try {
@@ -95,7 +123,18 @@ async function executeQuery(query, binds = [], database = 'DWHNAS') {
       fetchArraySize: 1000,
       autoCommit: true
     });
-    return result.rows;
+    
+    // For SELECT queries, process CLOB data and return rows
+    if (query.trim().toUpperCase().startsWith('SELECT')) {
+      // Process CLOB data if exists
+      const processedRows = await Promise.all(
+        result.rows.map(row => processClobData(row))
+      );
+      
+      return processedRows;
+    } else {
+      return result;
+    }
   } catch (error) {
     logger.error('Database query error:', error);
     

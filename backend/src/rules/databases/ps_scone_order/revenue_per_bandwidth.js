@@ -1,8 +1,9 @@
 const { loadRuleDatabase } = require('../../config/databaseLoader');
+const patternMatcher = require('../../utils/patternMatcher');
 
 module.exports = {
   RULE_META: {
-    RULE_ID: 'ps_007',
+    RULE_ID: 'ps_008',
     RULE_NAME: 'revenue_per_bandwidth',
     DESCRIPTION: 'Analisis revenue berdasarkan kategori bandwidth HSI dengan klasifikasi produk yang tepat menggunakan ORDER_ID, NCLI, dan ND_HSI',
     DATABASE: 'PS_SCONE_ORDER',
@@ -552,7 +553,7 @@ module.exports = {
 
   PATTERN_MATCHING: {
     checkMatch: function(userInput) {
-      const confidence = this.parent.KEYWORD_PATTERNS.calculateConfidence(userInput);
+      const confidence = patternMatcher.calculateConfidence(userInput, module.exports.KEYWORD_PATTERNS);
       return {
         matches: confidence >= 70,
         confidence: confidence,
@@ -560,7 +561,6 @@ module.exports = {
       };
     },
     
-    parent: this
   },
 
   CACHE_DURATION: 7200,

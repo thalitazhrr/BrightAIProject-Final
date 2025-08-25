@@ -1,5 +1,5 @@
 const { loadRuleDatabase } = require('../../config/databaseLoader');
-const patternMatcher = require('../../../utils/patternMatcher');
+const patternMatcher = require('../../utils/patternMatcher');
 
 module.exports = {
   RULE_META: {
@@ -18,39 +18,27 @@ module.exports = {
   DATABASE_CONFIG: loadRuleDatabase("CT0_NAL_EBIS"),
 
   KEYWORD_PATTERNS: {
-    primary: [
-      'churn rate', 'tingkat churn', 'cabut pelanggan', 'pelanggan cabut',
-      'churn regional', 'churn per regional', 'analisis churn',
-      'kehilangan pelanggan', 'pelanggan hilang', 'customer churn'
-    ],
+    required: {
+      churn_keywords: [
+        'churn rate', 'tingkat churn', 'cabut pelanggan', 'pelanggan cabut',
+        'churn regional', 'churn per regional', 'analisis churn',
+        'kehilangan pelanggan', 'pelanggan hilang', 'customer churn'
+      ],
+      service_keywords: [
+        'internet', 'broadband', 'hsi', 'koneksi internet'
+      ]
+    },
     
-    supporting: [
-      'internet', 'broadband', 'hsi', 'koneksi internet',
-      'regional', 'wilayah', 'area', 'daerah',
-      'analisis', 'analysis', 'performa', 'kinerja',
-      'ct0', 'dinolkan', 'nonaktif'
-    ],
-    
-    calculateConfidence: function(input) {
-      const lowerInput = input.toLowerCase();
-      let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
-        lowerInput.includes(keyword.toLowerCase())
-      ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
-        lowerInput.includes(keyword.toLowerCase())
-      ).length;
-      
-      if (primaryMatches > 0) {
-        score = 80 + (primaryMatches * 8) + (supportingMatches * 3);
-      } else if (lowerInput.includes('churn') || 
-                (lowerInput.includes('cabut') && lowerInput.includes('pelanggan'))) {
-        score = 75;
-      }
-      
-      return Math.min(score, 100);
+    optional: {
+      location_keywords: [
+        'regional', 'wilayah', 'area', 'daerah'
+      ],
+      analysis_keywords: [
+        'analisis', 'analysis', 'performa', 'kinerja'
+      ],
+      technical_keywords: [
+        'ct0', 'dinolkan', 'nonaktif'
+      ]
     }
   },
 
@@ -337,7 +325,7 @@ module.exports = {
 
   PATTERN_MATCHING: {
     checkMatch: function(userInput) {
-      const confidence = patternMatcher.calculateConfidence(userInput, this.parent.KEYWORD_PATTERNS);
+      const confidence = patternMatcher.calculateConfidence(userInput, module.exports.KEYWORD_PATTERNS);
       return {
         matches: confidence >= 70,
         confidence: confidence,
@@ -345,7 +333,6 @@ module.exports = {
       };
     },
     
-    parent: this
   },
 
   CACHE_DURATION: 1800,

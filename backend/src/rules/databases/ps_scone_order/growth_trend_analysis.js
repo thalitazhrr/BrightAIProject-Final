@@ -1,4 +1,5 @@
 const { loadRuleDatabase } = require('../../config/databaseLoader');
+const patternMatcher = require('../../utils/patternMatcher');
 
 module.exports = {
   RULE_META: {
@@ -969,7 +970,7 @@ module.exports = {
 
   PATTERN_MATCHING: {
     checkMatch: function(userInput) {
-      const confidence = this.parent.KEYWORD_PATTERNS.calculateConfidence(userInput);
+      const confidence = patternMatcher.calculateConfidence(userInput, module.exports.KEYWORD_PATTERNS);
       const lowerInput = userInput.toLowerCase();
       
       let focus_area = 'growth_analysis';
@@ -996,7 +997,6 @@ module.exports = {
       };
     },
     
-    parent: this
   },
 
   CACHE_DURATION: 3600,

@@ -51,42 +51,47 @@ const welcomeTemplates = {
 function generateWelcomeMessage() {
   const welcome = welcomeTemplates.welcome;
   
-  return {
-    type: 'welcome',
-    message: welcome.initial,
-    capabilities: {
-      description: welcome.capabilities,
-      databases: welcome.databases
-    },
-    examples: welcome.examples,
-    instruction: welcome.instruction,
-    timestamp: new Date().toISOString()
-  };
+  // Format as a complete message string for better display
+  const formattedMessage = `🚀 **${welcome.initial}**
+
+**${welcome.capabilities}**
+
+${welcome.databases.map(db => `📊 **${db}**`).join('\n')}
+
+**${welcome.examples[0]}**
+${welcome.examples.slice(1).join('\n')}
+
+${welcome.instruction}`;
+  
+  return formattedMessage;
 }
 
 function generateFallbackResponse(reason = 'no_rule_match') {
   const fallback = welcomeTemplates.fallback;
   
-  return {
-    type: 'fallback',
-    message: fallback[reason] || fallback.no_rule_match,
-    help: {
-      description: fallback.general_help,
-      categories: fallback.help_categories
-    },
-    clarification: fallback.clarification,
-    timestamp: new Date().toISOString()
-  };
+  // Format as a complete message string for better display
+  const baseMessage = fallback[reason] || fallback.no_rule_match;
+  
+  const helpCategories = Object.entries(fallback.help_categories)
+    .map(([key, value]) => `**${key.replace('_', ' ').toUpperCase()}**: ${value}`)
+    .join('\n\n');
+  
+  const formattedMessage = `${baseMessage}
+
+**${fallback.general_help}**
+
+${helpCategories}
+
+${fallback.clarification}`;
+  
+  return formattedMessage;
 }
 
 function generateErrorResponse(errorType = 'processing_error') {
   const error = welcomeTemplates.error;
   
-  return {
-    type: 'error',
-    message: error[errorType] || error.processing_error,
-    timestamp: new Date().toISOString()
-  };
+  // Return formatted error message as string
+  return error[errorType] || error.processing_error;
 }
 
 module.exports = {

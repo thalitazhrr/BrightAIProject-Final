@@ -116,7 +116,6 @@ module.exports = {
         SELECT 
             ORDER_ID,
             NCLI,
-            ND_HSI,  -- ADDED: Identifier untuk layanan HSI
             REGIONAL,
             WITEL,
             ORDER_DATE,
@@ -184,10 +183,9 @@ module.exports = {
                 ) THEN 1
                 ELSE 0
             END as IS_OCA_BLAST
-        FROM DWHNAS.DWH_MOIS.PS_SCONE_ORDER
+        FROM DWH_MOIS.PS_SCONE_ORDER
         WHERE STATUS_RESUME IN ('FULFILL BILLING COMPLETED', 'Completed (PS)')
-          AND ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD')
-          AND ND_HSI IS NOT NULL  -- ADDED: Pastikan hanya record dengan HSI yang valid
+          AND ORDER_DATE >= DATE '2025-01-01'
     ),
     MONTHLY_METRICS AS (
         SELECT 
@@ -198,17 +196,14 @@ module.exports = {
             COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1 THEN ORDER_ID END) as total_order_hsi,
             COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 THEN ORDER_ID END) as order_hsi_bisnis,
             COUNT(DISTINCT CASE WHEN IS_HSI_BASIC = 1 THEN ORDER_ID END) as order_hsi_basic,
-            -- ADDED: Unique HSI services (berdasarkan ND_HSI)
-            COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1 THEN ND_HSI END) as unique_hsi_services,
-            COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 THEN ND_HSI END) as unique_hsi_bisnis_services,
-            COUNT(DISTINCT CASE WHEN IS_HSI_BASIC = 1 THEN ND_HSI END) as unique_hsi_basic_services,
+            -- Unique customers per segment
+            COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 THEN NCLI END) as unique_bisnis_customers,
+            COUNT(DISTINCT CASE WHEN IS_HSI_BASIC = 1 THEN NCLI END) as unique_basic_customers,
             -- Customer metrics
             COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1 THEN NCLI END) as unique_customers,
-            -- ADDED: Ratio metrics untuk insight
+            -- Ratio metrics
             ROUND(COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1 THEN ORDER_ID END) * 1.0 / 
-                  NULLIF(COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1 THEN ND_HSI END), 0), 2) as avg_orders_per_hsi_service,
-            ROUND(COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1 THEN ND_HSI END) * 1.0 / 
-                  NULLIF(COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1 THEN NCLI END), 0), 2) as avg_hsi_services_per_customer,
+                  NULLIF(COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1 THEN NCLI END), 0), 2) as avg_orders_per_customer,
             -- Bundling analysis
             COUNT(DISTINCT CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND BUNDLING_TYPE = 'Hard Bundling' THEN ORDER_ID END) as hard_bundling,
             COUNT(DISTINCT CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND BUNDLING_TYPE = 'Bundling A La Carte' THEN ORDER_ID END) as ala_carte_bundling,
@@ -239,10 +234,6 @@ module.exports = {
             LAG(total_order_hsi, 12) OVER (ORDER BY tahun, bulan) as prev_year_order,
             ROUND((total_order_hsi - LAG(total_order_hsi, 12) OVER (ORDER BY tahun, bulan)) * 100.0 / 
                   NULLIF(LAG(total_order_hsi, 12) OVER (ORDER BY tahun, bulan), 0), 2) as yoy_growth,
-            -- ADDED: HSI Service growth tracking
-            LAG(unique_hsi_services) OVER (ORDER BY tahun, bulan) as prev_month_hsi_services,
-            ROUND((unique_hsi_services - LAG(unique_hsi_services) OVER (ORDER BY tahun, bulan)) * 100.0 / 
-                  NULLIF(LAG(unique_hsi_services) OVER (ORDER BY tahun, bulan), 0), 2) as mom_hsi_services_growth,
             -- Product mix percentages
             ROUND(order_hsi_bisnis * 100.0 / NULLIF(total_order_hsi, 0), 2) as pct_hsi_bisnis,
             ROUND(order_hsi_basic * 100.0 / NULLIF(total_order_hsi, 0), 2) as pct_hsi_basic,
@@ -298,18 +289,11 @@ module.exports = {
         });
       }
       
-      // ADDED: Analisis efisiensi HSI services
-      if (latest.avg_orders_per_hsi_service > 1.5) {
+      // Analisis efisiensi customer
+      if (latest.avg_orders_per_customer > 1.5) {
         insights.push({
-          kategori: 'Efisiensi Layanan',
-          nilai: `Rata-rata ${latest.avg_orders_per_hsi_service} order per layanan HSI - indikasi layanan yang aktif digunakan`
-        });
-      }
-      
-      if (latest.avg_hsi_services_per_customer > 1.2) {
-        insights.push({
-          kategori: 'Penetrasi Pelanggan',
-          nilai: `Rata-rata ${latest.avg_hsi_services_per_customer} layanan HSI per pelanggan - potensi cross-selling baik`
+          kategori: 'Loyalitas Pelanggan',
+          nilai: `Rata-rata ${latest.avg_orders_per_customer} order per pelanggan - indikasi pelanggan yang aktif`
         });
       }
       
@@ -353,7 +337,6 @@ module.exports = {
         
         ringkasan_utama: {
           total_order_hsi: latest.total_order_hsi.toLocaleString('id-ID'),
-          total_layanan_hsi: latest.unique_hsi_services.toLocaleString('id-ID'), // ADDED
           deskripsi: `Total order HSI (Bisnis + Basic) pada ${bulan_nama} ${latest.tahun}`,
           kategori_volume: this.translateVolumeCategory(volume_category)
         },
@@ -361,12 +344,12 @@ module.exports = {
         breakdown_produk: {
           hsi_bisnis: {
             jumlah_order: latest.order_hsi_bisnis.toLocaleString('id-ID'),
-            jumlah_layanan: latest.unique_hsi_bisnis_services.toLocaleString('id-ID'), // ADDED
+            jumlah_pelanggan: latest.unique_bisnis_customers.toLocaleString('id-ID'),
             persentase: `${latest.pct_hsi_bisnis}%`
           },
           hsi_basic: {
             jumlah_order: latest.order_hsi_basic.toLocaleString('id-ID'),
-            jumlah_layanan: latest.unique_hsi_basic_services.toLocaleString('id-ID'), // ADDED
+            jumlah_pelanggan: latest.unique_basic_customers.toLocaleString('id-ID'),
             persentase: `${latest.pct_hsi_basic}%`
           }
         },
@@ -377,11 +360,6 @@ module.exports = {
             kategori: this.translateGrowthCategory(growth_category),
             selisih_order: latest.prev_month_order !== null ? 
               (latest.total_order_hsi - latest.prev_month_order).toLocaleString('id-ID') : 'N/A'
-          },
-          layanan_bulanan: { // ADDED
-            persentase: latest.mom_hsi_services_growth !== null ? `${latest.mom_hsi_services_growth}%` : 'N/A',
-            selisih_layanan: latest.prev_month_hsi_services !== null ? 
-              (latest.unique_hsi_services - latest.prev_month_hsi_services).toLocaleString('id-ID') : 'N/A'
           },
           tahunan: hasValidYoY ? {
             persentase: `${latest.yoy_growth}%`,
@@ -413,9 +391,7 @@ module.exports = {
         
         metrik_pelanggan: {
           total_pelanggan_unik: latest.unique_customers.toLocaleString('id-ID'),
-          rata_rata_order_per_pelanggan: (latest.total_order_hsi / latest.unique_customers).toFixed(2),
-          rata_rata_layanan_per_pelanggan: latest.avg_hsi_services_per_customer, // ADDED
-          rata_rata_order_per_layanan: latest.avg_orders_per_hsi_service // ADDED
+          rata_rata_order_per_pelanggan: latest.avg_orders_per_customer
         },
         
         wawasan_bisnis: this.analyzeBundlingStrategy(data),
@@ -471,8 +447,9 @@ module.exports = {
 
   PATTERN_MATCHING: {
     checkMatch: function(userInput) {
-      const confidence = patternMatcher.calculateConfidence(userInput, this.parent.KEYWORD_PATTERNS);
-      const detectedInterest = patternMatcher.detectInterest(userInput, this.parent.KEYWORD_PATTERNS);
+      // Use the custom calculateConfidence from KEYWORD_PATTERNS instead of circular reference
+      const confidence = module.exports.KEYWORD_PATTERNS.calculateConfidence(userInput);
+      const detectedInterest = module.exports.KEYWORD_PATTERNS.detectInterest(userInput);
       
       return {
         matches: confidence >= 50,
@@ -480,9 +457,7 @@ module.exports = {
         focus_area: 'total_order_hsi',
         detected_interest: detectedInterest
       };
-    },
-    
-    parent: this
+    }
   },
 
   CONNECTION_HANDLER: {
@@ -492,10 +467,11 @@ module.exports = {
     retry_delay: 1000,
     
     getConnection: function() {
+      const config = module.exports.DATABASE_CONFIG;
       return {
-        connectionString: this.parent.DATABASE_CONFIG.DB_CONNECT_STRING,
-        user: this.parent.DATABASE_CONFIG.DB_USER,
-        password: this.parent.DATABASE_CONFIG.DB_PASSWORD,
+        connectionString: config.DB_CONNECT_STRING,
+        user: config.DB_USER,
+        password: config.DB_PASSWORD,
         poolMin: 2,
         poolMax: 10,
         poolIncrement: 2
@@ -503,12 +479,11 @@ module.exports = {
     },
     
     executeQuery: async function(query) {
+      const config = module.exports.DATABASE_CONFIG;
       const fullQuery = query.replace(/PS_SCONE_ORDER/g, 
-        `${this.parent.DATABASE_CONFIG.SCHEMA}.${this.parent.DATABASE_CONFIG.TABLE}`);
+        `${config.SCHEMA}.${config.TABLE}`);
       return fullQuery;
-    },
-    
-    parent: this
+    }
   },
 
   CACHE_DURATION: 3600,

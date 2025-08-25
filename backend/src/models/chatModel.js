@@ -118,11 +118,20 @@ class ChatModel {
       
       const result = await executeQuery(query, { user_id }, this.database);
       
-      // Parse JSON messages for assistant responses
+      // Parse JSON messages for assistant responses and ensure consistent field names
       return result.map(row => ({
-        ...row,
-        message: row.MESSAGE_TYPE === 'assistant' ? 
-          this.tryParseJSON(row.MESSAGE) : row.MESSAGE
+        CHAT_ID: row.CHAT_ID,
+        MESSAGE_TYPE: row.MESSAGE_TYPE,
+        MESSAGE: row.MESSAGE_TYPE === 'assistant' ? 
+          this.tryParseJSON(row.MESSAGE) : row.MESSAGE,
+        RULE_ID: row.RULE_ID,
+        RULE_NAME: row.RULE_NAME,
+        CONFIDENCE: row.CONFIDENCE,
+        SOURCE: row.SOURCE,
+        PROCESSING_TIME: row.PROCESSING_TIME,
+        CREATED_AT: row.CREATED_AT,
+        SESSION_ID: row.SESSION_ID,
+        USER_ID: row.USER_ID || null
       }));
       
     } catch (error) {
@@ -145,9 +154,18 @@ class ChatModel {
       const result = await executeQuery(query, { session_id }, this.database);
       
       return result.map(row => ({
-        ...row,
-        message: row.MESSAGE_TYPE === 'assistant' ? 
-          this.tryParseJSON(row.MESSAGE) : row.MESSAGE
+        CHAT_ID: row.CHAT_ID,
+        USER_ID: row.USER_ID,
+        MESSAGE_TYPE: row.MESSAGE_TYPE,
+        MESSAGE: row.MESSAGE_TYPE === 'assistant' ? 
+          this.tryParseJSON(row.MESSAGE) : row.MESSAGE,
+        RULE_ID: row.RULE_ID,
+        RULE_NAME: row.RULE_NAME,
+        CONFIDENCE: row.CONFIDENCE,
+        SOURCE: row.SOURCE,
+        PROCESSING_TIME: row.PROCESSING_TIME,
+        CREATED_AT: row.CREATED_AT,
+        SESSION_ID: row.SESSION_ID
       }));
       
     } catch (error) {
@@ -211,12 +229,76 @@ class ChatModel {
     }
   }
 
+  // Delete specific session's chat messages
+  async deleteSession(sessionId, userId) {
+    try {
+      const query = `
+        DELETE FROM ${this.schema}.${this.tableName}
+        WHERE SESSION_ID = :sessionId AND USER_ID = :userId
+      `;
+      
+      const result = await executeQuery(query, { sessionId, userId }, this.database);
+      
+      logger.info(`Deleted ${result.rowsAffected} messages from session ${sessionId} for user ${userId}`);
+      return result.rowsAffected;
+      
+    } catch (error) {
+      logger.error(`Error deleting session ${sessionId}:`, error);
+      throw error;
+    }
+  }
+
+  // Delete all chat history for a user
+  async deleteUserHistory(userId) {
+    try {
+      const query = `
+        DELETE FROM ${this.schema}.${this.tableName}
+        WHERE USER_ID = :userId
+      `;
+      
+      const result = await executeQuery(query, { userId }, this.database);
+      
+      logger.info(`Deleted ${result.rowsAffected} messages for user ${userId}`);
+      return result.rowsAffected;
+      
+    } catch (error) {
+      logger.error(`Error deleting history for user ${userId}:`, error);
+      throw error;
+    }
+  }
+
   // Helper function to parse JSON safely
   tryParseJSON(jsonString) {
+    if (!jsonString) return '';
+    
+    // If it's already a string and doesn't look like JSON, return as is
+    if (typeof jsonString === 'string' && !jsonString.trim().startsWith('{') && !jsonString.trim().startsWith('[')) {
+      return jsonString;
+    }
+    
     try {
-      return JSON.parse(jsonString);
+      const parsed = JSON.parse(jsonString);
+      
+      // If parsed result is an object, convert it back to a readable string
+      if (typeof parsed === 'object' && parsed !== null) {
+        // If it's a complex object, return a formatted string representation
+        if (Array.isArray(parsed)) {
+          return parsed.map(item => typeof item === 'object' ? JSON.stringify(item) : String(item)).join('\n');
+        } else {
+          // For objects, try to extract a meaningful text representation
+          if (parsed.text) return parsed.text;
+          if (parsed.message) return parsed.message;
+          if (parsed.response) return parsed.response;
+          
+          // Otherwise convert to formatted JSON string
+          return JSON.stringify(parsed, null, 2);
+        }
+      }
+      
+      return parsed;
     } catch (error) {
-      return jsonString; // Return original string if parsing fails
+      // Return original string if parsing fails
+      return String(jsonString);
     }
   }
 

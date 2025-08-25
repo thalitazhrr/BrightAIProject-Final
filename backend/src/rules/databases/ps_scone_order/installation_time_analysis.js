@@ -1,8 +1,9 @@
 const { loadRuleDatabase } = require('../../config/databaseLoader');
+const patternMatcher = require('../../utils/patternMatcher');
 
 module.exports = {
   RULE_META: {
-    RULE_ID: 'ps_006',
+    RULE_ID: 'ps_007',
     RULE_NAME: 'installation_time_analysis',
     DESCRIPTION: 'Analisis waktu instalasi HSI per wilayah dengan klasifikasi produk',
     DATABASE: 'PS_SCONE_ORDER',
@@ -833,7 +834,7 @@ module.exports = {
 
   PATTERN_MATCHING: {
     checkMatch: function(userInput) {
-      const confidence = this.parent.KEYWORD_PATTERNS.calculateConfidence(userInput);
+      const confidence = patternMatcher.calculateConfidence(userInput, module.exports.KEYWORD_PATTERNS);
       const lowerInput = userInput.toLowerCase();
       
       // ADDED: Enhanced focus area detection
@@ -855,7 +856,6 @@ module.exports = {
       };
     },
     
-    parent: this
   },
 
   CACHE_DURATION: 3600,

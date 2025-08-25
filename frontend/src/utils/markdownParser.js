@@ -2,10 +2,26 @@
 import React from 'react';
 
 export const parseMarkdownToJSX = (text, theme = 'dark') => {
-  if (!text) return text;
+  // Handle non-string inputs
+  if (!text) return null;
+  
+  // Convert to string if it's not already a string
+  let textString;
+  if (typeof text === 'string') {
+    textString = text;
+  } else if (typeof text === 'object') {
+    // Handle objects by converting to JSON string
+    try {
+      textString = JSON.stringify(text, null, 2);
+    } catch (e) {
+      textString = '[Complex Object - Cannot Display]';
+    }
+  } else {
+    textString = String(text);
+  }
 
   // Split text into lines for processing
-  const lines = text.split('\n');
+  const lines = textString.split('\n');
   const elements = [];
   let currentParagraph = [];
   let listItems = [];
@@ -149,10 +165,25 @@ export const parseMarkdownToJSX = (text, theme = 'dark') => {
 };
 
 export const parseInlineMarkdown = (text, theme = 'dark') => {
-  if (!text) return text;
+  // Handle non-string inputs
+  if (!text) return null;
+  
+  // Convert to string if it's not already a string
+  let textString;
+  if (typeof text === 'string') {
+    textString = text;
+  } else if (typeof text === 'object') {
+    try {
+      textString = JSON.stringify(text, null, 2);
+    } catch (e) {
+      textString = '[Complex Object - Cannot Display]';
+    }
+  } else {
+    textString = String(text);
+  }
 
   // Convert text to array of elements
-  let result = [text];
+  let result = [textString];
 
   // Bold text (**text**)
   result = result.flatMap(item => {
@@ -263,14 +294,34 @@ export const parseInlineMarkdown = (text, theme = 'dark') => {
     });
   });
 
-  return result;
+  // Filter out any invalid React elements and ensure we return valid content
+  return result.filter(item => {
+    // Keep strings and valid React elements
+    if (typeof item === 'string') return item.length > 0;
+    if (React.isValidElement(item)) return true;
+    return false;
+  });
 };
 
 // Simple markdown to plain text converter
 export const markdownToPlainText = (text) => {
   if (!text) return '';
   
-  return text
+  // Convert to string if it's not already a string
+  let textString;
+  if (typeof text === 'string') {
+    textString = text;
+  } else if (typeof text === 'object') {
+    try {
+      textString = JSON.stringify(text, null, 2);
+    } catch (e) {
+      textString = '[Complex Object - Cannot Display]';
+    }
+  } else {
+    textString = String(text);
+  }
+  
+  return textString
     .replace(/\*\*([^*]+)\*\*/g, '$1') // Remove bold
     .replace(/\*([^*]+)\*/g, '$1')     // Remove italic
     .replace(/`([^`]+)`/g, '$1')       // Remove inline code

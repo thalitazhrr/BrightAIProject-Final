@@ -40,11 +40,19 @@ const ChatHistory = () => {
               session_id: sessionId,
               messages: [],
               last_message: null,
+              first_message: null,
               message_count: 0
             };
           }
           sessionMap[sessionId].messages.push(chat);
           sessionMap[sessionId].message_count++;
+          
+          // Track first user message for title
+          if (!sessionMap[sessionId].first_message && chat.MESSAGE_TYPE === 'user') {
+            sessionMap[sessionId].first_message = chat;
+          }
+          
+          // Track latest message
           if (!sessionMap[sessionId].last_message || 
               new Date(chat.CREATED_AT) > new Date(sessionMap[sessionId].last_message.CREATED_AT)) {
             sessionMap[sessionId].last_message = chat;
@@ -68,16 +76,36 @@ const ChatHistory = () => {
 
   const loadSession = async (sessionId) => {
     try {
+      setError(null);
+      console.log('Loading session:', sessionId);
+      
       const response = await telkomApi.getChatSession(sessionId);
+      console.log('Session response:', response);
+      
       if (response.success) {
+        const messages = (response.chat_session || response.data || []).map(msg => ({
+          id: msg.CHAT_ID || msg.id,
+          text: formatMessage(msg.MESSAGE || msg.message || msg.text),
+          type: msg.MESSAGE_TYPE || msg.type,
+          timestamp: msg.CREATED_AT || msg.created_at || msg.timestamp,
+          userId: msg.USER_ID || msg.user_id,
+          ruleId: msg.RULE_ID,
+          ruleName: msg.RULE_NAME,
+          confidence: msg.CONFIDENCE
+        }));
+        
         setSelectedSession({
           session_id: sessionId,
-          messages: response.chat_session || []
+          messages: messages
         });
+        
+        console.log('Loaded messages:', messages);
+      } else {
+        setError('Failed to load session messages');
       }
     } catch (err) {
       console.error('Error loading session:', err);
-      setError(err.message);
+      setError('Error loading session: ' + err.message);
     }
   };
 
@@ -104,13 +132,69 @@ const ChatHistory = () => {
   };
 
   const formatMessage = (message) => {
+    if (!message) return 'No message';
+    
     if (typeof message === 'string') {
       return message;
     }
     if (typeof message === 'object') {
-      return JSON.stringify(message, null, 2);
+      try {
+        return JSON.stringify(message, null, 2);
+      } catch (e) {
+        return '[Complex Object - Cannot Display]';
+      }
     }
     return String(message);
+  };
+
+  const generateSessionTitle = (session) => {
+    try {
+      // Try to get first user message for title
+      if (session.messages && session.messages.length > 0) {
+        const firstUserMsg = session.messages.find(msg => msg.MESSAGE_TYPE === 'user');
+        if (firstUserMsg && firstUserMsg.MESSAGE) {
+          const firstMsg = formatMessage(firstUserMsg.MESSAGE);
+          return firstMsg.length > 40 ? firstMsg.substring(0, 40) + '...' : firstMsg;
+        }
+      }
+      
+      // Fallback to first_message if available
+      if (session.first_message && session.first_message.MESSAGE) {
+        const firstMsg = formatMessage(session.first_message.MESSAGE);
+        return firstMsg.length > 40 ? firstMsg.substring(0, 40) + '...' : firstMsg;
+      }
+      
+      // Use session name or default
+      return session.SESSION_NAME || `Chat ${new Date(session.STARTED_AT || Date.now()).toLocaleDateString()}`;
+    } catch (e) {
+      console.error('Error generating session title:', e);
+      return `Session ${session.session_id ? session.session_id.slice(-8) : 'Unknown'}`;
+    }
+  };
+
+  const generateSessionPreview = (session) => {
+    try {
+      // Try to get last message for preview
+      if (session.messages && session.messages.length > 0) {
+        const lastMsg = session.messages[session.messages.length - 1];
+        if (lastMsg && lastMsg.MESSAGE) {
+          const preview = formatMessage(lastMsg.MESSAGE);
+          return preview.length > 60 ? preview.substring(0, 60) + '...' : preview;
+        }
+      }
+      
+      // Fallback to last_message if available
+      if (session.last_message && session.last_message.MESSAGE) {
+        const lastMsg = formatMessage(session.last_message.MESSAGE);
+        return lastMsg.length > 60 ? lastMsg.substring(0, 60) + '...' : lastMsg;
+      }
+      
+      // Show message count as fallback
+      return `${session.message_count || session.MESSAGE_COUNT || 0} messages`;
+    } catch (e) {
+      console.error('Error generating session preview:', e);
+      return 'Error loading preview';
+    }
   };
 
   const formatDate = (dateString) => {
@@ -194,16 +278,17 @@ const ChatHistory = () => {
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <div className="text-sm font-medium text-gray-900 truncate">
-                          Session {session.session_id.slice(-8)}
+                          {generateSessionTitle(session)}
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          {session.message_count} messages
+                        <div className="text-xs text-gray-600 mt-1 line-clamp-2">
+                          {generateSessionPreview(session)}
                         </div>
-                        {session.last_message && (
-                          <div className="text-xs text-gray-400 mt-1">
-                            {formatDate(session.last_message.CREATED_AT)}
-                          </div>
-                        )}
+                        <div className="text-xs text-gray-400 mt-1 flex items-center gap-2">
+                          <span>{session.message_count} messages</span>
+                          {session.last_message && (
+                            <span>• {formatDate(session.last_message.CREATED_AT)}</span>
+                          )}
+                        </div>
                       </div>
                       <button
                         onClick={(e) => {

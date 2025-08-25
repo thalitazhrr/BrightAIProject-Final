@@ -1,4 +1,5 @@
 const { loadRuleDatabase } = require('../../config/databaseLoader');
+const patternMatcher = require('../../utils/patternMatcher');
 
 module.exports = {
   RULE_META: {
@@ -873,20 +874,17 @@ module.exports = {
 
   PATTERN_MATCHING: {
     checkMatch: function(userInput) {
-      const confidence = this.parent.KEYWORD_PATTERNS.calculateConfidence(userInput);
-      const detectedFocus = this.parent.KEYWORD_PATTERNS.detectQueryFocus(userInput);
-      const timeAnalysis = this.parent.KEYWORD_PATTERNS.detectTimeAnalysis(userInput);
+      const confidence = patternMatcher.calculateConfidence(userInput, module.exports.KEYWORD_PATTERNS);
+      const detectedInterest = patternMatcher.detectInterest(userInput, module.exports.KEYWORD_PATTERNS);
       
       return {
         matches: confidence >= 50,
         confidence: confidence,
         focus_area: 'geographic_distribution',
-        detected_focus: detectedFocus,
-        time_analysis: timeAnalysis
+        detected_interest: detectedInterest
       };
     },
     
-    parent: this
   },
 
   CACHE_DURATION: 1800,

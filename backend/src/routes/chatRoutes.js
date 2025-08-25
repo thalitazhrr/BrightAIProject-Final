@@ -6,40 +6,46 @@ const auth = require('../middleware/auth');
 const validation = require('../middleware/validation');
 
 // Main chat endpoint
-router.post('/message', 
+router.post(
+  '/message', 
   auth.authenticate, 
   validation.validateChatMessage, 
-  chatController.processMessage
+  chatController.processMessage.bind(chatController)
 );
 
 // Get chat history
-router.get('/history', 
+router.get(
+  '/history', 
   auth.authenticate, 
-  chatController.getChatHistory
+  chatController.getChatHistory.bind(chatController)
 );
 
 // Get specific chat session
-router.get('/session/:sessionId', 
+router.get(
+  '/session/:sessionId', 
   auth.authenticate, 
-  chatController.getChatSession
+  chatController.getChatSession.bind(chatController)
 );
 
 // Get chat statistics
-router.get('/stats', 
+router.get(
+  '/stats', 
   auth.authenticate, 
-  chatController.getChatStats
+  chatController.getChatStats.bind(chatController)
 );
 
 // Delete chat history
-router.delete('/history', 
+router.delete(
+  '/history', 
   auth.authenticate, 
-  chatController.deleteChatHistory
+  chatController.deleteChatHistory.bind(chatController)
 );
 
 // Get capabilities
-router.get('/capabilities', 
+router.get(
+  '/capabilities', 
   auth.authenticate, 
-  chatController.getCapabilities
+  chatController.getCapabilities.bind(chatController)
 );
 
 module.exports = router;

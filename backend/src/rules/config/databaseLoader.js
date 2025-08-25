@@ -7,19 +7,27 @@ const getDbConfig = require('./dbConfig');
  * dengan credential dari dbConfig (env)
  */
 function loadRuleDatabase(tableName) {
-  const registryConfig = ruleRegistry.getDatabaseConfig(tableName);
+  try {
+    const registryConfig = ruleRegistry.getDatabaseConfig(tableName);
 
-  if (!registryConfig) {
-    throw new Error(`Database config not found for table: ${tableName}`);
+    if (!registryConfig) {
+      throw new Error(`Database config not found for table: ${tableName}`);
+    }
+
+    const baseConfig = getDbConfig(registryConfig.database);
+
+    const finalConfig = {
+      ...baseConfig,
+      schema: registryConfig.schema,
+      table: registryConfig.table
+    };
+    
+    return finalConfig;
+    
+  } catch (error) {
+    console.error(`Error in loadRuleDatabase for table ${tableName}:`, error);
+    throw error;
   }
-
-  const baseConfig = getDbConfig(registryConfig.database);
-
-  return {
-    ...baseConfig,
-    schema: registryConfig.schema,
-    table: registryConfig.table
-  };
 }
 
 module.exports = { loadRuleDatabase };
