@@ -970,7 +970,7 @@ module.exports = {
 
   PATTERN_MATCHING: {
     checkMatch: function(userInput) {
-      const confidence = patternMatcher.calculateConfidence(userInput, module.exports.KEYWORD_PATTERNS);
+      const confidence = module.exports.KEYWORD_PATTERNS.calculateConfidence(userInput);
       const lowerInput = userInput.toLowerCase();
       
       let focus_area = 'growth_analysis';

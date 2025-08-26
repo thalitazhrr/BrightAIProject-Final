@@ -338,7 +338,7 @@ module.exports = {
 
   PATTERN_MATCHING: {
     checkMatch: function(userInput) {
-      const confidence = patternMatcher.calculateConfidence(userInput, module.exports.KEYWORD_PATTERNS);
+      const confidence = module.exports.KEYWORD_PATTERNS.calculateConfidence(userInput);
       return {
         matches: confidence >= 75,
         confidence: confidence,

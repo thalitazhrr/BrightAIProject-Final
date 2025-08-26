@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Bot, Send, Settings, Sun, Moon, Loader,
   User, Target, X, Trash2, LogOut, RefreshCw, Bell,
-  Plus, Search, Zap, Clock, Wifi, WifiOff
+  Plus, Search, Zap, Clock, Wifi, WifiOff, ChevronDown, ChevronUp, Menu
 } from 'lucide-react';
 
 // Import services and components
@@ -503,13 +503,12 @@ const AnimatedBackground = ({ theme }) => {
 const Sidebar = ({ activeView, setActiveView, theme, notifications }) => {
   const menuItems = [
     { id: 'ai', icon: Bot, label: 'BrightAI', badge: notifications },
-    { id: 'history', icon: Clock, label: 'Chat History', badge: null },
     { id: 'profile', icon: User, label: 'Profil', badge: null },
     { id: 'settings', icon: Settings, label: 'Pengaturan', badge: null }
   ];
 
   return (
-    <div className={`w-20 ${
+    <div className={`w-20 fixed left-0 top-0 h-screen z-50 ${
       theme === 'dark' ? 'bg-slate-800/60' : 'bg-white/60'
     } backdrop-blur-xl border-r ${
       theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
@@ -602,11 +601,11 @@ const StatusIndicator = ({ status, theme }) => {
 
 // Header Component
 const Header = ({ theme, setTheme, status, onRefresh, notifications, onNotificationClick, showNotifications, currentUser, onLogout }) => (
-  <div className={`${
+  <div className={`fixed top-0 left-20 right-0 z-40 ${
     theme === 'dark' ? 'bg-slate-800/60' : 'bg-white/60'
   } backdrop-blur-xl border-b ${
     theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
-  } px-6 py-4 flex items-center justify-between relative z-[100]`}>
+  } px-6 py-4 flex items-center justify-between`}>
     <div className="flex items-center space-x-4">
       <div>
         <h1 className={`text-2xl font-bold ${
@@ -865,6 +864,7 @@ const ChatMessage = ({ message, isBot, theme }) => {
 const ChatSidebar = ({ chats, activeChat, setActiveChat, onNewChat, onDeleteChat, theme }) => {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [isSearchActive, setIsSearchActive] = React.useState(false);
+  const [showChatControls, setShowChatControls] = React.useState(true);
   
   // Filter chats based on search query
   const filteredChats = chats.filter(chat => 
@@ -889,116 +889,141 @@ const ChatSidebar = ({ chats, activeChat, setActiveChat, onNewChat, onDeleteChat
   };
 
   return (
-    <div className={`w-80 ${
+    <div className={`w-80 fixed left-20 top-20 bottom-0 z-30 ${
       theme === 'dark' ? 'bg-slate-800/60' : 'bg-white/60'
     } backdrop-blur-xl border-r ${
       theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
     } flex flex-col`}>
-      <div className="p-4 border-b border-slate-700/50 space-y-3">
-        <button
-          onClick={onNewChat}
-          className={`w-full flex items-center justify-center space-x-2 px-4 py-3 ${
-            theme === 'dark' 
-              ? 'bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700' 
-              : 'bg-gradient-to-r from-blue-500 to-sky-500 hover:from-blue-600 hover:to-sky-600'
-          } text-white rounded-xl transition-all duration-200`}
-        >
-          <Plus className="w-4 h-4" />
-          <span className="font-medium">Percakapan Baru</span>
-        </button>
-        
-        {/* Search Box */}
-        <div className="relative">
-          <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${
-            isSearchActive 
-              ? theme === 'dark' ? 'text-blue-400' : 'text-blue-500'
-              : theme === 'dark' ? 'text-slate-400' : 'text-gray-400'
-          }`} />
-          <input
-            type="text"
-            placeholder="Cari percakapan..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onFocus={handleSearchFocus}
-            onBlur={handleSearchBlur}
-            className={`w-full pl-10 pr-10 py-2 rounded-lg border transition-all duration-200 ${
+      <div className={`p-4 border-b ${
+        theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
+      }`}>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className={`font-semibold text-lg ${
+            theme === 'dark' ? 'text-white' : 'text-gray-900'
+          }`}>
+            Percakapan
+          </h3>
+          <button
+            onClick={() => setShowChatControls(!showChatControls)}
+            className={`p-1 rounded-md transition-colors ${
               theme === 'dark' 
-                ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-400 focus:border-blue-500 focus:bg-slate-700' 
-                : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-blue-50/50'
-            } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-          />
-          {searchQuery && (
-            <button
-              onClick={handleSearchClear}
-              className={`absolute right-3 top-1/2 transform -translate-y-1/2 transition-colors ${
-                theme === 'dark' ? 'text-slate-400 hover:text-white' : 'text-gray-400 hover:text-gray-600'
-              }`}
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
+                ? 'text-slate-400 hover:text-white hover:bg-slate-700/50' 
+                : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+            }`}
+            title={showChatControls ? 'Sembunyikan kontrol' : 'Tampilkan kontrol'}
+          >
+            <Menu className="w-4 h-4" />
+          </button>
         </div>
+        
+        {showChatControls && (
+          <div className="space-y-3">
+            <button
+              onClick={onNewChat}
+              className={`w-full flex items-center justify-center space-x-2 px-4 py-3 ${
+                theme === 'dark' 
+                  ? 'bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700' 
+                  : 'bg-gradient-to-r from-blue-500 to-sky-500 hover:from-blue-600 hover:to-sky-600'
+              } text-white rounded-xl transition-all duration-200`}
+            >
+              <Plus className="w-4 h-4" />
+              <span className="font-medium">Percakapan Baru</span>
+            </button>
+            
+            {/* Search Box */}
+            <div className="relative">
+              <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${
+                isSearchActive 
+                  ? theme === 'dark' ? 'text-blue-400' : 'text-blue-500'
+                  : theme === 'dark' ? 'text-slate-400' : 'text-gray-400'
+              }`} />
+              <input
+                type="text"
+                placeholder="Cari percakapan..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={handleSearchFocus}
+                onBlur={handleSearchBlur}
+                className={`w-full pl-10 pr-10 py-2 rounded-lg border transition-all duration-200 ${
+                  theme === 'dark' 
+                    ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-400 focus:border-blue-500 focus:bg-slate-700' 
+                    : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-blue-50/50'
+                } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+              />
+              {searchQuery && (
+                <button
+                  onClick={handleSearchClear}
+                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 transition-colors ${
+                    theme === 'dark' ? 'text-slate-400 hover:text-white' : 'text-gray-400 hover:text-gray-600'
+                  }`}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     
-    <div className="flex-1 overflow-y-auto">
-      {filteredChats.length === 0 && searchQuery ? (
-        <div className="p-4 text-center">
-          <p className={`text-sm ${
-            theme === 'dark' ? 'text-slate-400' : 'text-gray-500'
-          }`}>
-            No conversations found
-          </p>
-        </div>
-      ) : (
-        filteredChats.map((chat) => (
-        <div
-          key={chat.id}
-          onClick={() => setActiveChat(chat.id)}
-          className={`p-4 border-b ${
-            theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
-          } cursor-pointer hover:${
-            theme === 'dark' ? 'bg-slate-700/50' : 'bg-gray-50'
-          } transition-colors ${
-            activeChat === chat.id 
-              ? theme === 'dark' ? 'bg-slate-700/50' : 'bg-gray-50'
-              : ''
-          }`}
-        >
-          <div className="flex items-start justify-between">
-            <div className="flex-1 min-w-0">
-              <h4 className={`font-medium truncate ${
-                theme === 'dark' ? 'text-white' : 'text-gray-900'
-              }`}>
-                {chat.title}
-              </h4>
-              <p className={`text-sm mt-1 truncate ${
-                theme === 'dark' ? 'text-slate-400' : 'text-gray-600'
-              }`}>
-                {chat.lastMessage}
-              </p>
-              <p className={`text-xs mt-1 ${
-                theme === 'dark' ? 'text-slate-500' : 'text-gray-500'
-              }`}>
-                {new Date(chat.updatedAt).toLocaleDateString()}
-              </p>
-            </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDeleteChat(chat.id);
-              }}
-              className={`ml-2 p-1 rounded ${
-                theme === 'dark' 
-                  ? 'text-slate-400 hover:text-red-400 hover:bg-slate-600/50' 
-                  : 'text-gray-400 hover:text-red-500 hover:bg-gray-100'
-              } transition-colors`}
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
+      <div className="flex-1 overflow-y-auto">
+        {filteredChats.length === 0 && searchQuery ? (
+          <div className="p-4 text-center">
+            <p className={`text-sm ${
+              theme === 'dark' ? 'text-slate-400' : 'text-gray-500'
+            }`}>
+              No conversations found
+            </p>
           </div>
-        </div>
-      )))}
-    </div>
+        ) : (
+          filteredChats.map((chat) => (
+          <div
+            key={chat.id}
+            onClick={() => setActiveChat(chat.id)}
+            className={`p-4 border-b ${
+              theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
+            } cursor-pointer hover:${
+              theme === 'dark' ? 'bg-slate-700/50' : 'bg-gray-50'
+            } transition-colors ${
+              activeChat === chat.id 
+                ? theme === 'dark' ? 'bg-slate-700/50' : 'bg-gray-50'
+                : ''
+            }`}
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex-1 min-w-0">
+                <h4 className={`font-medium truncate ${
+                  theme === 'dark' ? 'text-white' : 'text-gray-900'
+                }`}>
+                  {chat.title}
+                </h4>
+                <p className={`text-sm mt-1 truncate ${
+                  theme === 'dark' ? 'text-slate-400' : 'text-gray-600'
+                }`}>
+                  {chat.lastMessage}
+                </p>
+                <p className={`text-xs mt-1 ${
+                  theme === 'dark' ? 'text-slate-500' : 'text-gray-500'
+                }`}>
+                  {new Date(chat.updatedAt).toLocaleDateString()}
+                </p>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteChat(chat.id);
+                }}
+                className={`ml-2 p-1 rounded ${
+                  theme === 'dark' 
+                    ? 'text-slate-400 hover:text-red-400 hover:bg-slate-600/50' 
+                    : 'text-gray-400 hover:text-red-500 hover:bg-gray-100'
+                } transition-colors`}
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )))}
+      </div>
   </div>
 );
 }
@@ -1530,7 +1555,7 @@ function App() {
               theme={theme}
             />
             
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col ml-80">
               {activeChat ? (
                 <>
                   <div className="flex-1 overflow-y-auto p-6">
@@ -1652,7 +1677,7 @@ function App() {
 
       case 'profile':
         return (
-          <div className="p-8">
+          <div className="p-8 ml-20">
             <div className="mb-8">
               <h2 className={`text-3xl font-bold ${
                 theme === 'dark' ? 'text-white' : 'text-gray-900'
@@ -1741,7 +1766,7 @@ function App() {
 
       case 'settings':
         return (
-          <div className="p-8">
+          <div className="p-8 ml-20">
             <div className="mb-8">
               <h2 className={`text-3xl font-bold ${
                 theme === 'dark' ? 'text-white' : 'text-gray-900'
@@ -1912,7 +1937,7 @@ function App() {
 
       default:
         return (
-          <div className="p-8 flex items-center justify-center h-full">
+          <div className="p-8 ml-20 flex items-center justify-center h-full">
             <div className="text-center">
               <h2 className={`text-2xl font-bold mb-4 ${
                 theme === 'dark' ? 'text-white' : 'text-gray-900'
@@ -2100,7 +2125,7 @@ function App() {
     } transition-colors duration-200`}>
       <AnimatedBackground theme={theme} />
       
-      <div className="relative z-10 flex min-h-screen">
+      <div className="relative z-10">
         <Sidebar 
           activeView={activeView} 
           setActiveView={setActiveView} 
@@ -2108,23 +2133,21 @@ function App() {
           notifications={chats.length}
         />
         
-        <div className="flex-1 flex flex-col">
-          <Header 
-            theme={theme} 
-            setTheme={setTheme} 
-            status={status}
-            onRefresh={() => {}}
-            notifications={notifications}
-            onNotificationClick={handleNotificationClick}
-            showNotifications={showNotifications}
-            currentUser={currentUser}
-            onLogout={handleLogout}
-          />
-          
-          <main className="flex-1 overflow-y-auto">
-            {renderContent()}
-          </main>
-        </div>
+        <Header 
+          theme={theme} 
+          setTheme={setTheme} 
+          status={status}
+          onRefresh={() => {}}
+          notifications={notifications}
+          onNotificationClick={handleNotificationClick}
+          showNotifications={showNotifications}
+          currentUser={currentUser}
+          onLogout={handleLogout}
+        />
+        
+        <main className="pt-20 min-h-screen">
+          {renderContent()}
+        </main>
       </div>
     </div>
   );

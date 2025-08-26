@@ -17,7 +17,7 @@ module.exports = {
 
   DATABASE_CONFIG: loadRuleDatabase("CT0_NAL_EBIS"),
 
-  KEYWORD_PATTERNS: {
+    KEYWORD_PATTERNS: {
     required: {
       churn_keywords: [
         'churn rate', 'tingkat churn', 'cabut pelanggan', 'pelanggan cabut',
@@ -39,8 +39,39 @@ module.exports = {
       technical_keywords: [
         'ct0', 'dinolkan', 'nonaktif'
       ]
+    },
+    
+    calculateConfidence: function(inputPengguna) {
+      const input = inputPengguna.toLowerCase().trim();
+      let totalScore = 0;
+      let maxPossibleScore = 0;
+      
+      // Check required keywords
+      if (this.required) {
+        Object.keys(this.required).forEach(category => {
+          const keywords = this.required[category];
+          const matches = keywords.filter(keyword => input.includes(keyword.toLowerCase())).length;
+          const categoryScore = (matches / keywords.length) * 100;
+          totalScore += categoryScore * 2; // Double weight for required
+          maxPossibleScore += 200;
+        });
+      }
+      
+      // Check optional keywords  
+      if (this.optional) {
+        Object.keys(this.optional).forEach(category => {
+          const keywords = this.optional[category];
+          const matches = keywords.filter(keyword => input.includes(keyword.toLowerCase())).length;
+          const categoryScore = (matches / keywords.length) * 100;
+          totalScore += categoryScore;
+          maxPossibleScore += 100;
+        });
+      }
+      
+      return maxPossibleScore > 0 ? Math.min(100, (totalScore / maxPossibleScore) * 100) : 0;
     }
   },
+
 
   SQL_QUERY: `
     WITH CHURN_ANALYSIS AS (
@@ -325,7 +356,7 @@ module.exports = {
 
   PATTERN_MATCHING: {
     checkMatch: function(userInput) {
-      const confidence = patternMatcher.calculateConfidence(userInput, module.exports.KEYWORD_PATTERNS);
+      const confidence = module.exports.KEYWORD_PATTERNS.calculateConfidence(userInput);
       return {
         matches: confidence >= 70,
         confidence: confidence,

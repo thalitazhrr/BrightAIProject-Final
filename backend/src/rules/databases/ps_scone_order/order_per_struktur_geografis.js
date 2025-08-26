@@ -149,52 +149,52 @@ module.exports = {
             CASE 
                 WHEN PRODUCT = 'WMS' THEN 0
                 WHEN (
-                    CONTAINS(PACKAGE_NAME, 'HSIE') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'HSI BISNIS') OR
-                    CONTAINS(UPPER(PACKAGE_NAME), 'PAKET INDIBIZ ') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'PAKET HSI B2B ') OR
-                    CONTAINS(UPPER(PACKAGE_NAME), 'HSI INDIBIZ B2B')
+                    UPPER(PACKAGE_NAME) LIKE '%HSIE%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%HSI BISNIS%' OR
+                    UPPER(PACKAGE_NAME) LIKE '%PAKET INDIBIZ %' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%PAKET HSI B2B %' OR
+                    UPPER(PACKAGE_NAME) LIKE '%HSI INDIBIZ B2B%'
                 ) AND NOT (
-                    CONTAINS(PACKAGE_NAME, 'HSIEF') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'BASIC') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'INETF')
+                    UPPER(PACKAGE_NAME) LIKE '%HSIEF%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%BASIC%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%INETF%'
                 ) THEN 1
                 ELSE 0
             END as IS_HSI_BISNIS,
             CASE 
                 WHEN PRODUCT = 'WMS' THEN 0
                 WHEN (
-                    CONTAINS(PACKAGE_NAME, 'HSIEF') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'BASIC') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'INETF')
+                    UPPER(PACKAGE_NAME) LIKE '%HSIEF%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%BASIC%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%INETF%'
                 ) THEN 1
                 ELSE 0
             END as IS_HSI_BASIC,
             -- Bundling identification
             CASE
                 WHEN JENISPSB = 'AO' AND (
-                    CONTAINS(PACKAGE_NAME, 'HSI Bisnis Bundling ') OR 
-                    CONTAINS(PACKAGE_NAME, 'HSI Bisnis Basic Bundling ') OR
-                    CONTAINS(PACKAGE_NAME, 'Paket Indibiz 2S ')
-                ) AND NOT CONTAINS(PACKAGE_NAME, 'Non') AND NOT CONTAINS(PACKAGE_NAME, 'Add-on') 
+                    UPPER(PACKAGE_NAME) LIKE '%HSI Bisnis Bundling %' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%HSI Bisnis Basic Bundling %' OR
+                    UPPER(PACKAGE_NAME) LIKE '%Paket Indibiz 2S %'
+                ) AND NOT (UPPER(PACKAGE_NAME) LIKE '%Non%') AND NOT (UPPER(PACKAGE_NAME) LIKE '%Add-on%') 
                 THEN 'Hard Bundling'
-                WHEN JENISPSB = 'AO' AND NOT CONTAINS(PACKAGE_NAME, 'Non') AND (
-                    CONTAINS(PACKAGE_NAME, 'HSIE') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'BUNDLING') OR 
-                    CONTAINS(PACKAGE_NAME, ';')
+                WHEN JENISPSB = 'AO' AND NOT (UPPER(PACKAGE_NAME) LIKE '%Non%') AND (
+                    UPPER(PACKAGE_NAME) LIKE '%HSIE%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%BUNDLING%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%;%'
                 ) THEN 'Bundling A La Carte'
                 ELSE 'Non Bundling'
             END as BUNDLING_TYPE,
             -- Digital products
-            CASE WHEN CONTAINS(UPPER(PACKAGE_NAME), 'SEKOLAH') THEN 1 ELSE 0 END as HAS_PIJAR,
-            CASE WHEN CONTAINS(UPPER(PACKAGE_NAME), 'NETMONK') THEN 1 ELSE 0 END as HAS_NETMONK,
+            CASE WHEN UPPER(PACKAGE_NAME) LIKE '%SEKOLAH%' THEN 1 ELSE 0 END as HAS_PIJAR,
+            CASE WHEN UPPER(PACKAGE_NAME) LIKE '%NETMONK%' THEN 1 ELSE 0 END as HAS_NETMONK,
             CASE 
-                WHEN CONTAINS(UPPER(PACKAGE_NAME), 'OCAINT') OR 
-                     CONTAINS(UPPER(PACKAGE_NAME), 'INTERACTION') THEN 1
+                WHEN UPPER(PACKAGE_NAME) LIKE '%OCAINT%' OR 
+                     UPPER(PACKAGE_NAME) LIKE '%INTERACTION%' THEN 1
                 ELSE 0
             END as HAS_OCA_INT,
             CASE 
-                WHEN CONTAINS(UPPER(PACKAGE_NAME), 'BLAST') THEN 1
+                WHEN UPPER(PACKAGE_NAME) LIKE '%BLAST%' THEN 1
                 ELSE 0
             END as HAS_OCA_BLAST
         FROM DWHNAS.DWH_MOIS.PS_SCONE_ORDER  -- CORRECTED: Added full table name
@@ -874,7 +874,7 @@ module.exports = {
 
   PATTERN_MATCHING: {
     checkMatch: function(userInput) {
-      const confidence = patternMatcher.calculateConfidence(userInput, module.exports.KEYWORD_PATTERNS);
+      const confidence = module.exports.KEYWORD_PATTERNS.calculateConfidence(userInput);
       const detectedInterest = patternMatcher.detectInterest(userInput, module.exports.KEYWORD_PATTERNS);
       
       return {

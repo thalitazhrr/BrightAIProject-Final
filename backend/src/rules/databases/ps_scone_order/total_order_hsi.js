@@ -127,15 +127,15 @@ module.exports = {
             CASE 
                 WHEN PRODUCT = 'WMS' THEN 0
                 WHEN (
-                    CONTAINS(PACKAGE_NAME, 'HSIE') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'HSI BISNIS') OR
-                    CONTAINS(UPPER(PACKAGE_NAME), 'PAKET INDIBIZ ') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'PAKET HSI B2B ') OR
-                    CONTAINS(UPPER(PACKAGE_NAME), 'HSI INDIBIZ B2B')
+                    UPPER(PACKAGE_NAME) LIKE '%HSIE%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%HSI BISNIS%' OR
+                    UPPER(PACKAGE_NAME) LIKE '%PAKET INDIBIZ %' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%PAKET HSI B2B %' OR
+                    UPPER(PACKAGE_NAME) LIKE '%HSI INDIBIZ B2B%'
                 ) AND NOT (
-                    CONTAINS(PACKAGE_NAME, 'HSIEF') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'BASIC') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'INETF')
+                    UPPER(PACKAGE_NAME) LIKE '%HSIEF%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%BASIC%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%INETF%'
                 ) THEN 1
                 ELSE 0
             END as IS_HSI_BISNIS,
@@ -143,43 +143,43 @@ module.exports = {
             CASE 
                 WHEN PRODUCT = 'WMS' THEN 0
                 WHEN (
-                    CONTAINS(PACKAGE_NAME, 'HSIEF') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'BASIC') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'INETF')
+                    UPPER(PACKAGE_NAME) LIKE '%HSIEF%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%BASIC%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%INETF%'
                 ) THEN 1
                 ELSE 0
             END as IS_HSI_BASIC,
             -- Bundling type identification
             CASE
                 WHEN JENISPSB = 'AO' AND (
-                    CONTAINS(PACKAGE_NAME, 'HSI Bisnis Bundling ') OR 
-                    CONTAINS(PACKAGE_NAME, 'HSI Bisnis Basic Bundling ') OR
-                    CONTAINS(PACKAGE_NAME, 'Paket Indibiz 2S ')
-                ) AND NOT CONTAINS(PACKAGE_NAME, 'Non') AND NOT CONTAINS(PACKAGE_NAME, 'Add-on') 
+                    UPPER(PACKAGE_NAME) LIKE '%HSI Bisnis Bundling %' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%HSI Bisnis Basic Bundling %' OR
+                    UPPER(PACKAGE_NAME) LIKE '%Paket Indibiz 2S %'
+                ) AND NOT (UPPER(PACKAGE_NAME) LIKE '%Non%') AND NOT (UPPER(PACKAGE_NAME) LIKE '%Add-on%') 
                 THEN 'Hard Bundling'
-                WHEN JENISPSB = 'AO' AND NOT CONTAINS(PACKAGE_NAME, 'Non') AND (
-                    CONTAINS(PACKAGE_NAME, 'HSIE') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'BUNDLING') OR 
-                    CONTAINS(PACKAGE_NAME, ';')
+                WHEN JENISPSB = 'AO' AND NOT (UPPER(PACKAGE_NAME) LIKE '%Non%') AND (
+                    UPPER(PACKAGE_NAME) LIKE '%HSIE%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%BUNDLING%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%;%'
                 ) THEN 'Bundling A La Carte'
-                WHEN (JENISPSB = 'MO' OR JENISPSB = 'AS') AND NOT CONTAINS(PACKAGE_NAME, 'Non') 
+                WHEN (JENISPSB = 'MO' OR JENISPSB = 'AS') AND NOT (UPPER(PACKAGE_NAME) LIKE '%Non%') 
                 THEN 'Add or Modify Service'
                 ELSE 'Non Bundling'
             END as BUNDLING_TYPE,
             -- Digital product identification
-            CASE WHEN CONTAINS(UPPER(PACKAGE_NAME), 'SEKOLAH') THEN 1 ELSE 0 END as IS_PIJAR,
-            CASE WHEN CONTAINS(UPPER(PACKAGE_NAME), 'NETMONK') THEN 1 ELSE 0 END as IS_NETMONK,
+            CASE WHEN UPPER(PACKAGE_NAME) LIKE '%SEKOLAH%' THEN 1 ELSE 0 END as IS_PIJAR,
+            CASE WHEN UPPER(PACKAGE_NAME) LIKE '%NETMONK%' THEN 1 ELSE 0 END as IS_NETMONK,
             CASE 
-                WHEN CONTAINS(UPPER(PACKAGE_NAME), 'OCAINT') OR 
-                     CONTAINS(UPPER(PACKAGE_NAME), '2S OCA') OR
-                     CONTAINS(UPPER(PACKAGE_NAME), 'INTERACTION') OR 
-                     CONTAINS(UPPER(PACKAGE_NAME), 'BUNDLING OCA') THEN 1
+                WHEN UPPER(PACKAGE_NAME) LIKE '%OCAINT%' OR 
+                     UPPER(PACKAGE_NAME) LIKE '%2S OCA%' OR
+                     UPPER(PACKAGE_NAME) LIKE '%INTERACTION%' OR 
+                     UPPER(PACKAGE_NAME) LIKE '%BUNDLING OCA%' THEN 1
                 ELSE 0
             END as IS_OCA_INT,
             CASE 
-                WHEN CONTAINS(UPPER(PACKAGE_NAME), 'BLAST') AND NOT (
-                    CONTAINS(UPPER(PACKAGE_NAME), 'OCAINT') OR 
-                    CONTAINS(UPPER(PACKAGE_NAME), 'INTERACTION')
+                WHEN UPPER(PACKAGE_NAME) LIKE '%BLAST%' AND NOT (
+                    UPPER(PACKAGE_NAME) LIKE '%OCAINT%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%INTERACTION%'
                 ) THEN 1
                 ELSE 0
             END as IS_OCA_BLAST
