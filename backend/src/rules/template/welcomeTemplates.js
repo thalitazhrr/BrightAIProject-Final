@@ -6,11 +6,11 @@ const welcomeTemplates = {
     capabilities: "Saya dapat membantu analisis data dari:",
     
     databases: [
-      "PS_SCONE_ORDER: Analisis order dan sales HSI",
-      "DAPROS_MIGRASI: Profil dan segmentasi customer HSI", 
-      "TARGET_ALL: Analisis target dan performance",
-      "MART_REV_PMS_POTS: Analisis revenue dan billing",
-      "CT0_NAL_EBIS: Analisis churn dan customer lifecycle"
+      "BRIGHTAI_SALES: Analisis order dan sales HSI",
+      "BRIGHTAI_DAPROS: Profil dan segmentasi customer HSI", 
+      "BRIGHTAI_TARGET: Analisis target dan performance",
+      "BRIGHTAI_REVENUE: Analisis revenue dan billing",
+      "BRIGHTAI_CT0_NAL: Analisis churn dan customer lifecycle"
     ],
     
     examples: [

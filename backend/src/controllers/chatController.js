@@ -335,7 +335,7 @@ class ChatController {
       const rulesInfo = ruleEngine.getAllRulesInfo();
       const capabilities = {
         total_rules: rulesInfo.length,
-        databases: ['PS_SCONE_ORDER', 'DAPROS_MIGRASI', 'TARGET_ALL', 'MART_REV_PMS_POTS', 'CT0_NAL_EBIS'],
+        databases: ['BRIGHTAI_SALES', 'BRIGHTAI_DAPROS', 'BRIGHTAI_TARGET', 'BRIGHTAI_REVENUE', 'BRIGHTAI_CT0_NAL'],
         categories: [...new Set(rulesInfo.map(rule => rule.category))],
         rules_by_database: this.groupRulesByDatabase(rulesInfo)
       };

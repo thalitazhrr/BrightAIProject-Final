@@ -502,55 +502,63 @@ const AnimatedBackground = ({ theme }) => {
 // Sidebar Component
 const Sidebar = ({ activeView, setActiveView, theme, notifications }) => {
   const menuItems = [
-    { id: 'ai', icon: Bot, label: 'BrightAI', badge: notifications },
+    { id: 'ai', icon: Bot, label: 'BrightAI', badge: null },
     { id: 'profile', icon: User, label: 'Profil', badge: null },
     { id: 'settings', icon: Settings, label: 'Pengaturan', badge: null }
   ];
 
   return (
-    <div className={`w-20 fixed left-0 top-0 h-screen z-50 ${
-      theme === 'dark' ? 'bg-slate-800/60' : 'bg-white/60'
+    <div className={`w-16 fixed left-0 top-0 h-screen z-50 ${
+      theme === 'dark' ? 'bg-slate-900/80' : 'bg-white/80'
     } backdrop-blur-xl border-r ${
-      theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
-    } flex flex-col items-center py-6 space-y-6`}>
-      <div className={`w-12 h-12 ${
-        theme === 'dark' 
-          ? 'bg-gradient-to-r from-blue-600 to-blue-800' 
-          : 'bg-gradient-to-r from-blue-500 to-sky-600'
-      } rounded-2xl flex items-center justify-center hover:scale-110 transition-transform cursor-pointer`}>
-        <Target className="w-6 h-6 text-white" />
+      theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/70'
+    } flex flex-col items-center py-5 gap-2`}>
+      {/* Logo */}
+      <div className={`w-10 h-10 mb-2 ${
+        theme === 'dark'
+          ? 'bg-gradient-to-br from-blue-600 to-blue-800'
+          : 'bg-gradient-to-br from-blue-500 to-sky-600'
+      } rounded-xl flex items-center justify-center shadow-lg`}>
+        <Target className="w-5 h-5 text-white" />
       </div>
-      
-      <div className="flex-1 flex flex-col space-y-4">
+
+      {/* Divider */}
+      <div className={`w-8 h-px ${theme === 'dark' ? 'bg-slate-700' : 'bg-gray-200'} mb-2`} />
+
+      <div className="flex-1 flex flex-col gap-1 w-full px-2">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeView === item.id;
-          
+
           return (
             <div
               key={item.id}
               onClick={() => setActiveView(item.id)}
-              className={`relative w-12 h-12 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-200 group ${
+              title={item.label}
+              className={`relative w-full h-10 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-200 group ${
                 isActive
                   ? theme === 'dark'
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25'
-                    : 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                    : 'bg-blue-500 text-white shadow-md shadow-blue-500/30'
                   : theme === 'dark'
-                    ? 'text-slate-400 hover:text-white hover:bg-slate-700/50'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    ? 'text-slate-400 hover:text-white hover:bg-slate-700/60'
+                    : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
               <Icon className="w-5 h-5" />
-              
-              {item.badge && (
-                <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                  <span className="text-xs text-white font-medium">{item.badge}</span>
-                </div>
+
+              {/* Active indicator */}
+              {isActive && (
+                <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full ${
+                  theme === 'dark' ? 'bg-blue-400' : 'bg-blue-600'
+                }`} />
               )}
-              
-              <div className={`absolute left-full ml-3 px-2 py-1 rounded-lg text-sm font-medium whitespace-nowrap z-[200] transition-all duration-200 ${
-                theme === 'dark' ? 'bg-slate-800 text-white' : 'bg-gray-900 text-white'
-              } opacity-0 group-hover:opacity-100 pointer-events-none`}>
+
+              {/* Tooltip */}
+              <div className={`absolute left-full ml-2 px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap z-[200] pointer-events-none
+                transition-all duration-150 opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 ${
+                theme === 'dark' ? 'bg-slate-700 text-white border border-slate-600' : 'bg-gray-900 text-white'
+              } shadow-lg`}>
                 {item.label}
               </div>
             </div>
@@ -601,169 +609,122 @@ const StatusIndicator = ({ status, theme }) => {
 
 // Header Component
 const Header = ({ theme, setTheme, status, onRefresh, notifications, onNotificationClick, showNotifications, currentUser, onLogout }) => (
-  <div className={`fixed top-0 left-20 right-0 z-40 ${
-    theme === 'dark' ? 'bg-slate-800/60' : 'bg-white/60'
+  <div className={`fixed top-0 left-16 right-0 z-40 ${
+    theme === 'dark' ? 'bg-slate-900/80' : 'bg-white/80'
   } backdrop-blur-xl border-b ${
-    theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
-  } px-6 py-4 flex items-center justify-between`}>
-    <div className="flex items-center space-x-4">
-      <div>
-        <h1 className={`text-2xl font-bold ${
+    theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/70'
+  } px-6 h-14 flex items-center justify-between`}>
+    {/* Left: Brand */}
+    <div className="flex items-center gap-3 min-w-0">
+      <div className="min-w-0">
+        <h1 className={`text-lg font-bold leading-tight truncate ${
           theme === 'dark' ? 'text-white' : 'text-gray-900'
         }`}>
-          Telkom Bright
+          Telkom HSI BrightAI
         </h1>
-        <p className={`text-sm ${
-          theme === 'dark' ? 'text-slate-400' : 'text-gray-600'
+        <p className={`text-xs truncate ${
+          theme === 'dark' ? 'text-slate-400' : 'text-gray-500'
         }`}>
-          Platform Analisis dan Intelijensi Bisnis oleh Telkom Indonesia
+          Platform Analisis & Intelijensi Bisnis
         </p>
       </div>
     </div>
 
-    <div className="flex items-center space-x-4 relative">
+    {/* Right: Actions */}
+    <div className="flex items-center gap-1 shrink-0">
       <StatusIndicator status={status} theme={theme} />
-      
+
       <button
         onClick={onRefresh}
-        className={`p-2 rounded-xl ${
-          theme === 'dark' 
-            ? 'text-slate-400 hover:text-white hover:bg-slate-700/50' 
-            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+        className={`p-2 rounded-lg ${
+          theme === 'dark'
+            ? 'text-slate-400 hover:text-white hover:bg-slate-700/60'
+            : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
         } transition-colors`}
         title="Perbarui Data"
       >
-        <RefreshCw className="w-5 h-5" />
+        <RefreshCw className="w-4 h-4" />
       </button>
 
       <button
         onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-        className={`p-2 rounded-xl ${
-          theme === 'dark' 
-            ? 'text-slate-400 hover:text-white hover:bg-slate-700/50' 
-            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+        className={`p-2 rounded-lg ${
+          theme === 'dark'
+            ? 'text-slate-400 hover:text-white hover:bg-slate-700/60'
+            : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
         } transition-colors`}
+        title={theme === 'dark' ? 'Mode Terang' : 'Mode Gelap'}
       >
-        {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+        {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
       </button>
 
       <div className="relative">
-        <button 
+        <button
           onClick={onNotificationClick}
-          className={`p-2 rounded-xl ${
-            theme === 'dark' 
-              ? 'text-slate-400 hover:text-white hover:bg-slate-700/50' 
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+          className={`p-2 rounded-lg ${
+            theme === 'dark'
+              ? 'text-slate-400 hover:text-white hover:bg-slate-700/60'
+              : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
           } transition-colors relative`}
           title="Notifikasi"
         >
-          <Bell className="w-5 h-5" />
+          <Bell className="w-4 h-4" />
           {notifications.filter(n => !n.isRead).length > 0 && (
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-              <span className="text-xs text-white font-medium">
-                {notifications.filter(n => !n.isRead).length}
-              </span>
-            </div>
+            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
           )}
         </button>
-        
+
         {showNotifications && (
-          <div className={`fixed right-6 top-20 w-80 ${
+          <div className={`absolute right-0 top-full mt-2 w-72 ${
             theme === 'dark' ? 'bg-slate-800' : 'bg-white'
           } rounded-xl border ${
             theme === 'dark' ? 'border-slate-700' : 'border-gray-200'
-          } shadow-2xl z-[10000] max-h-96 overflow-y-auto`}>
-            <div className={`p-4 border-b ${
-              theme === 'dark' ? 'border-slate-700' : 'border-gray-200'
-            }`}>
-              <div className="flex items-center justify-between">
-                <h3 className={`font-semibold ${
-                  theme === 'dark' ? 'text-white' : 'text-gray-900'
-                }`}>
-                  Notifikasi
-                </h3>
-                {notifications.length > 0 && (
-                  <button
-                    onClick={() => {}}
-                    className={`text-sm ${
-                      theme === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'
-                    }`}
-                  >
-                    Hapus Semua
-                  </button>
-                )}
-              </div>
+          } shadow-2xl z-[10000] max-h-80 overflow-y-auto`}>
+            <div className={`px-4 py-3 border-b ${
+              theme === 'dark' ? 'border-slate-700' : 'border-gray-100'
+            } flex items-center justify-between`}>
+              <span className={`text-sm font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                Notifikasi
+              </span>
             </div>
-            
-            {notifications.length === 0 ? (
-              <div className="p-6 text-center">
-                <p className={`${
-                  theme === 'dark' ? 'text-slate-400' : 'text-gray-500'
-                }`}>
-                  No notifications
-                </p>
-              </div>
-            ) : (
-              notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className={`p-4 border-b ${
-                    theme === 'dark' ? 'border-slate-700' : 'border-gray-200'
-                  } hover:${theme === 'dark' ? 'bg-slate-700/50' : 'bg-gray-50'} cursor-pointer ${
-                    !notification.isRead ? 'bg-opacity-50' : ''
-                  }`}
-                  onClick={() => {}}
-                >
-                  <div className="flex items-start space-x-3">
-                    <div className={`w-2 h-2 rounded-full mt-2 ${
-                      notification.type === 'warning' ? 'bg-yellow-500' :
-                      notification.type === 'success' ? 'bg-green-500' :
-                      notification.type === 'error' ? 'bg-red-500' : 'bg-blue-500'
-                    }`} />
-                    <div className="flex-1">
-                      <h4 className={`text-sm font-medium ${
-                        theme === 'dark' ? 'text-white' : 'text-gray-900'
-                      }`}>
-                        {notification.title}
-                      </h4>
-                      <p className={`text-sm mt-1 ${
-                        theme === 'dark' ? 'text-slate-400' : 'text-gray-600'
-                      }`}>
-                        {notification.message}
-                      </p>
-                      <p className={`text-xs mt-2 ${
-                        theme === 'dark' ? 'text-slate-500' : 'text-gray-500'
-                      }`}>
-                        {notification.timestamp.toLocaleTimeString()}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
+            <div className="p-4 text-center">
+              <p className={`text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                Tidak ada notifikasi
+              </p>
+            </div>
           </div>
         )}
       </div>
-      
-      {/* User Info and Logout */}
+
+      {/* Divider */}
+      <div className={`w-px h-6 mx-1 ${theme === 'dark' ? 'bg-slate-700' : 'bg-gray-200'}`} />
+
+      {/* User Info */}
       {currentUser && (
-        <div className="flex items-center space-x-3 ml-4">
-          <div className={`text-right ${
-            theme === 'dark' ? 'text-slate-300' : 'text-gray-700'
+        <div className="flex items-center gap-2">
+          <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-semibold ${
+            theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
           }`}>
-            <p className="text-sm font-medium">{currentUser.full_name || currentUser.username}</p>
-            <p className="text-xs opacity-75">{currentUser.department || 'User'}</p>
+            {(currentUser.full_name || currentUser.username || 'U')[0].toUpperCase()}
+          </div>
+          <div className="hidden sm:block">
+            <p className={`text-sm font-medium leading-tight ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+              {currentUser.full_name || currentUser.username}
+            </p>
+            <p className={`text-xs leading-tight ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+              {currentUser.role || 'User'}
+            </p>
           </div>
           <button
             onClick={onLogout}
-            className={`p-2 rounded-xl ${
-              theme === 'dark' 
-                ? 'text-slate-400 hover:text-red-400 hover:bg-slate-700/50' 
-                : 'text-gray-600 hover:text-red-600 hover:bg-gray-100'
+            className={`p-2 rounded-lg ${
+              theme === 'dark'
+                ? 'text-slate-400 hover:text-red-400 hover:bg-slate-700/60'
+                : 'text-gray-500 hover:text-red-600 hover:bg-gray-100'
             } transition-colors`}
             title="Logout"
           >
-            <LogOut className="w-5 h-5" />
+            <LogOut className="w-4 h-4" />
           </button>
         </div>
       )}
@@ -775,40 +736,26 @@ const Header = ({ theme, setTheme, status, onRefresh, notifications, onNotificat
 
 // Chat Message Component
 const ChatMessage = ({ message, isBot, theme }) => {
-  // Safe message handling
   const safeMessage = React.useMemo(() => {
     if (!message) return 'Empty message';
-    
-    // If message is an object, convert to string
     if (typeof message === 'object') {
       try {
-        // Handle specific object structures
         if (message.text) return String(message.text);
         if (message.message) return String(message.message);
         if (message.response) return String(message.response);
-        
-        // Otherwise stringify
         return JSON.stringify(message, null, 2);
       } catch (e) {
         return '[Complex Object - Cannot Display]';
       }
     }
-    
-    // Ensure it's a string
     return String(message);
   }, [message]);
-  
-  // Safe markdown parsing with error boundary
+
   const renderMessage = React.useMemo(() => {
     try {
       if (isBot) {
-        // Only parse markdown for bot messages
         const parsed = parseMarkdownToJSX(safeMessage, theme);
-        // If parsing returns null or invalid, fall back to plain text
-        if (parsed && React.isValidElement(parsed)) {
-          return parsed;
-        }
-        // Fallback to plain text with line breaks
+        if (parsed && React.isValidElement(parsed)) return parsed;
         return (
           <div>
             {safeMessage.split('\n').map((line, index) => (
@@ -820,7 +767,6 @@ const ChatMessage = ({ message, isBot, theme }) => {
           </div>
         );
       }
-      // For user messages, just display as plain text with line breaks
       return (
         <div>
           {safeMessage.split('\n').map((line, index) => (
@@ -832,30 +778,43 @@ const ChatMessage = ({ message, isBot, theme }) => {
         </div>
       );
     } catch (error) {
-      console.error('Error rendering message:', error);
-      return <span className="text-red-500">[Error displaying message: {safeMessage.substring(0, 100)}...]</span>;
+      return <span className="text-red-500">[Error: {safeMessage.substring(0, 100)}]</span>;
     }
   }, [safeMessage, isBot, theme]);
-  
+
   return (
-    <div className={`flex ${isBot ? 'justify-start' : 'justify-end'} mb-4`}>
-      <div className={`max-w-xs lg:max-w-md xl:max-w-lg ${
-        isBot 
-          ? theme === 'dark' 
-            ? 'bg-slate-700 text-white' 
-            : 'bg-gray-100 text-gray-900'
-          : 'bg-gradient-to-r from-blue-500 to-sky-500 text-white'
-      } rounded-2xl px-4 py-3 shadow-lg`}>
-        {isBot && (
-          <div className="flex items-center mb-2">
-            <Bot className="w-4 h-4 mr-2" />
-            <span className="text-sm font-medium">BrightAI</span>
-          </div>
-        )}
+    <div className={`flex ${isBot ? 'justify-start' : 'justify-end'} mb-4 gap-2`}>
+      {/* Bot avatar */}
+      {isBot && (
+        <div className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center self-end ${
+          theme === 'dark' ? 'bg-blue-600' : 'bg-blue-500'
+        }`}>
+          <Bot className="w-4 h-4 text-white" />
+        </div>
+      )}
+
+      <div className={`max-w-[75%] xl:max-w-[70%] ${
+        isBot
+          ? theme === 'dark'
+            ? 'bg-slate-800/80 text-slate-100 border border-slate-700/50'
+            : 'bg-white text-gray-800 border border-gray-200 shadow-sm'
+          : theme === 'dark'
+            ? 'bg-blue-600 text-white'
+            : 'bg-blue-500 text-white'
+      } rounded-2xl px-4 py-3`}>
         <div className="text-sm leading-relaxed">
           {renderMessage}
         </div>
       </div>
+
+      {/* User avatar */}
+      {!isBot && (
+        <div className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center self-end ${
+          theme === 'dark' ? 'bg-slate-600' : 'bg-gray-300'
+        }`}>
+          <User className={`w-4 h-4 ${theme === 'dark' ? 'text-slate-300' : 'text-gray-600'}`} />
+        </div>
+      )}
     </div>
   );
 };
@@ -863,169 +822,136 @@ const ChatMessage = ({ message, isBot, theme }) => {
 // Chat Sidebar Component
 const ChatSidebar = ({ chats, activeChat, setActiveChat, onNewChat, onDeleteChat, theme }) => {
   const [searchQuery, setSearchQuery] = React.useState('');
-  const [isSearchActive, setIsSearchActive] = React.useState(false);
-  const [showChatControls, setShowChatControls] = React.useState(true);
-  
-  // Filter chats based on search query
-  const filteredChats = chats.filter(chat => 
+
+  const filteredChats = chats.filter(chat =>
     chat.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     chat.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Handle search activation
-  const handleSearchFocus = () => {
-    setIsSearchActive(true);
-  };
-
-  const handleSearchBlur = () => {
-    if (!searchQuery) {
-      setIsSearchActive(false);
-    }
-  };
-
-  const handleSearchClear = () => {
-    setSearchQuery('');
-    setIsSearchActive(false);
-  };
-
   return (
-    <div className={`w-80 fixed left-20 top-20 bottom-0 z-30 ${
-      theme === 'dark' ? 'bg-slate-800/60' : 'bg-white/60'
+    <div className={`w-72 fixed left-16 top-14 bottom-0 z-30 ${
+      theme === 'dark' ? 'bg-slate-900/70' : 'bg-white/70'
     } backdrop-blur-xl border-r ${
-      theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
+      theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/70'
     } flex flex-col`}>
-      <div className={`p-4 border-b ${
-        theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
+      {/* Header */}
+      <div className={`px-4 pt-4 pb-3 border-b ${
+        theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/70'
       }`}>
         <div className="flex items-center justify-between mb-3">
-          <h3 className={`font-semibold text-lg ${
-            theme === 'dark' ? 'text-white' : 'text-gray-900'
+          <span className={`text-sm font-semibold ${
+            theme === 'dark' ? 'text-slate-300' : 'text-gray-700'
           }`}>
             Percakapan
-          </h3>
-          <button
-            onClick={() => setShowChatControls(!showChatControls)}
-            className={`p-1 rounded-md transition-colors ${
-              theme === 'dark' 
-                ? 'text-slate-400 hover:text-white hover:bg-slate-700/50' 
-                : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
-            }`}
-            title={showChatControls ? 'Sembunyikan kontrol' : 'Tampilkan kontrol'}
-          >
-            <Menu className="w-4 h-4" />
-          </button>
+          </span>
+          <span className={`text-xs px-2 py-0.5 rounded-full ${
+            theme === 'dark' ? 'bg-slate-700 text-slate-400' : 'bg-gray-100 text-gray-500'
+          }`}>
+            {chats.length}
+          </span>
         </div>
-        
-        {showChatControls && (
-          <div className="space-y-3">
+
+        <button
+          onClick={onNewChat}
+          className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+            theme === 'dark'
+              ? 'bg-blue-600 hover:bg-blue-700 text-white'
+              : 'bg-blue-500 hover:bg-blue-600 text-white'
+          } shadow-sm`}
+        >
+          <Plus className="w-4 h-4" />
+          Percakapan Baru
+        </button>
+
+        {/* Search */}
+        <div className="relative mt-2">
+          <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 ${
+            theme === 'dark' ? 'text-slate-500' : 'text-gray-400'
+          }`} />
+          <input
+            type="text"
+            placeholder="Cari..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className={`w-full pl-8 pr-8 py-1.5 text-sm rounded-lg border transition-colors ${
+              theme === 'dark'
+                ? 'bg-slate-800/60 border-slate-700 text-white placeholder-slate-500 focus:border-blue-500'
+                : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-400'
+            } focus:outline-none`}
+          />
+          {searchQuery && (
             <button
-              onClick={onNewChat}
-              className={`w-full flex items-center justify-center space-x-2 px-4 py-3 ${
-                theme === 'dark' 
-                  ? 'bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700' 
-                  : 'bg-gradient-to-r from-blue-500 to-sky-500 hover:from-blue-600 hover:to-sky-600'
-              } text-white rounded-xl transition-all duration-200`}
+              onClick={() => setSearchQuery('')}
+              className={`absolute right-2.5 top-1/2 -translate-y-1/2 ${
+                theme === 'dark' ? 'text-slate-500 hover:text-slate-300' : 'text-gray-400 hover:text-gray-600'
+              }`}
             >
-              <Plus className="w-4 h-4" />
-              <span className="font-medium">Percakapan Baru</span>
+              <X className="w-3.5 h-3.5" />
             </button>
-            
-            {/* Search Box */}
-            <div className="relative">
-              <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${
-                isSearchActive 
-                  ? theme === 'dark' ? 'text-blue-400' : 'text-blue-500'
-                  : theme === 'dark' ? 'text-slate-400' : 'text-gray-400'
-              }`} />
-              <input
-                type="text"
-                placeholder="Cari percakapan..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={handleSearchFocus}
-                onBlur={handleSearchBlur}
-                className={`w-full pl-10 pr-10 py-2 rounded-lg border transition-all duration-200 ${
-                  theme === 'dark' 
-                    ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-400 focus:border-blue-500 focus:bg-slate-700' 
-                    : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-blue-50/50'
-                } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-              />
-              {searchQuery && (
-                <button
-                  onClick={handleSearchClear}
-                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 transition-colors ${
-                    theme === 'dark' ? 'text-slate-400 hover:text-white' : 'text-gray-400 hover:text-gray-600'
-                  }`}
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    
+
+      {/* Chat List */}
       <div className="flex-1 overflow-y-auto">
-        {filteredChats.length === 0 && searchQuery ? (
-          <div className="p-4 text-center">
-            <p className={`text-sm ${
-              theme === 'dark' ? 'text-slate-400' : 'text-gray-500'
-            }`}>
-              No conversations found
+        {filteredChats.length === 0 ? (
+          <div className="p-6 text-center">
+            <p className={`text-sm ${theme === 'dark' ? 'text-slate-500' : 'text-gray-400'}`}>
+              {searchQuery ? 'Tidak ditemukan' : 'Belum ada percakapan'}
             </p>
           </div>
         ) : (
           filteredChats.map((chat) => (
-          <div
-            key={chat.id}
-            onClick={() => setActiveChat(chat.id)}
-            className={`p-4 border-b ${
-              theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
-            } cursor-pointer hover:${
-              theme === 'dark' ? 'bg-slate-700/50' : 'bg-gray-50'
-            } transition-colors ${
-              activeChat === chat.id 
-                ? theme === 'dark' ? 'bg-slate-700/50' : 'bg-gray-50'
-                : ''
-            }`}
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex-1 min-w-0">
-                <h4 className={`font-medium truncate ${
-                  theme === 'dark' ? 'text-white' : 'text-gray-900'
-                }`}>
-                  {chat.title}
-                </h4>
-                <p className={`text-sm mt-1 truncate ${
-                  theme === 'dark' ? 'text-slate-400' : 'text-gray-600'
-                }`}>
-                  {chat.lastMessage}
-                </p>
-                <p className={`text-xs mt-1 ${
-                  theme === 'dark' ? 'text-slate-500' : 'text-gray-500'
-                }`}>
-                  {new Date(chat.updatedAt).toLocaleDateString()}
-                </p>
+            <div
+              key={chat.id}
+              onClick={() => setActiveChat(chat.id)}
+              className={`group px-3 py-3 mx-2 my-0.5 rounded-xl cursor-pointer transition-all duration-150 ${
+                activeChat === chat.id
+                  ? theme === 'dark'
+                    ? 'bg-blue-600/20 border border-blue-500/30'
+                    : 'bg-blue-50 border border-blue-200'
+                  : theme === 'dark'
+                    ? 'hover:bg-slate-800/60 border border-transparent'
+                    : 'hover:bg-gray-50 border border-transparent'
+              }`}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <h4 className={`text-sm font-medium truncate ${
+                    activeChat === chat.id
+                      ? theme === 'dark' ? 'text-blue-300' : 'text-blue-700'
+                      : theme === 'dark' ? 'text-slate-200' : 'text-gray-800'
+                  }`}>
+                    {chat.title}
+                  </h4>
+                  <p className={`text-xs mt-0.5 truncate ${
+                    theme === 'dark' ? 'text-slate-500' : 'text-gray-400'
+                  }`}>
+                    {chat.lastMessage}
+                  </p>
+                  <p className={`text-xs mt-1 ${
+                    theme === 'dark' ? 'text-slate-600' : 'text-gray-400'
+                  }`}>
+                    {new Date(chat.updatedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                  </p>
+                </div>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onDeleteChat(chat.id); }}
+                  className={`shrink-0 p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-all ${
+                    theme === 'dark'
+                      ? 'text-slate-500 hover:text-red-400 hover:bg-slate-700'
+                      : 'text-gray-400 hover:text-red-500 hover:bg-gray-100'
+                  }`}
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
               </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDeleteChat(chat.id);
-                }}
-                className={`ml-2 p-1 rounded ${
-                  theme === 'dark' 
-                    ? 'text-slate-400 hover:text-red-400 hover:bg-slate-600/50' 
-                    : 'text-gray-400 hover:text-red-500 hover:bg-gray-100'
-                } transition-colors`}
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
             </div>
-          </div>
-        )))}
+          ))
+        )}
       </div>
-  </div>
-);
+    </div>
+  );
 }
 
 // Main App Component
@@ -1300,7 +1226,7 @@ function App() {
         // Create welcome message in Indonesian
         const welcomeMessage = {
           id: `welcome_${Date.now()}`,
-          text: '🚀 **Selamat datang di BrightAI!**\n\nSaya adalah asisten analisis data Telkom yang dapat membantu Anda menganalisis data dari berbagai database perusahaan seperti:\n\n📊 **PS_SCONE_ORDER**: Analisis order dan sales HSI\n👥 **DAPROS_MIGRASI**: Profil dan segmentasi customer HSI\n🎯 **TARGET_ALL**: Analisis target dan performance\n💰 **MART_REV_PMS_POTS**: Analisis revenue dan billing\n📉 **CT0_NAL_EBIS**: Analisis churn dan customer lifecycle\n\n**Contoh pertanyaan yang bisa Anda ajukan:**\n• "Analisis total order HSI per regional"\n• "Bagaimana pola churn pelanggan HSI berdasarkan bandwidth?"\n• "Tren revenue HSI 6 bulan terakhir"\n• "Penetrasi HSI di wilayah Jawa Barat"\n\nSilakan ajukan pertanyaan analisis data yang Anda butuhkan! 💬',
+          text: '🚀 **Selamat datang di BrightAI!**\n\nSaya adalah asisten analisis data Telkom yang dapat membantu Anda menganalisis data dari berbagai database perusahaan seperti:\n\n📊 **BRIGHTAI_SALES**: Analisis order dan sales HSI\n👥 **BRIGHTAI_DAPROS**: Profil dan segmentasi customer HSI\n🎯 **BRIGHTAI_TARGET**: Analisis target dan performance\n💰 **BRIGHTAI_REVENUE**: Analisis revenue dan billing\n📉 **BRIGHTAI_CT0_NAL**: Analisis churn dan customer lifecycle\n\n**Contoh pertanyaan yang bisa Anda ajukan:**\n• "Analisis total order HSI per regional"\n• "Bagaimana pola churn pelanggan HSI berdasarkan bandwidth?"\n• "Tren revenue HSI 6 bulan terakhir"\n• "Penetrasi HSI di wilayah Jawa Barat"\n\nSilakan ajukan pertanyaan analisis data yang Anda butuhkan! 💬',
           isBot: true,
           timestamp: new Date().toISOString(),
           userId: userId
@@ -1545,8 +1471,8 @@ function App() {
     switch (activeView) {
       case 'ai':
         return (
-          <div className="flex h-full">
-            <ChatSidebar 
+          <div className="flex flex-1 overflow-hidden h-full">
+            <ChatSidebar
               chats={chats}
               activeChat={activeChat}
               setActiveChat={setActiveChat}
@@ -1554,15 +1480,15 @@ function App() {
               onDeleteChat={handleDeleteChat}
               theme={theme}
             />
-            
-            <div className="flex-1 flex flex-col ml-80">
+
+            <div className="flex-1 flex flex-col ml-72 min-w-0">
               {activeChat ? (
                 <>
-                  <div className="flex-1 overflow-y-auto p-6">
+                  {/* Messages Area */}
+                  <div className="flex-1 overflow-y-auto px-6 py-4">
                     {getCurrentChatMessages().map((message, index) => (
                       <ErrorBoundary key={`msg-${index}-${message.id || 'unknown'}`}>
                         <ChatMessage
-                          key={index}
                           message={message.text}
                           isBot={message.isBot}
                           theme={theme}
@@ -1570,104 +1496,86 @@ function App() {
                       </ErrorBoundary>
                     ))}
                     {isTyping && (
-                      <div className="flex justify-start mb-4">
-                        <div className={`max-w-xs ${
-                          theme === 'dark' ? 'bg-slate-700' : 'bg-gray-100'
-                        } rounded-2xl px-4 py-3`}>
-                          <div className="flex items-center space-x-1">
-                            <div className="flex space-x-1">
-                              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                            </div>
+                      <div className="flex justify-start mb-4 gap-2">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 self-end ${
+                          theme === 'dark' ? 'bg-blue-600' : 'bg-blue-500'
+                        }`}>
+                          <Bot className="w-4 h-4 text-white" />
+                        </div>
+                        <div className={`px-4 py-3 rounded-2xl ${
+                          theme === 'dark'
+                            ? 'bg-slate-800/80 border border-slate-700/50'
+                            : 'bg-white border border-gray-200 shadow-sm'
+                        }`}>
+                          <div className="flex gap-1">
+                            <div className={`w-2 h-2 rounded-full animate-bounce ${theme === 'dark' ? 'bg-slate-400' : 'bg-gray-400'}`}></div>
+                            <div className={`w-2 h-2 rounded-full animate-bounce ${theme === 'dark' ? 'bg-slate-400' : 'bg-gray-400'}`} style={{ animationDelay: '0.15s' }}></div>
+                            <div className={`w-2 h-2 rounded-full animate-bounce ${theme === 'dark' ? 'bg-slate-400' : 'bg-gray-400'}`} style={{ animationDelay: '0.3s' }}></div>
                           </div>
                         </div>
                       </div>
                     )}
                     <div ref={chatEndRef} />
                   </div>
-                  
-                  <div className={`p-4 border-t ${
-                    theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
+
+                  {/* Input Area */}
+                  <div className={`px-4 pb-4 pt-3 border-t ${
+                    theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/70'
                   }`}>
-                    {/* Quick Questions */}
-                    <QuickQuestionsComponent onQuestionClick={handleQuickQuestionClick} theme={theme} />
-                    
-                    {/* Powered by BrightAI */}
                     <PoweredByComponent theme={theme} />
-                    
-                    <div className="flex space-x-4">
+                    <div className="flex gap-3 items-end">
                       <textarea
                         value={currentMessage}
                         onChange={(e) => setCurrentMessage(e.target.value)}
                         onKeyPress={handleKeyPress}
-                        placeholder="Tanyakan apa saja kepada BrightAI - dari pertanyaan umum hingga bantuan teknis..."
-                        className={`flex-1 resize-none rounded-xl px-4 py-3 ${
-                          theme === 'dark' 
-                            ? 'bg-slate-700 border-slate-600 text-white placeholder-slate-400' 
-                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                        } border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                        rows="1"
+                        placeholder="Tanyakan kepada BrightAI..."
+                        className={`flex-1 resize-none rounded-xl px-4 py-3 text-sm ${
+                          theme === 'dark'
+                            ? 'bg-slate-800/80 border-slate-700 text-white placeholder-slate-500'
+                            : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
+                        } border focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors`}
+                        rows="2"
                         disabled={isTyping}
                       />
                       <button
                         onClick={handleSendMessage}
                         disabled={!currentMessage.trim() || isTyping}
-                        className={`px-6 py-3 ${
+                        className={`shrink-0 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
                           !currentMessage.trim() || isTyping
-                            ? 'bg-gray-400 cursor-not-allowed'
-                            : 'bg-gradient-to-r from-blue-500 to-sky-500 hover:from-blue-600 hover:to-sky-600'
-                        } text-white rounded-xl transition-all duration-200 flex items-center space-x-2`}
+                            ? theme === 'dark' ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                            : 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm'
+                        }`}
                       >
                         <Send className="w-4 h-4" />
-                        <span>Send</span>
+                        <span>Kirim</span>
                       </button>
                     </div>
                   </div>
                 </>
               ) : (
-                <div className="flex-1 flex flex-col">
-                  {/* Welcome Area */}
-                  <div className="flex-1 flex items-center justify-center">
-                    <div className="text-center">
-                      <Bot className={`w-16 h-16 mx-auto mb-4 ${
-                        theme === 'dark' ? 'text-slate-400' : 'text-gray-400'
-                      }`} />
-                      <h3 className={`text-xl font-semibold mb-2 ${
-                        theme === 'dark' ? 'text-white' : 'text-gray-900'
-                      }`}>
-                        Welcome to BrightAI
-                      </h3>
-                      <p className={`${
-                        theme === 'dark' ? 'text-slate-400' : 'text-gray-600'
-                      } mb-4`}>
-                        Mulai percakapan baru untuk mendapatkan wawasan bertenaga AI
-                      </p>
-                      <button
-                        onClick={handleNewChat}
-                        className="px-6 py-3 bg-gradient-to-r from-blue-500 to-sky-500 text-white rounded-xl hover:from-blue-600 hover:to-sky-600 transition-all duration-200"
-                      >
-                        Mulai Percakapan Baru
-                      </button>
-                    </div>
-                  </div>
-                  
-                  {/* Bottom section with Quick Questions and Powered by */}
-                  <div className={`p-4 border-t ${
-                    theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
+                <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
+                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 ${
+                    theme === 'dark' ? 'bg-blue-600/20' : 'bg-blue-50'
                   }`}>
-                    {/* Quick Questions for new users */}
-                    <QuickQuestionsComponent onQuestionClick={(question) => {
-                      handleNewChat();
-                      setTimeout(() => {
-                        setCurrentMessage(question);
-                        setTimeout(() => handleSendMessage(), 100);
-                      }, 200);
-                    }} theme={theme} />
-                    
-                    {/* Powered by BrightAI */}
-                    <PoweredByComponent theme={theme} />
+                    <Bot className={`w-8 h-8 ${theme === 'dark' ? 'text-blue-400' : 'text-blue-500'}`} />
                   </div>
+                  <h3 className={`text-xl font-semibold mb-2 ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    Selamat Datang di BrightAI
+                  </h3>
+                  <p className={`text-sm mb-6 max-w-sm ${
+                    theme === 'dark' ? 'text-slate-400' : 'text-gray-500'
+                  }`}>
+                    Mulai percakapan baru untuk menganalisis data HSI Telkom dengan kecerdasan buatan
+                  </p>
+                  <button
+                    onClick={handleNewChat}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-xl transition-colors shadow-sm"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Mulai Percakapan Baru
+                  </button>
                 </div>
               )}
             </div>
@@ -1677,85 +1585,94 @@ function App() {
 
       case 'profile':
         return (
-          <div className="p-8 ml-20">
-            <div className="mb-8">
-              <h2 className={`text-3xl font-bold ${
-                theme === 'dark' ? 'text-white' : 'text-gray-900'
-              }`}>
+          <div className="p-6 max-w-2xl">
+            {/* Page Header */}
+            <div className="mb-6">
+              <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                 Profil Pengguna
               </h2>
-              <p className={`text-lg mt-2 ${
-                theme === 'dark' ? 'text-slate-400' : 'text-gray-600'
-              }`}>
+              <p className={`text-sm mt-1 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
                 Kelola informasi profil dan preferensi akun Anda
               </p>
             </div>
-            
-            <div className={`${
-              theme === 'dark' ? 'bg-slate-800/60' : 'bg-white/60'
-            } backdrop-blur-xl rounded-2xl p-6 border ${
-              theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
-            } max-w-2xl`}>
-              <div className="space-y-6">
+
+            {/* Avatar Card */}
+            <div className={`flex items-center gap-4 p-4 rounded-xl mb-5 ${
+              theme === 'dark' ? 'bg-slate-800/60 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
+            }`}>
+              <div className={`w-14 h-14 rounded-xl flex items-center justify-center text-xl font-bold ${
+                theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
+              }`}>
+                {(currentUser?.full_name || currentUser?.username || 'U')[0].toUpperCase()}
+              </div>
+              <div>
+                <p className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                  {currentUser?.full_name || currentUser?.username}
+                </p>
+                <p className={`text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                  {currentUser?.email}
+                </p>
+              </div>
+            </div>
+
+            {/* Form Card */}
+            <div className={`rounded-xl p-5 ${
+              theme === 'dark' ? 'bg-slate-800/60 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
+            }`}>
+              <h3 className={`text-sm font-semibold mb-4 ${theme === 'dark' ? 'text-slate-300' : 'text-gray-700'}`}>
+                Informasi Profil
+              </h3>
+              <div className="space-y-4">
                 <div>
-                  <label className={`block text-sm font-medium mb-2 ${
-                    theme === 'dark' ? 'text-slate-300' : 'text-gray-700'
-                  }`}>
+                  <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
                     Nama Lengkap
                   </label>
                   <input
                     type="text"
                     value={profileForm.fullName}
                     onChange={(e) => setProfileForm({...profileForm, fullName: e.target.value})}
-                    className={`w-full px-4 py-3 rounded-xl border ${
-                      theme === 'dark' 
-                        ? 'bg-slate-700 border-slate-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
+                      theme === 'dark'
+                        ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                        : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
                     placeholder="Masukkan nama lengkap"
                   />
                 </div>
-                
                 <div>
-                  <label className={`block text-sm font-medium mb-2 ${
-                    theme === 'dark' ? 'text-slate-300' : 'text-gray-700'
-                  }`}>
+                  <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
                     Departemen
                   </label>
                   <input
                     type="text"
                     value={profileForm.department}
                     onChange={(e) => setProfileForm({...profileForm, department: e.target.value})}
-                    className={`w-full px-4 py-3 rounded-xl border ${
-                      theme === 'dark' 
-                        ? 'bg-slate-700 border-slate-600 text-white' 
-                        : 'bg-white border-gray-300 text-gray-900'
-                    } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
+                      theme === 'dark'
+                        ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                        : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
                     placeholder="Masukkan departemen"
                   />
                 </div>
-                
                 <div>
-                  <label className={`block text-sm font-medium mb-2 ${
-                    theme === 'dark' ? 'text-slate-300' : 'text-gray-700'
-                  }`}>
-                    Email
+                  <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
+                    Email <span className={`font-normal ${theme === 'dark' ? 'text-slate-500' : 'text-gray-400'}`}>(tidak dapat diubah)</span>
                   </label>
                   <input
                     type="email"
                     value={currentUser?.email || ''}
                     disabled
-                    className={`w-full px-4 py-3 rounded-xl border ${
-                      theme === 'dark' 
-                        ? 'bg-slate-600 border-slate-500 text-slate-300' 
-                        : 'bg-gray-100 border-gray-300 text-gray-600'
-                    } cursor-not-allowed`}
+                    className={`w-full px-3 py-2.5 text-sm rounded-lg border cursor-not-allowed ${
+                      theme === 'dark'
+                        ? 'bg-slate-700/30 border-slate-700 text-slate-500'
+                        : 'bg-gray-50 border-gray-200 text-gray-400'
+                    }`}
                   />
                 </div>
-                
                 <button
                   onClick={handleProfileUpdate}
-                  className="w-full px-6 py-3 bg-gradient-to-r from-blue-500 to-sky-500 text-white rounded-xl hover:from-blue-600 hover:to-sky-600 transition-all duration-200"
+                  className="w-full py-2.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm"
                 >
                   Simpan Perubahan
                 </button>
@@ -1766,153 +1683,124 @@ function App() {
 
       case 'settings':
         return (
-          <div className="p-8 ml-20">
-            <div className="mb-8">
-              <h2 className={`text-3xl font-bold ${
-                theme === 'dark' ? 'text-white' : 'text-gray-900'
-              }`}>
+          <div className="p-6 max-w-3xl">
+            {/* Page Header */}
+            <div className="mb-6">
+              <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                 Pengaturan
               </h2>
-              <p className={`text-lg mt-2 ${
-                theme === 'dark' ? 'text-slate-400' : 'text-gray-600'
-              }`}>
-                Kelola profil, keamanan, dan preferensi akun Anda
+              <p className={`text-sm mt-1 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                Kelola profil, keamanan, dan preferensi akun
               </p>
             </div>
-            <div className="max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className={`${
-                theme === 'dark' ? 'bg-slate-800/60' : 'bg-white/60'
-              } backdrop-blur-xl rounded-2xl p-6 border ${
-                theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Profile Settings */}
+              <div className={`rounded-xl p-5 ${
+                theme === 'dark' ? 'bg-slate-800/60 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
               }`}>
-                <h3 className={`text-xl font-semibold mb-6 ${
-                  theme === 'dark' ? 'text-white' : 'text-gray-900'
-                }`}>
+                <h3 className={`text-sm font-semibold mb-4 ${theme === 'dark' ? 'text-slate-200' : 'text-gray-800'}`}>
                   Pengaturan Profil
                 </h3>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${
-                      theme === 'dark' ? 'text-slate-300' : 'text-gray-700'
-                    }`}>
+                    <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
                       Nama Tampilan
                     </label>
                     <input
                       type="text"
                       value={profileForm.fullName}
                       onChange={(e) => setProfileForm({...profileForm, fullName: e.target.value})}
-                      className={`w-full px-4 py-3 rounded-xl border ${
-                        theme === 'dark' 
-                          ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-400' 
-                          : 'bg-white/50 border-gray-300 text-gray-900 placeholder-gray-500'
-                      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                      placeholder="Masukkan nama tampilan"
+                      className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
+                        theme === 'dark'
+                          ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                          : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
+                      } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                      placeholder="Nama tampilan"
                     />
                   </div>
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${
-                      theme === 'dark' ? 'text-slate-300' : 'text-gray-700'
-                    }`}>
-                      Email
+                    <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
+                      Email <span className={`font-normal ${theme === 'dark' ? 'text-slate-600' : 'text-gray-400'}`}>(tidak dapat diubah)</span>
                     </label>
                     <input
                       type="email"
                       value={currentUser?.email || ''}
-                      className={`w-full px-4 py-3 rounded-xl border ${
-                        theme === 'dark' 
-                          ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-400' 
-                          : 'bg-white/50 border-gray-300 text-gray-900 placeholder-gray-500'
-                      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                      placeholder="Email terhubung"
                       readOnly
+                      className={`w-full px-3 py-2.5 text-sm rounded-lg border cursor-not-allowed ${
+                        theme === 'dark'
+                          ? 'bg-slate-700/30 border-slate-700 text-slate-500'
+                          : 'bg-gray-50 border-gray-200 text-gray-400'
+                      }`}
                     />
-                    <p className={`text-xs mt-1 ${
-                      theme === 'dark' ? 'text-slate-400' : 'text-gray-500'
-                    }`}>
-                      Email tidak dapat diubah demi keamanan
-                    </p>
                   </div>
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${
-                      theme === 'dark' ? 'text-slate-300' : 'text-gray-700'
-                    }`}>
+                    <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
                       Departemen
                     </label>
                     <input
                       type="text"
                       value={profileForm.department}
                       onChange={(e) => setProfileForm({...profileForm, department: e.target.value})}
-                      className={`w-full px-4 py-3 rounded-xl border ${
-                        theme === 'dark' 
-                          ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-400' 
-                          : 'bg-white/50 border-gray-300 text-gray-900 placeholder-gray-500'
-                      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                      className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
+                        theme === 'dark'
+                          ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                          : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
+                      } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
                       placeholder="Departemen"
                     />
                   </div>
-                  <div className="pt-4">
-                    <button
-                      onClick={handleUpdateProfile}
-                      disabled={profileUpdateLoading}
-                      className={`w-full px-4 py-3 rounded-xl ${
-                        theme === 'dark' 
-                          ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                          : 'bg-blue-500 hover:bg-blue-600 text-white'
-                      } transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center`}
-                    >
-                      {profileUpdateLoading ? (
-                        <>
-                          <Loader className="w-4 h-4 animate-spin mr-2" />
-                          Memperbarui...
-                        </>
-                      ) : (
-                        'Perbarui Profil'
-                      )}
-                    </button>
-                  </div>
+                  <button
+                    onClick={handleUpdateProfile}
+                    disabled={profileUpdateLoading}
+                    className="w-full py-2.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {profileUpdateLoading ? (
+                      <><Loader className="w-4 h-4 animate-spin" /> Memperbarui...</>
+                    ) : 'Perbarui Profil'}
+                  </button>
                 </div>
               </div>
-              <div className={`${
-                theme === 'dark' ? 'bg-slate-800/60' : 'bg-white/60'
-              } backdrop-blur-xl rounded-2xl p-6 border ${
-                theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/50'
+
+              {/* Account & Security */}
+              <div className={`rounded-xl p-5 ${
+                theme === 'dark' ? 'bg-slate-800/60 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
               }`}>
-                <h3 className={`text-xl font-semibold mb-6 ${
-                  theme === 'dark' ? 'text-white' : 'text-gray-900'
-                }`}>
+                <h3 className={`text-sm font-semibold mb-4 ${theme === 'dark' ? 'text-slate-200' : 'text-gray-800'}`}>
                   Akun & Keamanan
                 </h3>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div>
-                    <label className={`block text-sm font-medium mb-2 ${
-                      theme === 'dark' ? 'text-slate-300' : 'text-gray-700'
-                    }`}>
-                      Nama Pengguna
+                    <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
+                      Username
                     </label>
                     <input
                       type="text"
                       value={currentUser?.username || ''}
-                      className={`w-full px-4 py-3 rounded-xl border ${
-                        theme === 'dark' 
-                          ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-400' 
-                          : 'bg-white/50 border-gray-300 text-gray-900 placeholder-gray-500'
-                      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                       readOnly
+                      className={`w-full px-3 py-2.5 text-sm rounded-lg border cursor-not-allowed ${
+                        theme === 'dark'
+                          ? 'bg-slate-700/30 border-slate-700 text-slate-500'
+                          : 'bg-gray-50 border-gray-200 text-gray-400'
+                      }`}
                     />
                   </div>
-                  <div>
-                    <button
-                      className={`w-full px-4 py-3 rounded-xl border-2 border-dashed ${
-                        theme === 'dark' 
-                          ? 'border-slate-600 text-slate-400 hover:border-slate-500 hover:text-slate-300' 
-                          : 'border-gray-300 text-gray-500 hover:border-gray-400 hover:text-gray-600'
-                      } transition-colors`}
-                      onClick={() => alert('Fitur ubah kata sandi akan segera tersedia')}
-                    >
-                      Ubah Kata Sandi
-                    </button>
-                  </div>
-                  <div className="pt-4">
+                  <button
+                    className={`w-full py-2.5 text-sm font-medium rounded-lg border transition-colors ${
+                      theme === 'dark'
+                        ? 'border-slate-600 text-slate-400 hover:border-slate-500 hover:text-slate-300 hover:bg-slate-700/40'
+                        : 'border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50'
+                    }`}
+                    onClick={() => alert('Fitur ubah kata sandi akan segera tersedia')}
+                  >
+                    Ubah Kata Sandi
+                  </button>
+
+                  {/* Divider */}
+                  <div className={`border-t pt-3 mt-1 ${theme === 'dark' ? 'border-slate-700' : 'border-gray-100'}`}>
+                    <p className={`text-xs mb-3 ${theme === 'dark' ? 'text-slate-500' : 'text-gray-400'}`}>
+                      Zona Berbahaya
+                    </p>
                     <button
                       onClick={() => {
                         if (window.confirm('Apakah Anda yakin ingin keluar?')) {
@@ -1920,11 +1808,7 @@ function App() {
                           window.location.reload();
                         }
                       }}
-                      className={`w-full px-4 py-3 rounded-xl ${
-                        theme === 'dark' 
-                          ? 'bg-red-600 hover:bg-red-700 text-white' 
-                          : 'bg-red-500 hover:bg-red-600 text-white'
-                      } transition-colors`}
+                      className="w-full py-2.5 text-sm font-medium bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                     >
                       Keluar dari Akun
                     </button>
@@ -1937,16 +1821,12 @@ function App() {
 
       default:
         return (
-          <div className="p-8 ml-20 flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full">
             <div className="text-center">
-              <h2 className={`text-2xl font-bold mb-4 ${
-                theme === 'dark' ? 'text-white' : 'text-gray-900'
-              }`}>
+              <h2 className={`text-xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                 Segera Hadir
               </h2>
-              <p className={`${
-                theme === 'dark' ? 'text-slate-400' : 'text-gray-600'
-              }`}>
+              <p className={`text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
                 Fitur ini sedang dalam pengembangan
               </p>
             </div>
@@ -2092,28 +1972,15 @@ function App() {
 
   // Powered by BrightAI Component
   const PoweredByComponent = ({ theme }) => (
-    <div className={`flex items-center justify-center py-3 px-4 rounded-xl mb-4 ${
-      theme === 'dark' 
-        ? 'bg-gradient-to-r from-slate-800/60 to-slate-700/60 border border-slate-600/50' 
-        : 'bg-gradient-to-r from-blue-50/80 to-sky-50/80 border border-blue-200/50'
-    } backdrop-blur-sm`}>
-      <div className="flex items-center space-x-2">
-        <Zap className={`w-5 h-5 ${
-          theme === 'dark' ? 'text-blue-400' : 'text-blue-600'
-        }`} />
-        <div className="text-center">
-          <div className={`text-sm font-semibold ${
-            theme === 'dark' ? 'text-white' : 'text-gray-900'
-          }`}>
-            Powered by BrightAI
-          </div>
-          <div className={`text-xs ${
-            theme === 'dark' ? 'text-slate-400' : 'text-gray-600'
-          }`}>
-            AI canggih yang memahami data bisnis Anda dan memberikan wawasan cerdas
-          </div>
-        </div>
-      </div>
+    <div className={`flex items-center justify-center gap-2 py-1.5 px-3 rounded-lg mb-2 ${
+      theme === 'dark'
+        ? 'bg-slate-800/40 border border-slate-700/40'
+        : 'bg-gray-50/80 border border-gray-200/60'
+    }`}>
+      <Zap className={`w-3.5 h-3.5 shrink-0 ${theme === 'dark' ? 'text-blue-400' : 'text-blue-500'}`} />
+      <span className={`text-xs ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+        Powered by <span className={`font-medium ${theme === 'dark' ? 'text-slate-300' : 'text-gray-700'}`}>BrightAI</span>
+      </span>
     </div>
   );
 
@@ -2145,8 +2012,10 @@ function App() {
           onLogout={handleLogout}
         />
         
-        <main className="pt-20 min-h-screen">
-          {renderContent()}
+        <main className="pl-16 pt-14 min-h-screen h-screen flex flex-col overflow-hidden">
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {renderContent()}
+          </div>
         </main>
       </div>
     </div>

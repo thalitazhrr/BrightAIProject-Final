@@ -3,7 +3,7 @@
 ## 📋 Prerequisites
 
 - Node.js 16+ and npm
-- Oracle Database access (DWHNAS & DADBS)
+- Oracle Database access (DADBS)
 - Git
 
 ## 🚀 Installation
@@ -30,27 +30,7 @@ cp .env.example .env
 nano .env
 ```
 
-**Required Environment Variables:**
-```env
-# Server Configuration
-NODE_ENV=development
-PORT=3001
-JWT_SECRET=your-super-secret-jwt-key-here-min-32-chars
 
-# Database Configuration - DWHNAS
-ORACLE_DWHNAS_HOST=10.60.180.19
-ORACLE_DWHNAS_PORT=1525
-ORACLE_DWHNAS_DATABASE=DWHNAS
-ORACLE_DWHNAS_USER=dwh_mois
-ORACLE_DWHNAS_PASSWORD=your_password_here
-
-# Database Configuration - DADBS
-ORACLE_DADBS_HOST=10.62.165.144
-ORACLE_DADBS_PORT=1521
-ORACLE_DADBS_DATABASE=DADBS
-ORACLE_DADBS_USER=pmsdbs
-ORACLE_DADBS_PASSWORD=your_password_here
-```
 
 ### 3. Frontend Setup
 
@@ -137,7 +117,6 @@ BrightAIProject-Final/
 - **BRIGHTAI_USER**: User management
 - **BRIGHTAI_CHAT**: Chat messages
 - **BRIGHTAI_SESSION**: Chat sessions
-- **BRIGHTAI_RULES**: AI response rules
 
 ## 🛠️ API Endpoints
 

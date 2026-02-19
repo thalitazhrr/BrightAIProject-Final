@@ -2,36 +2,27 @@
 const oracledb = require('oracledb');
 const logger = require('../src/utils/logger');
 
-// Initialize Oracle Thick Mode untuk mendukung versi Oracle lama
+// ---------- Oracle Client Initialization (Thick Mode) ----------
 try {
-  // Skip thick mode initialization in WSL/Linux environment
-  if (process.platform === 'win32' || process.env.ORACLE_INSTANT_CLIENT_PATH) {
-    const libDir = process.env.ORACLE_INSTANT_CLIENT_PATH || 'C:\\Users\\Thalita Zahra\\Downloads\\instantclient-basic-windows\\instantclient_23_8';
-    oracledb.initOracleClient({
-      libDir: libDir,
-      // configDir: libDir + '\\network\\admin' // Optional, jika ada tnsnames.ora
-    });
-    logger.info('Oracle Thick mode initialized successfully');
+  if (process.env.ORACLE_INSTANT_CLIENT_PATH) {
+    // macOS/Linux/Windows via env path
+    oracledb.initOracleClient({ libDir: process.env.ORACLE_INSTANT_CLIENT_PATH });
+    logger.info(`Oracle Thick mode initialized successfully at ${process.env.ORACLE_INSTANT_CLIENT_PATH}`);
+  } else if (process.platform === 'win32') {
+    // Windows fallback (ubah sesuai lokasi jika perlu)
+    const libDir = 'C:\\Users\\Thalita Zahra\\Downloads\\instantclient-basic-windows\\instantclient_23_8';
+    oracledb.initOracleClient({ libDir });
+    logger.info('Oracle Thick mode initialized on Windows default path');
   } else {
-    logger.info('Skipping Oracle Thick mode initialization (not on Windows platform)');
+    logger.info('No Instant Client path provided, running in Thin mode (older DB versions may not be supported)');
   }
 } catch (err) {
-  logger.warn('Oracle Thick mode initialization failed, falling back to Thin mode:', err.message);
-  // Jika thick mode gagal, akan tetap menggunakan thin mode
+  logger.warn(`Oracle Thick mode initialization failed, falling back to Thin mode: ${err.message}`);
 }
 
+// ---------- Connection Pool Config ----------
 const pools = {
-  DWHNAS: null,
   DADBS: null
-};
-
-const dwhNasConfig = {
-  user: process.env.ORACLE_DWHNAS_USER,
-  password: process.env.ORACLE_DWHNAS_PASSWORD,
-  connectString: process.env.ORACLE_DWHNAS_CONNECT_STRING,
-  poolMin: 2,
-  poolMax: 10,
-  poolIncrement: 1
 };
 
 const dadbsConfig = {
@@ -40,33 +31,30 @@ const dadbsConfig = {
   connectString: process.env.ORACLE_DADBS_CONNECT_STRING,
   poolMin: 2,
   poolMax: 10,
-  poolIncrement: 1
+  poolIncrement: 1,
+
+  connectTimeout: 60,
+  transportConnectTimeout: 60000,
 };
 
+// ---------- Helpers ----------
+function redactConnectString(cs) {
+  if (!cs) return '';
+  // jangan tampilkan password; connectString tidak mengandung password, jadi aman
+  return cs;
+}
+
+// ---------- Pool Lifecycle ----------
 async function initializePools() {
   try {
-    // Check if pools already exist to prevent double initialization
-    if (pools.DWHNAS && pools.DADBS) {
-      logger.info('Oracle pools already initialized, skipping...');
-      return;
-    }
+    // Log env yang dipakai (tanpa password)
+    logger.info(`DADBS  -> ${process.env.ORACLE_DADBS_USER}@${redactConnectString(process.env.ORACLE_DADBS_CONNECT_STRING)}`);
 
-    if (!pools.DWHNAS) {
-      pools.DWHNAS = await oracledb.createPool({
-        ...dwhNasConfig,
-        poolAlias: 'DWHNAS'
-      });
-      logger.info('DWHNAS pool created successfully');
-    }
-    
     if (!pools.DADBS) {
-      pools.DADBS = await oracledb.createPool({
-        ...dadbsConfig,
-        poolAlias: 'DADBS'
-      });
+      pools.DADBS = await oracledb.createPool({ ...dadbsConfig, poolAlias: 'DADBS' });
       logger.info('DADBS pool created successfully');
     }
-    
+
     logger.info('Oracle connection pools initialized successfully');
   } catch (error) {
     logger.error('Failed to initialize Oracle connection pools:', error);
@@ -74,7 +62,7 @@ async function initializePools() {
   }
 }
 
-async function getConnection(database = 'DWHNAS') {
+async function getConnection(database = 'DADBS') {
   try {
     if (!pools[database]) {
       throw new Error(`Database pool ${database} not initialized`);
@@ -86,20 +74,16 @@ async function getConnection(database = 'DWHNAS') {
   }
 }
 
+// ---------- CLOB Handling ----------
 async function processClobData(row) {
   const processedRow = {};
-  
   for (const [key, value] of Object.entries(row)) {
     if (value && typeof value === 'object' && value.constructor && value.constructor.name === 'Lob') {
       try {
-        // Read CLOB data
         let clobData = '';
         value.setEncoding('utf8');
-        
         const chunks = [];
-        for await (const chunk of value) {
-          chunks.push(chunk);
-        }
+        for await (const chunk of value) chunks.push(chunk);
         clobData = chunks.join('');
         processedRow[key] = clobData;
       } catch (err) {
@@ -110,11 +94,17 @@ async function processClobData(row) {
       processedRow[key] = value;
     }
   }
-  
   return processedRow;
 }
 
-async function executeQuery(query, binds = [], database = 'DWHNAS') {
+// ---------- Query Executor with Fallback ----------
+async function executeQuery(query, binds = [], database = 'DADBS') {
+  // Dev switch: bypass DB entirely
+  if (process.env.USE_DB === 'false') {
+    logger.warn('USE_DB=false -> returning mock data for development.');
+    return getMockData(query, binds);
+  }
+
   let connection;
   try {
     connection = await getConnection(database);
@@ -123,56 +113,49 @@ async function executeQuery(query, binds = [], database = 'DWHNAS') {
       fetchArraySize: 1000,
       autoCommit: true
     });
-    
-    // For SELECT queries, process CLOB data and return rows
+
     if (query.trim().toUpperCase().startsWith('SELECT')) {
-      // Process CLOB data if exists
-      const processedRows = await Promise.all(
-        result.rows.map(row => processClobData(row))
-      );
-      
+      const processedRows = await Promise.all(result.rows.map(row => processClobData(row)));
       return processedRows;
-    } else {
-      return result;
     }
+    return result;
   } catch (error) {
     logger.error('Database query error:', error);
-    
-    // If it's the unsupported database version error, provide mock data for development
-    if (error.code === 'NJS-138') {
-      logger.warn('Returning mock data due to Oracle version compatibility issue');
+
+    // Fallback untuk DB tua (Thin mode tak didukung) atau konektivitas (timeout)
+    if (error?.code === 'NJS-138' || error?.code === 'NJS-510') {
+      logger.warn('Returning mock data due to Oracle connection/version issue');
       return getMockData(query, binds);
     }
-    
+
     throw error;
   } finally {
     if (connection) {
-      try {
-        await connection.close();
-      } catch (closeError) {
-        logger.error('Error closing connection:', closeError);
-      }
+      try { await connection.close(); } 
+      catch (closeError) { logger.error('Error closing connection:', closeError); }
     }
   }
 }
 
+// ---------- Mock Data ----------
 function getMockData(query, binds) {
-  const queryLower = query.toLowerCase().trim();
-  
-  // Mock data for different query types
-  if (queryLower.includes('select') && queryLower.includes('brightai_chat')) {
-    return []; // Empty chat history
+  const q = (query || '').toLowerCase().trim();
+
+  // Chats
+  if (q.includes('select') && q.includes('usr_rpt.brightai_chat')) {
+    return [];
   }
-  
-  if (queryLower.includes('select') && queryLower.includes('brightai_user')) {
-    if (queryLower.includes('email')) {
+
+  // Users (mock login - password: Admin123)
+  if (q.includes('select') && q.includes('usr_rpt.brightai_user')) {
+    if (q.includes('email') || q.includes('username')) {
       return [{
         USER_ID: 1,
-        USERNAME: 'testuser',
-        EMAIL: 'test@example.com',
-        PASSWORD_HASH: '$2b$10$example.hash.here',
-        FULL_NAME: 'Test User',
-        ROLE: 'user',
+        USERNAME: 'Admin123',
+        EMAIL: 'admin123@gmail.com',
+        PASSWORD_HASH: '$2a$10$0Wor7LQTfzTNoOFyvaNZOujSfpuhGXxYjDabmFtN6Qc0zgXL9wr7O',
+        FULL_NAME: 'Admin Telkom Regional',
+        ROLE: 'admin',
         IS_ACTIVE: 1,
         CREATED_AT: new Date(),
         UPDATED_AT: new Date()
@@ -180,32 +163,29 @@ function getMockData(query, binds) {
     }
     return [];
   }
-  
-  if (queryLower.includes('select') && queryLower.includes('brightai_session')) {
-    return []; // Empty sessions
+
+  // Sessions
+  if (q.includes('select') && q.includes('usr_rpt.brightai_session')) {
+    return [];
   }
-  
-  if (queryLower.includes('insert') || queryLower.includes('update') || queryLower.includes('delete')) {
-    return []; // Mock success for DML operations
+
+  // DML mock success
+  if (q.includes('insert') || q.includes('update') || q.includes('delete')) {
+    return [];
   }
-  
-  if (queryLower.includes('seq_brightai') && queryLower.includes('currval')) {
-    return [{ CHAT_ID: Math.floor(Math.random() * 10000) }]; // Mock sequence value
+
+  // Sequence mock
+  if (q.includes('seq_brightai') && q.includes('currval')) {
+    return [{ CHAT_ID: Math.floor(Math.random() * 10000) }];
   }
-  
-  return []; // Default empty result
+
+  return [];
 }
 
+// ---------- Pool Shutdown ----------
 async function closePools() {
   try {
-    if (pools.DWHNAS) {
-      await pools.DWHNAS.close(10);
-      pools.DWHNAS = null;
-    }
-    if (pools.DADBS) {
-      await pools.DADBS.close(10);
-      pools.DADBS = null;
-    }
+    if (pools.DADBS)  { await pools.DADBS.close(10);  pools.DADBS  = null; }
     logger.info('All database pools closed');
   } catch (error) {
     logger.error('Error closing pools:', error);

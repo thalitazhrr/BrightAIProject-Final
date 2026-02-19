@@ -5,8 +5,8 @@ const logger = require('../utils/logger');
 class SessionModel {
   constructor() {
     this.tableName = 'BRIGHTAI_SESSION';
-    this.database = 'DWHNAS';
-    this.schema = 'DWH_MOIS';
+    this.database = 'DADBS';
+    this.schema = 'USR_RPT';
     this.isInitialized = false;
   }
 

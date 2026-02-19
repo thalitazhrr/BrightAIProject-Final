@@ -5,8 +5,8 @@ const logger = require('../utils/logger');
 class UserModel {
   constructor() {
     this.tableName = 'BRIGHTAI_USER';
-    this.database = 'DWHNAS';
-    this.schema = 'DWH_MOIS';
+    this.database = 'DADBS';
+    this.schema = 'USR_RPT';
     this.isInitialized = false;
   }
 
@@ -47,7 +47,7 @@ class UserModel {
       
       // Get the last inserted user ID from sequence
       const getUserIdQuery = `
-        SELECT SEQ_BRIGHTAI_USER.CURRVAL as USER_ID FROM DUAL
+        SELECT USR_RPT.SEQ_BRIGHTAI_USER.CURRVAL as USER_ID FROM DUAL
       `;
       const result = await executeQuery(getUserIdQuery, [], this.database);
       const userId = result[0].USER_ID;
