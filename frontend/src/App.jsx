@@ -1238,11 +1238,12 @@ function App() {
           id: savedChat.session_id,
           messages: [welcomeMessage],
           lastMessage: 'Selamat datang di BrightAI! Silakan ajukan pertanyaan...',
-          title: 'Percakapan Baru - BrightAI'
+          title: 'Percakapan Baru - BrightAI',
+          _loaded: true // mark as loaded so welcome message isn't overwritten
         };
         setChats(prev => [chatWithRealId, ...prev]);
         setActiveChat(savedChat.session_id);
-        
+
         console.log('✅ New chat created successfully with welcome:', savedChat.session_id);
       } else {
         console.error('❌ Failed to save chat to database');
@@ -1436,17 +1437,17 @@ function App() {
   useEffect(() => {
     const loadMessages = async () => {
       if (!activeChat) return;
-      
+
       const currentChatObj = chats.find(chat => chat.id === activeChat);
       if (!currentChatObj) return;
-      
-      // If messages not loaded, load from database
-      if (currentChatObj.messages.length === 0) {
+
+      // Only load from DB if messages haven't been fetched yet (marked with _loaded flag)
+      if (!currentChatObj._loaded) {
         try {
-          const messages = await loadChatMessagesFromDatabase(activeChat);
-          setChats(prev => prev.map(chat => 
-            chat.id === activeChat 
-              ? { ...chat, messages }
+          const dbMessages = await loadChatMessagesFromDatabase(activeChat);
+          setChats(prev => prev.map(chat =>
+            chat.id === activeChat
+              ? { ...chat, messages: dbMessages, _loaded: true }
               : chat
           ));
         } catch (error) {
@@ -1454,9 +1455,9 @@ function App() {
         }
       }
     };
-    
+
     loadMessages();
-  }, [activeChat, chats]);
+  }, [activeChat]); // Only re-run when activeChat changes, not on every chats update
 
   // Get current chat messages
   const getCurrentChatMessages = () => {

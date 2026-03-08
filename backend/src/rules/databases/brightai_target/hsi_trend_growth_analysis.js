@@ -102,7 +102,7 @@ module.exports = {
     ),
     
     TREND_CALCULATIONS AS (
-        SELECT *,
+        SELECT t.*,
             -- Previous period metrics
             LAG(MONTHLY_REALISASI, 1) OVER (
                 PARTITION BY TREG, SEGMEN, LLEVEL, SATUAN 
@@ -132,11 +132,11 @@ module.exports = {
                 ORDER BY PERIODE
             ) as YOY_ACHIEVEMENT
             
-        FROM HSI_MONTHLY_TREND
+        FROM HSI_MONTHLY_TREND t
     ),
     
     GROWTH_METRICS AS (
-        SELECT *,
+        SELECT t.*,
             -- Month-over-month growth
             CASE 
                 WHEN PREV_MONTH_REALISASI IS NOT NULL AND PREV_MONTH_REALISASI > 0 THEN 
@@ -172,11 +172,11 @@ module.exports = {
                 ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
             ) as VOLATILITY_INDICATOR
             
-        FROM TREND_CALCULATIONS
+        FROM TREND_CALCULATIONS t
     ),
     
     PATTERN_ANALYSIS AS (
-        SELECT *,
+        SELECT t.*,
             -- Seasonal pattern detection
             CASE 
                 WHEN BULAN IN ('01', '02', '12') THEN 'Q4_Q1_TRANSITION'
@@ -224,11 +224,11 @@ module.exports = {
                 ELSE 'TREND_TURUN_KUAT'
             END as TREND_DIRECTION
             
-        FROM GROWTH_METRICS
+        FROM GROWTH_METRICS t
     ),
     
     FORECAST_INDICATORS AS (
-        SELECT *,
+        SELECT t.*,
             -- Next month projection (simple linear trend)
             CASE 
                 WHEN MOM_GROWTH_PCT IS NOT NULL THEN 
@@ -265,7 +265,7 @@ module.exports = {
                 END, 2
             ) as OPPORTUNITY_SCORE
             
-        FROM PATTERN_ANALYSIS
+        FROM PATTERN_ANALYSIS t
     )
     
     SELECT 

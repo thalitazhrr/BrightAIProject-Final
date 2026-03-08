@@ -238,7 +238,7 @@ module.exports = {
     ),
     
     REVENUE_METRICS AS (
-        SELECT *,
+        SELECT t.*,
             -- ARPU estimation berdasarkan data aktual (bukan asumsi)
             CASE 
                 WHEN BANDWIDTH_CATEGORY = 'Ultra Premium (≥200 Mbps)' THEN
@@ -270,19 +270,19 @@ module.exports = {
                 ELSE 1.0
             END as DIGITAL_PREMIUM_FACTOR
             
-        FROM BANDWIDTH_REVENUE_ANALYSIS
+        FROM BANDWIDTH_REVENUE_ANALYSIS t
         WHERE TOTAL_HSI_ORDERS > 0
     ),
     
     FINAL_CALCULATION AS (
-        SELECT *,
+        SELECT t.*,
             -- Final ARPU dengan premium factors
             ROUND(ESTIMATED_BASE_ARPU * BUNDLING_PREMIUM_FACTOR * DIGITAL_PREMIUM_FACTOR, 0) as FINAL_MONTHLY_ARPU,
             
             -- Revenue calculations berdasarkan pelanggan unik (lebih akurat untuk revenue)
             TOTAL_HSI_PELANGGAN * ROUND(ESTIMATED_BASE_ARPU * BUNDLING_PREMIUM_FACTOR * DIGITAL_PREMIUM_FACTOR, 0) as TOTAL_MONTHLY_REVENUE_ESTIMATE
             
-        FROM REVENUE_METRICS
+        FROM REVENUE_METRICS t
     )
     SELECT 
         BANDWIDTH_CATEGORY,

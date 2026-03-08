@@ -74,25 +74,25 @@ const PORT = process.env.PORT || 3001;
 
 async function startServer() {
   try {
+    // Oracle DB wajib terkoneksi — tidak ada fallback mock
     await initializePools();
     logger.info("Database pools initialized successfully");
-    
-    // Initialize models after database is ready
+
     const userModel = require('./src/models/userModel');
     const chatModel = require('./src/models/chatModel');
     const sessionModel = require('./src/models/sessionModel');
-    
+
     await userModel.initialize();
     await chatModel.initialize();
     await sessionModel.initialize();
-    logger.info("Database models initialized successfully");
-    
+    logger.info("Database models initialized");
+
     app.listen(PORT, () => {
       logger.info(`BrightAI Backend Server running on port ${PORT}`);
       logger.info(`Environment: ${process.env.NODE_ENV || 'development'}`);
     });
   } catch (error) {
-    logger.error('Failed to start server:', error);
+    logger.error('Failed to start server. Pastikan Oracle DB dapat diakses (VPN aktif, .env sudah benar):', error.message);
     process.exit(1);
   }
 }

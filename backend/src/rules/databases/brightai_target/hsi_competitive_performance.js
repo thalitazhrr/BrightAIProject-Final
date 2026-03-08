@@ -103,7 +103,7 @@ module.exports = {
     ),
     
     PEER_BENCHMARKS AS (
-        SELECT *,
+        SELECT t.*,
             -- Peer group statistics
             AVG(UNIT_ACHIEVEMENT_PCT) OVER (
                 PARTITION BY PERIODE, SEGMEN, LLEVEL, SATUAN
@@ -145,11 +145,11 @@ module.exports = {
                 ORDER BY UNIT_REALISASI
             ) as VOLUME_PERCENTILE
             
-        FROM HSI_PERFORMANCE_BASE
+        FROM HSI_PERFORMANCE_BASE t
     ),
     
     COMPETITIVE_METRICS AS (
-        SELECT *,
+        SELECT t.*,
             -- Performance vs peers
             ROUND(UNIT_ACHIEVEMENT_PCT - PEER_AVG_ACHIEVEMENT, 2) as VS_PEER_AVG,
             ROUND(UNIT_ACHIEVEMENT_PCT - PEER_MEDIAN_ACHIEVEMENT, 2) as VS_PEER_MEDIAN,
@@ -197,11 +197,11 @@ module.exports = {
                 PARTITION BY PERIODE, SEGMEN, LLEVEL
             ) as TOTAL_PEERS
             
-        FROM PEER_BENCHMARKS
+        FROM PEER_BENCHMARKS t
     ),
     
     COMPETITIVE_GAPS AS (
-        SELECT *,
+        SELECT t.*,
             -- Gap to leader
             ROUND(PEER_MAX_ACHIEVEMENT - UNIT_ACHIEVEMENT_PCT, 2) as GAP_TO_LEADER_PCT,
             ROUND((PEER_MAX_VOLUME - UNIT_REALISASI) * 100.0 / NULLIF(PEER_MAX_VOLUME, 0), 2) as VOLUME_GAP_TO_LEADER_PCT,
@@ -237,11 +237,11 @@ module.exports = {
                 ORDER BY PERIODE
             ) as PREV_ACHIEVEMENT_RANK
             
-        FROM COMPETITIVE_METRICS
+        FROM COMPETITIVE_METRICS t
     ),
     
     COMPETITIVE_TRENDS AS (
-        SELECT *,
+        SELECT t.*,
             -- Performance momentum
             CASE 
                 WHEN PREV_ACHIEVEMENT_PCT IS NOT NULL THEN 
@@ -266,7 +266,7 @@ module.exports = {
                 ELSE 'SIGNIFICANT_DECLINE'
             END as MOMENTUM_CATEGORY
             
-        FROM COMPETITIVE_GAPS
+        FROM COMPETITIVE_GAPS t
     )
     
     SELECT 

@@ -161,7 +161,7 @@ module.exports = {
     ),
     
     TEMPORAL_ANALYSIS AS (
-        SELECT *,
+        SELECT t.*,
             -- Churn intensity classification
             CASE 
                 WHEN total_churn_ct0 >= 150 THEN 'PUNCAK_CHURN'
@@ -193,7 +193,7 @@ module.exports = {
                 ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
             ) as moving_avg_3_month
             
-        FROM TEMPORAL_AGGREGATION
+        FROM TEMPORAL_AGGREGATION t
     )
     
     SELECT 

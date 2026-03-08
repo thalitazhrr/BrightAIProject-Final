@@ -96,89 +96,89 @@ module.exports = {
     ),
     
     SEGMENT_CONTRIBUTION AS (
-        SELECT *,
+        SELECT b.*,
             -- Market share calculation per segment
-            ROUND(SEGMENT_REALISASI * 100.0 / 
-                SUM(SEGMENT_REALISASI) OVER (PARTITION BY PERIODE, LLEVEL, SATUAN), 2
+            ROUND(b.SEGMENT_REALISASI * 100.0 /
+                SUM(b.SEGMENT_REALISASI) OVER (PARTITION BY b.PERIODE, b.LLEVEL, b.SATUAN), 2
             ) as MARKET_SHARE_PCT,
-            
+
             -- Target vs realisasi contribution
-            ROUND(SEGMENT_TARGET * 100.0 / 
-                SUM(SEGMENT_TARGET) OVER (PARTITION BY PERIODE, LLEVEL, SATUAN), 2
+            ROUND(b.SEGMENT_TARGET * 100.0 /
+                SUM(b.SEGMENT_TARGET) OVER (PARTITION BY b.PERIODE, b.LLEVEL, b.SATUAN), 2
             ) as TARGET_CONTRIBUTION_PCT,
-            
+
             -- Performance vs market average
-            SEGMENT_ACHIEVEMENT_PCT - 
-            AVG(SEGMENT_ACHIEVEMENT_PCT) OVER (PARTITION BY PERIODE, LLEVEL, SATUAN) as VS_AVERAGE_PCT,
-            
+            b.SEGMENT_ACHIEVEMENT_PCT -
+            AVG(b.SEGMENT_ACHIEVEMENT_PCT) OVER (PARTITION BY b.PERIODE, b.LLEVEL, b.SATUAN) as VS_AVERAGE_PCT,
+
             -- Segment categorization
-            CASE 
-                WHEN SEGMENT_ACHIEVEMENT_PCT >= 110 THEN 'SEGMENT_UNGGUL'
-                WHEN SEGMENT_ACHIEVEMENT_PCT >= 100 THEN 'SEGMENT_STABIL'
-                WHEN SEGMENT_ACHIEVEMENT_PCT >= 85 THEN 'SEGMENT_BERKEMBANG'
+            CASE
+                WHEN b.SEGMENT_ACHIEVEMENT_PCT >= 110 THEN 'SEGMENT_UNGGUL'
+                WHEN b.SEGMENT_ACHIEVEMENT_PCT >= 100 THEN 'SEGMENT_STABIL'
+                WHEN b.SEGMENT_ACHIEVEMENT_PCT >= 85 THEN 'SEGMENT_BERKEMBANG'
                 ELSE 'SEGMENT_PERLU_PERHATIAN'
             END as KATEGORI_SEGMENT
-            
-        FROM HSI_SEGMENT_BASE
+
+        FROM HSI_SEGMENT_BASE b
     ),
-    
+
     SEGMENT_PERFORMANCE AS (
-        SELECT *,
+        SELECT c.*,
             -- Rankings
             RANK() OVER (
-                PARTITION BY PERIODE, LLEVEL, SATUAN 
-                ORDER BY SEGMENT_ACHIEVEMENT_PCT DESC
+                PARTITION BY c.PERIODE, c.LLEVEL, c.SATUAN
+                ORDER BY c.SEGMENT_ACHIEVEMENT_PCT DESC
             ) as RANKING_ACHIEVEMENT,
-            
+
             RANK() OVER (
-                PARTITION BY PERIODE, LLEVEL, SATUAN 
-                ORDER BY SEGMENT_REALISASI DESC
+                PARTITION BY c.PERIODE, c.LLEVEL, c.SATUAN
+                ORDER BY c.SEGMENT_REALISASI DESC
             ) as RANKING_VOLUME,
-            
+
             RANK() OVER (
-                PARTITION BY PERIODE, LLEVEL, SATUAN 
-                ORDER BY MARKET_SHARE_PCT DESC
+                PARTITION BY c.PERIODE, c.LLEVEL, c.SATUAN
+                ORDER BY c.MARKET_SHARE_PCT DESC
             ) as RANKING_MARKET_SHARE,
-            
+
             -- Growth calculation (vs previous period)
-            LAG(SEGMENT_REALISASI) OVER (
-                PARTITION BY SEGMEN, LLEVEL, TREG, WITEL, SATUAN 
-                ORDER BY PERIODE
+            LAG(c.SEGMENT_REALISASI) OVER (
+                PARTITION BY c.SEGMEN, c.LLEVEL, c.TREG, c.WITEL, c.SATUAN
+                ORDER BY c.PERIODE
             ) as PREV_REALISASI,
-            
-            LAG(SEGMENT_ACHIEVEMENT_PCT) OVER (
-                PARTITION BY SEGMEN, LLEVEL, TREG, WITEL, SATUAN 
-                ORDER BY PERIODE
+
+            LAG(c.SEGMENT_ACHIEVEMENT_PCT) OVER (
+                PARTITION BY c.SEGMEN, c.LLEVEL, c.TREG, c.WITEL, c.SATUAN
+                ORDER BY c.PERIODE
             ) as PREV_ACHIEVEMENT_PCT
-            
-        FROM SEGMENT_CONTRIBUTION
+
+        FROM SEGMENT_CONTRIBUTION c
     ),
-    
+
     SEGMENT_GROWTH AS (
-        SELECT *,
+        SELECT p.*,
             -- Growth calculations
-            CASE 
-                WHEN PREV_REALISASI IS NOT NULL AND PREV_REALISASI > 0 THEN 
-                    ROUND(((SEGMENT_REALISASI - PREV_REALISASI) * 100.0 / PREV_REALISASI), 2)
+            CASE
+                WHEN p.PREV_REALISASI IS NOT NULL AND p.PREV_REALISASI > 0 THEN
+                    ROUND(((p.SEGMENT_REALISASI - p.PREV_REALISASI) * 100.0 / p.PREV_REALISASI), 2)
                 ELSE NULL
             END as GROWTH_RATE_PCT,
-            
-            CASE 
-                WHEN PREV_ACHIEVEMENT_PCT IS NOT NULL THEN 
-                    ROUND(SEGMENT_ACHIEVEMENT_PCT - PREV_ACHIEVEMENT_PCT, 2)
+
+            CASE
+                WHEN p.PREV_ACHIEVEMENT_PCT IS NOT NULL THEN
+                    ROUND(p.SEGMENT_ACHIEVEMENT_PCT - p.PREV_ACHIEVEMENT_PCT, 2)
                 ELSE NULL
             END as ACHIEVEMENT_IMPROVEMENT_PCT,
-            
+
             -- Growth categorization
-            CASE 
-                WHEN PREV_REALISASI IS NULL THEN 'NEW_SEGMENT'
-                WHEN ((SEGMENT_REALISASI - PREV_REALISASI) * 100.0 / PREV_REALISASI) >= 15 THEN 'HIGH_GROWTH'
-                WHEN ((SEGMENT_REALISASI - PREV_REALISASI) * 100.0 / PREV_REALISASI) >= 5 THEN 'MODERATE_GROWTH'
-                WHEN ((SEGMENT_REALISASI - PREV_REALISASI) * 100.0 / PREV_REALISASI) >= -5 THEN 'STABLE'
+            CASE
+                WHEN p.PREV_REALISASI IS NULL THEN 'NEW_SEGMENT'
+                WHEN ((p.SEGMENT_REALISASI - p.PREV_REALISASI) * 100.0 / p.PREV_REALISASI) >= 15 THEN 'HIGH_GROWTH'
+                WHEN ((p.SEGMENT_REALISASI - p.PREV_REALISASI) * 100.0 / p.PREV_REALISASI) >= 5 THEN 'MODERATE_GROWTH'
+                WHEN ((p.SEGMENT_REALISASI - p.PREV_REALISASI) * 100.0 / p.PREV_REALISASI) >= -5 THEN 'STABLE'
                 ELSE 'DECLINING'
             END as GROWTH_CATEGORY
-            
-        FROM SEGMENT_PERFORMANCE
+
+        FROM SEGMENT_PERFORMANCE p
     )
     
     SELECT 

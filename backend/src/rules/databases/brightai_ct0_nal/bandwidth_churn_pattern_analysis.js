@@ -147,7 +147,7 @@ module.exports = {
     ),
     
     CHURN_ANALYSIS AS (
-        SELECT *,
+        SELECT t.*,
             -- Ranking berdasarkan volume churn
             RANK() OVER (PARTITION BY PERIODE ORDER BY total_churn_ct0 DESC) as ranking_churn_volume,
             RANK() OVER (PARTITION BY PERIODE, kategori_bandwidth ORDER BY total_churn_ct0 DESC) as ranking_dalam_kategori,
@@ -173,7 +173,7 @@ module.exports = {
                 ORDER BY PERIODE
             ) as prev_churn_count
             
-        FROM BANDWIDTH_CHURN_SUMMARY
+        FROM BANDWIDTH_CHURN_SUMMARY t
     )
     
     SELECT 

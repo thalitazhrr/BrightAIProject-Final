@@ -152,7 +152,7 @@ module.exports = {
     ),
     
     RISK_ASSESSMENT AS (
-        SELECT *,
+        SELECT t.*,
             -- Risk scoring berdasarkan pola
             CASE 
                 WHEN kategori_masa_layanan = 'SANGAT_BARU' AND jumlah_ct0 >= 20 THEN 'RISIKO_TINGGI'
@@ -172,7 +172,7 @@ module.exports = {
                 (jumlah_ct0 * 100.0 / SUM(jumlah_ct0) OVER (PARTITION BY PERIODE, REGIONAL)), 2
             ) as kontribusi_persen_regional
             
-        FROM PATTERN_SUMMARY
+        FROM PATTERN_SUMMARY t
     )
     
     SELECT 

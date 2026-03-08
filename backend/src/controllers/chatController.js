@@ -174,8 +174,8 @@ class ChatController {
       if (session_id) {
         const chatSession = await chatModel.getChatBySession(session_id);
         
-        // Check if user has access to this session
-        const userHasAccess = chatSession.some(chat => chat.USER_ID === userId);
+        // Check if user has access to this session (use == for type-safe Oracle number comparison)
+        const userHasAccess = chatSession.some(chat => String(chat.USER_ID) === String(userId));
         if (!userHasAccess && chatSession.length > 0) {
           return res.status(403).json({
             success: false,
@@ -223,8 +223,8 @@ class ChatController {
 
       const chatSession = await chatModel.getChatBySession(sessionId);
 
-      // Check if user has access to this session
-      const userHasAccess = chatSession.some(chat => chat.USER_ID === req.user.id);
+      // Check if user has access to this session (use string comparison for Oracle number safety)
+      const userHasAccess = chatSession.some(chat => String(chat.USER_ID) === String(req.user.id));
       if (!userHasAccess && chatSession.length > 0) {
         return res.status(403).json({
           success: false,

@@ -379,7 +379,7 @@ module.exports = {
     ),
     
     FULFILLMENT_METRICS AS (
-        SELECT *,
+        SELECT t.*,
             -- Success rates (order-based)
             ROUND(SUCCESSFUL_HSI_ORDERS * 100.0 / NULLIF(TOTAL_HSI_ORDERS, 0), 2) as SUCCESS_RATE_TOTAL,
             ROUND(SUCCESSFUL_BISNIS_ORDERS * 100.0 / NULLIF(HSI_BISNIS_ORDERS, 0), 2) as SUCCESS_RATE_BISNIS,
@@ -434,7 +434,7 @@ module.exports = {
                       ELSE 5 END * 0.2)
             , 1) as SKOR_EFISIENSI
             
-        FROM FULFILLMENT_ANALYSIS
+        FROM FULFILLMENT_ANALYSIS t
     )
     SELECT 
         REGIONAL,

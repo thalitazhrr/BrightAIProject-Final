@@ -119,7 +119,7 @@ module.exports = {
     ),
     
     PERFORMANCE_METRICS AS (
-        SELECT *,
+        SELECT t.*,
             -- Ranking calculations
             RANK() OVER (PARTITION BY PERIODE, LLEVEL ORDER BY ACHIEVEMENT_PCT DESC) as RANKING_ACHIEVEMENT,
             RANK() OVER (PARTITION BY PERIODE, LLEVEL ORDER BY TOTAL_REALISASI DESC) as RANKING_VOLUME,
@@ -137,11 +137,11 @@ module.exports = {
                 ELSE 0 
             END as IS_TARGET_ACHIEVED
             
-        FROM HSI_TARGET_ANALYSIS
+        FROM HSI_TARGET_ANALYSIS t
     ),
     
     TREND_ANALYSIS AS (
-        SELECT *,
+        SELECT t.*,
             -- Trend calculation
             CASE 
                 WHEN PREV_ACHIEVEMENT_PCT IS NULL THEN 'NEW_PERIOD'
@@ -156,7 +156,7 @@ module.exports = {
                 ELSE NULL
             END as TREND_CHANGE_PCT
             
-        FROM PERFORMANCE_METRICS
+        FROM PERFORMANCE_METRICS t
     )
     
     SELECT 

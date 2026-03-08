@@ -228,7 +228,7 @@ module.exports = {
     ),
 
     STO_RANKING AS (
-        SELECT *,
+        SELECT t.*,
             -- ADDED: Service efficiency metrics
             CASE 
                 WHEN avg_orders_per_service >= 2.0 THEN 'EFISIENSI_TINGGI'
@@ -271,7 +271,7 @@ module.exports = {
                 (CASE WHEN avg_orders_per_service >= 1.5 THEN 10 ELSE avg_orders_per_service * 6.67 END * 0.1)
             , 1) as skor_efisiensi
 
-        FROM STO_PERFORMANCE
+        FROM STO_PERFORMANCE t
     )
     SELECT * FROM STO_RANKING
     ORDER BY REGIONAL, WITEL, total_hsi_orders DESC

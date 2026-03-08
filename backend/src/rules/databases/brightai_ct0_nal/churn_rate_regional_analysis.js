@@ -139,7 +139,7 @@ module.exports = {
     ),
     
     REGIONAL_RANKING AS (
-        SELECT *,
+        SELECT t.*,
             RANK() OVER (PARTITION BY PERIODE ORDER BY total_churn_ct0 DESC) as ranking_churn_volume,
             RANK() OVER (PARTITION BY PERIODE ORDER BY rata_rata_masa_layanan_bulan ASC) as ranking_churn_cepat,
             
@@ -157,7 +157,7 @@ module.exports = {
                 ELSE 'SANGAT_RENDAH'
             END as kategori_churn
             
-        FROM CHURN_ANALYSIS
+        FROM CHURN_ANALYSIS t
     )
     
     SELECT 

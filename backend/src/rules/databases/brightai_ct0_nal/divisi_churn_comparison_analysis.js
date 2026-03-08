@@ -170,7 +170,7 @@ module.exports = {
     ),
     
     DIVISI_COMPARATIVE_ANALYSIS AS (
-        SELECT *,
+        SELECT t.*,
             -- Performance categorization
             CASE 
                 WHEN total_churn_ct0 >= 100 THEN 'PERFORMA_BURUK'
@@ -217,7 +217,7 @@ module.exports = {
                 ORDER BY PERIODE
             ) as prev_early_churn_rate
             
-        FROM DIVISI_CHURN_METRICS
+        FROM DIVISI_CHURN_METRICS t
     )
     
     SELECT 

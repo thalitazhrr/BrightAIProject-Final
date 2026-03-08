@@ -65,7 +65,7 @@ class SessionModel {
         const query = `
         SELECT *
         FROM (
-            SELECT SESSION_ID, SESSION_NAME, STARTED_AT, MESSAGE_COUNT
+            SELECT SESSION_ID, USER_ID, SESSION_NAME, STARTED_AT, MESSAGE_COUNT
             FROM ${this.schema}.${this.tableName}
             WHERE USER_ID = :user_id AND IS_ACTIVE = 1
             ORDER BY STARTED_AT DESC

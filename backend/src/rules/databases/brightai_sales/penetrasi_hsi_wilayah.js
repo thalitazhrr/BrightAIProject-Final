@@ -440,7 +440,7 @@ module.exports = {
     ),
     
     PERINGKAT_PENETRASI AS (
-        SELECT *,
+        SELECT t.*,
             -- Ranking Nasional & Regional berdasarkan penetrasi order HSI
             RANK() OVER (PARTITION BY tahun, bulan ORDER BY penetrasi_hsi_order DESC) as peringkat_penetrasi_nasional,
             RANK() OVER (PARTITION BY tahun, bulan, REGIONAL ORDER BY penetrasi_hsi_order DESC) as peringkat_penetrasi_regional,
@@ -506,7 +506,7 @@ module.exports = {
             DENSE_RANK() OVER (PARTITION BY WITEL ORDER BY rata_rata_order_per_layanan DESC) as posisi_efisiensi_witel,
             pelanggan_hsi_unik * 100.0 / SUM(pelanggan_hsi_unik) OVER (PARTITION BY WITEL) as pangsa_pelanggan_dalam_witel
             
-        FROM ANALISIS_PENETRASI
+        FROM ANALISIS_PENETRASI t
     )
     SELECT * FROM PERINGKAT_PENETRASI
     ORDER BY tahun DESC, bulan DESC, penetrasi_hsi_order DESC, total_pesanan_hsi DESC

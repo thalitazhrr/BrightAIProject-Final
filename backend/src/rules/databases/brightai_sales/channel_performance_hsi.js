@@ -69,7 +69,7 @@ module.exports = {
 
   SQL_QUERY: `
     WITH HSI_CLASSIFICATION AS (
-        SELECT *,
+        SELECT t.*,
             -- HSI Bisnis Classification
             CASE 
                 WHEN UPPER(PRODUCT) = 'WMS' THEN 0
@@ -284,13 +284,13 @@ module.exports = {
             COUNT(CASE WHEN IS_HSI_BISNIS = 1 THEN 1 END) * 100.0 / 
             NULLIF(COUNT(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) THEN 1 END), 0) as PREMIUM_PRODUCT_FOCUS
             
-        FROM HSI_CLASSIFICATION
+        FROM HSI_CLASSIFICATION t
         GROUP BY CLEAN_CHANNEL_NAME
         HAVING COUNT(*) >= 10 -- Minimum volume for analysis
     ),
     
     CHANNEL_PERFORMANCE AS (
-        SELECT *,
+        SELECT t.*,
             -- Market share calculation
             ROUND(HSI_ORDERS * 100.0 / SUM(HSI_ORDERS) OVER(), 2) as MARKET_SHARE_PCT,
             
@@ -319,7 +319,7 @@ module.exports = {
             RANK() OVER (ORDER BY EFFECTIVENESS_SCORE DESC) as RANKING_EFEKTIVITAS,
             RANK() OVER (ORDER BY BUNDLING_RATE DESC) as RANKING_BUNDLING
             
-        FROM CHANNEL_METRICS
+        FROM CHANNEL_METRICS t
     )
     SELECT 
         CHANNEL_NAME,

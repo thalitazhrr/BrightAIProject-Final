@@ -98,7 +98,7 @@ module.exports = {
     ),
     
     REGIONAL_MARKET_SHARE AS (
-        SELECT *,
+        SELECT t.*,
             -- National market share per TREG
             ROUND(REGIONAL_REALISASI * 100.0 / 
                 SUM(REGIONAL_REALISASI) OVER (PARTITION BY PERIODE, LLEVEL, SEGMEN, SATUAN), 2
@@ -128,11 +128,11 @@ module.exports = {
                 ELSE 'REGIONAL_UNDERPERFORM'
             END as KATEGORI_REGIONAL
             
-        FROM HSI_REGIONAL_BASE
+        FROM HSI_REGIONAL_BASE t
     ),
     
     REGIONAL_PERFORMANCE AS (
-        SELECT *,
+        SELECT t.*,
             -- Rankings
             RANK() OVER (
                 PARTITION BY PERIODE, LLEVEL, SEGMEN, SATUAN 
@@ -173,11 +173,11 @@ module.exports = {
                 ELSE 'MARKET_FOLLOWER'
             END as MARKET_POSITION
             
-        FROM REGIONAL_MARKET_SHARE
+        FROM REGIONAL_MARKET_SHARE t
     ),
     
     REGIONAL_TRENDS AS (
-        SELECT *,
+        SELECT t.*,
             -- Growth calculations
             CASE 
                 WHEN PREV_REALISASI IS NOT NULL AND PREV_REALISASI > 0 THEN 
@@ -207,7 +207,7 @@ module.exports = {
                 2
             ) as EFFICIENCY_SCORE
             
-        FROM REGIONAL_PERFORMANCE
+        FROM REGIONAL_PERFORMANCE t
     )
     
     SELECT 

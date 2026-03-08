@@ -149,7 +149,7 @@ module.exports = {
     ),
     
     WITEL_PERFORMANCE_ANALYSIS AS (
-        SELECT *,
+        SELECT t.*,
             -- Performance categorization
             CASE 
                 WHEN total_churn_ct0 >= 100 THEN 'PERFORMA_BURUK'
@@ -188,7 +188,7 @@ module.exports = {
                 ORDER BY PERIODE
             ) as prev_early_churn_rate
             
-        FROM WITEL_CHURN_METRICS
+        FROM WITEL_CHURN_METRICS t
     )
     
     SELECT 

@@ -354,7 +354,7 @@ module.exports = {
     ),
     
     PERFORMA_INSTALASI AS (
-        SELECT *,
+        SELECT t.*,
             -- Persentase kepatuhan SLA (order-based)
             ROUND(SESUAI_SLA_7HARI * 100.0 / NULLIF(TOTAL_INSTALASI_HSI, 0), 1) as KEPATUHAN_SLA_7HARI,
             ROUND(SESUAI_SLA_14HARI * 100.0 / NULLIF(TOTAL_INSTALASI_HSI, 0), 1) as KEPATUHAN_SLA_14HARI,
@@ -402,7 +402,7 @@ module.exports = {
                 GREATEST(0, (20 - COALESCE(KONSISTENSI_WAKTU_STDDEV, 20)) / 20 * 10)
             , 1) as SKOR_EFISIENSI
             
-        FROM METRIK_INSTALASI
+        FROM METRIK_INSTALASI t
     )
     SELECT 
         REGIONAL,
