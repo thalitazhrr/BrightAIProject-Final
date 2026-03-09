@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Bot, Send, Settings, Sun, Moon, Loader,
-  User, Target, X, Trash2, LogOut, RefreshCw, Bell,
+  User, Target, X, Trash2, LogOut, RefreshCw,
   Plus, Search, Zap, Clock, Wifi, WifiOff, ChevronDown, ChevronUp, Menu
 } from 'lucide-react';
 
@@ -446,14 +446,28 @@ const StatusIndicator = ({ status, theme }) => {
 };
 
 // Header Component
-const Header = ({ theme, setTheme, status, onRefresh, notifications, onNotificationClick, showNotifications, currentUser, onLogout }) => (
+const Header = ({ theme, setTheme, status, currentUser, onLogout, onToggleSidebar, sidebarOpen, showSidebarToggle }) => (
   <div className={`fixed top-0 left-16 right-0 z-40 ${
     theme === 'dark' ? 'bg-slate-900/80' : 'bg-white/80'
   } backdrop-blur-xl border-b ${
     theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/70'
-  } px-6 h-14 flex items-center justify-between`}>
-    {/* Left: Brand */}
+  } px-4 h-14 flex items-center justify-between`}>
+
+    {/* Left: Sidebar toggle + Brand */}
     <div className="flex items-center gap-3 min-w-0">
+      {showSidebarToggle && (
+        <button
+          onClick={onToggleSidebar}
+          className={`p-2 rounded-lg transition-colors shrink-0 ${
+            theme === 'dark'
+              ? 'text-slate-400 hover:text-white hover:bg-slate-700/60'
+              : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+          }`}
+          title={sidebarOpen ? 'Sembunyikan percakapan' : 'Tampilkan percakapan'}
+        >
+          <Menu className="w-4 h-4" />
+        </button>
+      )}
       <div className="min-w-0">
         <h1 className={`text-lg font-bold leading-tight truncate ${
           theme === 'dark' ? 'text-white' : 'text-gray-900'
@@ -468,21 +482,9 @@ const Header = ({ theme, setTheme, status, onRefresh, notifications, onNotificat
       </div>
     </div>
 
-    {/* Right: Actions */}
+    {/* Right: Status + Theme + User */}
     <div className="flex items-center gap-1 shrink-0">
       <StatusIndicator status={status} theme={theme} />
-
-      <button
-        onClick={onRefresh}
-        className={`p-2 rounded-lg ${
-          theme === 'dark'
-            ? 'text-slate-400 hover:text-white hover:bg-slate-700/60'
-            : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
-        } transition-colors`}
-        title="Perbarui Data"
-      >
-        <RefreshCw className="w-4 h-4" />
-      </button>
 
       <button
         onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -495,44 +497,6 @@ const Header = ({ theme, setTheme, status, onRefresh, notifications, onNotificat
       >
         {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
       </button>
-
-      <div className="relative">
-        <button
-          onClick={onNotificationClick}
-          className={`p-2 rounded-lg ${
-            theme === 'dark'
-              ? 'text-slate-400 hover:text-white hover:bg-slate-700/60'
-              : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
-          } transition-colors relative`}
-          title="Notifikasi"
-        >
-          <Bell className="w-4 h-4" />
-          {notifications.filter(n => !n.isRead).length > 0 && (
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-          )}
-        </button>
-
-        {showNotifications && (
-          <div className={`absolute right-0 top-full mt-2 w-72 ${
-            theme === 'dark' ? 'bg-slate-800' : 'bg-white'
-          } rounded-xl border ${
-            theme === 'dark' ? 'border-slate-700' : 'border-gray-200'
-          } shadow-2xl z-[10000] max-h-80 overflow-y-auto`}>
-            <div className={`px-4 py-3 border-b ${
-              theme === 'dark' ? 'border-slate-700' : 'border-gray-100'
-            } flex items-center justify-between`}>
-              <span className={`text-sm font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                Notifikasi
-              </span>
-            </div>
-            <div className="p-4 text-center">
-              <p className={`text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
-                Tidak ada notifikasi
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
 
       {/* Divider */}
       <div className={`w-px h-6 mx-1 ${theme === 'dark' ? 'bg-slate-700' : 'bg-gray-200'}`} />
@@ -560,7 +524,7 @@ const Header = ({ theme, setTheme, status, onRefresh, notifications, onNotificat
                 ? 'text-slate-400 hover:text-red-400 hover:bg-slate-700/60'
                 : 'text-gray-500 hover:text-red-600 hover:bg-gray-100'
             } transition-colors`}
-            title="Logout"
+            title="Keluar"
           >
             <LogOut className="w-4 h-4" />
           </button>
@@ -658,7 +622,7 @@ const ChatMessage = ({ message, isBot, theme }) => {
 };
 
 // Chat Sidebar Component
-const ChatSidebar = ({ chats, activeChat, setActiveChat, onNewChat, onDeleteChat, theme }) => {
+const ChatSidebar = ({ chats, activeChat, setActiveChat, onNewChat, onDeleteChat, theme, isOpen }) => {
   const [searchQuery, setSearchQuery] = React.useState('');
 
   const filteredChats = chats.filter(chat =>
@@ -667,8 +631,10 @@ const ChatSidebar = ({ chats, activeChat, setActiveChat, onNewChat, onDeleteChat
   );
 
   return (
-    <div className={`w-72 fixed left-16 top-14 bottom-0 z-30 ${
-      theme === 'dark' ? 'bg-slate-900/70' : 'bg-white/70'
+    <div className={`w-72 fixed left-16 top-14 bottom-0 z-30 transition-transform duration-300 ease-in-out ${
+      isOpen ? 'translate-x-0' : '-translate-x-full'
+    } ${
+      theme === 'dark' ? 'bg-slate-900/90' : 'bg-white/90'
     } backdrop-blur-xl border-r ${
       theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/70'
     } flex flex-col`}>
@@ -808,7 +774,7 @@ function App() {
   const [currentMessage, setCurrentMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [notifications, setNotifications] = useState([]);
-  const [showNotifications, setShowNotifications] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const chatEndRef = useRef(null);
 
   // Profile form state
@@ -1006,27 +972,6 @@ function App() {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chats, activeChat]);
 
-
-
-  // Handle notification click
-  const handleNotificationClick = () => {
-    setShowNotifications(!showNotifications);
-  };
-
-  // Mark notification as read
-  const markNotificationAsRead = (notificationId) => {
-    setNotifications(prev => 
-      prev.map(notif => 
-        notif.id === notificationId ? { ...notif, isRead: true } : notif
-      )
-    );
-  };
-
-  // Clear all notifications
-  const clearAllNotifications = () => {
-    setNotifications([]);
-    setShowNotifications(false);
-  };
 
 
   // Create new chat with proper user association
@@ -1318,9 +1263,10 @@ function App() {
               onNewChat={handleNewChat}
               onDeleteChat={handleDeleteChat}
               theme={theme}
+              isOpen={sidebarOpen}
             />
 
-            <div className="flex-1 flex flex-col ml-72 min-w-0">
+            <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${sidebarOpen ? 'ml-72' : 'ml-0'}`}>
               {activeChat ? (
                 <>
                   {/* Messages Area */}
@@ -1965,16 +1911,15 @@ function App() {
           notifications={chats.length}
         />
         
-        <Header 
-          theme={theme} 
-          setTheme={setTheme} 
+        <Header
+          theme={theme}
+          setTheme={setTheme}
           status={status}
-          onRefresh={() => {}}
-          notifications={notifications}
-          onNotificationClick={handleNotificationClick}
-          showNotifications={showNotifications}
           currentUser={currentUser}
           onLogout={handleLogout}
+          onToggleSidebar={() => setSidebarOpen(prev => !prev)}
+          sidebarOpen={sidebarOpen}
+          showSidebarToggle={activeView === 'ai'}
         />
         
         <main className="pl-16 pt-14 min-h-screen h-screen flex flex-col overflow-hidden">
