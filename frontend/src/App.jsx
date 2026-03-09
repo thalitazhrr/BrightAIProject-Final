@@ -336,168 +336,6 @@ const deleteChatFromDatabase = async (chatId) => {
   }
 };
 
-// Animated Background Component with Starry Space Theme
-const AnimatedBackground = ({ theme }) => {
-  // Blue color palette - lighter shades for light theme
-  const blueColors = theme === 'dark' ? [
-    '#1E3A8A', // blue-800
-    '#1E40AF', // blue-700
-    '#2563EB', // blue-600
-    '#3B82F6', // blue-500
-    '#60A5FA', // blue-400
-    '#93C5FD', // blue-300
-    '#0EA5E9', // sky-500
-    '#0284C7', // sky-600
-    '#0369A1', // sky-700
-    '#075985'  // sky-800
-  ] : [
-    '#DBEAFE', // blue-100
-    '#BFDBFE', // blue-200
-    '#93C5FD', // blue-300
-    '#60A5FA', // blue-400
-    '#3B82F6', // blue-500
-    '#2563EB', // blue-600
-    '#E0F2FE', // sky-100
-    '#BAE6FD', // sky-200
-    '#7DD3FC', // sky-300
-    '#38BDF8'  // sky-400
-  ];
-
-  // Animation types for variety - all blue-themed
-  const animationTypes = ['float0', 'float1', 'float2', 'float3', 'float4', 'gentlePulse', 'drift', 'oceanWave', 'blueBreeze', 'skyDrift'];
-  
-  // Star particle animations
-  const starAnimations = ['starTwinkle', 'starPulse', 'starFloat', 'cosmicDance'];
-
-  return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none">
-      {/* Base gradient background */}
-      <div className={`absolute inset-0 ${
-        theme === 'dark' 
-          ? 'bg-gradient-to-br from-slate-900 via-blue-950/40 to-slate-900'
-          : 'bg-gradient-to-br from-blue-50 via-sky-50 to-indigo-50'
-      }`} />
-      
-      {/* Floating blue orbs */}
-      <div className="absolute inset-0">
-        {Array.from({ length: 12 }, (_, i) => {
-          // Extended positions for better coverage
-          const positions = [
-            { top: '5%', left: '10%' },
-            { top: '20%', left: '88%' },
-            { top: '70%', left: '5%' },
-            { top: '40%', left: '78%' },
-            { top: '88%', left: '70%' },
-            { top: '15%', left: '55%' },
-            { top: '80%', left: '25%' },
-            { top: '55%', left: '92%' },
-            { top: '30%', left: '35%' },
-            { top: '95%', left: '50%' },
-            { top: '12%', left: '75%' },
-            { top: '60%', left: '60%' }
-          ];
-          
-          // More varied sizes for better visual layering
-          const sizes = [250, 300, 180, 350, 160, 320, 220, 280, 370, 200, 340, 190];
-          
-          // Select animation type
-          const animationType = animationTypes[i % animationTypes.length];
-          
-          return (
-            <div
-              key={i}
-              className={`absolute rounded-full mix-blend-multiply filter blur-3xl ${
-                theme === 'dark' ? 'opacity-8' : 'opacity-20'
-              }`}
-              style={{
-                background: `radial-gradient(circle, ${blueColors[i % blueColors.length]}, transparent 70%)`,
-                width: `${sizes[i]}px`,
-                height: `${sizes[i]}px`,
-                top: positions[i].top,
-                left: positions[i].left,
-                animation: `${animationType} ${25 + (i * 2)}s ease-in-out infinite`,
-                animationDelay: `${i * 1.8}s`
-              }}
-            />
-          );
-        })}
-      </div>
-      
-      {/* Twinkling star particles */}
-      <div className="absolute inset-0">
-        {Array.from({ length: 25 }, (_, i) => {
-          // Random positions for stars
-          const starPositions = [
-            { top: '8%', left: '15%' }, { top: '25%', left: '85%' }, { top: '45%', left: '12%' },
-            { top: '65%', left: '78%' }, { top: '32%', left: '55%' }, { top: '18%', left: '92%' },
-            { top: '75%', left: '33%' }, { top: '52%', left: '8%' }, { top: '88%', left: '65%' },
-            { top: '12%', left: '42%' }, { top: '38%', left: '95%' }, { top: '72%', left: '18%' },
-            { top: '55%', left: '72%' }, { top: '28%', left: '25%' }, { top: '85%', left: '45%' },
-            { top: '15%', left: '68%' }, { top: '68%', left: '88%' }, { top: '42%', left: '35%' },
-            { top: '78%', left: '58%' }, { top: '22%', left: '5%' }, { top: '95%', left: '22%' },
-            { top: '58%', left: '48%' }, { top: '35%', left: '82%' }, { top: '82%', left: '95%' },
-            { top: '48%', left: '62%' }
-          ];
-          
-          const starSizes = ['star-small', 'star-medium', 'star-large'];
-          const starSize = starSizes[i % 3];
-          const starAnimation = starAnimations[i % starAnimations.length];
-          const position = starPositions[i % starPositions.length];
-          
-          return (
-            <div
-              key={`star-${i}`}
-              className={`absolute star-particle ${starSize} ${
-                theme === 'dark' ? 'opacity-80' : 'opacity-60'
-              }`}
-              style={{
-                top: position.top,
-                left: position.left,
-                animation: `${starAnimation} ${3 + (i * 0.3)}s ease-in-out infinite`,
-                animationDelay: `${i * 0.2}s`,
-                background: theme === 'dark' 
-                  ? 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(147, 197, 253, 0.7) 50%, transparent 100%)'
-                  : 'radial-gradient(circle, rgba(59, 130, 246, 0.8) 0%, rgba(147, 197, 253, 0.6) 50%, transparent 100%)'
-              }}
-            />
-          );
-        })}
-      </div>
-      
-      {/* Cosmic glow effects */}
-      <div className="absolute inset-0">
-        {Array.from({ length: 8 }, (_, i) => {
-          const glowPositions = [
-            { top: '20%', left: '30%' }, { top: '60%', left: '80%' },
-            { top: '35%', left: '15%' }, { top: '75%', left: '55%' },
-            { top: '15%', left: '70%' }, { top: '85%', left: '25%' },
-            { top: '50%', left: '90%' }, { top: '90%', left: '10%' }
-          ];
-          
-          const glowSizes = [80, 120, 100, 150, 90, 110, 95, 130];
-          const position = glowPositions[i % glowPositions.length];
-          
-          return (
-            <div
-              key={`glow-${i}`}
-              className={`absolute cosmic-glow ${
-                theme === 'dark' ? 'opacity-20' : 'opacity-15'
-              }`}
-              style={{
-                top: position.top,
-                left: position.left,
-                width: `${glowSizes[i]}px`,
-                height: `${glowSizes[i]}px`,
-                animation: `starGlow ${8 + (i * 1.5)}s ease-in-out infinite`,
-                animationDelay: `${i * 1.2}s`
-              }}
-            />
-          );
-        })}
-      </div>
-    </div>
-  );
-};
 
 // Sidebar Component
 const Sidebar = ({ activeView, setActiveView, theme, notifications }) => {
@@ -1586,97 +1424,165 @@ function App() {
 
       case 'profile':
         return (
-          <div className="p-6 max-w-2xl">
-            {/* Page Header */}
-            <div className="mb-6">
-              <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                Profil Pengguna
-              </h2>
-              <p className={`text-sm mt-1 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
-                Kelola informasi profil dan preferensi akun Anda
-              </p>
-            </div>
+          <div className="flex-1 overflow-y-auto">
+            <div className="min-h-full p-6 flex flex-col items-center justify-start">
+              <div className="w-full max-w-2xl space-y-4">
 
-            {/* Avatar Card */}
-            <div className={`flex items-center gap-4 p-4 rounded-xl mb-5 ${
-              theme === 'dark' ? 'bg-slate-800/60 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
-            }`}>
-              <div className={`w-14 h-14 rounded-xl flex items-center justify-center text-xl font-bold ${
-                theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
-              }`}>
-                {(currentUser?.full_name || currentUser?.username || 'U')[0].toUpperCase()}
-              </div>
-              <div>
-                <p className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                  {currentUser?.full_name || currentUser?.username}
-                </p>
-                <p className={`text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
-                  {currentUser?.email}
-                </p>
-              </div>
-            </div>
+                {/* ── Profile Hero Card ── */}
+                <div className={`rounded-2xl overflow-hidden ${
+                  theme === 'dark' ? 'bg-slate-800/70 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
+                }`}>
+                  {/* Gradient header strip */}
+                  <div className="relative h-24 bg-gradient-to-r from-blue-800 via-blue-600 to-sky-500 overflow-hidden">
+                    <div className="absolute inset-0" style={{
+                      backgroundImage: 'radial-gradient(circle at 15% 60%, rgba(255,255,255,0.08) 0%, transparent 50%), radial-gradient(circle at 85% 30%, rgba(255,255,255,0.06) 0%, transparent 50%)'
+                    }} />
+                  </div>
 
-            {/* Form Card */}
-            <div className={`rounded-xl p-5 ${
-              theme === 'dark' ? 'bg-slate-800/60 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
-            }`}>
-              <h3 className={`text-sm font-semibold mb-4 ${theme === 'dark' ? 'text-slate-300' : 'text-gray-700'}`}>
-                Informasi Profil
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
-                    Nama Lengkap
-                  </label>
-                  <input
-                    type="text"
-                    value={profileForm.fullName}
-                    onChange={(e) => setProfileForm({...profileForm, fullName: e.target.value})}
-                    className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
-                      theme === 'dark'
-                        ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
-                        : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
-                    } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                    placeholder="Masukkan nama lengkap"
-                  />
+                  <div className="px-6 pb-6">
+                    {/* Avatar row — floats over header */}
+                    <div className="flex items-end gap-4 -mt-11 mb-3">
+                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 border-4 border-slate-800 flex items-center justify-center text-2xl font-bold text-white shadow-lg shrink-0"
+                        style={{ borderColor: theme === 'dark' ? '#1e293b' : '#ffffff' }}>
+                        {(currentUser?.full_name || currentUser?.username || 'U')[0].toUpperCase()}
+                      </div>
+                      <div className="pb-1 flex-1 min-w-0">
+                        <h1 className={`text-lg font-bold truncate ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                          {currentUser?.full_name || currentUser?.username || '-'}
+                        </h1>
+                        <p className={`text-sm truncate ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                          {currentUser?.email || '-'}
+                        </p>
+                      </div>
+                      <div className="pb-1 shrink-0">
+                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${
+                          theme === 'dark' ? 'bg-green-500/15 text-green-400 border border-green-500/25' : 'bg-green-50 text-green-600 border border-green-200'
+                        }`}>
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
+                          Aktif
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Info chips */}
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { icon: User, text: `@${currentUser?.username || '-'}` },
+                        { icon: Target, text: currentUser?.role || 'Analis' },
+                        { icon: Clock, text: `Bergabung ${currentUser?.created_at ? new Date(currentUser.created_at).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }) : 'baru-baru ini'}` },
+                      ].map(({ icon: Icon, text }) => (
+                        <span key={text} className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs ${
+                          theme === 'dark' ? 'bg-slate-700/60 text-slate-400 border border-slate-600/50' : 'bg-gray-100 text-gray-500 border border-gray-200'
+                        }`}>
+                          <Icon className="w-3 h-3" />
+                          {text}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
-                    Departemen
-                  </label>
-                  <input
-                    type="text"
-                    value={profileForm.department}
-                    onChange={(e) => setProfileForm({...profileForm, department: e.target.value})}
-                    className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
-                      theme === 'dark'
-                        ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
-                        : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
-                    } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                    placeholder="Masukkan departemen"
-                  />
+
+                {/* ── Stats Row ── */}
+                <div className="grid grid-cols-3 gap-4">
+                  {[
+                    { label: 'Total Percakapan', value: chats.length, icon: Bot, color: 'blue' },
+                    { label: 'Status Akun', value: 'Aktif', icon: Wifi, color: 'green' },
+                    { label: 'Peran', value: currentUser?.role || 'Analis', icon: Target, color: 'purple' },
+                  ].map(({ label, value, icon: Icon, color }) => (
+                    <div key={label} className={`rounded-xl p-4 text-center ${
+                      theme === 'dark' ? 'bg-slate-800/70 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
+                    }`}>
+                      <div className={`w-8 h-8 rounded-lg mx-auto mb-2 flex items-center justify-center ${
+                        color === 'blue' ? 'bg-blue-500/15' : color === 'green' ? 'bg-green-500/15' : 'bg-purple-500/15'
+                      }`}>
+                        <Icon className={`w-4 h-4 ${
+                          color === 'blue' ? 'text-blue-400' : color === 'green' ? 'text-green-400' : 'text-purple-400'
+                        }`} />
+                      </div>
+                      <p className={`text-base font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{value}</p>
+                      <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>{label}</p>
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
-                    Email <span className={`font-normal ${theme === 'dark' ? 'text-slate-500' : 'text-gray-400'}`}>(tidak dapat diubah)</span>
-                  </label>
-                  <input
-                    type="email"
-                    value={currentUser?.email || ''}
-                    disabled
-                    className={`w-full px-3 py-2.5 text-sm rounded-lg border cursor-not-allowed ${
-                      theme === 'dark'
-                        ? 'bg-slate-700/30 border-slate-700 text-slate-500'
-                        : 'bg-gray-50 border-gray-200 text-gray-400'
-                    }`}
-                  />
+
+                {/* ── Edit Profile Form ── */}
+                <div className={`rounded-2xl overflow-hidden ${
+                  theme === 'dark' ? 'bg-slate-800/70 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
+                }`}>
+                  <div className={`px-6 py-4 border-b ${theme === 'dark' ? 'border-slate-700/60' : 'border-gray-100'}`}>
+                    <h3 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Edit Profil</h3>
+                    <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>Perbarui informasi akun Anda</p>
+                  </div>
+                  <div className="px-6 py-5 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>Nama Lengkap</label>
+                        <input
+                          type="text"
+                          value={profileForm.fullName}
+                          onChange={(e) => setProfileForm({...profileForm, fullName: e.target.value})}
+                          className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
+                            theme === 'dark'
+                              ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                              : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                          placeholder="Nama lengkap"
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>Departemen</label>
+                        <input
+                          type="text"
+                          value={profileForm.department}
+                          onChange={(e) => setProfileForm({...profileForm, department: e.target.value})}
+                          className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
+                            theme === 'dark'
+                              ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                              : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                          placeholder="Departemen"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
+                          Email <span className={`font-normal ${theme === 'dark' ? 'text-slate-500' : 'text-gray-400'}`}>(tidak dapat diubah)</span>
+                        </label>
+                        <input
+                          type="email"
+                          value={currentUser?.email || ''}
+                          disabled
+                          className={`w-full px-3 py-2.5 text-sm rounded-lg border cursor-not-allowed ${
+                            theme === 'dark' ? 'bg-slate-700/30 border-slate-700 text-slate-500' : 'bg-gray-100 border-gray-200 text-gray-400'
+                          }`}
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
+                          Username <span className={`font-normal ${theme === 'dark' ? 'text-slate-500' : 'text-gray-400'}`}>(tidak dapat diubah)</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={currentUser?.username || ''}
+                          disabled
+                          className={`w-full px-3 py-2.5 text-sm rounded-lg border cursor-not-allowed ${
+                            theme === 'dark' ? 'bg-slate-700/30 border-slate-700 text-slate-500' : 'bg-gray-100 border-gray-200 text-gray-400'
+                          }`}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-end pt-1">
+                      <button
+                        onClick={handleProfileUpdate}
+                        className="px-6 py-2.5 text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm"
+                      >
+                        Simpan Perubahan
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <button
-                  onClick={handleProfileUpdate}
-                  className="w-full py-2.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm"
-                >
-                  Simpan Perubahan
-                </button>
+
               </div>
             </div>
           </div>
@@ -1684,124 +1590,182 @@ function App() {
 
       case 'settings':
         return (
-          <div className="p-6 max-w-3xl">
-            {/* Page Header */}
-            <div className="mb-6">
-              <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                Pengaturan
-              </h2>
-              <p className={`text-sm mt-1 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
-                Kelola profil, keamanan, dan preferensi akun
-              </p>
-            </div>
+          <div className="flex-1 overflow-y-auto">
+            <div className="min-h-full p-6 flex flex-col items-center justify-start">
+              <div className="w-full max-w-2xl space-y-4">
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {/* Profile Settings */}
-              <div className={`rounded-xl p-5 ${
-                theme === 'dark' ? 'bg-slate-800/60 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
-              }`}>
-                <h3 className={`text-sm font-semibold mb-4 ${theme === 'dark' ? 'text-slate-200' : 'text-gray-800'}`}>
-                  Pengaturan Profil
-                </h3>
-                <div className="space-y-3">
-                  <div>
-                    <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
-                      Nama Tampilan
-                    </label>
-                    <input
-                      type="text"
-                      value={profileForm.fullName}
-                      onChange={(e) => setProfileForm({...profileForm, fullName: e.target.value})}
-                      className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
-                        theme === 'dark'
-                          ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
-                          : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
-                      } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                      placeholder="Nama tampilan"
-                    />
-                  </div>
-                  <div>
-                    <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
-                      Email <span className={`font-normal ${theme === 'dark' ? 'text-slate-600' : 'text-gray-400'}`}>(tidak dapat diubah)</span>
-                    </label>
-                    <input
-                      type="email"
-                      value={currentUser?.email || ''}
-                      readOnly
-                      className={`w-full px-3 py-2.5 text-sm rounded-lg border cursor-not-allowed ${
-                        theme === 'dark'
-                          ? 'bg-slate-700/30 border-slate-700 text-slate-500'
-                          : 'bg-gray-50 border-gray-200 text-gray-400'
-                      }`}
-                    />
-                  </div>
-                  <div>
-                    <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
-                      Departemen
-                    </label>
-                    <input
-                      type="text"
-                      value={profileForm.department}
-                      onChange={(e) => setProfileForm({...profileForm, department: e.target.value})}
-                      className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
-                        theme === 'dark'
-                          ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
-                          : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
-                      } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                      placeholder="Departemen"
-                    />
-                  </div>
-                  <button
-                    onClick={handleUpdateProfile}
-                    disabled={profileUpdateLoading}
-                    className="w-full py-2.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  >
-                    {profileUpdateLoading ? (
-                      <><Loader className="w-4 h-4 animate-spin" /> Memperbarui...</>
-                    ) : 'Perbarui Profil'}
-                  </button>
+                {/* ── Page Title ── */}
+                <div className="mb-2">
+                  <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Pengaturan</h2>
+                  <p className={`text-sm mt-1 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                    Kelola preferensi dan konfigurasi akun Anda
+                  </p>
                 </div>
-              </div>
 
-              {/* Account & Security */}
-              <div className={`rounded-xl p-5 ${
-                theme === 'dark' ? 'bg-slate-800/60 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
-              }`}>
-                <h3 className={`text-sm font-semibold mb-4 ${theme === 'dark' ? 'text-slate-200' : 'text-gray-800'}`}>
-                  Akun & Keamanan
-                </h3>
-                <div className="space-y-3">
-                  <div>
-                    <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
-                      Username
-                    </label>
-                    <input
-                      type="text"
-                      value={currentUser?.username || ''}
-                      readOnly
-                      className={`w-full px-3 py-2.5 text-sm rounded-lg border cursor-not-allowed ${
-                        theme === 'dark'
-                          ? 'bg-slate-700/30 border-slate-700 text-slate-500'
-                          : 'bg-gray-50 border-gray-200 text-gray-400'
-                      }`}
-                    />
+                {/* ── Appearance ── */}
+                <div className={`rounded-2xl overflow-hidden ${
+                  theme === 'dark' ? 'bg-slate-800/70 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
+                }`}>
+                  <div className={`px-6 py-4 border-b flex items-center gap-3 ${theme === 'dark' ? 'border-slate-700/60' : 'border-gray-100'}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${theme === 'dark' ? 'bg-blue-500/15' : 'bg-blue-50'}`}>
+                      {theme === 'dark' ? <Moon className="w-4 h-4 text-blue-400" /> : <Sun className="w-4 h-4 text-blue-500" />}
+                    </div>
+                    <div>
+                      <h3 className={`font-semibold text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Tampilan</h3>
+                      <p className={`text-xs ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>Sesuaikan tema antarmuka</p>
+                    </div>
                   </div>
-                  <button
-                    className={`w-full py-2.5 text-sm font-medium rounded-lg border transition-colors ${
-                      theme === 'dark'
-                        ? 'border-slate-600 text-slate-400 hover:border-slate-500 hover:text-slate-300 hover:bg-slate-700/40'
-                        : 'border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50'
-                    }`}
-                    onClick={() => alert('Fitur ubah kata sandi akan segera tersedia')}
-                  >
-                    Ubah Kata Sandi
-                  </button>
+                  <div className="px-6 py-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Tema Gelap</p>
+                        <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                          {theme === 'dark' ? 'Mode gelap aktif' : 'Mode terang aktif'}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                        className={`relative w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500/30 ${
+                          theme === 'dark' ? 'bg-blue-600' : 'bg-gray-300'
+                        }`}
+                      >
+                        <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-300 ${
+                          theme === 'dark' ? 'translate-x-6' : 'translate-x-0'
+                        }`} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
-                  {/* Divider */}
-                  <div className={`border-t pt-3 mt-1 ${theme === 'dark' ? 'border-slate-700' : 'border-gray-100'}`}>
-                    <p className={`text-xs mb-3 ${theme === 'dark' ? 'text-slate-500' : 'text-gray-400'}`}>
-                      Zona Berbahaya
-                    </p>
+                {/* ── Account Info ── */}
+                <div className={`rounded-2xl overflow-hidden ${
+                  theme === 'dark' ? 'bg-slate-800/70 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
+                }`}>
+                  <div className={`px-6 py-4 border-b flex items-center gap-3 ${theme === 'dark' ? 'border-slate-700/60' : 'border-gray-100'}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${theme === 'dark' ? 'bg-slate-700' : 'bg-gray-100'}`}>
+                      <User className={`w-4 h-4 ${theme === 'dark' ? 'text-slate-300' : 'text-gray-500'}`} />
+                    </div>
+                    <div>
+                      <h3 className={`font-semibold text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Informasi Akun</h3>
+                      <p className={`text-xs ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>Detail akun yang terdaftar</p>
+                    </div>
+                  </div>
+                  <div className={`divide-y ${theme === 'dark' ? 'divide-slate-700/50' : 'divide-gray-50'}`}>
+                    {[
+                      { label: 'Nama Lengkap', value: currentUser?.full_name || '-' },
+                      { label: 'Username', value: `@${currentUser?.username || '-'}` },
+                      { label: 'Email', value: currentUser?.email || '-' },
+                      { label: 'Departemen', value: profileForm.department || '-' },
+                      { label: 'Peran', value: currentUser?.role || 'Analis' },
+                    ].map(({ label, value }) => (
+                      <div key={label} className="px-6 py-3.5 flex items-center justify-between">
+                        <span className={`text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>{label}</span>
+                        <span className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* ── Edit Profile ── */}
+                <div className={`rounded-2xl overflow-hidden ${
+                  theme === 'dark' ? 'bg-slate-800/70 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
+                }`}>
+                  <div className={`px-6 py-4 border-b flex items-center gap-3 ${theme === 'dark' ? 'border-slate-700/60' : 'border-gray-100'}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${theme === 'dark' ? 'bg-blue-500/15' : 'bg-blue-50'}`}>
+                      <RefreshCw className="w-4 h-4 text-blue-400" />
+                    </div>
+                    <div>
+                      <h3 className={`font-semibold text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Perbarui Profil</h3>
+                      <p className={`text-xs ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>Ubah nama tampilan dan departemen</p>
+                    </div>
+                  </div>
+                  <div className="px-6 py-5 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>Nama Lengkap</label>
+                        <input
+                          type="text"
+                          value={profileForm.fullName}
+                          onChange={(e) => setProfileForm({...profileForm, fullName: e.target.value})}
+                          className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
+                            theme === 'dark'
+                              ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                              : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                          placeholder="Nama lengkap"
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>Departemen</label>
+                        <input
+                          type="text"
+                          value={profileForm.department}
+                          onChange={(e) => setProfileForm({...profileForm, department: e.target.value})}
+                          className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
+                            theme === 'dark'
+                              ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                              : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                          placeholder="Departemen"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-end">
+                      <button
+                        onClick={handleUpdateProfile}
+                        disabled={profileUpdateLoading}
+                        className="px-5 py-2.5 text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
+                      >
+                        {profileUpdateLoading ? <><Loader className="w-4 h-4 animate-spin" /> Menyimpan...</> : 'Simpan Perubahan'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ── Security ── */}
+                <div className={`rounded-2xl overflow-hidden ${
+                  theme === 'dark' ? 'bg-slate-800/70 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
+                }`}>
+                  <div className={`px-6 py-4 border-b flex items-center gap-3 ${theme === 'dark' ? 'border-slate-700/60' : 'border-gray-100'}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${theme === 'dark' ? 'bg-slate-700' : 'bg-gray-100'}`}>
+                      <Settings className={`w-4 h-4 ${theme === 'dark' ? 'text-slate-300' : 'text-gray-500'}`} />
+                    </div>
+                    <div>
+                      <h3 className={`font-semibold text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Keamanan</h3>
+                      <p className={`text-xs ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>Kelola kata sandi akun</p>
+                    </div>
+                  </div>
+                  <div className="px-6 py-4 flex items-center justify-between">
+                    <div>
+                      <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Kata Sandi</p>
+                      <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>Terakhir diubah: belum pernah diubah</p>
+                    </div>
+                    <button
+                      onClick={() => alert('Fitur ubah kata sandi akan segera tersedia')}
+                      className={`text-sm font-medium px-4 py-2 rounded-lg border transition-colors ${
+                        theme === 'dark'
+                          ? 'border-slate-600 text-slate-300 hover:bg-slate-700'
+                          : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      Ubah Kata Sandi
+                    </button>
+                  </div>
+                </div>
+
+                {/* ── Danger Zone ── */}
+                <div className={`rounded-2xl overflow-hidden border ${
+                  theme === 'dark' ? 'bg-red-950/20 border-red-900/30' : 'bg-red-50/60 border-red-200'
+                }`}>
+                  <div className={`px-6 py-4 border-b ${theme === 'dark' ? 'border-red-900/30' : 'border-red-100'}`}>
+                    <h3 className={`font-semibold text-sm ${theme === 'dark' ? 'text-red-400' : 'text-red-600'}`}>Zona Berbahaya</h3>
+                    <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-red-400/60' : 'text-red-400'}`}>Tindakan berikut tidak dapat dibatalkan</p>
+                  </div>
+                  <div className="px-6 py-4 flex items-center justify-between">
+                    <div>
+                      <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Keluar dari Akun</p>
+                      <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>Sesi Anda akan berakhir</p>
+                    </div>
                     <button
                       onClick={() => {
                         if (window.confirm('Apakah Anda yakin ingin keluar?')) {
@@ -1809,12 +1773,14 @@ function App() {
                           window.location.reload();
                         }
                       }}
-                      className="w-full py-2.5 text-sm font-medium bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                      className="px-4 py-2 text-sm font-semibold bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center gap-2"
                     >
-                      Keluar dari Akun
+                      <LogOut className="w-4 h-4" />
+                      Keluar
                     </button>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
@@ -1991,8 +1957,6 @@ function App() {
         ? 'bg-slate-900 text-white' 
         : 'bg-gray-50 text-gray-900'
     } transition-colors duration-200`}>
-      <AnimatedBackground theme={theme} />
-      
       <div className="relative z-10">
         <Sidebar 
           activeView={activeView} 

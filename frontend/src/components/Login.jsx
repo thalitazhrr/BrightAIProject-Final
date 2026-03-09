@@ -82,22 +82,28 @@ const Login = ({ onLogin, theme = 'dark' }) => {
         ? 'bg-slate-900'
         : 'bg-gray-50'
     }`}>
-      {/* Left Panel - Branding */}
-      <div className={`hidden lg:flex lg:w-1/2 flex-col justify-between p-10 ${
-        theme === 'dark'
-          ? 'bg-gradient-to-br from-blue-900/80 via-slate-800/60 to-slate-900'
-          : 'bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800'
-      }`}>
+      {/* Left Panel - Branding with building photo */}
+      <div
+        className="hidden lg:flex lg:w-1/2 flex-col justify-between p-10 relative overflow-hidden"
+        style={{
+          backgroundImage: `url('/images/telkom-building.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        {/* Blue overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/85 via-blue-800/70 to-slate-900/90" />
+
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+        <div className="relative z-10 flex items-center gap-3">
+          <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
             <Target className="w-5 h-5 text-white" />
           </div>
           <span className="text-white font-bold text-lg">Telkom HSI BrightAI</span>
         </div>
 
         {/* Center Content */}
-        <div>
+        <div className="relative z-10">
           <h2 className="text-3xl font-bold text-white mb-4 leading-snug">
             Platform Analisis &<br />Intelijensi Bisnis
           </h2>
@@ -113,7 +119,7 @@ const Login = ({ onLogin, theme = 'dark' }) => {
               'Laporan interaktif dan visualisasi data',
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+                <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center shrink-0 backdrop-blur-sm">
                   <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                   </svg>
@@ -125,7 +131,7 @@ const Login = ({ onLogin, theme = 'dark' }) => {
         </div>
 
         {/* Footer */}
-        <p className="text-blue-200/60 text-xs">
+        <p className="relative z-10 text-blue-200/60 text-xs">
           &copy; {new Date().getFullYear()} Telkom Indonesia. All rights reserved.
         </p>
       </div>

@@ -7,8 +7,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        'poppins': ['Poppins', 'sans-serif'],
-        'sans': ['Poppins', 'ui-sans-serif', 'system-ui'],
+        'jakarta': ['Plus Jakarta Sans', 'sans-serif'],
+        'sans': ['Plus Jakarta Sans', 'ui-sans-serif', 'system-ui'],
       },
       animation: {
         'fadeIn': 'fadeIn 0.5s ease-out',
@@ -74,12 +74,6 @@ module.exports = {
           600: '#2563eb',
           700: '#1d4ed8',
         },
-        purple: {
-          400: '#a855f7',
-          500: '#9333ea',
-          600: '#7c3aed',
-          700: '#6d28d9',
-        },
         slate: {
           50: '#f8fafc',
           100: '#f1f5f9',
@@ -126,43 +120,6 @@ module.exports = {
         '90': '90',
         '100': '100',
       },
-    },
-  },
-  plugins: [],
-}/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
-  theme: {
-    extend: {
-      fontFamily: {
-        'inter': ['Inter', 'sans-serif'],
-      },
-      animation: {
-        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'bounce': 'bounce 1s infinite',
-      },
-      backdropBlur: {
-        'xs': '2px',
-      },
-      colors: {
-        blue: {
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-        },
-        slate: {
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
-        }
-      }
     },
   },
   plugins: [],
