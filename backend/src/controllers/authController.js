@@ -279,7 +279,7 @@ class AuthController {
       if (!isValidPassword) {
         return res.status(400).json({
           success: false,
-          error: 'Current password is incorrect'
+          error: 'Kata sandi lama yang Anda masukkan tidak tepat. Silakan periksa kembali.'
         });
       }
 

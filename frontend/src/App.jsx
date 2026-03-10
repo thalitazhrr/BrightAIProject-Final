@@ -966,7 +966,13 @@ function App() {
       }
     } catch (error) {
       console.error('Change password error:', error);
-      setPasswordMsg({ type: 'error', text: 'Tidak dapat terhubung ke server.' });
+      const isNetworkError = error.message.includes('connect') || error.message.includes('fetch') || error.message.includes('network');
+      setPasswordMsg({
+        type: 'error',
+        text: isNetworkError
+          ? 'Tidak dapat terhubung ke server. Periksa koneksi Anda.'
+          : (error.message || 'Gagal mengubah kata sandi.')
+      });
     } finally {
       setPasswordLoading(false);
     }
