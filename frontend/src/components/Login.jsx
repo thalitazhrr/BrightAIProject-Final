@@ -146,7 +146,7 @@ const Login = ({ onLogin, theme = 'dark' }) => {
             <Target className="w-5 h-5 text-white" />
           </div>
           <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-            Telkom HSI BrightAI
+            Welcome to BrightAI
           </span>
         </div>
 

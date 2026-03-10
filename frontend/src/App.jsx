@@ -472,12 +472,12 @@ const Header = ({ theme, setTheme, status, currentUser, onLogout, onToggleSideba
         <h1 className={`text-lg font-bold leading-tight truncate ${
           theme === 'dark' ? 'text-white' : 'text-gray-900'
         }`}>
-          Telkom HSI BrightAI
+          Welcome to BrightAI
         </h1>
         <p className={`text-xs truncate ${
           theme === 'dark' ? 'text-slate-400' : 'text-gray-500'
         }`}>
-          Platform Analisis & Intelijensi Bisnis
+          Platform Analisis dan Intelijensi Bisnis untuk HSI
         </p>
       </div>
     </div>
@@ -780,9 +780,20 @@ function App() {
   // Profile form state
   const [profileForm, setProfileForm] = useState({
     fullName: '',
-    department: ''
+    username: '',
+    email: ''
   });
   const [profileUpdateLoading, setProfileUpdateLoading] = useState(false);
+  const [profileUpdateMsg, setProfileUpdateMsg] = useState({ type: '', text: '' });
+
+  // Password change form state
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [passwordMsg, setPasswordMsg] = useState({ type: '', text: '' });
 
   // Initialize authentication on app start
   useEffect(() => {
@@ -852,52 +863,109 @@ function App() {
     if (currentUser) {
       setProfileForm({
         fullName: currentUser.fullName || currentUser.full_name || '',
-        department: currentUser.department || ''
+        username: currentUser.username || '',
+        email: currentUser.email || ''
       });
     }
   }, [currentUser]);
 
-  // Handle profile update
+  // Handle profile update (used by both profile page and settings page)
   const handleUpdateProfile = async () => {
     if (!currentUser) return;
-    
+
+    if (!profileForm.fullName.trim()) {
+      setProfileUpdateMsg({ type: 'error', text: 'Nama lengkap wajib diisi.' });
+      return;
+    }
+    if (!profileForm.username.trim() || profileForm.username.trim().length < 3) {
+      setProfileUpdateMsg({ type: 'error', text: 'Username minimal 3 karakter.' });
+      return;
+    }
+    if (!profileForm.email.trim() || !/\S+@\S+\.\S+/.test(profileForm.email)) {
+      setProfileUpdateMsg({ type: 'error', text: 'Format email tidak valid.' });
+      return;
+    }
+
     setProfileUpdateLoading(true);
+    setProfileUpdateMsg({ type: '', text: '' });
     try {
       const response = await apiCall('/auth/profile', {
         method: 'PUT',
         body: JSON.stringify({
-          fullName: profileForm.fullName,
-          department: profileForm.department
+          fullName: profileForm.fullName.trim(),
+          username: profileForm.username.trim(),
+          email: profileForm.email.trim()
         })
       });
-      
+
       if (response.success) {
-        // Update current user state
-        setCurrentUser(prev => ({
-          ...prev,
-          fullName: profileForm.fullName,
-          full_name: profileForm.fullName,
-          department: profileForm.department
-        }));
-        
-        // Update localStorage
+        const updatedFields = {
+          fullName: profileForm.fullName.trim(),
+          full_name: profileForm.fullName.trim(),
+          username: profileForm.username.trim(),
+          email: profileForm.email.trim()
+        };
+
+        setCurrentUser(prev => ({ ...prev, ...updatedFields }));
+
         const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-        localStorage.setItem('user', JSON.stringify({
-          ...storedUser,
-          fullName: profileForm.fullName,
-          full_name: profileForm.fullName,
-          department: profileForm.department
-        }));
-        
-        alert('Profile updated successfully!');
+        localStorage.setItem('user', JSON.stringify({ ...storedUser, ...updatedFields }));
+
+        setProfileUpdateMsg({ type: 'success', text: 'Profil berhasil diperbarui.' });
       } else {
-        alert('Failed to update profile: ' + (response.error || 'Unknown error'));
+        setProfileUpdateMsg({ type: 'error', text: response.error || 'Gagal memperbarui profil.' });
       }
     } catch (error) {
       console.error('Profile update error:', error);
-      alert('Failed to update profile: ' + error.message);
+      setProfileUpdateMsg({ type: 'error', text: 'Tidak dapat terhubung ke server.' });
     } finally {
       setProfileUpdateLoading(false);
+    }
+  };
+
+  // Handle password change
+  const handleChangePassword = async () => {
+    setPasswordMsg({ type: '', text: '' });
+
+    if (!passwordForm.currentPassword) {
+      setPasswordMsg({ type: 'error', text: 'Kata sandi lama wajib diisi.' });
+      return;
+    }
+    if (!passwordForm.newPassword || passwordForm.newPassword.length < 6) {
+      setPasswordMsg({ type: 'error', text: 'Kata sandi baru minimal 6 karakter.' });
+      return;
+    }
+    if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(passwordForm.newPassword)) {
+      setPasswordMsg({ type: 'error', text: 'Kata sandi baru harus mengandung huruf besar, huruf kecil, dan angka.' });
+      return;
+    }
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setPasswordMsg({ type: 'error', text: 'Konfirmasi kata sandi tidak cocok.' });
+      return;
+    }
+
+    setPasswordLoading(true);
+    try {
+      const response = await apiCall('/auth/change-password', {
+        method: 'PUT',
+        body: JSON.stringify({
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword,
+          confirmPassword: passwordForm.confirmPassword
+        })
+      });
+
+      if (response.success) {
+        setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        setPasswordMsg({ type: 'success', text: 'Kata sandi berhasil diubah.' });
+      } else {
+        setPasswordMsg({ type: 'error', text: response.error || 'Gagal mengubah kata sandi.' });
+      }
+    } catch (error) {
+      console.error('Change password error:', error);
+      setPasswordMsg({ type: 'error', text: 'Tidak dapat terhubung ke server.' });
+    } finally {
+      setPasswordLoading(false);
     }
   };
 
@@ -1191,30 +1259,6 @@ function App() {
     }
   };
 
-  // Handle profile update
-  const handleProfileUpdate = async () => {
-    try {
-      const response = await apiCall('/auth/profile', {
-        method: 'PUT',
-        body: JSON.stringify({
-          fullName: profileForm.fullName,
-          department: profileForm.department
-        })
-      });
-
-      if (response.success) {
-        setCurrentUser(prev => ({
-          ...prev,
-          fullName: profileForm.fullName,
-          department: profileForm.department
-        }));
-        alert('Profil berhasil diperbarui!');
-      }
-    } catch (error) {
-      console.error('Profile update error:', error);
-      alert('Gagal memperbarui profil. Silakan coba lagi.');
-    }
-  };
 
   // Load messages for active chat
   useEffect(() => {
@@ -1371,160 +1415,150 @@ function App() {
       case 'profile':
         return (
           <div className="flex-1 overflow-y-auto">
-            <div className="min-h-full p-6 flex flex-col items-center justify-start">
-              <div className="w-full max-w-2xl space-y-4">
+            <div className="p-6 flex flex-col items-center">
+              <div className="w-full max-w-xl space-y-4">
 
-                {/* ── Profile Hero Card ── */}
-                <div className={`rounded-2xl overflow-hidden ${
-                  theme === 'dark' ? 'bg-slate-800/70 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
+                {/* Page title */}
+                <div>
+                  <h2 className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    Profil Saya
+                  </h2>
+                  <p className={`text-sm mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                    Informasi identitas akun Anda
+                  </p>
+                </div>
+
+                {/* Card 1: Identity view */}
+                <div className={`rounded-2xl border ${
+                  theme === 'dark' ? 'bg-slate-800/70 border-slate-700/50' : 'bg-white border-gray-200 shadow-sm'
                 }`}>
-                  {/* Gradient header strip */}
-                  <div className="relative h-24 bg-gradient-to-r from-blue-800 via-blue-600 to-sky-500 overflow-hidden">
-                    <div className="absolute inset-0" style={{
-                      backgroundImage: 'radial-gradient(circle at 15% 60%, rgba(255,255,255,0.08) 0%, transparent 50%), radial-gradient(circle at 85% 30%, rgba(255,255,255,0.06) 0%, transparent 50%)'
-                    }} />
-                  </div>
-
-                  <div className="px-6 pb-6">
-                    {/* Avatar row — floats over header */}
-                    <div className="flex items-end gap-4 -mt-11 mb-3">
-                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 border-4 border-slate-800 flex items-center justify-center text-2xl font-bold text-white shadow-lg shrink-0"
-                        style={{ borderColor: theme === 'dark' ? '#1e293b' : '#ffffff' }}>
-                        {(currentUser?.full_name || currentUser?.username || 'U')[0].toUpperCase()}
-                      </div>
-                      <div className="pb-1 flex-1 min-w-0">
-                        <h1 className={`text-lg font-bold truncate ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                          {currentUser?.full_name || currentUser?.username || '-'}
-                        </h1>
-                        <p className={`text-sm truncate ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
-                          {currentUser?.email || '-'}
-                        </p>
-                      </div>
-                      <div className="pb-1 shrink-0">
-                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${
-                          theme === 'dark' ? 'bg-green-500/15 text-green-400 border border-green-500/25' : 'bg-green-50 text-green-600 border border-green-200'
+                  <div className="px-5 pt-5 pb-4 flex items-center gap-4">
+                    <div className={`w-14 h-14 rounded-xl flex items-center justify-center text-xl font-bold shrink-0 ${
+                      theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
+                    }`}>
+                      {(currentUser?.full_name || currentUser?.username || 'U')[0].toUpperCase()}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className={`text-base font-bold truncate ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                        {currentUser?.full_name || currentUser?.username || '-'}
+                      </p>
+                      <p className={`text-sm truncate mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                        {currentUser?.email || '-'}
+                      </p>
+                      <div className="flex items-center gap-2 mt-2 flex-wrap">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                          theme === 'dark' ? 'bg-slate-700 text-slate-300' : 'bg-gray-100 text-gray-600'
                         }`}>
+                          @{currentUser?.username || '-'}
+                        </span>
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                          theme === 'dark' ? 'bg-blue-500/15 text-blue-400' : 'bg-blue-50 text-blue-600'
+                        }`}>
+                          {currentUser?.role || 'Analis'}
+                        </span>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-500/15 text-green-400">
                           <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
                           Aktif
                         </span>
                       </div>
                     </div>
-
-                    {/* Info chips */}
-                    <div className="flex flex-wrap gap-2">
-                      {[
-                        { icon: User, text: `@${currentUser?.username || '-'}` },
-                        { icon: Target, text: currentUser?.role || 'Analis' },
-                        { icon: Clock, text: `Bergabung ${currentUser?.created_at ? new Date(currentUser.created_at).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }) : 'baru-baru ini'}` },
-                      ].map(({ icon: Icon, text }) => (
-                        <span key={text} className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs ${
-                          theme === 'dark' ? 'bg-slate-700/60 text-slate-400 border border-slate-600/50' : 'bg-gray-100 text-gray-500 border border-gray-200'
-                        }`}>
-                          <Icon className="w-3 h-3" />
-                          {text}
-                        </span>
-                      ))}
-                    </div>
                   </div>
-                </div>
-
-                {/* ── Stats Row ── */}
-                <div className="grid grid-cols-3 gap-4">
-                  {[
-                    { label: 'Total Percakapan', value: chats.length, icon: Bot, color: 'blue' },
-                    { label: 'Status Akun', value: 'Aktif', icon: Wifi, color: 'green' },
-                    { label: 'Peran', value: currentUser?.role || 'Analis', icon: Target, color: 'purple' },
-                  ].map(({ label, value, icon: Icon, color }) => (
-                    <div key={label} className={`rounded-xl p-4 text-center ${
-                      theme === 'dark' ? 'bg-slate-800/70 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
-                    }`}>
-                      <div className={`w-8 h-8 rounded-lg mx-auto mb-2 flex items-center justify-center ${
-                        color === 'blue' ? 'bg-blue-500/15' : color === 'green' ? 'bg-green-500/15' : 'bg-purple-500/15'
+                  <div className={`border-t ${theme === 'dark' ? 'border-slate-700/40' : 'border-gray-100'}`}>
+                    {[
+                      { label: 'Username', value: `@${currentUser?.username || '-'}` },
+                      { label: 'Email', value: currentUser?.email || '-' },
+                      { label: 'Bergabung', value: currentUser?.created_at ? new Date(currentUser.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-' },
+                      { label: 'Percakapan', value: `${chats.length} sesi` },
+                    ].map(({ label, value }, i, arr) => (
+                      <div key={label} className={`px-5 py-3 flex items-center justify-between ${
+                        i < arr.length - 1 ? theme === 'dark' ? 'border-b border-slate-700/40' : 'border-b border-gray-100' : ''
                       }`}>
-                        <Icon className={`w-4 h-4 ${
-                          color === 'blue' ? 'text-blue-400' : color === 'green' ? 'text-green-400' : 'text-purple-400'
-                        }`} />
+                        <span className={`text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>{label}</span>
+                        <span className={`text-sm font-medium ${theme === 'dark' ? 'text-slate-200' : 'text-gray-800'}`}>{value}</span>
                       </div>
-                      <p className={`text-base font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{value}</p>
-                      <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>{label}</p>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
 
-                {/* ── Edit Profile Form ── */}
-                <div className={`rounded-2xl overflow-hidden ${
-                  theme === 'dark' ? 'bg-slate-800/70 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
+                {/* Card 2: Edit form — nama, username, email */}
+                <div className={`rounded-2xl border ${
+                  theme === 'dark' ? 'bg-slate-800/70 border-slate-700/50' : 'bg-white border-gray-200 shadow-sm'
                 }`}>
-                  <div className={`px-6 py-4 border-b ${theme === 'dark' ? 'border-slate-700/60' : 'border-gray-100'}`}>
-                    <h3 className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Edit Profil</h3>
-                    <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>Perbarui informasi akun Anda</p>
-                  </div>
-                  <div className="px-6 py-5 space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+                  <div className="px-5 pt-5 pb-5">
+                    <p className={`text-sm font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                      Edit Profil
+                    </p>
+
+                    {profileUpdateMsg.text && (
+                      <div className={`mb-4 px-3 py-2.5 rounded-lg text-sm ${
+                        profileUpdateMsg.type === 'success'
+                          ? theme === 'dark' ? 'bg-green-500/10 border border-green-500/20 text-green-400' : 'bg-green-50 border border-green-200 text-green-700'
+                          : theme === 'dark' ? 'bg-red-500/10 border border-red-500/20 text-red-400' : 'bg-red-50 border border-red-200 text-red-700'
+                      }`}>
+                        {profileUpdateMsg.text}
+                      </div>
+                    )}
+
+                    <div className="space-y-3">
                       <div>
-                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>Nama Lengkap</label>
+                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                          Nama Lengkap
+                        </label>
                         <input
                           type="text"
                           value={profileForm.fullName}
-                          onChange={(e) => setProfileForm({...profileForm, fullName: e.target.value})}
-                          className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
+                          onChange={(e) => setProfileForm({ ...profileForm, fullName: e.target.value })}
+                          className={`w-full px-3 py-2.5 text-sm rounded-lg border transition-colors ${
                             theme === 'dark'
-                              ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                              ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
                               : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
                           } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                          placeholder="Nama lengkap"
+                          placeholder="Masukkan nama lengkap"
                         />
                       </div>
                       <div>
-                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>Departemen</label>
+                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                          Username
+                        </label>
                         <input
                           type="text"
-                          value={profileForm.department}
-                          onChange={(e) => setProfileForm({...profileForm, department: e.target.value})}
-                          className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
+                          value={profileForm.username}
+                          onChange={(e) => setProfileForm({ ...profileForm, username: e.target.value })}
+                          className={`w-full px-3 py-2.5 text-sm rounded-lg border transition-colors ${
                             theme === 'dark'
-                              ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                              ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
                               : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
                           } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                          placeholder="Departemen"
+                          placeholder="Masukkan username"
                         />
                       </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
-                          Email <span className={`font-normal ${theme === 'dark' ? 'text-slate-500' : 'text-gray-400'}`}>(tidak dapat diubah)</span>
+                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                          Email
                         </label>
                         <input
                           type="email"
-                          value={currentUser?.email || ''}
-                          disabled
-                          className={`w-full px-3 py-2.5 text-sm rounded-lg border cursor-not-allowed ${
-                            theme === 'dark' ? 'bg-slate-700/30 border-slate-700 text-slate-500' : 'bg-gray-100 border-gray-200 text-gray-400'
-                          }`}
+                          value={profileForm.email}
+                          onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
+                          className={`w-full px-3 py-2.5 text-sm rounded-lg border transition-colors ${
+                            theme === 'dark'
+                              ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                              : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                          placeholder="email@telkom.co.id"
                         />
                       </div>
-                      <div>
-                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>
-                          Username <span className={`font-normal ${theme === 'dark' ? 'text-slate-500' : 'text-gray-400'}`}>(tidak dapat diubah)</span>
-                        </label>
-                        <input
-                          type="text"
-                          value={currentUser?.username || ''}
-                          disabled
-                          className={`w-full px-3 py-2.5 text-sm rounded-lg border cursor-not-allowed ${
-                            theme === 'dark' ? 'bg-slate-700/30 border-slate-700 text-slate-500' : 'bg-gray-100 border-gray-200 text-gray-400'
-                          }`}
-                        />
+                      <div className="pt-1 flex justify-end">
+                        <button
+                          onClick={handleUpdateProfile}
+                          disabled={profileUpdateLoading}
+                          className="px-5 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
+                        >
+                          {profileUpdateLoading
+                            ? <><Loader className="w-3.5 h-3.5 animate-spin" />Menyimpan...</>
+                            : 'Simpan Perubahan'}
+                        </button>
                       </div>
-                    </div>
-                    <div className="flex justify-end pt-1">
-                      <button
-                        onClick={handleProfileUpdate}
-                        className="px-6 py-2.5 text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm"
-                      >
-                        Simpan Perubahan
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -1537,180 +1571,152 @@ function App() {
       case 'settings':
         return (
           <div className="flex-1 overflow-y-auto">
-            <div className="min-h-full p-6 flex flex-col items-center justify-start">
-              <div className="w-full max-w-2xl space-y-4">
+            <div className="p-6 flex flex-col items-center">
+              <div className="w-full max-w-xl space-y-4">
 
-                {/* ── Page Title ── */}
-                <div className="mb-2">
-                  <h2 className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Pengaturan</h2>
-                  <p className={`text-sm mt-1 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
-                    Kelola preferensi dan konfigurasi akun Anda
+                {/* Page header */}
+                <div>
+                  <h2 className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    Pengaturan
+                  </h2>
+                  <p className={`text-sm mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                    Preferensi tampilan dan keamanan akun
                   </p>
                 </div>
 
-                {/* ── Appearance ── */}
-                <div className={`rounded-2xl overflow-hidden ${
-                  theme === 'dark' ? 'bg-slate-800/70 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
+                {/* Card: Tampilan */}
+                <div className={`rounded-2xl border ${
+                  theme === 'dark' ? 'bg-slate-800/70 border-slate-700/50' : 'bg-white border-gray-200 shadow-sm'
                 }`}>
-                  <div className={`px-6 py-4 border-b flex items-center gap-3 ${theme === 'dark' ? 'border-slate-700/60' : 'border-gray-100'}`}>
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${theme === 'dark' ? 'bg-blue-500/15' : 'bg-blue-50'}`}>
-                      {theme === 'dark' ? <Moon className="w-4 h-4 text-blue-400" /> : <Sun className="w-4 h-4 text-blue-500" />}
-                    </div>
-                    <div>
-                      <h3 className={`font-semibold text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Tampilan</h3>
-                      <p className={`text-xs ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>Sesuaikan tema antarmuka</p>
-                    </div>
-                  </div>
-                  <div className="px-6 py-4">
-                    <div className="flex items-center justify-between">
+                  <div className="px-5 py-4 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+                        theme === 'dark' ? 'bg-slate-700' : 'bg-gray-100'
+                      }`}>
+                        {theme === 'dark'
+                          ? <Moon className="w-4 h-4 text-blue-400" />
+                          : <Sun className="w-4 h-4 text-amber-500" />}
+                      </div>
                       <div>
-                        <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Tema Gelap</p>
-                        <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
-                          {theme === 'dark' ? 'Mode gelap aktif' : 'Mode terang aktif'}
+                        <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                          {theme === 'dark' ? 'Tema Gelap' : 'Tema Terang'}
+                        </p>
+                        <p className={`text-xs ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                          Tampilan antarmuka aplikasi
                         </p>
                       </div>
-                      <button
-                        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                        className={`relative w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500/30 ${
-                          theme === 'dark' ? 'bg-blue-600' : 'bg-gray-300'
-                        }`}
-                      >
-                        <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-300 ${
-                          theme === 'dark' ? 'translate-x-6' : 'translate-x-0'
-                        }`} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* ── Account Info ── */}
-                <div className={`rounded-2xl overflow-hidden ${
-                  theme === 'dark' ? 'bg-slate-800/70 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
-                }`}>
-                  <div className={`px-6 py-4 border-b flex items-center gap-3 ${theme === 'dark' ? 'border-slate-700/60' : 'border-gray-100'}`}>
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${theme === 'dark' ? 'bg-slate-700' : 'bg-gray-100'}`}>
-                      <User className={`w-4 h-4 ${theme === 'dark' ? 'text-slate-300' : 'text-gray-500'}`} />
-                    </div>
-                    <div>
-                      <h3 className={`font-semibold text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Informasi Akun</h3>
-                      <p className={`text-xs ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>Detail akun yang terdaftar</p>
-                    </div>
-                  </div>
-                  <div className={`divide-y ${theme === 'dark' ? 'divide-slate-700/50' : 'divide-gray-50'}`}>
-                    {[
-                      { label: 'Nama Lengkap', value: currentUser?.full_name || '-' },
-                      { label: 'Username', value: `@${currentUser?.username || '-'}` },
-                      { label: 'Email', value: currentUser?.email || '-' },
-                      { label: 'Departemen', value: profileForm.department || '-' },
-                      { label: 'Peran', value: currentUser?.role || 'Analis' },
-                    ].map(({ label, value }) => (
-                      <div key={label} className="px-6 py-3.5 flex items-center justify-between">
-                        <span className={`text-sm ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>{label}</span>
-                        <span className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* ── Edit Profile ── */}
-                <div className={`rounded-2xl overflow-hidden ${
-                  theme === 'dark' ? 'bg-slate-800/70 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
-                }`}>
-                  <div className={`px-6 py-4 border-b flex items-center gap-3 ${theme === 'dark' ? 'border-slate-700/60' : 'border-gray-100'}`}>
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${theme === 'dark' ? 'bg-blue-500/15' : 'bg-blue-50'}`}>
-                      <RefreshCw className="w-4 h-4 text-blue-400" />
-                    </div>
-                    <div>
-                      <h3 className={`font-semibold text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Perbarui Profil</h3>
-                      <p className={`text-xs ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>Ubah nama tampilan dan departemen</p>
-                    </div>
-                  </div>
-                  <div className="px-6 py-5 space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>Nama Lengkap</label>
-                        <input
-                          type="text"
-                          value={profileForm.fullName}
-                          onChange={(e) => setProfileForm({...profileForm, fullName: e.target.value})}
-                          className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
-                            theme === 'dark'
-                              ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
-                              : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
-                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                          placeholder="Nama lengkap"
-                        />
-                      </div>
-                      <div>
-                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-600'}`}>Departemen</label>
-                        <input
-                          type="text"
-                          value={profileForm.department}
-                          onChange={(e) => setProfileForm({...profileForm, department: e.target.value})}
-                          className={`w-full px-3 py-2.5 text-sm rounded-lg border ${
-                            theme === 'dark'
-                              ? 'bg-slate-700/60 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
-                              : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
-                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                          placeholder="Departemen"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex justify-end">
-                      <button
-                        onClick={handleUpdateProfile}
-                        disabled={profileUpdateLoading}
-                        className="px-5 py-2.5 text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
-                      >
-                        {profileUpdateLoading ? <><Loader className="w-4 h-4 animate-spin" /> Menyimpan...</> : 'Simpan Perubahan'}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* ── Security ── */}
-                <div className={`rounded-2xl overflow-hidden ${
-                  theme === 'dark' ? 'bg-slate-800/70 border border-slate-700/50' : 'bg-white border border-gray-200 shadow-sm'
-                }`}>
-                  <div className={`px-6 py-4 border-b flex items-center gap-3 ${theme === 'dark' ? 'border-slate-700/60' : 'border-gray-100'}`}>
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${theme === 'dark' ? 'bg-slate-700' : 'bg-gray-100'}`}>
-                      <Settings className={`w-4 h-4 ${theme === 'dark' ? 'text-slate-300' : 'text-gray-500'}`} />
-                    </div>
-                    <div>
-                      <h3 className={`font-semibold text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Keamanan</h3>
-                      <p className={`text-xs ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>Kelola kata sandi akun</p>
-                    </div>
-                  </div>
-                  <div className="px-6 py-4 flex items-center justify-between">
-                    <div>
-                      <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Kata Sandi</p>
-                      <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>Terakhir diubah: belum pernah diubah</p>
                     </div>
                     <button
-                      onClick={() => alert('Fitur ubah kata sandi akan segera tersedia')}
-                      className={`text-sm font-medium px-4 py-2 rounded-lg border transition-colors ${
-                        theme === 'dark'
-                          ? 'border-slate-600 text-slate-300 hover:bg-slate-700'
-                          : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                      className={`relative w-11 h-6 rounded-full transition-colors duration-300 focus:outline-none ${
+                        theme === 'dark' ? 'bg-blue-600' : 'bg-gray-300'
                       }`}
                     >
-                      Ubah Kata Sandi
+                      <span className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow-sm transition-transform duration-300 ${
+                        theme === 'dark' ? 'translate-x-5' : 'translate-x-0'
+                      }`} />
                     </button>
                   </div>
                 </div>
 
-                {/* ── Danger Zone ── */}
-                <div className={`rounded-2xl overflow-hidden border ${
-                  theme === 'dark' ? 'bg-red-950/20 border-red-900/30' : 'bg-red-50/60 border-red-200'
+                {/* Card: Ubah Kata Sandi */}
+                <div className={`rounded-2xl border ${
+                  theme === 'dark' ? 'bg-slate-800/70 border-slate-700/50' : 'bg-white border-gray-200 shadow-sm'
                 }`}>
-                  <div className={`px-6 py-4 border-b ${theme === 'dark' ? 'border-red-900/30' : 'border-red-100'}`}>
-                    <h3 className={`font-semibold text-sm ${theme === 'dark' ? 'text-red-400' : 'text-red-600'}`}>Zona Berbahaya</h3>
-                    <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-red-400/60' : 'text-red-400'}`}>Tindakan berikut tidak dapat dibatalkan</p>
+                  <div className="px-5 pt-5 pb-5">
+                    <p className={`text-sm font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                      Ubah Kata Sandi
+                    </p>
+
+                    {passwordMsg.text && (
+                      <div className={`mb-4 px-3 py-2.5 rounded-lg text-sm ${
+                        passwordMsg.type === 'success'
+                          ? theme === 'dark' ? 'bg-green-500/10 border border-green-500/20 text-green-400' : 'bg-green-50 border border-green-200 text-green-700'
+                          : theme === 'dark' ? 'bg-red-500/10 border border-red-500/20 text-red-400' : 'bg-red-50 border border-red-200 text-red-700'
+                      }`}>
+                        {passwordMsg.text}
+                      </div>
+                    )}
+
+                    <div className="space-y-3">
+                      <div>
+                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                          Kata Sandi Lama
+                        </label>
+                        <input
+                          type="password"
+                          value={passwordForm.currentPassword}
+                          onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+                          className={`w-full px-3 py-2.5 text-sm rounded-lg border transition-colors ${
+                            theme === 'dark'
+                              ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                              : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                          placeholder="Masukkan kata sandi lama"
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                          Kata Sandi Baru
+                          <span className={`ml-1 font-normal ${theme === 'dark' ? 'text-slate-500' : 'text-gray-400'}`}>
+                            (min. 6 karakter, huruf besar + angka)
+                          </span>
+                        </label>
+                        <input
+                          type="password"
+                          value={passwordForm.newPassword}
+                          onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                          className={`w-full px-3 py-2.5 text-sm rounded-lg border transition-colors ${
+                            theme === 'dark'
+                              ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                              : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                          placeholder="Masukkan kata sandi baru"
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                          Konfirmasi Kata Sandi Baru
+                        </label>
+                        <input
+                          type="password"
+                          value={passwordForm.confirmPassword}
+                          onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                          className={`w-full px-3 py-2.5 text-sm rounded-lg border transition-colors ${
+                            theme === 'dark'
+                              ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                              : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                          placeholder="Ulangi kata sandi baru"
+                        />
+                      </div>
+                      <div className="pt-1 flex justify-end">
+                        <button
+                          onClick={handleChangePassword}
+                          disabled={passwordLoading}
+                          className="px-5 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50 flex items-center gap-2"
+                        >
+                          {passwordLoading
+                            ? <><Loader className="w-3.5 h-3.5 animate-spin" />Menyimpan...</>
+                            : 'Ubah Kata Sandi'}
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div className="px-6 py-4 flex items-center justify-between">
+                </div>
+
+                {/* Card: Sesi */}
+                <div className={`rounded-2xl border ${
+                  theme === 'dark' ? 'bg-slate-800/70 border-slate-700/50' : 'bg-white border-gray-200 shadow-sm'
+                }`}>
+                  <div className="px-5 py-4 flex items-center justify-between">
                     <div>
-                      <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Keluar dari Akun</p>
-                      <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>Sesi Anda akan berakhir</p>
+                      <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                        Keluar dari Akun
+                      </p>
+                      <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                        Mengakhiri sesi aktif Anda
+                      </p>
                     </div>
                     <button
                       onClick={() => {
@@ -1719,9 +1725,9 @@ function App() {
                           window.location.reload();
                         }
                       }}
-                      className="px-4 py-2 text-sm font-semibold bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center gap-2"
+                      className="text-sm font-semibold px-3.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white transition-colors flex items-center gap-1.5"
                     >
-                      <LogOut className="w-4 h-4" />
+                      <LogOut className="w-3.5 h-3.5" />
                       Keluar
                     </button>
                   </div>

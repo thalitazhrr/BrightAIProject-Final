@@ -120,8 +120,8 @@ async function closePools() {
   }
 }
 
-process.on('SIGINT', closePools);
-process.on('SIGTERM', closePools);
+process.on('SIGINT', async () => { await closePools(); process.exit(0); });
+process.on('SIGTERM', async () => { await closePools(); process.exit(0); });
 
 module.exports = {
   initializePools,

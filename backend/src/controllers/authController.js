@@ -200,22 +200,52 @@ class AuthController {
       }
 
       const userId = req.user.id;
-      const { name } = req.body;
+      const { fullName, username, email } = req.body;
 
-      await userModel.updateProfile(userId, { name });
+      // Check email uniqueness if changed
+      if (email && email !== req.user.email) {
+        const emailTaken = await userModel.emailExists(email, userId);
+        if (emailTaken) {
+          return res.status(400).json({
+            success: false,
+            error: 'Email sudah digunakan oleh akun lain'
+          });
+        }
+      }
+
+      // Check username uniqueness if changed
+      if (username) {
+        const usernameTaken = await userModel.usernameExists(username, userId);
+        if (usernameTaken) {
+          return res.status(400).json({
+            success: false,
+            error: 'Username sudah digunakan oleh akun lain'
+          });
+        }
+      }
+
+      await userModel.updateProfile(userId, { full_name: fullName, username, email });
 
       logger.info(`User profile updated: ${req.user.email}`);
 
       res.json({
         success: true,
-        message: 'Profile updated successfully'
+        message: 'Profil berhasil diperbarui',
+        user: {
+          full_name: fullName,
+          username,
+          email
+        }
       });
 
     } catch (error) {
       logger.error('Update profile error:', error);
+      const isDbError = error.message && (error.message.includes('not initialized') || error.message.includes('ECONNREFUSED') || error.message.includes('NJS-'));
       res.status(500).json({
         success: false,
-        error: 'Failed to update profile'
+        error: isDbError
+          ? 'Koneksi database bermasalah. Pastikan Oracle DB aktif dan server sudah di-restart.'
+          : 'Gagal memperbarui profil'
       });
     }
   }
@@ -269,9 +299,12 @@ class AuthController {
 
     } catch (error) {
       logger.error('Change password error:', error);
+      const isDbError = error.message && (error.message.includes('not initialized') || error.message.includes('ECONNREFUSED') || error.message.includes('NJS-'));
       res.status(500).json({
         success: false,
-        error: 'Failed to change password'
+        error: isDbError
+          ? 'Koneksi database bermasalah. Pastikan Oracle DB aktif dan server sudah di-restart.'
+          : 'Failed to change password'
       });
     }
   }
@@ -352,12 +385,22 @@ class AuthController {
   ];
 
   validateUpdateProfile = [
-    body('name')
+    body('fullName')
       .trim()
       .notEmpty()
-      .withMessage('Name is required')
-      .isLength({ min: 2, max: 50 })
-      .withMessage('Name must be between 2 and 50 characters')
+      .withMessage('Nama lengkap wajib diisi')
+      .isLength({ min: 2, max: 100 })
+      .withMessage('Nama lengkap harus antara 2-100 karakter'),
+    body('username')
+      .trim()
+      .notEmpty()
+      .withMessage('Username wajib diisi')
+      .isLength({ min: 3, max: 50 })
+      .withMessage('Username harus antara 3-50 karakter'),
+    body('email')
+      .isEmail()
+      .withMessage('Format email tidak valid')
+      .normalizeEmail()
   ];
 
   validateChangePassword = [

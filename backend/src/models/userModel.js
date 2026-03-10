@@ -138,18 +138,19 @@ class UserModel {
   // Update user profile
   async updateProfile(user_id, profileData) {
     try {
-      const { username, full_name } = profileData;
-      
+      const { full_name, username, email } = profileData;
+
       const query = `
         UPDATE ${this.schema}.${this.tableName}
-        SET USERNAME = :username,
-            FULL_NAME = :full_name,
+        SET FULL_NAME = :full_name,
+            USERNAME = :username,
+            EMAIL = :email,
             UPDATED_AT = CURRENT_TIMESTAMP
         WHERE USER_ID = :user_id
       `;
-      
-      await executeQuery(query, { username, full_name, user_id }, this.database);
-      
+
+      await executeQuery(query, { full_name, username, email, user_id }, this.database);
+
     } catch (error) {
       logger.error('Error updating user profile:', error);
       throw error;
