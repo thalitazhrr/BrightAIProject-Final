@@ -6,7 +6,7 @@
 - Oracle Database access (DADBS)
 - Git
 
-## 🚀 Installation
+## Installation
 
 ### 1. Clone Repository
 ```bash

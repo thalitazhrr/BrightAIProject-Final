@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 Starting Telkom HSI BrightAI Application..."
+echo "Starting Telkom HSI BrightAI Application..."
 echo "================================================"
 
 # Function to check if port is in use
@@ -17,7 +17,7 @@ check_port() {
 # Check backend
 echo "🔍 Checking Backend (Port 3001)..."
 if ! check_port 3001; then
-    echo "🚀 Starting Backend..."
+    echo "Starting Backend..."
     cd backend
     npm start &
     BACKEND_PID=$!
@@ -29,7 +29,7 @@ fi
 # Check frontend
 echo "🔍 Checking Frontend (Port 3000)..."
 if ! check_port 3000; then
-    echo "🚀 Starting Frontend..."
+    echo "Starting Frontend..."
     cd frontend
     npm start &
     FRONTEND_PID=$!

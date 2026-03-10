@@ -44,7 +44,7 @@ class TelkomApiService {
     // Add request timestamp for debugging
     const requestId = Date.now().toString(36);
     const startTime = Date.now();
-    console.log(`[API-${requestId}] 🚀 Starting: ${config.method || 'GET'} ${url}`);
+    console.log(`[API-${requestId}] Starting: ${config.method || 'GET'} ${url}`);
 
     let lastError;
     

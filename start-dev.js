@@ -4,7 +4,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 const net = require('net');
 
-console.log('🚀 Starting Telkom HSI BrightAI Application...');
+console.log('Starting Telkom HSI BrightAI Application...');
 console.log('================================================');
 
 // Function to check if port is in use
@@ -26,7 +26,7 @@ function checkPort(port) {
 // Function to start a service
 function startService(name, directory, command, args = []) {
     return new Promise((resolve, reject) => {
-        console.log(`🚀 Starting ${name}...`);
+        console.log(`Starting ${name}...`);
         
         const child = spawn(command, args, {
             cwd: path.join(__dirname, directory),

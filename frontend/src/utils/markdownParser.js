@@ -56,8 +56,8 @@ export const parseMarkdownToJSX = (text, theme = 'dark') => {
           }`}
         >
           {listItems.map((item, index) => (
-            <li key={index} className="flex items-start">
-              <span className={`mr-2 ${
+            <li key={index}>
+              <span className={`mr-1 ${
                 theme === 'dark' ? 'text-blue-400' : 'text-blue-600'
               }`}>•</span>
               <span>{parseInlineMarkdown(item, theme)}</span>

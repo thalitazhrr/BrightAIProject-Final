@@ -1,4 +1,4 @@
-# 🚀 Telkom HSI BrightAI Platform
+# Telkom HSI BrightAI Platform
 
 **AI-Powered HSI Analytics & Intelligence Dashboard untuk Telkom**
 
@@ -34,7 +34,7 @@ Platform **BrightAI** adalah solusi analytics dan intelligence untuk manajemen H
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - **Node.js** 18+

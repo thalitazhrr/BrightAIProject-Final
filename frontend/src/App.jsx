@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Bot, Send, Settings, Sun, Moon, Loader,
   User, Target, X, Trash2, LogOut, RefreshCw,
-  Plus, Search, Zap, Clock, Wifi, WifiOff, ChevronDown, ChevronUp, Menu
+  Plus, Search, Zap, Clock, Wifi, WifiOff, ChevronDown, ChevronUp, Menu,
+  Eye, EyeOff
 } from 'lucide-react';
 
 // Import services and components
 import authService from './services/authService';
 import Login from './components/Login';
 import { parseMarkdownToJSX } from './utils/markdownParser';
+import { generateWelcomeMessage } from './utils/welcomeTemplate';
 import './animations.css';
 
 // Error Boundary Component
@@ -792,6 +794,7 @@ function App() {
     newPassword: '',
     confirmPassword: ''
   });
+  const [showPasswords, setShowPasswords] = useState({ current: false, new: false, confirm: false });
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [passwordMsg, setPasswordMsg] = useState({ type: '', text: '' });
 
@@ -1074,10 +1077,10 @@ function App() {
       const savedChat = await saveChatToDatabase(newChat);
       
       if (savedChat && savedChat.session_id) {
-        // Create welcome message in Indonesian
+        // Create welcome message from template (see src/utils/welcomeTemplate.js)
         const welcomeMessage = {
           id: `welcome_${Date.now()}`,
-          text: '🚀 **Selamat datang di BrightAI!**\n\nSaya adalah asisten analisis data Telkom yang dapat membantu Anda menganalisis data dari berbagai database perusahaan seperti:\n\n📊 **BRIGHTAI_SALES**: Analisis order dan sales HSI\n👥 **BRIGHTAI_DAPROS**: Profil dan segmentasi customer HSI\n🎯 **BRIGHTAI_TARGET**: Analisis target dan performance\n💰 **BRIGHTAI_REVENUE**: Analisis revenue dan billing\n📉 **BRIGHTAI_CT0_NAL**: Analisis churn dan customer lifecycle\n\n**Contoh pertanyaan yang bisa Anda ajukan:**\n• "Analisis total order HSI per regional"\n• "Bagaimana pola churn pelanggan HSI berdasarkan bandwidth?"\n• "Tren revenue HSI 6 bulan terakhir"\n• "Penetrasi HSI di wilayah Jawa Barat"\n\nSilakan ajukan pertanyaan analisis data yang Anda butuhkan! 💬',
+          text: generateWelcomeMessage(),
           isBot: true,
           timestamp: new Date().toISOString(),
           userId: userId
@@ -1639,22 +1642,34 @@ function App() {
                     )}
 
                     <div className="space-y-3">
+                      {/* Kata Sandi Lama */}
                       <div>
                         <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
                           Kata Sandi Lama
                         </label>
-                        <input
-                          type="password"
-                          value={passwordForm.currentPassword}
-                          onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
-                          className={`w-full px-3 py-2.5 text-sm rounded-lg border transition-colors ${
-                            theme === 'dark'
-                              ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
-                              : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
-                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                          placeholder="Masukkan kata sandi lama"
-                        />
+                        <div className="relative">
+                          <input
+                            type={showPasswords.current ? 'text' : 'password'}
+                            value={passwordForm.currentPassword}
+                            onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+                            className={`w-full px-3 py-2.5 pr-10 text-sm rounded-lg border transition-colors ${
+                              theme === 'dark'
+                                ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                                : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
+                            } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                            placeholder="Masukkan kata sandi lama"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPasswords(p => ({ ...p, current: !p.current }))}
+                            className={`absolute right-2.5 top-1/2 -translate-y-1/2 ${theme === 'dark' ? 'text-slate-400 hover:text-slate-200' : 'text-gray-400 hover:text-gray-600'}`}
+                          >
+                            {showPasswords.current ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+                        </div>
                       </div>
+
+                      {/* Kata Sandi Baru */}
                       <div>
                         <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
                           Kata Sandi Baru
@@ -1662,34 +1677,64 @@ function App() {
                             (min. 6 karakter, huruf besar + angka)
                           </span>
                         </label>
-                        <input
-                          type="password"
-                          value={passwordForm.newPassword}
-                          onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
-                          className={`w-full px-3 py-2.5 text-sm rounded-lg border transition-colors ${
-                            theme === 'dark'
-                              ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
-                              : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
-                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                          placeholder="Masukkan kata sandi baru"
-                        />
+                        <div className="relative">
+                          <input
+                            type={showPasswords.new ? 'text' : 'password'}
+                            value={passwordForm.newPassword}
+                            onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                            className={`w-full px-3 py-2.5 pr-10 text-sm rounded-lg border transition-colors ${
+                              theme === 'dark'
+                                ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
+                                : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
+                            } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                            placeholder="Masukkan kata sandi baru"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPasswords(p => ({ ...p, new: !p.new }))}
+                            className={`absolute right-2.5 top-1/2 -translate-y-1/2 ${theme === 'dark' ? 'text-slate-400 hover:text-slate-200' : 'text-gray-400 hover:text-gray-600'}`}
+                          >
+                            {showPasswords.new ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+                        </div>
                       </div>
-                      <div>
-                        <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
-                          Konfirmasi Kata Sandi Baru
-                        </label>
-                        <input
-                          type="password"
-                          value={passwordForm.confirmPassword}
-                          onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
-                          className={`w-full px-3 py-2.5 text-sm rounded-lg border transition-colors ${
-                            theme === 'dark'
-                              ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500'
-                              : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500'
-                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
-                          placeholder="Ulangi kata sandi baru"
-                        />
-                      </div>
+
+                      {/* Konfirmasi Kata Sandi Baru */}
+                      {(() => {
+                        const mismatch = passwordForm.confirmPassword.length > 0 && passwordForm.confirmPassword !== passwordForm.newPassword;
+                        return (
+                          <div>
+                            <label className={`block text-xs font-medium mb-1.5 ${theme === 'dark' ? 'text-slate-400' : 'text-gray-500'}`}>
+                              Konfirmasi Kata Sandi Baru
+                            </label>
+                            <div className="relative">
+                              <input
+                                type={showPasswords.confirm ? 'text' : 'password'}
+                                value={passwordForm.confirmPassword}
+                                onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                                className={`w-full px-3 py-2.5 pr-10 text-sm rounded-lg border transition-colors focus:outline-none focus:ring-2 ${
+                                  mismatch
+                                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20 ' + (theme === 'dark' ? 'bg-slate-700/50 text-white placeholder-slate-500' : 'bg-gray-50 text-gray-900 placeholder-gray-400')
+                                    : theme === 'dark'
+                                      ? 'bg-slate-700/50 border-slate-600 text-white placeholder-slate-500 focus:border-blue-500 focus:ring-blue-500/20'
+                                      : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500/20'
+                                }`}
+                                placeholder="Ulangi kata sandi baru"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowPasswords(p => ({ ...p, confirm: !p.confirm }))}
+                                className={`absolute right-2.5 top-1/2 -translate-y-1/2 ${theme === 'dark' ? 'text-slate-400 hover:text-slate-200' : 'text-gray-400 hover:text-gray-600'}`}
+                              >
+                                {showPasswords.confirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                              </button>
+                            </div>
+                            {mismatch && (
+                              <p className="mt-1 text-xs text-red-500">Password tidak sesuai</p>
+                            )}
+                          </div>
+                        );
+                      })()}
                       <div className="pt-1 flex justify-end">
                         <button
                           onClick={handleChangePassword}

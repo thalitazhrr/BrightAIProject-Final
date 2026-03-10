@@ -103,7 +103,7 @@ class UserModel {
   async findById(user_id) {
     try {
       const query = `
-        SELECT USER_ID, USERNAME, EMAIL, FULL_NAME, ROLE, IS_ACTIVE, CREATED_AT, UPDATED_AT
+        SELECT USER_ID, USERNAME, EMAIL, PASSWORD_HASH, FULL_NAME, ROLE, IS_ACTIVE, CREATED_AT, UPDATED_AT
         FROM ${this.schema}.${this.tableName}
         WHERE USER_ID = :user_id AND IS_ACTIVE = 1
       `;

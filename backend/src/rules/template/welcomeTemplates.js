@@ -6,20 +6,20 @@ const welcomeTemplates = {
     capabilities: "Saya dapat membantu analisis data dari:",
     
     databases: [
-      "BRIGHTAI_SALES: Analisis order dan sales HSI",
-      "BRIGHTAI_DAPROS: Profil dan segmentasi customer HSI", 
-      "BRIGHTAI_TARGET: Analisis target dan performance",
-      "BRIGHTAI_REVENUE: Analisis revenue dan billing",
-      "BRIGHTAI_CT0_NAL: Analisis churn dan customer lifecycle"
+      " BRIGHTAI_SALES: Analisis order dan sales HSI\n",
+      " BRIGHTAI_DAPROS: Profil dan segmentasi customer HSI\n", 
+      " BRIGHTAI_TARGET: Analisis target dan performance\n",
+      " BRIGHTAI_REVENUE: Analisis revenue dan billing\n",
+      " BRIGHTAI_CT0_NAL: Analisis churn dan customer lifecycle\n"
     ],
     
     examples: [
       "Contoh pertanyaan yang bisa Anda ajukan:",
-      "- Analisis total order HSI per regional",
-      "- Bagaimana performa churn divisi DBS vs RBS?",
-      "- Tren revenue HSI 6 bulan terakhir",
-      "- Penetrasi HSI di wilayah Jawa Barat",
-      "- Analisis customer segmentation HSI"
+      "- Analisis total order HSI per regional\n",
+      "- Bagaimana performa churn divisi?\n",
+      "- Tren revenue HSI 6 bulan terakhir\n",
+      "- Penetrasi HSI di wilayah Jawa Barat\n",
+      "- Analisis customer segmentation HSI\n"
     ],
     
     instruction: "Silakan ajukan pertanyaan analisis data yang Anda butuhkan."
@@ -50,19 +50,22 @@ const welcomeTemplates = {
 
 function generateWelcomeMessage() {
   const welcome = welcomeTemplates.welcome;
-  
-  // Format as a complete message string for better display
-  const formattedMessage = `🚀 **${welcome.initial}**
+
+  // Use "- " prefix so each item is detected as a list entry by the markdown parser
+  const dbList = welcome.databases.map(db => `- ${db}`).join('\n');
+  const exampleList = welcome.examples.slice(1).join('\n');
+
+  const formattedMessage = `**${welcome.initial}**
 
 **${welcome.capabilities}**
 
-${welcome.databases.map(db => `📊 **${db}**`).join('\n')}
+${dbList}
 
 **${welcome.examples[0]}**
-${welcome.examples.slice(1).join('\n')}
+${exampleList}
 
 ${welcome.instruction}`;
-  
+
   return formattedMessage;
 }
 
