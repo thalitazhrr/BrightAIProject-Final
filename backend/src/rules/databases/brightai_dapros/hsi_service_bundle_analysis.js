@@ -100,7 +100,7 @@ module.exports = {
                 ELSE 'STANDARD_VALUE_BUNDLE'
             END as VALUE_BUNDLE_SEGMENT
             
-        FROM USR_RPT.BRIGHTAI_DAPROS
+        FROM DWH_MOIS.BRIGHTAI_DAPROS
         WHERE PLBLCL IN ('BL', 'CL')
           AND CITEM NOT LIKE '%W/%'
           AND CITEM NOT LIKE '%WM%'

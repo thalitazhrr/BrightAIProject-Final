@@ -181,7 +181,7 @@ module.exports = {
                      UPPER(PACKAGE_NAME) LIKE '%BLAST%'
                 THEN 1 ELSE 0
             END as HAS_DIGITAL_PRODUCT
-        FROM USR_RPT.BRIGHTAI_SALES  -- CORRECTED: Added full table name
+        FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE STATUS_RESUME IN ('FULFILL BILLING COMPLETED', 'Completed (PS)')
           AND BW IS NOT NULL 
           AND BW != '0'

@@ -197,7 +197,7 @@ module.exports = {
                 WHEN UPPER(PACKAGE_NAME) LIKE '%BLAST%' THEN 1
                 ELSE 0
             END as HAS_OCA_BLAST
-        FROM USR_RPT.BRIGHTAI_SALES  -- CORRECTED: Added full table name
+        FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE STATUS_RESUME IN ('FULFILL BILLING COMPLETED', 'Completed (PS)')
           AND REGIONAL IS NOT NULL
           AND WITEL IS NOT NULL  

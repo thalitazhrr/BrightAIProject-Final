@@ -4,37 +4,37 @@ class RuleRegistry {
     this.databases = {
       BRIGHTAI_SALES: {
         connection: 'DADBS',
-        schema: 'USR_RPT.BRIGHTAI_SALES',
-        table: 'BRIGHTAI_SALES',
+        schema: 'DWH_MOIS.BRIGHTAI_SALES',
+        table: 'BRIGHTAI_',
         rules_count: 11,
-        rule_prefix: 'ps_scone'
+        rule_prefix: 'sales'
       },
       BRIGHTAI_DAPROS: {
-        connection: 'DADBS', 
-        schema: 'USR_RPT.BRIGHTAI_DAPROS',
+        connection: 'DADBS',
+        schema: 'DWH_MOIS.BRIGHTAI_DAPROS',
         table: 'BRIGHTAI_DAPROS',
         rules_count: 7,
         rule_prefix: 'dapros'
       },
       BRIGHTAI_TARGET: {
         connection: 'DADBS',
-        schema: 'USR_RPT.BRIGHTAI_TARGET', 
+        schema: 'DWH_MOIS.BRIGHTAI_TARGET',
         table: 'BRIGHTAI_TARGET',
         rules_count: 5,
         rule_prefix: 'target'
       },
       BRIGHTAI_REVENUE: {
         connection: 'DADBS',
-        schema: 'USR_RPT.BRIGHTAI_REVENUE',
-        table: 'BRIGHTAI_REVENUE', 
+        schema: 'DWH_MOIS.BRIGHTAI_REVENUE',
+        table: 'BRIGHTAI_REVENUE',
         rules_count: 8,
         rule_prefix: 'mart_rev'
       },
       BRIGHTAI_CT0_NAL: {
         connection: 'DADBS',
-        schema: 'USR_RPT.BRIGHTAI_CT0_NAL',
+        schema: 'DWH_MOIS.BRIGHTAI_CT0_NAL',
         table: 'BRIGHTAI_CT0_NAL',
-        rules_count: 6, 
+        rules_count: 6,
         rule_prefix: 'ct0_ebis'
       }
     };

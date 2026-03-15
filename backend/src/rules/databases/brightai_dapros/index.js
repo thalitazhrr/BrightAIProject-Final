@@ -16,8 +16,8 @@ module.exports = {
   total_rules: 7,
   rules: rules,
   
-  // Direct table access - USR_RPT.BRIGHTAI_DAPROS is now always up-to-date
+  // Direct table access - DWH_MOIS.BRIGHTAI_DAPROS is now always up-to-date
   getTableName: function() {
-    return "USR_RPT.BRIGHTAI_DAPROS";
+    return "DWH_MOIS.BRIGHTAI_DAPROS";
   }
 };

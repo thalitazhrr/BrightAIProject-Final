@@ -110,7 +110,7 @@ module.exports = {
             
             COUNT(*) as JUMLAH_UNIT
             
-        FROM USR_RPT.BRIGHTAI_TARGET
+        FROM DWH_MOIS.BRIGHTAI_TARGET
         WHERE UPPER(PRODUK) = 'HSI'
           AND PERIODE >= TO_CHAR(ADD_MONTHS(SYSDATE, -6), 'YYYYMM')
           AND TARGET IS NOT NULL 

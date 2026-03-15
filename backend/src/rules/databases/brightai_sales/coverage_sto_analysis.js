@@ -147,7 +147,7 @@ module.exports = {
 
             CASE WHEN UPPER(PACKAGE_NAME) LIKE '%NETMONK%' THEN 1 ELSE 0 END as IS_NETMONK
 
-        FROM USR_RPT.BRIGHTAI_SALES  -- CORRECTED: Added full table name
+        FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE ORDER_DATE >= ADD_MONTHS(SYSDATE, -3)
           AND STO IS NOT NULL
           AND TRIM(STO) != ''

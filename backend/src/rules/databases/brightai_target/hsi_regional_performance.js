@@ -90,7 +90,7 @@ module.exports = {
             COUNT(DISTINCT TELDA) as JUMLAH_TELDA,
             COUNT(*) as JUMLAH_UNIT_TARGET
             
-        FROM USR_RPT.BRIGHTAI_TARGET
+        FROM DWH_MOIS.BRIGHTAI_TARGET
         WHERE UPPER(PRODUK) = 'HSI'
           AND PERIODE >= TO_CHAR(ADD_MONTHS(SYSDATE, -6), 'YYYYMM')
           AND TREG IS NOT NULL

@@ -97,7 +97,7 @@ module.exports = {
                 ELSE 0
             END as CUSTOMER_TENURE_MONTHS
             
-        FROM USR_RPT.BRIGHTAI_REVENUE
+        FROM DWH_MOIS.BRIGHTAI_REVENUE
         WHERE GROUP4 = 'High Speed Internet'
           AND REVENUE > 0
           AND REGIONAL_BILL IS NOT NULL

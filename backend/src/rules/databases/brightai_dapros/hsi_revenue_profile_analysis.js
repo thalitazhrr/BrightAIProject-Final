@@ -123,7 +123,7 @@ module.exports = {
             END as BILLING_PROFILE
             
         FROM (
-            SELECT * FROM USR_RPT.BRIGHTAI_DAPROS
+            SELECT * FROM DWH_MOIS.BRIGHTAI_DAPROS
             WHERE PLBLCL IN ('BL', 'CL')
               AND CITEM NOT LIKE '%W/%'
               AND CITEM NOT LIKE '%WM%'

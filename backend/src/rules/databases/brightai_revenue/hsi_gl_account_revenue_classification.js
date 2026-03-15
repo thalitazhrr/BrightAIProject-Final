@@ -86,7 +86,7 @@ module.exports = {
                 ELSE 'TIER_5_OTHERS'
             END as SERVICE_TIER
             
-        FROM (SELECT DISTINCT GL_ACC FROM USR_RPT.BRIGHTAI_REVENUE WHERE GROUP4 = 'High Speed Internet')
+        FROM (SELECT DISTINCT GL_ACC FROM DWH_MOIS.BRIGHTAI_REVENUE WHERE GROUP4 = 'High Speed Internet')
     )
     
     SELECT 
@@ -134,7 +134,7 @@ module.exports = {
         COUNT(DISTINCT p.WITEL_BILL) as WITEL_COVERAGE,
         COUNT(DISTINCT p.DATEL) as DATEL_COVERAGE
         
-    FROM USR_RPT.BRIGHTAI_REVENUE p
+    FROM DWH_MOIS.BRIGHTAI_REVENUE p
     JOIN GL_ACCOUNT_CLASSIFICATION g ON p.GL_ACC = g.GL_ACC
     WHERE p.GROUP4 = 'High Speed Internet'
       AND p.REVENUE > 0

@@ -225,7 +225,7 @@ module.exports = {
                 ELSE 'LAINNYA'
             END as ECOSYSTEM_STANDARDIZED
             
-        FROM USR_RPT.BRIGHTAI_SALES  -- CORRECTED: Added full table name
+        FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD') -- Data mulai dari 1 Januari 2025
           AND ORDER_ID IS NOT NULL  -- ADDED: Pastikan ada order ID
           AND NCLI IS NOT NULL       -- ADDED: Pastikan ada customer identifier

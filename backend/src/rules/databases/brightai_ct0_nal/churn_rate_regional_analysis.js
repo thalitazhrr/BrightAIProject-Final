@@ -129,7 +129,7 @@ module.exports = {
                 WHEN TO_NUMBER(SUBSTR(TGL_PS, 7, 2)) > 20 THEN 1 
             END) as churn_akhir_bulan
             
-        FROM USR_RPT.BRIGHTAI_CT0_NAL
+        FROM DWH_MOIS.BRIGHTAI_CT0_NAL
         WHERE UPPER(PRODUK) = 'INTERNET'
           AND (CITEM IS NULL OR NOT UPPER(CITEM) LIKE 'WM%')
           AND PERIODE >= TO_CHAR(ADD_MONTHS(SYSDATE, -6), 'YYYYMM')

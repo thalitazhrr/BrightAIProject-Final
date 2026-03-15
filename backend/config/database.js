@@ -95,7 +95,8 @@ async function executeQuery(query, binds = [], database = 'DADBS') {
       autoCommit: true
     });
 
-    if (query.trim().toUpperCase().startsWith('SELECT')) {
+    const trimmedUpper = query.trim().toUpperCase();
+    if (trimmedUpper.startsWith('SELECT') || trimmedUpper.startsWith('WITH')) {
       return await Promise.all(result.rows.map(row => processClobData(row)));
     }
     return result;

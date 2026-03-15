@@ -96,7 +96,7 @@ module.exports = {
                 ELSE 'NEW_CUSTOMER'
             END as TENURE_CATEGORY
 
-        FROM USR_RPT.BRIGHTAI_DAPROS
+        FROM DWH_MOIS.BRIGHTAI_DAPROS
         WHERE PLBLCL IN ('BL', 'CL')
           AND CITEM NOT LIKE '%W/%'
           AND CITEM NOT LIKE '%WM%'
@@ -308,9 +308,9 @@ module.exports = {
           regional: segment.REGIONAL,
           witel: segment.WITEL,
           telda: segment.TELDA,
-          jumlah_pelanggan: segment.CUSTOMER_COUNT.toLocaleString('id-ID'),
-          persentase: `${segment.CUSTOMER_PERCENTAGE}%`,
-          rata_rata_pendapatan_hsi: `Rp ${segment.AVG_HSI_REVENUE.toLocaleString('id-ID')}`,
+          jumlah_pelanggan: (segment.CUSTOMER_COUNT || 0).toLocaleString('id-ID'),
+          persentase: `${segment.CUSTOMER_PERCENTAGE || 0}%`,
+          rata_rata_pendapatan_hsi: `Rp ${(segment.AVG_HSI_REVENUE || 0).toLocaleString('id-ID')}`,
           rata_rata_kecepatan: `${segment.AVG_SPEED_MBPS} Mbps`,
           rata_rata_masa_berlangganan: `${segment.AVG_TENURE_MONTHS} bulan`,
           cakupan_telda: segment.TELDA_COVERAGE,

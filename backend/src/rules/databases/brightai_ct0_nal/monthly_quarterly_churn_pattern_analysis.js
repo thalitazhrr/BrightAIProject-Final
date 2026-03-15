@@ -109,7 +109,7 @@ module.exports = {
                 ELSE 'PREMIUM_SPEED'
             END as kategori_bandwidth
             
-        FROM USR_RPT.BRIGHTAI_CT0_NAL
+        FROM DWH_MOIS.BRIGHTAI_CT0_NAL
         WHERE UPPER(PRODUK) = 'INTERNET'
           AND (CITEM IS NULL OR NOT UPPER(CITEM) LIKE 'WM%')
           AND PERIODE >= TO_CHAR(ADD_MONTHS(SYSDATE, -18), 'YYYYMM') -- 18 months for temporal analysis

@@ -54,7 +54,7 @@ module.exports = {
   SQL_QUERY: `
     WITH LATEST_MONTH AS (
         SELECT MAX(YEAR_ID || LPAD(MONTH_ID, 2, '0')) as LATEST_PERIOD
-        FROM USR_RPT.BRIGHTAI_REVENUE 
+        FROM DWH_MOIS.BRIGHTAI_REVENUE 
         WHERE GROUP4 = 'High Speed Internet'
     ),
     
@@ -89,7 +89,7 @@ module.exports = {
             COUNT(DISTINCT GROUP3) as GROUP3_DIVERSITY,
             COUNT(DISTINCT GROUP5) as GROUP5_DIVERSITY
             
-        FROM USR_RPT.BRIGHTAI_REVENUE
+        FROM DWH_MOIS.BRIGHTAI_REVENUE
         CROSS JOIN LATEST_MONTH
         WHERE GROUP4 = 'High Speed Internet'
           AND YEAR_ID || LPAD(MONTH_ID, 2, '0') = LATEST_MONTH.LATEST_PERIOD

@@ -328,7 +328,7 @@ module.exports = {
                 ELSE 0
             END as TERINTEGRASI_POTS
 
-        FROM USR_RPT.BRIGHTAI_SALES
+        FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD')
           AND ORDER_ID IS NOT NULL
           AND NCLI IS NOT NULL

@@ -196,7 +196,7 @@ module.exports = {
             -- Clean channel name
             UPPER(TRIM(COALESCE(CHANNEL, 'TIDAK_DIKETAHUI'))) as CLEAN_CHANNEL_NAME
             
-        FROM USR_RPT.BRIGHTAI_SALES
+        FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD') -- Data mulai dari 1 Januari 2025
           AND CHANNEL IS NOT NULL 
           AND TRIM(CHANNEL) != ''

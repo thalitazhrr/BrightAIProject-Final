@@ -226,7 +226,7 @@ module.exports = {
                 ELSE 'LAINNYA'
             END as EKOSISTEM_TERSTANDAR
             
-        FROM USR_RPT.BRIGHTAI_SALES  -- CORRECTED: Added full table name
+        FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD')
           AND TGL_PS IS NOT NULL 
           AND ORDER_DATE IS NOT NULL

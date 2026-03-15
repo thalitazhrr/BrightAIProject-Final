@@ -201,7 +201,7 @@ module.exports = {
                 ELSE 'Tenure Tidak Diketahui'
             END as CUSTOMER_VINTAGE
             
-        FROM USR_RPT.BRIGHTAI_SALES
+        FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE ORDER_DATE >= ADD_MONTHS(SYSDATE, -24) -- 2 years data for seasonal analysis
           AND ORDER_ID IS NOT NULL    -- Pastikan ORDER_ID tidak null
           AND NCLI IS NOT NULL        -- Pastikan NCLI tidak null

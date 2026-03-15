@@ -165,7 +165,7 @@ module.exports = {
             -- Bandwidth numeric value for calculations
             CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) as BANDWIDTH_NUMERIC
             
-        FROM USR_RPT.BRIGHTAI_SALES
+        FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE ORDER_DATE >= ADD_MONTHS(SYSDATE, -3)
           AND BW IS NOT NULL 
           AND TRIM(BW) != ''

@@ -183,7 +183,7 @@ module.exports = {
                 ) THEN 1
                 ELSE 0
             END as IS_OCA_BLAST
-        FROM USR_RPT.BRIGHTAI_SALES
+        FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE STATUS_RESUME IN ('FULFILL BILLING COMPLETED', 'Completed (PS)')
           AND ORDER_DATE >= DATE '2025-01-01'
     ),
