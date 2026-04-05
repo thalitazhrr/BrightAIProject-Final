@@ -66,55 +66,55 @@ module.exports = {
             PACK_NAME, ASSET_STATUS, P_DIGITAL, LGEST,
             
             -- Kategori speed utama
-            CASE 
-                WHEN SPEED_NUM >= 100000 THEN 'ULTRA_HIGH_SPEED'
-                WHEN SPEED_NUM >= 50000 THEN 'HIGH_SPEED'
-                WHEN SPEED_NUM >= 30000 THEN 'MEDIUM_HIGH_SPEED'
-                WHEN SPEED_NUM >= 20000 THEN 'MEDIUM_SPEED'
-                WHEN SPEED_NUM >= 10000 THEN 'BASIC_SPEED'
+            CASE
+                WHEN CAST(SPEED AS NUMBER) >= 100000 THEN 'ULTRA_HIGH_SPEED'
+                WHEN CAST(SPEED AS NUMBER) >= 50000 THEN 'HIGH_SPEED'
+                WHEN CAST(SPEED AS NUMBER) >= 30000 THEN 'MEDIUM_HIGH_SPEED'
+                WHEN CAST(SPEED AS NUMBER) >= 20000 THEN 'MEDIUM_SPEED'
+                WHEN CAST(SPEED AS NUMBER) >= 10000 THEN 'BASIC_SPEED'
                 ELSE 'LOW_SPEED'
             END as SPEED_CATEGORY,
-            
+
             -- Speed tier dalam Mbps
-            CASE 
-                WHEN SPEED_NUM >= 100000 THEN '100_MBPS_PLUS'
-                WHEN SPEED_NUM >= 50000 THEN '50_99_MBPS'
-                WHEN SPEED_NUM >= 30000 THEN '30_49_MBPS'
-                WHEN SPEED_NUM >= 20000 THEN '20_29_MBPS'
-                WHEN SPEED_NUM >= 10000 THEN '10_19_MBPS'
+            CASE
+                WHEN CAST(SPEED AS NUMBER) >= 100000 THEN '100_MBPS_PLUS'
+                WHEN CAST(SPEED AS NUMBER) >= 50000 THEN '50_99_MBPS'
+                WHEN CAST(SPEED AS NUMBER) >= 30000 THEN '30_49_MBPS'
+                WHEN CAST(SPEED AS NUMBER) >= 20000 THEN '20_29_MBPS'
+                WHEN CAST(SPEED AS NUMBER) >= 10000 THEN '10_19_MBPS'
                 ELSE 'UNDER_10_MBPS'
             END as SPEED_TIER,
-            
+
             -- Speed readiness untuk teknologi
-            CASE 
-                WHEN SPEED_NUM >= 100000 AND LGEST LIKE '%FIBER%' THEN 'FIBER_ULTRA_READY'
-                WHEN SPEED_NUM >= 50000 AND LGEST LIKE '%FIBER%' THEN 'FIBER_HIGH_READY'
-                WHEN SPEED_NUM >= 100000 THEN 'ULTRA_READY_NON_FIBER'
-                WHEN SPEED_NUM >= 50000 THEN 'HIGH_READY_NON_FIBER'
-                WHEN SPEED_NUM >= 20000 THEN 'STANDARD_READY'
+            CASE
+                WHEN CAST(SPEED AS NUMBER) >= 100000 AND LGEST LIKE '%FIBER%' THEN 'FIBER_ULTRA_READY'
+                WHEN CAST(SPEED AS NUMBER) >= 50000 AND LGEST LIKE '%FIBER%' THEN 'FIBER_HIGH_READY'
+                WHEN CAST(SPEED AS NUMBER) >= 100000 THEN 'ULTRA_READY_NON_FIBER'
+                WHEN CAST(SPEED AS NUMBER) >= 50000 THEN 'HIGH_READY_NON_FIBER'
+                WHEN CAST(SPEED AS NUMBER) >= 20000 THEN 'STANDARD_READY'
                 ELSE 'BASIC_READY'
             END as SPEED_TECH_READINESS,
-            
+
             -- Speed vs Revenue efficiency
-            CASE 
-                WHEN SPEED_NUM > 0 THEN
-                    CASE 
-                        WHEN (REV_HSI / (SPEED_NUM/1000)) >= 25000 THEN 'HIGH_REVENUE_EFFICIENCY'
-                        WHEN (REV_HSI / (SPEED_NUM/1000)) >= 15000 THEN 'MEDIUM_REVENUE_EFFICIENCY'
-                        WHEN (REV_HSI / (SPEED_NUM/1000)) >= 8000 THEN 'STANDARD_REVENUE_EFFICIENCY'
+            CASE
+                WHEN CAST(SPEED AS NUMBER) > 0 THEN
+                    CASE
+                        WHEN (NVL(TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 25000 THEN 'HIGH_REVENUE_EFFICIENCY'
+                        WHEN (NVL(TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 15000 THEN 'MEDIUM_REVENUE_EFFICIENCY'
+                        WHEN (NVL(TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 8000 THEN 'STANDARD_REVENUE_EFFICIENCY'
                         ELSE 'LOW_REVENUE_EFFICIENCY'
                     END
                 ELSE 'UNDEFINED_EFFICIENCY'
             END as SPEED_REVENUE_EFFICIENCY,
-            
+
             -- Customer segment berdasarkan speed preference
-            CASE 
-                WHEN PLBLCL = 'BL' AND SPEED_NUM >= 100000 THEN 'ENTERPRISE_POWER_USER'
-                WHEN PLBLCL = 'BL' AND SPEED_NUM >= 50000 THEN 'BUSINESS_HIGH_USER'
+            CASE
+                WHEN PLBLCL = 'BL' AND CAST(SPEED AS NUMBER) >= 100000 THEN 'ENTERPRISE_POWER_USER'
+                WHEN PLBLCL = 'BL' AND CAST(SPEED AS NUMBER) >= 50000 THEN 'BUSINESS_HIGH_USER'
                 WHEN PLBLCL = 'BL' THEN 'BUSINESS_STANDARD_USER'
-                WHEN PLBLCL = 'CL' AND SPEED_NUM >= 100000 THEN 'CONSUMER_POWER_USER'
-                WHEN PLBLCL = 'CL' AND SPEED_NUM >= 50000 THEN 'CONSUMER_HIGH_USER'
-                WHEN PLBLCL = 'CL' AND SPEED_NUM >= 20000 THEN 'CONSUMER_MEDIUM_USER'
+                WHEN PLBLCL = 'CL' AND CAST(SPEED AS NUMBER) >= 100000 THEN 'CONSUMER_POWER_USER'
+                WHEN PLBLCL = 'CL' AND CAST(SPEED AS NUMBER) >= 50000 THEN 'CONSUMER_HIGH_USER'
+                WHEN PLBLCL = 'CL' AND CAST(SPEED AS NUMBER) >= 20000 THEN 'CONSUMER_MEDIUM_USER'
                 ELSE 'CONSUMER_BASIC_USER'
             END as SPEED_USER_SEGMENT
             

@@ -67,56 +67,56 @@ module.exports = {
             LOY_PROGRAM, VALID_FROM,
             
             -- Kategori tenure utama (disederhanakan menjadi 6 kategori)
-            CASE 
-                WHEN LOS_NUM >= 60 THEN 'SANGAT_LOYAL'
-                WHEN LOS_NUM >= 36 THEN 'LOYAL'
-                WHEN LOS_NUM >= 24 THEN 'BERKOMITMEN'
-                WHEN LOS_NUM >= 12 THEN 'MAPAN'
-                WHEN LOS_NUM >= 6 THEN 'BERKEMBANG'
+            CASE
+                WHEN CAST(LOS AS NUMBER) >= 60 THEN 'SANGAT_LOYAL'
+                WHEN CAST(LOS AS NUMBER) >= 36 THEN 'LOYAL'
+                WHEN CAST(LOS AS NUMBER) >= 24 THEN 'BERKOMITMEN'
+                WHEN CAST(LOS AS NUMBER) >= 12 THEN 'MAPAN'
+                WHEN CAST(LOS AS NUMBER) >= 6 THEN 'BERKEMBANG'
                 ELSE 'PELANGGAN_BARU'
             END as LOYALTY_CATEGORY,
-            
+
             -- Program loyalty participation
-            CASE 
+            CASE
                 WHEN LOY_PROGRAM IS NOT NULL AND LOY_PROGRAM != '' THEN 'PROGRAM_LOYALITAS_AKTIF'
                 ELSE 'TANPA_PROGRAM_LOYALITAS'
             END as LOYALTY_PROGRAM_STATUS,
-            
+
             -- Customer retention risk
-            CASE 
-                WHEN LOS_NUM >= 60 AND REV_HSI >= 300000 AND ADDON_COUNT >= 2 THEN 'RISIKO_RENDAH'
-                WHEN LOS_NUM >= 36 AND REV_HSI >= 200000 THEN 'RISIKO_MENENGAH_RENDAH'
-                WHEN LOS_NUM >= 24 AND REV_HSI >= 150000 THEN 'RISIKO_MENENGAH'
-                WHEN LOS_NUM >= 12 THEN 'RISIKO_MENENGAH_TINGGI'
-                WHEN LOS_NUM >= 6 THEN 'RISIKO_TINGGI'
+            CASE
+                WHEN CAST(LOS AS NUMBER) >= 60 AND NVL(TREMS_REV_REF, 0) >= 300000 AND NVL(ADDON_TOTAL, 0) >= 2 THEN 'RISIKO_RENDAH'
+                WHEN CAST(LOS AS NUMBER) >= 36 AND NVL(TREMS_REV_REF, 0) >= 200000 THEN 'RISIKO_MENENGAH_RENDAH'
+                WHEN CAST(LOS AS NUMBER) >= 24 AND NVL(TREMS_REV_REF, 0) >= 150000 THEN 'RISIKO_MENENGAH'
+                WHEN CAST(LOS AS NUMBER) >= 12 THEN 'RISIKO_MENENGAH_TINGGI'
+                WHEN CAST(LOS AS NUMBER) >= 6 THEN 'RISIKO_TINGGI'
                 ELSE 'RISIKO_SANGAT_TINGGI'
             END as CHURN_RISK_CATEGORY,
-            
+
             -- Loyalty value classification
-            CASE 
-                WHEN LOS_NUM >= 60 AND REV_HSI >= 500000 THEN 'PELANGGAN_LOYAL_PREMIUM'
-                WHEN LOS_NUM >= 36 AND REV_HSI >= 300000 THEN 'PELANGGAN_LOYAL_TINGGI'
-                WHEN LOS_NUM >= 24 AND REV_HSI >= 200000 THEN 'PELANGGAN_LOYAL_SEDANG'
-                WHEN LOS_NUM >= 12 AND REV_HSI >= 150000 THEN 'PELANGGAN_LOYAL_STANDAR'
-                WHEN LOS_NUM >= 12 THEN 'PELANGGAN_LOYAL'
+            CASE
+                WHEN CAST(LOS AS NUMBER) >= 60 AND NVL(TREMS_REV_REF, 0) >= 500000 THEN 'PELANGGAN_LOYAL_PREMIUM'
+                WHEN CAST(LOS AS NUMBER) >= 36 AND NVL(TREMS_REV_REF, 0) >= 300000 THEN 'PELANGGAN_LOYAL_TINGGI'
+                WHEN CAST(LOS AS NUMBER) >= 24 AND NVL(TREMS_REV_REF, 0) >= 200000 THEN 'PELANGGAN_LOYAL_SEDANG'
+                WHEN CAST(LOS AS NUMBER) >= 12 AND NVL(TREMS_REV_REF, 0) >= 150000 THEN 'PELANGGAN_LOYAL_STANDAR'
+                WHEN CAST(LOS AS NUMBER) >= 12 THEN 'PELANGGAN_LOYAL'
                 ELSE 'PELANGGAN_BERKEMBANG'
             END as LOYALTY_VALUE_SEGMENT,
-            
+
             -- Service evolution pattern
-            CASE 
-                WHEN LOS_NUM >= 36 AND ADDON_COUNT >= 3 THEN 'EKSPANSI_LAYANAN'
-                WHEN LOS_NUM >= 24 AND ADDON_COUNT >= 2 THEN 'ADOPSI_LAYANAN'  
-                WHEN LOS_NUM >= 12 AND ADDON_COUNT >= 1 THEN 'EKSPLORASI_LAYANAN'
-                WHEN LOS_NUM >= 36 AND ADDON_COUNT = 0 THEN 'KONSERVATIF_LAYANAN'
+            CASE
+                WHEN CAST(LOS AS NUMBER) >= 36 AND NVL(ADDON_TOTAL, 0) >= 3 THEN 'EKSPANSI_LAYANAN'
+                WHEN CAST(LOS AS NUMBER) >= 24 AND NVL(ADDON_TOTAL, 0) >= 2 THEN 'ADOPSI_LAYANAN'
+                WHEN CAST(LOS AS NUMBER) >= 12 AND NVL(ADDON_TOTAL, 0) >= 1 THEN 'EKSPLORASI_LAYANAN'
+                WHEN CAST(LOS AS NUMBER) >= 36 AND NVL(ADDON_TOTAL, 0) = 0 THEN 'KONSERVATIF_LAYANAN'
                 ELSE 'LAYANAN_DASAR'
             END as SERVICE_EVOLUTION_PATTERN,
-            
+
             -- Digital loyalty behavior
-            CASE 
-                WHEN P_DIGITAL = '1' AND LOS_NUM >= 24 AND ADDON_COUNT >= 2 THEN 'ADOPTER_DIGITAL_LOYAL'
-                WHEN P_DIGITAL = '1' AND LOS_NUM >= 12 THEN 'DIGITAL_LOYAL_DASAR'
-                WHEN LOS_NUM >= 36 AND ADDON_COUNT >= 2 THEN 'ANALOG_LOYAL_LANJUT'
-                WHEN LOS_NUM >= 24 THEN 'ANALOG_LOYAL_STANDAR'
+            CASE
+                WHEN P_DIGITAL = '1' AND CAST(LOS AS NUMBER) >= 24 AND NVL(ADDON_TOTAL, 0) >= 2 THEN 'ADOPTER_DIGITAL_LOYAL'
+                WHEN P_DIGITAL = '1' AND CAST(LOS AS NUMBER) >= 12 THEN 'DIGITAL_LOYAL_DASAR'
+                WHEN CAST(LOS AS NUMBER) >= 36 AND NVL(ADDON_TOTAL, 0) >= 2 THEN 'ANALOG_LOYAL_LANJUT'
+                WHEN CAST(LOS AS NUMBER) >= 24 THEN 'ANALOG_LOYAL_STANDAR'
                 ELSE 'PELANGGAN_TRADISIONAL'
             END as DIGITAL_LOYALTY_TYPE
             

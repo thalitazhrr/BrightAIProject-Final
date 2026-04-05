@@ -108,7 +108,7 @@ module.exports = {
             ) as rata_rata_masa_layanan_bulan,
             
             -- Distribusi bandwidth yang churn
-            MODE() WITHIN GROUP (ORDER BY BW) as bandwidth_churn_terbanyak,
+            STATS_MODE(BW) as bandwidth_churn_terbanyak,
             
             -- Churn berdasarkan divisi
             COUNT(CASE WHEN DIVISI = 'DBS' THEN 1 END) as churn_dbs,

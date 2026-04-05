@@ -86,7 +86,7 @@ module.exports = {
                 ELSE 'TIER_5_OTHERS'
             END as SERVICE_TIER
             
-        FROM (SELECT DISTINCT GL_ACC FROM DWH_MOIS.BRIGHTAI_REVENUE WHERE GROUP4 = 'High Speed Internet')
+        FROM (SELECT DISTINCT GL_ACC FROM DWH_MOIS.BRIGHTAI_REVENUE WHERE GROUP4 = 'High Speed Internet') gl_src
     )
     
     SELECT 

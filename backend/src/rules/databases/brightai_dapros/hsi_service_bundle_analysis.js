@@ -67,36 +67,36 @@ module.exports = {
             ASSET_STATUS, KW_IH, P_DIGITAL,
             
             -- Klasifikasi bundle utama
-            CASE 
-                WHEN IS_POTS = '1' AND IS_IPTV = '1' AND ADDON_COUNT >= 3 THEN 'QUAD_PLAY'
+            CASE
+                WHEN IS_POTS = '1' AND IS_IPTV = '1' AND NVL(ADDON_TOTAL, 0) >= 3 THEN 'QUAD_PLAY'
                 WHEN IS_POTS = '1' AND IS_IPTV = '1' THEN 'TRIPLE_PLAY'
                 WHEN IS_POTS = '1' AND IS_IPTV = '0' THEN 'HSI_POTS'
                 WHEN IS_POTS = '0' AND IS_IPTV = '1' THEN 'HSI_IPTV'
-                WHEN ADDON_COUNT > 0 THEN 'HSI_ADDON'
+                WHEN NVL(ADDON_TOTAL, 0) > 0 THEN 'HSI_ADDON'
                 ELSE 'HSI_BASIC'
             END as BUNDLE_TYPE,
-            
+
             -- Kategori penetrasi add-on
-            CASE 
-                WHEN ADDON_COUNT >= 4 THEN 'HEAVY_ADDON_USER'
-                WHEN ADDON_COUNT >= 2 THEN 'MODERATE_ADDON_USER'
-                WHEN ADDON_COUNT = 1 THEN 'LIGHT_ADDON_USER'
+            CASE
+                WHEN NVL(ADDON_TOTAL, 0) >= 4 THEN 'HEAVY_ADDON_USER'
+                WHEN NVL(ADDON_TOTAL, 0) >= 2 THEN 'MODERATE_ADDON_USER'
+                WHEN NVL(ADDON_TOTAL, 0) = 1 THEN 'LIGHT_ADDON_USER'
                 ELSE 'NO_ADDON'
             END as ADDON_PENETRATION,
-            
+
             -- Status digitalisasi
-            CASE 
-                WHEN P_DIGITAL = '1' AND ADDON_COUNT >= 2 THEN 'DIGITAL_ADVANCED'
+            CASE
+                WHEN P_DIGITAL = '1' AND NVL(ADDON_TOTAL, 0) >= 2 THEN 'DIGITAL_ADVANCED'
                 WHEN P_DIGITAL = '1' THEN 'DIGITAL_BASIC'
-                WHEN ADDON_COUNT >= 2 THEN 'ANALOG_ADVANCED'
+                WHEN NVL(ADDON_TOTAL, 0) >= 2 THEN 'ANALOG_ADVANCED'
                 ELSE 'ANALOG_BASIC'
             END as DIGITAL_STATUS,
-            
+
             -- Segmen berdasarkan revenue dan bundle
-            CASE 
-                WHEN REV_HSI >= 400000 AND (IS_POTS = '1' OR IS_IPTV = '1') THEN 'HIGH_VALUE_BUNDLE'
-                WHEN REV_HSI >= 200000 AND ADDON_COUNT >= 2 THEN 'MEDIUM_VALUE_BUNDLE'
-                WHEN REV_HSI < 200000 AND ADDON_COUNT = 0 THEN 'BASIC_VALUE_BUNDLE'
+            CASE
+                WHEN NVL(TREMS_REV_REF, 0) >= 400000 AND (IS_POTS = '1' OR IS_IPTV = '1') THEN 'HIGH_VALUE_BUNDLE'
+                WHEN NVL(TREMS_REV_REF, 0) >= 200000 AND NVL(ADDON_TOTAL, 0) >= 2 THEN 'MEDIUM_VALUE_BUNDLE'
+                WHEN NVL(TREMS_REV_REF, 0) < 200000 AND NVL(ADDON_TOTAL, 0) = 0 THEN 'BASIC_VALUE_BUNDLE'
                 ELSE 'STANDARD_VALUE_BUNDLE'
             END as VALUE_BUNDLE_SEGMENT
             

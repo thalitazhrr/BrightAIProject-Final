@@ -122,7 +122,7 @@ module.exports = {
             AVG(bandwidth_mbps) as rata_bandwidth_mbps,
             MIN(bandwidth_mbps) as min_bandwidth_mbps,
             MAX(bandwidth_mbps) as max_bandwidth_mbps,
-            MODE() WITHIN GROUP (ORDER BY bandwidth_mbps) as bandwidth_mode_mbps,
+            STATS_MODE(bandwidth_mbps) as bandwidth_mode_mbps,
             
             -- Analisis masa layanan per kategori bandwidth
             AVG(masa_layanan_bulan) as rata_masa_layanan,

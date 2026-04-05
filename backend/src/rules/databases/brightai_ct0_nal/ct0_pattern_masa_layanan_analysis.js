@@ -130,7 +130,7 @@ module.exports = {
             STDDEV(masa_layanan_bulan) as standar_deviasi_masa_layanan,
             
             -- Distribusi bandwidth
-            MODE() WITHIN GROUP (ORDER BY BW) as bandwidth_ct0_terbanyak,
+            STATS_MODE(BW) as bandwidth_ct0_terbanyak,
             COUNT(DISTINCT BW) as variasi_bandwidth,
             
             -- Analisis temporal CT0

@@ -88,36 +88,36 @@ module.exports = {
             END as MARKET_DENSITY,
             
             -- Customer segment per region
-            CASE 
+            CASE
                 WHEN IS_DINAS = '1' THEN 'SEGMEN_PEMERINTAH'
-                WHEN PLBLCL = 'BL' AND REV_HSI >= 500000 THEN 'SEGMEN_KORPORAT'
+                WHEN PLBLCL = 'BL' AND NVL(TREMS_REV_REF, 0) >= 500000 THEN 'SEGMEN_KORPORAT'
                 WHEN PLBLCL = 'BL' THEN 'SEGMEN_UKM'
-                WHEN PLBLCL = 'CL' AND REV_HSI >= 300000 THEN 'SEGMEN_KONSUMEN_PREMIUM'
+                WHEN PLBLCL = 'CL' AND NVL(TREMS_REV_REF, 0) >= 300000 THEN 'SEGMEN_KONSUMEN_PREMIUM'
                 ELSE 'SEGMEN_KONSUMEN_MASA'
             END as CUSTOMER_SEGMENT,
-            
+
             -- Service penetration per area
-            CASE 
-                WHEN IS_POTS = '1' AND IS_IPTV = '1' AND ADDON_COUNT >= 2 THEN 'AREA_LAYANAN_LENGKAP'
+            CASE
+                WHEN IS_POTS = '1' AND IS_IPTV = '1' AND NVL(ADDON_TOTAL, 0) >= 2 THEN 'AREA_LAYANAN_LENGKAP'
                 WHEN IS_POTS = '1' AND IS_IPTV = '1' THEN 'AREA_TRIPLE_PLAY'
                 WHEN IS_POTS = '1' OR IS_IPTV = '1' THEN 'AREA_LAYANAN_GANDA'
-                WHEN ADDON_COUNT > 0 THEN 'AREA_HSI_ENHANCED'
+                WHEN NVL(ADDON_TOTAL, 0) > 0 THEN 'AREA_HSI_ENHANCED'
                 ELSE 'AREA_HSI_DASAR'
             END as SERVICE_PENETRATION,
-            
+
             -- Digital readiness per region
-            CASE 
-                WHEN P_DIGITAL = '1' AND SPEED_NUM >= 50000 AND ADDON_COUNT >= 2 THEN 'KESIAPAN_DIGITAL_TINGGI'
-                WHEN P_DIGITAL = '1' AND SPEED_NUM >= 30000 THEN 'KESIAPAN_DIGITAL_SEDANG'
-                WHEN P_DIGITAL = '1' OR SPEED_NUM >= 50000 THEN 'KESIAPAN_DIGITAL_DASAR'
+            CASE
+                WHEN P_DIGITAL = '1' AND CAST(SPEED AS NUMBER) >= 50000 AND NVL(ADDON_TOTAL, 0) >= 2 THEN 'KESIAPAN_DIGITAL_TINGGI'
+                WHEN P_DIGITAL = '1' AND CAST(SPEED AS NUMBER) >= 30000 THEN 'KESIAPAN_DIGITAL_SEDANG'
+                WHEN P_DIGITAL = '1' OR CAST(SPEED AS NUMBER) >= 50000 THEN 'KESIAPAN_DIGITAL_DASAR'
                 ELSE 'AREA_TRADISIONAL'
             END as DIGITAL_READINESS,
-            
+
             -- Revenue performance per geography
-            CASE 
-                WHEN REV_HSI >= 500000 THEN 'AREA_PENDAPATAN_TINGGI'
-                WHEN REV_HSI >= 300000 THEN 'AREA_PENDAPATAN_SEDANG'
-                WHEN REV_HSI >= 150000 THEN 'AREA_PENDAPATAN_STANDAR'
+            CASE
+                WHEN NVL(TREMS_REV_REF, 0) >= 500000 THEN 'AREA_PENDAPATAN_TINGGI'
+                WHEN NVL(TREMS_REV_REF, 0) >= 300000 THEN 'AREA_PENDAPATAN_SEDANG'
+                WHEN NVL(TREMS_REV_REF, 0) >= 150000 THEN 'AREA_PENDAPATAN_STANDAR'
                 ELSE 'AREA_PENDAPATAN_PEMULA'
             END as REVENUE_PERFORMANCE
             

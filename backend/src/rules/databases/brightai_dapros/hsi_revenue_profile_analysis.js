@@ -66,56 +66,56 @@ module.exports = {
             PACK_NAME, ASSET_STATUS,
             
             -- Revenue tier berdasarkan HSI
-            CASE 
-                WHEN REV_HSI >= 800000 THEN 'ULTRA_HIGH_VALUE'
-                WHEN REV_HSI >= 500000 THEN 'HIGH_VALUE'
-                WHEN REV_HSI >= 300000 THEN 'MEDIUM_VALUE'
-                WHEN REV_HSI >= 150000 THEN 'STANDARD_VALUE'
-                WHEN REV_HSI >= 50000 THEN 'ENTRY_VALUE'
+            CASE
+                WHEN NVL(TREMS_REV_REF, 0) >= 800000 THEN 'ULTRA_HIGH_VALUE'
+                WHEN NVL(TREMS_REV_REF, 0) >= 500000 THEN 'HIGH_VALUE'
+                WHEN NVL(TREMS_REV_REF, 0) >= 300000 THEN 'MEDIUM_VALUE'
+                WHEN NVL(TREMS_REV_REF, 0) >= 150000 THEN 'STANDARD_VALUE'
+                WHEN NVL(TREMS_REV_REF, 0) >= 50000 THEN 'ENTRY_VALUE'
                 ELSE 'LOW_VALUE'
             END as HSI_REVENUE_TIER,
-            
+
             -- Add-on revenue contribution
-            CASE 
-                WHEN ADDON_REV >= 200000 THEN 'HIGH_ADDON_REVENUE'
-                WHEN ADDON_REV >= 100000 THEN 'MEDIUM_ADDON_REVENUE'
-                WHEN ADDON_REV >= 50000 THEN 'LOW_ADDON_REVENUE'
+            CASE
+                WHEN NVL(ADDON_PRICE, 0) >= 200000 THEN 'HIGH_ADDON_REVENUE'
+                WHEN NVL(ADDON_PRICE, 0) >= 100000 THEN 'MEDIUM_ADDON_REVENUE'
+                WHEN NVL(ADDON_PRICE, 0) >= 50000 THEN 'LOW_ADDON_REVENUE'
                 ELSE 'NO_ADDON_REVENUE'
             END as ADDON_REVENUE_TIER,
-            
+
             -- Total revenue classification
-            CASE 
-                WHEN REV_TOTAL >= 1000000 THEN 'ENTERPRISE_LEVEL'
-                WHEN REV_TOTAL >= 600000 THEN 'PREMIUM_LEVEL'
-                WHEN REV_TOTAL >= 300000 THEN 'STANDARD_LEVEL'
+            CASE
+                WHEN NVL(TREMS_REV_P, 0) >= 1000000 THEN 'ENTERPRISE_LEVEL'
+                WHEN NVL(TREMS_REV_P, 0) >= 600000 THEN 'PREMIUM_LEVEL'
+                WHEN NVL(TREMS_REV_P, 0) >= 300000 THEN 'STANDARD_LEVEL'
                 ELSE 'BASIC_LEVEL'
             END as TOTAL_REVENUE_TIER,
-            
+
             -- Revenue efficiency (per Mbps)
-            CASE 
-                WHEN SPEED_NUM > 0 THEN
-                    CASE 
-                        WHEN (REV_HSI / (SPEED_NUM/1000)) >= 20000 THEN 'HIGH_EFFICIENCY'
-                        WHEN (REV_HSI / (SPEED_NUM/1000)) >= 10000 THEN 'MEDIUM_EFFICIENCY'
-                        WHEN (REV_HSI / (SPEED_NUM/1000)) >= 5000 THEN 'STANDARD_EFFICIENCY'
+            CASE
+                WHEN CAST(SPEED AS NUMBER) > 0 THEN
+                    CASE
+                        WHEN (NVL(TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 20000 THEN 'HIGH_EFFICIENCY'
+                        WHEN (NVL(TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 10000 THEN 'MEDIUM_EFFICIENCY'
+                        WHEN (NVL(TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 5000 THEN 'STANDARD_EFFICIENCY'
                         ELSE 'LOW_EFFICIENCY'
                     END
                 ELSE 'UNDEFINED_EFFICIENCY'
             END as REVENUE_EFFICIENCY,
-            
+
             -- Customer lifetime value indicator
-            CASE 
-                WHEN LOS_NUM >= 60 AND REV_HSI >= 400000 THEN 'HIGH_LTV'
-                WHEN LOS_NUM >= 36 AND REV_HSI >= 250000 THEN 'MEDIUM_LTV'
-                WHEN LOS_NUM >= 24 AND REV_HSI >= 150000 THEN 'STANDARD_LTV'
-                WHEN LOS_NUM >= 12 THEN 'DEVELOPING_LTV'
+            CASE
+                WHEN CAST(LOS AS NUMBER) >= 60 AND NVL(TREMS_REV_REF, 0) >= 400000 THEN 'HIGH_LTV'
+                WHEN CAST(LOS AS NUMBER) >= 36 AND NVL(TREMS_REV_REF, 0) >= 250000 THEN 'MEDIUM_LTV'
+                WHEN CAST(LOS AS NUMBER) >= 24 AND NVL(TREMS_REV_REF, 0) >= 150000 THEN 'STANDARD_LTV'
+                WHEN CAST(LOS AS NUMBER) >= 12 THEN 'DEVELOPING_LTV'
                 ELSE 'NEW_LTV'
             END as LTV_CATEGORY,
-            
+
             -- Billing activity profile
-            CASE 
-                WHEN KW_IH = '4' AND REV_HSI >= 300000 THEN 'ACTIVE_HIGH_SPENDER'
-                WHEN KW_IH = '4' AND REV_HSI >= 150000 THEN 'ACTIVE_MEDIUM_SPENDER'
+            CASE
+                WHEN KW_IH = '4' AND NVL(TREMS_REV_REF, 0) >= 300000 THEN 'ACTIVE_HIGH_SPENDER'
+                WHEN KW_IH = '4' AND NVL(TREMS_REV_REF, 0) >= 150000 THEN 'ACTIVE_MEDIUM_SPENDER'
                 WHEN KW_IH = '4' THEN 'ACTIVE_STANDARD_SPENDER'
                 WHEN KW_IH = '3' THEN 'USAGE_ONLY_CUSTOMER'
                 WHEN KW_IH = '2' THEN 'BILLING_ONLY_CUSTOMER'

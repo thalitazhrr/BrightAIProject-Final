@@ -403,7 +403,7 @@ module.exports = {
             COUNT(DISTINCT CASE WHEN JENIS_CUSTOMER_JOURNEY = 'HSI_CHURN' THEN ORDER_ID END) * 100.0 / COUNT(DISTINCT ORDER_ID) as tingkat_churn,
 
             -- Ecosystem Analysis
-            MODE() WITHIN GROUP (ORDER BY EKOSISTEM_TERSTANDAR) as ekosistem_dominan,
+            STATS_MODE(EKOSISTEM_TERSTANDAR) as ekosistem_dominan,
             COUNT(DISTINCT EKOSISTEM_TERSTANDAR) as keragaman_ekosistem,
             COUNT(DISTINCT CASE WHEN EKOSISTEM_TERSTANDAR = 'PENDIDIKAN' THEN ORDER_ID END) * 100.0 / COUNT(DISTINCT ORDER_ID) as penetrasi_pendidikan,
             COUNT(DISTINCT CASE WHEN EKOSISTEM_TERSTANDAR = 'PEMERINTAHAN' THEN ORDER_ID END) * 100.0 / COUNT(DISTINCT ORDER_ID) as penetrasi_pemerintahan,
@@ -411,7 +411,7 @@ module.exports = {
             COUNT(DISTINCT CASE WHEN EKOSISTEM_TERSTANDAR = 'MEDIA_KOMUNIKASI' THEN ORDER_ID END) * 100.0 / COUNT(DISTINCT ORDER_ID) as penetrasi_media,
 
             -- Provider/Division Analysis
-            MODE() WITHIN GROUP (ORDER BY KATEGORI_PROVIDER) as provider_dominan,
+            STATS_MODE(KATEGORI_PROVIDER) as provider_dominan,
             COUNT(DISTINCT KATEGORI_PROVIDER) as keragaman_provider,
             COUNT(DISTINCT CASE WHEN KATEGORI_PROVIDER = 'LAYANAN_ENTERPRISE' THEN ORDER_ID END) * 100.0 / COUNT(DISTINCT ORDER_ID) as share_layanan_enterprise,
             COUNT(DISTINCT CASE WHEN KATEGORI_PROVIDER = 'LAYANAN_BISNIS' THEN ORDER_ID END) * 100.0 / COUNT(DISTINCT ORDER_ID) as share_layanan_bisnis,

@@ -73,36 +73,36 @@ module.exports = {
             END as TECHNOLOGY_TYPE,
             
             -- Level kecepatan digital
-            CASE 
-                WHEN SPEED_NUM >= 100000 THEN 'ULTRA_HIGH_SPEED'
-                WHEN SPEED_NUM >= 50000 THEN 'HIGH_SPEED'
-                WHEN SPEED_NUM >= 20000 THEN 'MEDIUM_SPEED'
+            CASE
+                WHEN CAST(SPEED AS NUMBER) >= 100000 THEN 'ULTRA_HIGH_SPEED'
+                WHEN CAST(SPEED AS NUMBER) >= 50000 THEN 'HIGH_SPEED'
+                WHEN CAST(SPEED AS NUMBER) >= 20000 THEN 'MEDIUM_SPEED'
                 ELSE 'BASIC_SPEED'
             END as SPEED_CATEGORY,
-            
+
             -- Digital maturity berdasarkan adopsi
-            CASE 
-                WHEN P_DIGITAL = '1' AND ADDON_COUNT >= 3 AND SPEED_NUM >= 50000 THEN 'DIGITAL_PIONEER'
-                WHEN P_DIGITAL = '1' AND (ADDON_COUNT >= 2 OR SPEED_NUM >= 30000) THEN 'DIGITAL_ADOPTER'
-                WHEN P_DIGITAL = '1' OR ADDON_COUNT >= 1 THEN 'DIGITAL_BEGINNER'
+            CASE
+                WHEN P_DIGITAL = '1' AND NVL(ADDON_TOTAL, 0) >= 3 AND CAST(SPEED AS NUMBER) >= 50000 THEN 'DIGITAL_PIONEER'
+                WHEN P_DIGITAL = '1' AND (NVL(ADDON_TOTAL, 0) >= 2 OR CAST(SPEED AS NUMBER) >= 30000) THEN 'DIGITAL_ADOPTER'
+                WHEN P_DIGITAL = '1' OR NVL(ADDON_TOTAL, 0) >= 1 THEN 'DIGITAL_BEGINNER'
                 ELSE 'TRADITIONAL_USER'
             END as DIGITAL_MATURITY,
-            
+
             -- Profil billing dan usage digital
-            CASE 
+            CASE
                 WHEN KW_IH = '4' AND P_DIGITAL = '1' THEN 'FULL_DIGITAL_ACTIVE'
                 WHEN KW_IH = '4' THEN 'BILLING_USAGE_ACTIVE'
                 WHEN KW_IH = '3' THEN 'USAGE_ONLY_ACTIVE'
                 WHEN KW_IH = '2' THEN 'BILLING_ONLY_ACTIVE'
                 ELSE 'INACTIVE_DIGITAL'
             END as DIGITAL_ACTIVITY,
-            
+
             -- Segmen transformasi
-            CASE 
-                WHEN LGEST LIKE '%FIBER%' AND SPEED_NUM >= 100000 AND P_DIGITAL = '1' THEN 'FULLY_TRANSFORMED'
-                WHEN LGEST LIKE '%FIBER%' AND SPEED_NUM >= 50000 THEN 'TECH_TRANSFORMED'
-                WHEN P_DIGITAL = '1' AND ADDON_COUNT >= 2 THEN 'SERVICE_TRANSFORMED'
-                WHEN SPEED_NUM >= 50000 OR ADDON_COUNT >= 1 THEN 'PARTIALLY_TRANSFORMED'
+            CASE
+                WHEN LGEST LIKE '%FIBER%' AND CAST(SPEED AS NUMBER) >= 100000 AND P_DIGITAL = '1' THEN 'FULLY_TRANSFORMED'
+                WHEN LGEST LIKE '%FIBER%' AND CAST(SPEED AS NUMBER) >= 50000 THEN 'TECH_TRANSFORMED'
+                WHEN P_DIGITAL = '1' AND NVL(ADDON_TOTAL, 0) >= 2 THEN 'SERVICE_TRANSFORMED'
+                WHEN CAST(SPEED AS NUMBER) >= 50000 OR NVL(ADDON_TOTAL, 0) >= 1 THEN 'PARTIALLY_TRANSFORMED'
                 ELSE 'NOT_TRANSFORMED'
             END as TRANSFORMATION_STAGE
             
