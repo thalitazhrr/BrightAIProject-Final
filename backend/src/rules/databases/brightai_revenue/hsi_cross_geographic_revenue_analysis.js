@@ -133,13 +133,13 @@ module.exports = {
             COUNT(DISTINCT CASE WHEN cgf.TOTAL_CUSTOMER_REVENUE >= 2000000 AND cgf.GEOGRAPHIC_PRESENCE_TYPE != 'SINGLE_LOCATION_CUSTOMER' THEN p.NIP_NAS END) as MEDIUM_VALUE_MULTI_LOCATION,
             
             -- Geographic diversity metrics
-            ROUND(AVG(cgf.REGIONAL_COUNT), 1) as AVG_REGIONAL_PRESENCE_PER_CUSTOMER,
-            ROUND(AVG(cgf.WITEL_COUNT), 1) as AVG_WITEL_PRESENCE_PER_CUSTOMER,
-            ROUND(AVG(cgf.DATEL_COUNT), 1) as AVG_DATEL_PRESENCE_PER_CUSTOMER,
+            ROUND(AVG(cgf.REGIONAL_COUNT), 1) as AVG_REGIONAL_PRESENCE_PER_CUST,
+            ROUND(AVG(cgf.WITEL_COUNT), 1) as AVG_WITEL_PRESENCE_PER_CUST,
+            ROUND(AVG(cgf.DATEL_COUNT), 1) as AVG_DATEL_PRESENCE_PER_CUST,
             ROUND(AVG(cgf.STO_COUNT), 1) as AVG_STO_PRESENCE_PER_CUSTOMER,
-            
+
             -- Expansion opportunity metrics
-            ROUND((COUNT(DISTINCT CASE WHEN cgf.GEOGRAPHIC_PRESENCE_TYPE != 'SINGLE_LOCATION_CUSTOMER' THEN p.NIP_NAS END) * 100.0) / NULLIF(COUNT(DISTINCT p.NIP_NAS), 0), 2) as MULTI_LOCATION_PENETRATION_RATE,
+            ROUND((COUNT(DISTINCT CASE WHEN cgf.GEOGRAPHIC_PRESENCE_TYPE != 'SINGLE_LOCATION_CUSTOMER' THEN p.NIP_NAS END) * 100.0) / NULLIF(COUNT(DISTINCT p.NIP_NAS), 0), 2) as MULTI_LOC_PENETRATION_RATE,
             
             ROUND((SUM(CASE WHEN cgf.GEOGRAPHIC_PRESENCE_TYPE != 'SINGLE_LOCATION_CUSTOMER' THEN p.REVENUE ELSE 0 END) * 100.0) / NULLIF(SUM(p.REVENUE), 0), 2) as MULTI_LOCATION_REVENUE_SHARE
             
@@ -176,22 +176,22 @@ module.exports = {
         SINGLE_LOCATION_REVENUE,
         HIGH_VALUE_MULTI_LOCATION,
         MEDIUM_VALUE_MULTI_LOCATION,
-        AVG_REGIONAL_PRESENCE_PER_CUSTOMER,
-        AVG_WITEL_PRESENCE_PER_CUSTOMER,
-        AVG_DATEL_PRESENCE_PER_CUSTOMER,
+        AVG_REGIONAL_PRESENCE_PER_CUST,
+        AVG_WITEL_PRESENCE_PER_CUST,
+        AVG_DATEL_PRESENCE_PER_CUST,
         AVG_STO_PRESENCE_PER_CUSTOMER,
-        MULTI_LOCATION_PENETRATION_RATE,
+        MULTI_LOC_PENETRATION_RATE,
         MULTI_LOCATION_REVENUE_SHARE,
         
         -- Ranking metrics
         RANK() OVER (ORDER BY TOTAL_REVENUE DESC) as REVENUE_RANK,
-        RANK() OVER (ORDER BY MULTI_LOCATION_PENETRATION_RATE DESC) as PENETRATION_RANK,
-        
+        RANK() OVER (ORDER BY MULTI_LOC_PENETRATION_RATE DESC) as PENETRATION_RANK,
+
         -- Expansion opportunity scoring
-        CASE 
-            WHEN MULTI_LOCATION_PENETRATION_RATE >= 30 AND MULTI_LOCATION_REVENUE_SHARE >= 40 THEN 'HIGH_EXPANSION_OPPORTUNITY'
-            WHEN MULTI_LOCATION_PENETRATION_RATE >= 15 AND MULTI_LOCATION_REVENUE_SHARE >= 20 THEN 'MEDIUM_EXPANSION_OPPORTUNITY'
-            WHEN MULTI_LOCATION_PENETRATION_RATE >= 5 THEN 'LOW_EXPANSION_OPPORTUNITY'
+        CASE
+            WHEN MULTI_LOC_PENETRATION_RATE >= 30 AND MULTI_LOCATION_REVENUE_SHARE >= 40 THEN 'HIGH_EXPANSION_OPPORTUNITY'
+            WHEN MULTI_LOC_PENETRATION_RATE >= 15 AND MULTI_LOCATION_REVENUE_SHARE >= 20 THEN 'MEDIUM_EXPANSION_OPPORTUNITY'
+            WHEN MULTI_LOC_PENETRATION_RATE >= 5 THEN 'LOW_EXPANSION_OPPORTUNITY'
             ELSE 'MINIMAL_EXPANSION_OPPORTUNITY'
         END as EXPANSION_OPPORTUNITY_LEVEL
         
@@ -309,7 +309,7 @@ module.exports = {
             opportunity_level: item.EXPANSION_OPPORTUNITY_LEVEL,
             total_revenue: `Rp ${item.TOTAL_REVENUE.toLocaleString('id-ID')}`,
             total_pelanggan: item.TOTAL_CUSTOMERS.toLocaleString('id-ID'),
-            multi_location_penetration: `${item.MULTI_LOCATION_PENETRATION_RATE}%`,
+            multi_location_penetration: `${item.MULTI_LOC_PENETRATION_RATE}%`,
             multi_location_revenue_share: `${item.MULTI_LOCATION_REVENUE_SHARE}%`,
             multi_regional_customers: item.MULTI_REGIONAL_CUSTOMERS.toLocaleString('id-ID'),
             multi_witel_customers: item.MULTI_WITEL_CUSTOMERS.toLocaleString('id-ID'),
@@ -317,9 +317,9 @@ module.exports = {
             multi_sto_customers: item.MULTI_STO_CUSTOMERS.toLocaleString('id-ID'),
             high_value_multi_location: item.HIGH_VALUE_MULTI_LOCATION.toLocaleString('id-ID'),
             medium_value_multi_location: item.MEDIUM_VALUE_MULTI_LOCATION.toLocaleString('id-ID'),
-            avg_regional_presence: item.AVG_REGIONAL_PRESENCE_PER_CUSTOMER,
-            avg_witel_presence: item.AVG_WITEL_PRESENCE_PER_CUSTOMER,
-            avg_datel_presence: item.AVG_DATEL_PRESENCE_PER_CUSTOMER,
+            avg_regional_presence: item.AVG_REGIONAL_PRESENCE_PER_CUST,
+            avg_witel_presence: item.AVG_WITEL_PRESENCE_PER_CUST,
+            avg_datel_presence: item.AVG_DATEL_PRESENCE_PER_CUST,
             avg_sto_presence: item.AVG_STO_PRESENCE_PER_CUSTOMER,
             revenue_rank: item.REVENUE_RANK,
             penetration_rank: item.PENETRATION_RANK

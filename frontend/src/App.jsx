@@ -9,6 +9,7 @@ import {
 // Import services and components
 import authService from './services/authService';
 import Login from './components/Login';
+import GuidedFlow from './components/GuidedFlow';
 import { parseMarkdownToJSX } from './utils/markdownParser';
 import { generateWelcomeMessage } from './utils/welcomeTemplate';
 import './animations.css';
@@ -115,96 +116,31 @@ const loadChatsFromDatabase = async () => {
     if (!authService.isAuthenticated()) {
       throw new Error('Authentication required to load chats');
     }
-    
+
     const response = await apiCall('/sessions/active');
-    
+
     if (!response.success || !response.active_sessions) {
       console.warn('Invalid response format from sessions API');
       return [];
     }
-    
-    // For each session, get the first message to create a proper title and preview
-    const chatsWithDetails = await Promise.all(
-      response.active_sessions.map(async (session) => {
-        try {
-          const messagesResponse = await apiCall(`/chat/history?session_id=${session.SESSION_ID}`);
-          const messages = messagesResponse.success && messagesResponse.data ? messagesResponse.data : [];
-          
-          // Find first user message for title
-          const firstUserMessage = messages.find(msg => msg.MESSAGE_TYPE === 'user');
-          const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
-          
-            // Create title from first user message, fallback to session name
-          let title = session.SESSION_NAME || 'Percakapan Baru';
-          if (firstUserMessage && firstUserMessage.MESSAGE) {
-            let firstMsgText = '';
-            if (typeof firstUserMessage.MESSAGE === 'string') {
-              firstMsgText = firstUserMessage.MESSAGE;
-            } else if (typeof firstUserMessage.MESSAGE === 'object') {
-              firstMsgText = firstUserMessage.MESSAGE.text || firstUserMessage.MESSAGE.message || JSON.stringify(firstUserMessage.MESSAGE);
-            } else {
-              firstMsgText = String(firstUserMessage.MESSAGE);
-            }
-            
-            if (firstMsgText && firstMsgText.trim()) {
-              title = firstMsgText.slice(0, 50);
-              if (firstMsgText.length > 50) title += '...';
-            }
-          }
-          
-          // Create preview from last message
-          let preview = `${session.MESSAGE_COUNT || 0} pesan`;
-          if (lastMessage && lastMessage.MESSAGE) {
-            let lastMsgText = '';
-            if (typeof lastMessage.MESSAGE === 'string') {
-              lastMsgText = lastMessage.MESSAGE;
-            } else if (typeof lastMessage.MESSAGE === 'object') {
-              lastMsgText = lastMessage.MESSAGE.text || lastMessage.MESSAGE.message || JSON.stringify(lastMessage.MESSAGE);
-            } else {
-              lastMsgText = String(lastMessage.MESSAGE);
-            }
-            
-            if (lastMsgText && lastMsgText.trim()) {
-              preview = lastMsgText.slice(0, 80);
-              if (lastMsgText.length > 80) preview += '...';
-            }
-          }
-          
-          return {
-            id: session.SESSION_ID,
-            title: title,
-            messages: [],
-            lastMessage: preview,
-            createdAt: session.STARTED_AT,
-            updatedAt: session.STARTED_AT,
-            userId: session.USER_ID,
-            messageCount: session.MESSAGE_COUNT || 0
-          };
-        } catch (error) {
-          console.error(`Error loading details for session ${session.SESSION_ID}:`, error);
-          // Fallback to basic session info
-          return {
-            id: session.SESSION_ID,
-            title: session.SESSION_NAME || 'Percakapan Baru',
-            messages: [],
-            lastMessage: `${session.MESSAGE_COUNT || 0} pesan`,
-            createdAt: session.STARTED_AT,
-            updatedAt: session.STARTED_AT,
-            userId: session.USER_ID,
-            messageCount: session.MESSAGE_COUNT || 0
-          };
-        }
-      })
-    );
-    
-    return chatsWithDetails;
+
+    // Single API call — no per-session message fetching to keep load fast
+    return response.active_sessions.map(session => ({
+      id: session.SESSION_ID,
+      title: session.SESSION_NAME || 'Percakapan Baru',
+      messages: [],
+      lastMessage: session.MESSAGE_COUNT > 0
+        ? `${session.MESSAGE_COUNT} pesan`
+        : 'Percakapan baru',
+      createdAt: session.STARTED_AT,
+      updatedAt: session.STARTED_AT,
+      userId: session.USER_ID,
+      messageCount: session.MESSAGE_COUNT || 0
+    }));
+
   } catch (error) {
     console.error('Error loading chats from database:', error);
-    
-    if (error.message.includes('Authentication')) {
-      throw error; // Re-throw auth errors
-    }
-    
+    if (error.message.includes('Authentication')) throw error;
     return [];
   }
 };
@@ -765,7 +701,7 @@ function App() {
   // Authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(false);
   
   // App state
   const [theme, setTheme] = useState('dark');
@@ -778,6 +714,11 @@ function App() {
   const [notifications, setNotifications] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const chatEndRef = useRef(null);
+
+  // Guided flow state
+  const [guidedStep, setGuidedStep] = useState('mode_select'); // 'mode_select' | 'category_select' | 'question_select' | 'awaiting' | 'post_answer'
+  const [guidedCategory, setGuidedCategory] = useState(null);
+  const prevIsTypingRef = useRef(false);
 
   // Profile form state
   const [profileForm, setProfileForm] = useState({
@@ -798,43 +739,16 @@ function App() {
   const [passwordLoading, setPasswordLoading] = useState(false);
   const [passwordMsg, setPasswordMsg] = useState({ type: '', text: '' });
 
-  // Initialize authentication on app start
+  // Always start at login page — clear any stored auth on mount
   useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        console.log('Initializing authentication...');
-        
-        // Clean up any invalid tokens first
-        const storedToken = localStorage.getItem('token');
-        const storedUser = localStorage.getItem('user');
-        
-        if (storedToken && (!storedToken.includes('.') || storedUser === 'null' || storedUser === 'undefined')) {
-          console.log('Found invalid stored auth data, cleaning up');
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          localStorage.removeItem('telkom_chat_history');
-        }
-        
-        const authData = await authService.initializeAuth();
-        if (authData) {
-          console.log('Auth data found:', authData.user.username);
-          setIsAuthenticated(true);
-          setCurrentUser(authData.user);
-        } else {
-          console.log('No valid auth data found');
-          setIsAuthenticated(false);
-          setCurrentUser(null);
-        }
-      } catch (error) {
-        console.error('Auth initialization error:', error);
-        setIsAuthenticated(false);
-        setCurrentUser(null);
-      } finally {
-        setAuthLoading(false);
-      }
-    };
-
-    initializeAuth();
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('telkom_chat_history');
+    authService.token = null;
+    authService.user = null;
+    setIsAuthenticated(false);
+    setCurrentUser(null);
+    setAuthLoading(false);
   }, []);
 
   // Handle login
@@ -848,17 +762,15 @@ function App() {
   };
 
   // Handle logout
-  const handleLogout = async () => {
-    try {
-      await authService.logout();
-      setIsAuthenticated(false);
-      setCurrentUser(null);
-      setChats([]);
-      setActiveChat(null);
-      setNotifications([]);
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
+  const handleLogout = () => {
+    // Clear state immediately so the button always works
+    setIsAuthenticated(false);
+    setCurrentUser(null);
+    setChats([]);
+    setActiveChat(null);
+    setNotifications([]);
+    // Fire-and-forget API call to invalidate server-side token
+    authService.logout().catch(err => console.error('Logout API error:', err));
   };
 
   // Initialize profile form when user data is available
@@ -978,65 +890,31 @@ function App() {
     }
   };
 
-  // Load user-specific chat history - with proper authentication check
+  // Load user-specific chat history from Oracle after login
   useEffect(() => {
     const loadChats = async () => {
-      if (!isAuthenticated || !currentUser || authLoading) {
-        console.log('Skipping chat load - auth not ready:', {
-          isAuthenticated, 
-          hasCurrentUser: !!currentUser, 
-          authLoading
-        });
-        return;
-      }
-      
       try {
-        console.log(`💬 Loading chats for user: ${currentUser.username}`);
-        
-        // Refresh auth state before loading chats
-        authService.refreshAuthState();
-        
-        // Verify authentication before loading chats
-        if (!authService.isAuthenticated()) {
-          console.warn('Auth service says not authenticated, refreshing page...');
-          window.location.reload();
-          return;
-        }
-        
-        // Load user-specific chats from database
         const dbChats = await loadChatsFromDatabase();
-        console.log(`✅ Loaded ${dbChats.length} chats from database`);
-        
         setChats(dbChats);
-        if (dbChats.length > 0 && !activeChat) {
+        if (dbChats.length > 0) {
           setActiveChat(dbChats[0].id);
-          console.log(`🎯 Set active chat: ${dbChats[0].id}`);
         }
       } catch (error) {
-        console.error('❌ Error loading user chats:', error);
-        
-        // If authentication error, force logout
+        console.error('Error loading chats from Oracle:', error);
         if (error.message.includes('Authentication') || error.message.includes('token')) {
-          console.warn('Authentication error while loading chats - logging out');
           setIsAuthenticated(false);
           setCurrentUser(null);
           authService.logout();
         } else {
-          // For other errors, just set empty chats
           setChats([]);
           setActiveChat(null);
         }
       }
     };
-    
-    // Only load chats when user is fully authenticated and loading is complete
+
     if (isAuthenticated && currentUser && !authLoading) {
-      // Add delay to ensure auth state is fully synced
-      const timer = setTimeout(loadChats, 200);
-      return () => clearTimeout(timer);
+      loadChats();
     } else if (!isAuthenticated && !authLoading) {
-      // Clear chats when not authenticated
-      console.log('🗺 Clearing chats - user not authenticated');
       setChats([]);
       setActiveChat(null);
     }
@@ -1048,6 +926,30 @@ function App() {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chats, activeChat]);
+
+  // Reset guided flow when switching chats
+  useEffect(() => {
+    if (activeChat) {
+      const chat = chats.find(c => c.id === activeChat);
+      const hasUserMessages = chat?.messages?.some(m => !m.isBot) ?? false;
+      if (hasUserMessages) {
+        // Existing chat — go straight to category selection
+        setGuidedStep('category_select');
+      } else {
+        setGuidedStep('mode_select');
+      }
+      setGuidedCategory(null);
+    }
+  }, [activeChat]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Transition from 'awaiting' → 'post_answer' when AI finishes typing
+  useEffect(() => {
+    if (prevIsTypingRef.current && !isTyping && guidedStep === 'awaiting') {
+      const timer = setTimeout(() => setGuidedStep('post_answer'), 200);
+      return () => clearTimeout(timer);
+    }
+    prevIsTypingRef.current = isTyping;
+  }, [isTyping]); // eslint-disable-line react-hooks/exhaustive-deps
 
 
 
@@ -1135,15 +1037,57 @@ function App() {
     await deleteChatFromDatabase(chatId);
   };
 
+  // Guided flow handlers
+  const handleModeSelect = (mode) => {
+    if (mode === 'forecast') {
+      // Add a bot message explaining the module is coming soon
+      const userId = currentUser?.id || currentUser?.userId;
+      const forecastMsg = {
+        id: `forecast_${Date.now()}`,
+        text: '## Prediksi 1 Bulan Kedepan\n\nModul **Time Series Forecasting** sedang dalam pengembangan dan akan segera tersedia.\n\nSilakan gunakan **Analisis Saat Ini** untuk mengeksplorasi kondisi dan performa HSI terkini.',
+        isBot: true,
+        timestamp: new Date().toISOString(),
+        userId,
+      };
+      setChats(prev => prev.map(chat =>
+        chat.id === activeChat
+          ? { ...chat, messages: [...chat.messages, forecastMsg] }
+          : chat
+      ));
+      // Stay on mode_select so user can pick Analisis Saat Ini
+      return;
+    }
+    setGuidedStep('category_select');
+  };
+
+  const handleCategorySelect = (categoryId) => {
+    setGuidedCategory(categoryId);
+    setGuidedStep('question_select');
+  };
+
+  const handleQuestionClick = (questionText) => {
+    setGuidedStep('awaiting');
+    handleSendMessage(questionText);
+  };
+
+  const handleGuidedBack = (targetStep) => {
+    setGuidedStep(targetStep);
+  };
+
+  const handleGuidedReset = () => {
+    setGuidedStep('mode_select');
+    setGuidedCategory(null);
+  };
+
   // Send message with enhanced authentication and error handling
-  const handleSendMessage = async () => {
-    if (!currentMessage.trim() || !currentUser || !authService.isAuthenticated()) {
+  const handleSendMessage = async (messageOverride = null) => {
+    const userMessage = messageOverride || currentMessage.trim();
+    if (!userMessage || !currentUser || !authService.isAuthenticated()) {
       console.warn('Cannot send message - missing requirements');
       return;
     }
 
-    const userMessage = currentMessage.trim();
-    setCurrentMessage('');
+    if (!messageOverride) setCurrentMessage('');
     setIsTyping(true);
 
     // Verify current chat exists and belongs to user
@@ -1167,15 +1111,32 @@ function App() {
         userId: userId
       };
       
+      // First real user message → update title locally and in Oracle
+      const isFirstUserMessage = !currentChatObj.messages.some(m => !m.isBot);
+      const newTitle = isFirstUserMessage
+        ? (userMessage.slice(0, 50) + (userMessage.length > 50 ? '...' : ''))
+        : currentChatObj.title;
+
+      if (isFirstUserMessage) {
+        apiCall(`/sessions/${activeChat}/name`, {
+          method: 'PUT',
+          body: JSON.stringify({ session_name: newTitle })
+        }).catch(err => console.warn('Failed to update session name:', err));
+      }
+
       const updatedChat = {
         ...currentChatObj,
         messages: [...currentChatObj.messages, userMessageObj],
         lastMessage: userMessage,
         updatedAt: new Date().toISOString(),
-        title: currentChatObj.messages.length === 0 ? generateChatTitle(userMessage) : currentChatObj.title
+        title: newTitle
       };
 
-      setChats(prev => prev.map(chat => chat.id === activeChat ? updatedChat : chat));
+      // Move active chat to top of sidebar
+      setChats(prev => {
+        const mapped = prev.map(chat => chat.id === activeChat ? updatedChat : chat);
+        return [mapped.find(c => c.id === activeChat), ...mapped.filter(c => c.id !== activeChat)];
+      });
 
       // Send to AI using correct endpoint
       const response = await apiCall('/chat/message', {
@@ -1215,16 +1176,19 @@ function App() {
         confidence: response.confidence
       };
       
-      setChats(prev => prev.map(chat => 
-        chat.id === activeChat 
-          ? {
-              ...chat,
-              messages: [...chat.messages, aiMessageObj],
-              lastMessage: aiMessage.slice(0, 50) + (aiMessage.length > 50 ? '...' : ''),
-              updatedAt: new Date().toISOString()
-            }
-          : chat
-      ));
+      setChats(prev => {
+        const mapped = prev.map(chat =>
+          chat.id === activeChat
+            ? {
+                ...chat,
+                messages: [...chat.messages, aiMessageObj],
+                lastMessage: aiMessage.slice(0, 50) + (aiMessage.length > 50 ? '...' : ''),
+                updatedAt: new Date().toISOString()
+              }
+            : chat
+        );
+        return [mapped.find(c => c.id === activeChat), ...mapped.filter(c => c.id !== activeChat)];
+      });
 
     } catch (error) {
       console.error('Send message error:', error);
@@ -1356,39 +1320,18 @@ function App() {
                     <div ref={chatEndRef} />
                   </div>
 
-                  {/* Input Area */}
-                  <div className={`px-4 pb-4 pt-3 border-t ${
-                    theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/70'
-                  }`}>
-                    <PoweredByComponent theme={theme} />
-                    <div className="flex gap-3 items-end">
-                      <textarea
-                        value={currentMessage}
-                        onChange={(e) => setCurrentMessage(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        placeholder="Tanyakan kepada BrightAI..."
-                        className={`flex-1 resize-none rounded-xl px-4 py-3 text-sm ${
-                          theme === 'dark'
-                            ? 'bg-slate-800/80 border-slate-700 text-white placeholder-slate-500'
-                            : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
-                        } border focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors`}
-                        rows="2"
-                        disabled={isTyping}
-                      />
-                      <button
-                        onClick={handleSendMessage}
-                        disabled={!currentMessage.trim() || isTyping}
-                        className={`shrink-0 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
-                          !currentMessage.trim() || isTyping
-                            ? theme === 'dark' ? 'bg-slate-700 text-slate-500 cursor-not-allowed' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                            : 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm'
-                        }`}
-                      >
-                        <Send className="w-4 h-4" />
-                        <span>Kirim</span>
-                      </button>
-                    </div>
-                  </div>
+                  {/* Guided Flow Controls (replaces free-form input) */}
+                  <GuidedFlow
+                    theme={theme}
+                    guidedStep={guidedStep}
+                    guidedCategory={guidedCategory}
+                    onModeSelect={handleModeSelect}
+                    onCategorySelect={handleCategorySelect}
+                    onQuestionClick={handleQuestionClick}
+                    onBack={handleGuidedBack}
+                    onGantiKategori={() => handleGuidedBack('category_select')}
+                    onReset={handleGuidedReset}
+                  />
                 </>
               ) : (
                 <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">

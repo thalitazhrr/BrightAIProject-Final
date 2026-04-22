@@ -119,7 +119,21 @@ module.exports = {
     ),
     
     PERFORMANCE_METRICS AS (
-        SELECT t.*,
+        SELECT t.PERIODE,
+            t.SEGMEN,
+            t.LLEVEL,
+            t.TREG,
+            t.WITEL,
+            t.TELDA,
+            t.GROUP_PRODUK,
+            t.SATUAN,
+            t.TOTAL_TARGET,
+            t.TOTAL_REALISASI,
+            t.ACHIEVEMENT_PCT,
+            t.GAP_ABSOLUTE,
+            t.GAP_PCT,
+            t.KATEGORI_PERFORMANCE,
+            t.JUMLAH_UNIT,
             -- Ranking calculations
             RANK() OVER (PARTITION BY PERIODE, LLEVEL ORDER BY ACHIEVEMENT_PCT DESC) as RANKING_ACHIEVEMENT,
             RANK() OVER (PARTITION BY PERIODE, LLEVEL ORDER BY TOTAL_REALISASI DESC) as RANKING_VOLUME,
@@ -141,7 +155,26 @@ module.exports = {
     ),
     
     TREND_ANALYSIS AS (
-        SELECT t.*,
+        SELECT t.PERIODE,
+            t.SEGMEN,
+            t.LLEVEL,
+            t.TREG,
+            t.WITEL,
+            t.TELDA,
+            t.GROUP_PRODUK,
+            t.SATUAN,
+            t.TOTAL_TARGET,
+            t.TOTAL_REALISASI,
+            t.ACHIEVEMENT_PCT,
+            t.GAP_ABSOLUTE,
+            t.GAP_PCT,
+            t.KATEGORI_PERFORMANCE,
+            t.JUMLAH_UNIT,
+            t.RANKING_ACHIEVEMENT,
+            t.RANKING_VOLUME,
+            t.RANKING_GAP,
+            t.PREV_ACHIEVEMENT_PCT,
+            t.IS_TARGET_ACHIEVED,
             -- Trend calculation
             CASE 
                 WHEN PREV_ACHIEVEMENT_PCT IS NULL THEN 'NEW_PERIOD'

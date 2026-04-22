@@ -424,8 +424,8 @@ module.exports = {
             
             -- Penetration rates berdasarkan customers
             ROUND(dpa.digital_customers * 100.0 / NULLIF(thb.total_hsi_customers, 0), 2) as penetration_rate_customers,
-            ROUND(dpa.hsi_bisnis_customers * 100.0 / NULLIF(thb.total_hsi_customers, 0), 2) as penetration_rate_bisnis_customers,
-            ROUND(dpa.hsi_basic_customers * 100.0 / NULLIF(thb.total_hsi_customers, 0), 2) as penetration_rate_basic_customers,
+            ROUND(dpa.hsi_bisnis_customers * 100.0 / NULLIF(thb.total_hsi_customers, 0), 2) as penetration_rate_bisnis_cust,
+            ROUND(dpa.hsi_basic_customers * 100.0 / NULLIF(thb.total_hsi_customers, 0), 2) as penetration_rate_basic_cust,
             
             -- Penetration rates berdasarkan services
             ROUND(dpa.digital_services * 100.0 / NULLIF(thb.total_hsi_services, 0), 2) as penetration_rate_services,
@@ -440,10 +440,10 @@ module.exports = {
             ROUND(dpa.target_ecosystem_orders * 100.0 / NULLIF(dpa.digital_orders, 0), 2) as ecosystem_alignment_rate,
             
             -- Revenue impact berdasarkan customers (lebih akurat)
-            dpa.digital_customers * dpa.estimated_additional_arpu as total_additional_monthly_revenue,
+            dpa.digital_customers * dpa.estimated_additional_arpu as total_addl_monthly_revenue,
             
             -- Market potential (assuming 30% ceiling for premium digital products)
-            ROUND((thb.total_hsi_customers * 0.30) - dpa.digital_customers, 0) as market_potential_remaining_customers,
+            ROUND((thb.total_hsi_customers * 0.30) - dpa.digital_customers, 0) as market_pot_remaining_cust,
             
             -- Adoption categorization berdasarkan customer penetration
             CASE 
@@ -482,8 +482,8 @@ module.exports = {
         penetration_rate_services,
         penetration_rate_bisnis_orders,
         penetration_rate_basic_orders,
-        penetration_rate_bisnis_customers,
-        penetration_rate_basic_customers,
+        penetration_rate_bisnis_cust,
+        penetration_rate_basic_cust,
         
         -- Service combination
         triple_play_orders,
@@ -498,8 +498,8 @@ module.exports = {
         
         -- Revenue metrics
         estimated_additional_arpu,
-        ROUND(total_additional_monthly_revenue/1000000, 2) as total_revenue_impact_millions,
-        market_potential_remaining_customers,
+        ROUND(total_addl_monthly_revenue/1000000, 2) as total_revenue_impact_millions,
+        market_pot_remaining_cust,
         
         -- Customer journey metrics
         new_customer_orders,
@@ -516,7 +516,7 @@ module.exports = {
         RANK() OVER (ORDER BY penetration_rate_orders DESC) as ranking_penetrasi_order,
         RANK() OVER (ORDER BY digital_customers DESC) as ranking_volume_customer,
         RANK() OVER (ORDER BY digital_orders DESC) as ranking_volume_order,
-        RANK() OVER (ORDER BY total_additional_monthly_revenue DESC) as ranking_revenue_impact
+        RANK() OVER (ORDER BY total_addl_monthly_revenue DESC) as ranking_revenue_impact
     FROM PENETRATION_METRICS
     ORDER BY penetration_rate_customers DESC, digital_customers DESC
   `,

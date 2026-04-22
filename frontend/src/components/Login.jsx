@@ -24,6 +24,9 @@ const Login = ({ onLogin, theme = 'dark' }) => {
     setLoading(true);
     setError('');
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
     try {
       const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
       const payload = isLogin
@@ -39,7 +42,8 @@ const Login = ({ onLogin, theme = 'dark' }) => {
       const response = await fetch(`${apiUrl}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal: controller.signal
       });
 
       const data = await response.json();
@@ -61,9 +65,14 @@ const Login = ({ onLogin, theme = 'dark' }) => {
         setError(data.error || 'Terjadi kesalahan');
       }
     } catch (error) {
-      console.error('Auth error:', error);
-      setError('Tidak dapat terhubung ke server. Silakan coba lagi.');
+      if (error.name === 'AbortError') {
+        setError('Server terlalu lama merespons. Pastikan server aktif dan coba lagi.');
+      } else {
+        console.error('Auth error:', error);
+        setError('Tidak dapat terhubung ke server. Silakan coba lagi.');
+      }
     } finally {
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   };
@@ -105,18 +114,18 @@ const Login = ({ onLogin, theme = 'dark' }) => {
         {/* Center Content */}
         <div className="relative z-10">
           <h2 className="text-3xl font-bold text-white mb-4 leading-snug">
-            Platform Analisis &<br />Intelijensi Bisnis
+            Platform Analisis dan<br />Intelijensi Bisnis
           </h2>
           <p className="text-blue-100 text-sm leading-relaxed mb-8">
-            Dapatkan wawasan mendalam dari data HSI Telkom dengan kecerdasan buatan yang canggih.
+            Dapatkan wawasan mendalam terkait Product HSI Telkom.
           </p>
 
           {/* Feature list */}
           <div className="space-y-3">
             {[
-              'Analisis data real-time dari 5 database',
-              'AI yang memahami konteks bisnis Telkom',
-              'Laporan interaktif dan visualisasi data',
+              'BrightAI dapat membantu Anda analisis kondisi bisnis',
+              'BrightAI dapat tersambungkan dengan Oracle',
+              'BrightAI dapat memprediksi kondisi bisnis kedepannya',
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3">
                 <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center shrink-0 backdrop-blur-sm">

@@ -44,14 +44,14 @@ class UserModel {
       };
 
       await executeQuery(query, binds, this.database);
-      
-      // Get the last inserted user ID from sequence
+
+      // Fetch the newly inserted user's ID by email (avoids CURRVAL cross-session issue)
       const getUserIdQuery = `
-        SELECT USR_RPT.SEQ_BRIGHTAI_USER.CURRVAL as USER_ID FROM DUAL
+        SELECT USER_ID FROM ${this.schema}.${this.tableName} WHERE EMAIL = :email AND IS_ACTIVE = 1
       `;
-      const result = await executeQuery(getUserIdQuery, [], this.database);
-      const userId = result[0].USER_ID;
-      
+      const result = await executeQuery(getUserIdQuery, { email }, this.database);
+      const userId = result[0]?.USER_ID;
+
       logger.info(`User created with ID: ${userId}`);
       return userId;
       

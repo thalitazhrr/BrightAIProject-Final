@@ -225,8 +225,25 @@ module.exports = {
                  TO_CHAR(ORDER_DATE, 'YYYY-MM')
     ),
     GROWTH_ANALYSIS AS (
-        SELECT 
-            *,
+        SELECT
+            tahun,
+            bulan,
+            periode,
+            total_order_hsi,
+            order_hsi_bisnis,
+            order_hsi_basic,
+            unique_bisnis_customers,
+            unique_basic_customers,
+            unique_customers,
+            avg_orders_per_customer,
+            hard_bundling,
+            ala_carte_bundling,
+            total_bundling,
+            bundling_pijar,
+            bundling_netmonk,
+            bundling_oca_int,
+            bundling_oca_blast,
+            any_digital_bundling,
             -- Growth calculations
             LAG(total_order_hsi) OVER (ORDER BY tahun, bulan) as prev_month_order,
             ROUND((total_order_hsi - LAG(total_order_hsi) OVER (ORDER BY tahun, bulan)) * 100.0 / 

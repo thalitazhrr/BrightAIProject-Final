@@ -30,8 +30,8 @@ const dadbsConfig = {
   poolMin: 2,
   poolMax: 10,
   poolIncrement: 1,
-  connectTimeout: 60,
-  transportConnectTimeout: 60000,
+  connectTimeout: 10,
+  transportConnectTimeout: 10000,
 };
 
 // ---------- Pool Lifecycle ----------

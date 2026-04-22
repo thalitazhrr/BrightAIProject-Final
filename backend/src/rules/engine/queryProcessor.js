@@ -61,10 +61,12 @@ class QueryProcessor {
       'hai', 'hello', 'hi', 'selamat', 'halo', 'apa kabar',
       'welcome', 'bantuan', 'help', 'mulai', 'start'
     ];
-    
+
     const lowerInput = userInput.toLowerCase().trim();
-    return welcomeKeywords.some(keyword => lowerInput.includes(keyword)) ||
-           lowerInput.length < 10;
+    return welcomeKeywords.some(keyword => {
+      const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return new RegExp(`(?<![a-z])${escaped}(?![a-z])`, 'i').test(lowerInput);
+    }) || lowerInput.length < 10;
   }
 
   isHelpQuery(userInput) {
@@ -72,9 +74,12 @@ class QueryProcessor {
       'bantuan', 'help', 'bisa apa', 'fitur', 'kemampuan',
       'cara', 'how to', 'panduan', 'petunjuk'
     ];
-    
+
     const lowerInput = userInput.toLowerCase();
-    return helpKeywords.some(keyword => lowerInput.includes(keyword));
+    return helpKeywords.some(keyword => {
+      const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return new RegExp(`(?<![a-z])${escaped}(?![a-z])`, 'i').test(lowerInput);
+    });
   }
 }
 

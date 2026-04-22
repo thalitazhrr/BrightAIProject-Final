@@ -236,7 +236,7 @@ module.exports = {
             SUM(DAILY_TOTAL_CUSTOMERS) as WEEKLY_TOTAL_CUSTOMERS,
             SUM(DAILY_TOTAL_SERVICES) as WEEKLY_TOTAL_SERVICES,
             AVG(DAILY_ORDER_PER_CUSTOMER) as WEEKLY_AVG_ORDER_PER_CUSTOMER,
-            AVG(DAILY_SERVICE_PER_CUSTOMER) as WEEKLY_AVG_SERVICE_PER_CUSTOMER,
+            AVG(DAILY_SERVICE_PER_CUSTOMER) as WEEKLY_AVG_SVC_PER_CUST,
             AVG(DAILY_ORDER_PER_SERVICE) as WEEKLY_AVG_ORDER_PER_SERVICE,
             
             SUM(DAILY_TOTAL_HSI_ORDERS) as WEEKLY_TOTAL_HSI_ORDERS,
@@ -287,7 +287,7 @@ module.exports = {
             SUM(DAILY_TOTAL_CUSTOMERS) as MONTHLY_TOTAL_CUSTOMERS,
             SUM(DAILY_TOTAL_SERVICES) as MONTHLY_TOTAL_SERVICES,
             AVG(DAILY_ORDER_PER_CUSTOMER) as MONTHLY_AVG_ORDER_PER_CUSTOMER,
-            AVG(DAILY_SERVICE_PER_CUSTOMER) as MONTHLY_AVG_SERVICE_PER_CUSTOMER,
+            AVG(DAILY_SERVICE_PER_CUSTOMER) as MONTHLY_AVG_SVC_PER_CUST,
             AVG(DAILY_ORDER_PER_SERVICE) as MONTHLY_AVG_ORDER_PER_SERVICE,
             
             SUM(DAILY_TOTAL_HSI_ORDERS) as MONTHLY_TOTAL_HSI_ORDERS,
@@ -342,7 +342,7 @@ module.exports = {
             WEEKLY_TOTAL_CUSTOMERS as TOTAL_CUSTOMERS,
             WEEKLY_TOTAL_SERVICES as TOTAL_SERVICES,
             WEEKLY_AVG_ORDER_PER_CUSTOMER as AVG_ORDER_PER_CUSTOMER,
-            WEEKLY_AVG_SERVICE_PER_CUSTOMER as AVG_SERVICE_PER_CUSTOMER,
+            WEEKLY_AVG_SVC_PER_CUST as AVG_SERVICE_PER_CUSTOMER,
             WEEKLY_AVG_ORDER_PER_SERVICE as AVG_ORDER_PER_SERVICE,
             
             WEEKLY_TOTAL_HSI_ORDERS as TOTAL_HSI_ORDERS,
@@ -399,7 +399,7 @@ module.exports = {
             MONTHLY_TOTAL_CUSTOMERS as TOTAL_CUSTOMERS,
             MONTHLY_TOTAL_SERVICES as TOTAL_SERVICES,
             MONTHLY_AVG_ORDER_PER_CUSTOMER as AVG_ORDER_PER_CUSTOMER,
-            MONTHLY_AVG_SERVICE_PER_CUSTOMER as AVG_SERVICE_PER_CUSTOMER,
+            MONTHLY_AVG_SVC_PER_CUST as AVG_SERVICE_PER_CUSTOMER,
             MONTHLY_AVG_ORDER_PER_SERVICE as AVG_ORDER_PER_SERVICE,
             
             MONTHLY_TOTAL_HSI_ORDERS as TOTAL_HSI_ORDERS,
@@ -501,13 +501,13 @@ module.exports = {
             WHEN PREV_PERIOD_CUSTOMERS > 0 THEN 
                 ROUND((TOTAL_HSI_CUSTOMERS - PREV_PERIOD_CUSTOMERS) * 100.0 / PREV_PERIOD_CUSTOMERS, 2)
             ELSE NULL 
-        END as PERTUMBUHAN_CUSTOMER_PERIODE_PCT,
-        
-        CASE 
-            WHEN PREV_PERIOD_SERVICES > 0 THEN 
+        END as PERTUMBUHAN_CUST_PERIODE_PCT,
+
+        CASE
+            WHEN PREV_PERIOD_SERVICES > 0 THEN
                 ROUND((TOTAL_HSI_SERVICES - PREV_PERIOD_SERVICES) * 100.0 / PREV_PERIOD_SERVICES, 2)
-            ELSE NULL 
-        END as PERTUMBUHAN_SERVICE_PERIODE_PCT,
+            ELSE NULL
+        END as PERTUMBUHAN_SVC_PERIODE_PCT,
         
         CASE 
             WHEN MONTH_AGO_ORDERS > 0 THEN 
@@ -763,8 +763,8 @@ module.exports = {
         analysis.perbandingan_timeframe = {
             pertumbuhan_order_mingguan_terkini: latest_weekly.PERTUMBUHAN_ORDER_PERIODE_PCT,
             pertumbuhan_order_bulanan_terkini: latest_monthly.PERTUMBUHAN_ORDER_PERIODE_PCT,
-            pertumbuhan_customer_mingguan_terkini: latest_weekly.PERTUMBUHAN_CUSTOMER_PERIODE_PCT,
-            pertumbuhan_customer_bulanan_terkini: latest_monthly.PERTUMBUHAN_CUSTOMER_PERIODE_PCT,
+            pertumbuhan_customer_mingguan_terkini: latest_weekly.PERTUMBUHAN_CUST_PERIODE_PCT,
+            pertumbuhan_customer_bulanan_terkini: latest_monthly.PERTUMBUHAN_CUST_PERIODE_PCT,
             konsistensi_pertumbuhan: Math.abs((latest_weekly.PERTUMBUHAN_ORDER_PERIODE_PCT || 0) - (latest_monthly.PERTUMBUHAN_ORDER_PERIODE_PCT || 0)) <= 5 ? 'KONSISTEN' : 'FLUKTUATIF'
         };
         }
@@ -772,7 +772,7 @@ module.exports = {
         // Growth patterns analysis
         const recent_trends = data.slice(0, 6); // Last 6 periods
         const positive_order_growth_periods = recent_trends.filter(d => (d.PERTUMBUHAN_ORDER_PERIODE_PCT || 0) > 0).length;
-        const positive_customer_growth_periods = recent_trends.filter(d => (d.PERTUMBUHAN_CUSTOMER_PERIODE_PCT || 0) > 0).length;
+        const positive_customer_growth_periods = recent_trends.filter(d => (d.PERTUMBUHAN_CUST_PERIODE_PCT || 0) > 0).length;
         
         analysis.pola_pertumbuhan = {
         periode_order_positif: positive_order_growth_periods,
@@ -843,8 +843,8 @@ module.exports = {
         const hasil_analisis = data.map(period => {
         const health = this.assessTrendHealth(
             period.PERTUMBUHAN_ORDER_PERIODE_PCT,
-            period.PERTUMBUHAN_CUSTOMER_PERIODE_PCT,
-            period.PERTUMBUHAN_SERVICE_PERIODE_PCT,
+            period.PERTUMBUHAN_CUST_PERIODE_PCT,
+            period.PERTUMBUHAN_SVC_PERIODE_PCT,
             period.MOMENTUM_PERTUMBUHAN,
             period.KATEGORI_TREN
         );
@@ -864,7 +864,7 @@ module.exports = {
             period.TOTAL_HSI_CUSTOMERS,
             period.TOTAL_HSI_SERVICES,
             period.PERTUMBUHAN_ORDER_PERIODE_PCT,
-            period.PERTUMBUHAN_CUSTOMER_PERIODE_PCT,
+            period.PERTUMBUHAN_CUST_PERIODE_PCT,
             period.MOMENTUM_PERTUMBUHAN,
             period.TIMEFRAME
         );
@@ -899,8 +899,8 @@ module.exports = {
             },
             analisis_pertumbuhan: {
             pertumbuhan_order_periode: `${period.PERTUMBUHAN_ORDER_PERIODE_PCT || 0}%`,
-            pertumbuhan_customer_periode: `${period.PERTUMBUHAN_CUSTOMER_PERIODE_PCT || 0}%`,
-            pertumbuhan_service_periode: `${period.PERTUMBUHAN_SERVICE_PERIODE_PCT || 0}%`,
+            pertumbuhan_customer_periode: `${period.PERTUMBUHAN_CUST_PERIODE_PCT || 0}%`,
+            pertumbuhan_service_periode: `${period.PERTUMBUHAN_SVC_PERIODE_PCT || 0}%`,
             pertumbuhan_extended: `${period.PERTUMBUHAN_EXTENDED_PCT || 0}%`,
             momentum_order: period.MOMENTUM_PERTUMBUHAN,
             momentum_customer: period.MOMENTUM_CUSTOMER,

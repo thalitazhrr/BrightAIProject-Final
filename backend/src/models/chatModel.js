@@ -43,15 +43,7 @@ class ChatModel {
       };
 
       await executeQuery(query, binds, this.database);
-      
-      // Get the last inserted chat ID (trigger will handle auto-increment)
-      const getChatIdQuery = `
-        SELECT SEQ_BRIGHTAI_CHAT.CURRVAL as CHAT_ID FROM DUAL
-      `;
-      const result = await executeQuery(getChatIdQuery, [], this.database);
-      
-      return result[0].CHAT_ID;
-      
+
     } catch (error) {
       logger.error('Error saving user message:', error);
       throw error;
@@ -90,15 +82,7 @@ class ChatModel {
       };
 
       await executeQuery(query, binds, this.database);
-      
-      // Get the last inserted chat ID
-      const getChatIdQuery = `
-        SELECT SEQ_BRIGHTAI_CHAT.CURRVAL as CHAT_ID FROM DUAL
-      `;
-      const result = await executeQuery(getChatIdQuery, [], this.database);
-      
-      return result[0].CHAT_ID;
-      
+
     } catch (error) {
       logger.error('Error saving assistant response:', error);
       throw error;

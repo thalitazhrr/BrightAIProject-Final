@@ -170,7 +170,31 @@ module.exports = {
     ),
     
     DIVISI_COMPARATIVE_ANALYSIS AS (
-        SELECT t.*,
+        SELECT t.PERIODE,
+            t.REGIONAL,
+            t.DIVISI,
+            t.total_churn_ct0,
+            t.unique_customers_churn,
+            t.unique_internet_services,
+            t.jumlah_witel,
+            t.jumlah_sto,
+            t.rata_masa_layanan,
+            t.masa_layanan_minimum,
+            t.masa_layanan_maksimum,
+            t.standar_deviasi_masa_layanan,
+            t.churn_new_customer,
+            t.churn_regular_customer,
+            t.churn_loyal_customer,
+            t.early_churn_rate,
+            t.loyalty_churn_rate,
+            t.churn_low_speed,
+            t.churn_medium_speed,
+            t.churn_high_speed,
+            t.churn_premium_speed,
+            t.churn_q1,
+            t.churn_q2,
+            t.churn_q3,
+            t.churn_q4,
             -- Performance categorization
             CASE 
                 WHEN total_churn_ct0 >= 100 THEN 'PERFORMA_BURUK'

@@ -96,7 +96,18 @@ module.exports = {
     ),
     
     SEGMENT_CONTRIBUTION AS (
-        SELECT b.*,
+        SELECT b.PERIODE,
+            b.SEGMEN,
+            b.LLEVEL,
+            b.TREG,
+            b.WITEL,
+            b.GROUP_PRODUK,
+            b.SATUAN,
+            b.SEGMENT_TARGET,
+            b.SEGMENT_REALISASI,
+            b.SEGMENT_ACHIEVEMENT_PCT,
+            b.JUMLAH_WITEL,
+            b.JUMLAH_TELDA,
             -- Market share calculation per segment
             ROUND(b.SEGMENT_REALISASI * 100.0 /
                 SUM(b.SEGMENT_REALISASI) OVER (PARTITION BY b.PERIODE, b.LLEVEL, b.SATUAN), 2
@@ -123,7 +134,22 @@ module.exports = {
     ),
 
     SEGMENT_PERFORMANCE AS (
-        SELECT c.*,
+        SELECT c.PERIODE,
+            c.SEGMEN,
+            c.LLEVEL,
+            c.TREG,
+            c.WITEL,
+            c.GROUP_PRODUK,
+            c.SATUAN,
+            c.SEGMENT_TARGET,
+            c.SEGMENT_REALISASI,
+            c.SEGMENT_ACHIEVEMENT_PCT,
+            c.JUMLAH_WITEL,
+            c.JUMLAH_TELDA,
+            c.MARKET_SHARE_PCT,
+            c.TARGET_CONTRIBUTION_PCT,
+            c.VS_AVERAGE_PCT,
+            c.KATEGORI_SEGMENT,
             -- Rankings
             RANK() OVER (
                 PARTITION BY c.PERIODE, c.LLEVEL, c.SATUAN
@@ -155,7 +181,27 @@ module.exports = {
     ),
 
     SEGMENT_GROWTH AS (
-        SELECT p.*,
+        SELECT p.PERIODE,
+            p.SEGMEN,
+            p.LLEVEL,
+            p.TREG,
+            p.WITEL,
+            p.GROUP_PRODUK,
+            p.SATUAN,
+            p.SEGMENT_TARGET,
+            p.SEGMENT_REALISASI,
+            p.SEGMENT_ACHIEVEMENT_PCT,
+            p.JUMLAH_WITEL,
+            p.JUMLAH_TELDA,
+            p.MARKET_SHARE_PCT,
+            p.TARGET_CONTRIBUTION_PCT,
+            p.VS_AVERAGE_PCT,
+            p.KATEGORI_SEGMENT,
+            p.RANKING_ACHIEVEMENT,
+            p.RANKING_VOLUME,
+            p.RANKING_MARKET_SHARE,
+            p.PREV_REALISASI,
+            p.PREV_ACHIEVEMENT_PCT,
             -- Growth calculations
             CASE
                 WHEN p.PREV_REALISASI IS NOT NULL AND p.PREV_REALISASI > 0 THEN

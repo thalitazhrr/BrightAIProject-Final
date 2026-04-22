@@ -185,8 +185,8 @@ module.exports = {
         COUNT(DISTINCT STO) as STO_COVERAGE,
         
         -- Loyalty progression metrics
-        ROUND(SUM(CASE WHEN LOS_NUM >= 36 AND ADDON_COUNT > 0 THEN 1 ELSE 0 END) * 100.0 / NULLIF(SUM(CASE WHEN LOS_NUM >= 36 THEN 1 ELSE 0 END), 0), 2) as LOYAL_CUSTOMER_SERVICE_EXPANSION_RATE,
-        ROUND(SUM(CASE WHEN LOS_NUM >= 24 AND REV_HSI >= 200000 THEN 1 ELSE 0 END) * 100.0 / NULLIF(SUM(CASE WHEN LOS_NUM >= 24 THEN 1 ELSE 0 END), 0), 2) as ESTABLISHED_CUSTOMER_VALUE_RATE
+        ROUND(SUM(CASE WHEN LOS_NUM >= 36 AND ADDON_COUNT > 0 THEN 1 ELSE 0 END) * 100.0 / NULLIF(SUM(CASE WHEN LOS_NUM >= 36 THEN 1 ELSE 0 END), 0), 2) as LOYAL_CUST_SVC_EXPANSION_RATE,
+        ROUND(SUM(CASE WHEN LOS_NUM >= 24 AND REV_HSI >= 200000 THEN 1 ELSE 0 END) * 100.0 / NULLIF(SUM(CASE WHEN LOS_NUM >= 24 THEN 1 ELSE 0 END), 0), 2) as ESTABLISHED_CUST_VALUE_RATE
         
     FROM HSI_LOYALTY_BASE
     GROUP BY LOYALTY_CATEGORY, LOYALTY_PROGRAM_STATUS, CHURN_RISK_CATEGORY, 
@@ -560,10 +560,10 @@ module.exports = {
             (data.reduce((sum, d) => sum + d.HIGH_SPEED_ADOPTION_RATE, 0) / data.length).toFixed(2) + '%' : '0%',
           rata_rata_tingkat_adopsi_multi_addon: data.length > 0 ? 
             (data.reduce((sum, d) => sum + d.MULTI_ADDON_ADOPTION_RATE, 0) / data.length).toFixed(2) + '%' : '0%',
-          rata_rata_tingkat_ekspansi_layanan_loyal: data.length > 0 ? 
-            (data.reduce((sum, d) => sum + (d.LOYAL_CUSTOMER_SERVICE_EXPANSION_RATE || 0), 0) / data.length).toFixed(2) + '%' : '0%',
-          rata_rata_tingkat_nilai_pelanggan_mapan: data.length > 0 ? 
-            (data.reduce((sum, d) => sum + (d.ESTABLISHED_CUSTOMER_VALUE_RATE || 0), 0) / data.length).toFixed(2) + '%' : '0%'
+          rata_rata_tingkat_ekspansi_layanan_loyal: data.length > 0 ?
+            (data.reduce((sum, d) => sum + (d.LOYAL_CUST_SVC_EXPANSION_RATE || 0), 0) / data.length).toFixed(2) + '%' : '0%',
+          rata_rata_tingkat_nilai_pelanggan_mapan: data.length > 0 ?
+            (data.reduce((sum, d) => sum + (d.ESTABLISHED_CUST_VALUE_RATE || 0), 0) / data.length).toFixed(2) + '%' : '0%'
         },
         
         wawasan_bisnis: [
@@ -608,8 +608,8 @@ module.exports = {
           tingkat_billing_usage_aktif: `${loyalty.ACTIVE_BILLING_USAGE_RATE}%`,
           tingkat_adopsi_kecepatan_tinggi: `${loyalty.HIGH_SPEED_ADOPTION_RATE}%`,
           tingkat_adopsi_multi_addon: `${loyalty.MULTI_ADDON_ADOPTION_RATE}%`,
-          tingkat_ekspansi_layanan_loyal: `${loyalty.LOYAL_CUSTOMER_SERVICE_EXPANSION_RATE || 0}%`,
-          tingkat_nilai_pelanggan_mapan: `${loyalty.ESTABLISHED_CUSTOMER_VALUE_RATE || 0}%`,
+          tingkat_ekspansi_layanan_loyal: `${loyalty.LOYAL_CUST_SVC_EXPANSION_RATE || 0}%`,
+          tingkat_nilai_pelanggan_mapan: `${loyalty.ESTABLISHED_CUST_VALUE_RATE || 0}%`,
           cakupan_telda: loyalty.TELDA_COVERAGE,
           cakupan_sto: loyalty.STO_COVERAGE,
           skor_loyalitas: this.calculateLoyaltyScore(loyalty),

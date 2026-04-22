@@ -100,8 +100,8 @@ module.exports = {
         
         -- Average Revenue per Scaling Type
         ROUND(AVG(CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING NEW' THEN REVENUE END), 0) as AVG_NEW_REVENUE_PER_SERVICE,
-        ROUND(AVG(CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING RECURRING' THEN REVENUE END), 0) as AVG_RECURRING_REVENUE_PER_SERVICE,
-        ROUND(AVG(CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SUSTAIN' THEN REVENUE END), 0) as AVG_SUSTAIN_REVENUE_PER_SERVICE,
+        ROUND(AVG(CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING RECURRING' THEN REVENUE END), 0) as AVG_REC_REV_PER_SVC,
+        ROUND(AVG(CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SUSTAIN' THEN REVENUE END), 0) as AVG_SUSTAIN_REV_PER_SVC,
         
         -- Growth Potential Classification
         CASE 
@@ -476,8 +476,8 @@ module.exports = {
           recurring_revenue_ratio: `${item.RECURRING_REVENUE_RATIO}%`,
           sustain_revenue_ratio: `${item.SUSTAIN_REVENUE_RATIO}%`,
           avg_new_revenue_per_service: `Rp ${item.AVG_NEW_REVENUE_PER_SERVICE?.toLocaleString('id-ID') || '0'}`,
-          avg_recurring_revenue_per_service: `Rp ${item.AVG_RECURRING_REVENUE_PER_SERVICE?.toLocaleString('id-ID') || '0'}`,
-          avg_sustain_revenue_per_service: `Rp ${item.AVG_SUSTAIN_REVENUE_PER_SERVICE?.toLocaleString('id-ID') || '0'}`
+          avg_recurring_revenue_per_service: `Rp ${item.AVG_REC_REV_PER_SVC?.toLocaleString('id-ID') || '0'}`,
+          avg_sustain_revenue_per_service: `Rp ${item.AVG_SUSTAIN_REV_PER_SVC?.toLocaleString('id-ID') || '0'}`
         })),
         
         insight_bisnis: [

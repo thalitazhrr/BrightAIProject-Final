@@ -102,7 +102,19 @@ module.exports = {
     ),
     
     TREND_CALCULATIONS AS (
-        SELECT t.*,
+        SELECT t.PERIODE,
+            t.TREG,
+            t.SEGMEN,
+            t.LLEVEL,
+            t.GROUP_PRODUK,
+            t.SATUAN,
+            t.MONTHLY_TARGET,
+            t.MONTHLY_REALISASI,
+            t.MONTHLY_ACHIEVEMENT_PCT,
+            t.TAHUN,
+            t.BULAN,
+            t.ACTIVE_WITEL,
+            t.ACTIVE_TELDA,
             -- Previous period metrics
             LAG(MONTHLY_REALISASI, 1) OVER (
                 PARTITION BY TREG, SEGMEN, LLEVEL, SATUAN 
@@ -136,7 +148,24 @@ module.exports = {
     ),
     
     GROWTH_METRICS AS (
-        SELECT t.*,
+        SELECT t.PERIODE,
+            t.TREG,
+            t.SEGMEN,
+            t.LLEVEL,
+            t.GROUP_PRODUK,
+            t.SATUAN,
+            t.MONTHLY_TARGET,
+            t.MONTHLY_REALISASI,
+            t.MONTHLY_ACHIEVEMENT_PCT,
+            t.TAHUN,
+            t.BULAN,
+            t.ACTIVE_WITEL,
+            t.ACTIVE_TELDA,
+            t.PREV_MONTH_REALISASI,
+            t.PREV_MONTH_ACHIEVEMENT,
+            t.MA3_REALISASI,
+            t.YOY_REALISASI,
+            t.YOY_ACHIEVEMENT,
             -- Month-over-month growth
             CASE 
                 WHEN PREV_MONTH_REALISASI IS NOT NULL AND PREV_MONTH_REALISASI > 0 THEN 
@@ -176,7 +205,29 @@ module.exports = {
     ),
     
     PATTERN_ANALYSIS AS (
-        SELECT t.*,
+        SELECT t.PERIODE,
+            t.TREG,
+            t.SEGMEN,
+            t.LLEVEL,
+            t.GROUP_PRODUK,
+            t.SATUAN,
+            t.MONTHLY_TARGET,
+            t.MONTHLY_REALISASI,
+            t.MONTHLY_ACHIEVEMENT_PCT,
+            t.TAHUN,
+            t.BULAN,
+            t.ACTIVE_WITEL,
+            t.ACTIVE_TELDA,
+            t.PREV_MONTH_REALISASI,
+            t.PREV_MONTH_ACHIEVEMENT,
+            t.MA3_REALISASI,
+            t.YOY_REALISASI,
+            t.YOY_ACHIEVEMENT,
+            t.MOM_GROWTH_PCT,
+            t.YOY_GROWTH_PCT,
+            t.ACHIEVEMENT_CHANGE_PCT,
+            t.TREND_POSITION,
+            t.VOLATILITY_INDICATOR,
             -- Seasonal pattern detection
             CASE 
                 WHEN BULAN IN ('01', '02', '12') THEN 'Q4_Q1_TRANSITION'
@@ -228,7 +279,34 @@ module.exports = {
     ),
     
     FORECAST_INDICATORS AS (
-        SELECT t.*,
+        SELECT t.PERIODE,
+            t.TREG,
+            t.SEGMEN,
+            t.LLEVEL,
+            t.GROUP_PRODUK,
+            t.SATUAN,
+            t.MONTHLY_TARGET,
+            t.MONTHLY_REALISASI,
+            t.MONTHLY_ACHIEVEMENT_PCT,
+            t.TAHUN,
+            t.BULAN,
+            t.ACTIVE_WITEL,
+            t.ACTIVE_TELDA,
+            t.PREV_MONTH_REALISASI,
+            t.PREV_MONTH_ACHIEVEMENT,
+            t.MA3_REALISASI,
+            t.YOY_REALISASI,
+            t.YOY_ACHIEVEMENT,
+            t.MOM_GROWTH_PCT,
+            t.YOY_GROWTH_PCT,
+            t.ACHIEVEMENT_CHANGE_PCT,
+            t.TREND_POSITION,
+            t.VOLATILITY_INDICATOR,
+            t.SEASONAL_PERIOD,
+            t.GROWTH_CONSISTENCY,
+            t.MOMENTUM_CATEGORY,
+            t.STABILITY_CATEGORY,
+            t.TREND_DIRECTION,
             -- Next month projection (simple linear trend)
             CASE 
                 WHEN MOM_GROWTH_PCT IS NOT NULL THEN 

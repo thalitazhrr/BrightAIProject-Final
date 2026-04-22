@@ -100,22 +100,34 @@ class RuleEngine {
       const dbInfo = this.getDatabaseForRule(rule);
       
       const queryResult = await executeQuery(
-        rule.SQL_QUERY, 
-        [], 
+        rule.SQL_QUERY,
+        [],
         dbInfo.database
       );
 
-      let processedResult = queryResult;
+      // Oracle returns column names in UPPERCASE — normalize to lowercase
+      // so all BUSINESS_LOGIC functions can use lowercase property names consistently
+      const normalizedResult = Array.isArray(queryResult)
+        ? queryResult.map(row => {
+            const normalized = {};
+            for (const [key, value] of Object.entries(row)) {
+              normalized[key.toLowerCase()] = value;
+            }
+            return normalized;
+          })
+        : queryResult;
+
+      let processedResult = normalizedResult;
       if (rule.BUSINESS_LOGIC && rule.BUSINESS_LOGIC.formatIndonesianResponse) {
-        processedResult = rule.BUSINESS_LOGIC.formatIndonesianResponse(queryResult);
+        processedResult = rule.BUSINESS_LOGIC.formatIndonesianResponse(normalizedResult);
       }
 
       return {
         success: true,
-        data: queryResult,
+        data: normalizedResult,
         processed_data: processedResult,
         execution_time: Date.now() - startTime,
-        record_count: Array.isArray(queryResult) ? queryResult.length : 1
+        record_count: Array.isArray(normalizedResult) ? normalizedResult.length : 1
       };
       
     } catch (error) {

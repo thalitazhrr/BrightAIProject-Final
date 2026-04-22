@@ -98,7 +98,19 @@ module.exports = {
     ),
     
     REGIONAL_MARKET_SHARE AS (
-        SELECT t.*,
+        SELECT t.PERIODE,
+            t.TREG,
+            t.SEGMEN,
+            t.LLEVEL,
+            t.WITEL,
+            t.GROUP_PRODUK,
+            t.SATUAN,
+            t.REGIONAL_TARGET,
+            t.REGIONAL_REALISASI,
+            t.REGIONAL_ACHIEVEMENT_PCT,
+            t.JUMLAH_WITEL,
+            t.JUMLAH_TELDA,
+            t.JUMLAH_UNIT_TARGET,
             -- National market share per TREG
             ROUND(REGIONAL_REALISASI * 100.0 / 
                 SUM(REGIONAL_REALISASI) OVER (PARTITION BY PERIODE, LLEVEL, SEGMEN, SATUAN), 2
@@ -132,7 +144,24 @@ module.exports = {
     ),
     
     REGIONAL_PERFORMANCE AS (
-        SELECT t.*,
+        SELECT t.PERIODE,
+            t.TREG,
+            t.SEGMEN,
+            t.LLEVEL,
+            t.WITEL,
+            t.GROUP_PRODUK,
+            t.SATUAN,
+            t.REGIONAL_TARGET,
+            t.REGIONAL_REALISASI,
+            t.REGIONAL_ACHIEVEMENT_PCT,
+            t.JUMLAH_WITEL,
+            t.JUMLAH_TELDA,
+            t.JUMLAH_UNIT_TARGET,
+            t.NATIONAL_MARKET_SHARE_PCT,
+            t.TARGET_CONTRIBUTION_PCT,
+            t.VS_NATIONAL_AVG_PCT,
+            t.DENSITY_PER_UNIT,
+            t.KATEGORI_REGIONAL,
             -- Rankings
             RANK() OVER (
                 PARTITION BY PERIODE, LLEVEL, SEGMEN, SATUAN 
@@ -177,7 +206,31 @@ module.exports = {
     ),
     
     REGIONAL_TRENDS AS (
-        SELECT t.*,
+        SELECT t.PERIODE,
+            t.TREG,
+            t.SEGMEN,
+            t.LLEVEL,
+            t.WITEL,
+            t.GROUP_PRODUK,
+            t.SATUAN,
+            t.REGIONAL_TARGET,
+            t.REGIONAL_REALISASI,
+            t.REGIONAL_ACHIEVEMENT_PCT,
+            t.JUMLAH_WITEL,
+            t.JUMLAH_TELDA,
+            t.JUMLAH_UNIT_TARGET,
+            t.NATIONAL_MARKET_SHARE_PCT,
+            t.TARGET_CONTRIBUTION_PCT,
+            t.VS_NATIONAL_AVG_PCT,
+            t.DENSITY_PER_UNIT,
+            t.KATEGORI_REGIONAL,
+            t.RANKING_ACHIEVEMENT,
+            t.RANKING_VOLUME,
+            t.RANKING_MARKET_SHARE,
+            t.RANKING_DENSITY,
+            t.PREV_REALISASI,
+            t.PREV_ACHIEVEMENT_PCT,
+            t.MARKET_POSITION,
             -- Growth calculations
             CASE 
                 WHEN PREV_REALISASI IS NOT NULL AND PREV_REALISASI > 0 THEN 

@@ -38,13 +38,19 @@ router.post('/logout',
   authController.logout
 );
 
-router.get('/verify', 
-  auth.authenticate, 
-  (req, res) => {
-    res.json({
-      success: true,
-      user: req.user
-    });
+router.get('/verify',
+  auth.authenticate,
+  async (req, res) => {
+    try {
+      const userModel = require('../models/userModel');
+      const user = await userModel.findById(req.user.id);
+      if (!user) {
+        return res.status(401).json({ success: false, error: 'User no longer exists' });
+      }
+      res.json({ success: true, user: req.user });
+    } catch (error) {
+      res.status(500).json({ success: false, error: 'Verification failed' });
+    }
   }
 );
 

@@ -370,7 +370,7 @@ module.exports = {
             AVG(CASE WHEN TRANSACTION_TYPE = 'TAMBAH_LAYANAN' 
                           AND STATUS_RESUME IN ('FULFILL BILLING COMPLETED', 'Completed (PS)')
                           AND TGL_PS IS NOT NULL 
-                     THEN TGL_PS - ORDER_DATE END) as AVG_ADD_SERVICE_FULFILLMENT_TIME
+                     THEN TGL_PS - ORDER_DATE END) as AVG_ADD_SVC_FULFILL_TIME
             
         FROM HSI_CLASSIFICATION
         WHERE (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1)
@@ -379,7 +379,52 @@ module.exports = {
     ),
     
     FULFILLMENT_METRICS AS (
-        SELECT t.*,
+        SELECT t.REGIONAL,
+            t.WITEL,
+            t.DATEL,
+            t.TOTAL_ORDERS,
+            t.TOTAL_CUSTOMERS,
+            t.TOTAL_HSI_SERVICES,
+            t.AVG_ORDERS_PER_CUSTOMER,
+            t.AVG_SERVICES_PER_CUSTOMER,
+            t.AVG_ORDERS_PER_SERVICE,
+            t.TOTAL_HSI_ORDERS,
+            t.HSI_BISNIS_ORDERS,
+            t.HSI_BASIC_ORDERS,
+            t.TOTAL_HSI_SERVICES_ACTIVE,
+            t.HSI_BISNIS_SERVICES,
+            t.HSI_BASIC_SERVICES,
+            t.TOTAL_HSI_CUSTOMERS,
+            t.HSI_BISNIS_CUSTOMERS,
+            t.HSI_BASIC_CUSTOMERS,
+            t.SUCCESSFUL_HSI_ORDERS,
+            t.SUCCESSFUL_BISNIS_ORDERS,
+            t.SUCCESSFUL_BASIC_ORDERS,
+            t.SUCCESSFUL_HSI_SERVICES,
+            t.SUCCESSFUL_HSI_CUSTOMERS,
+            t.FAILED_HSI_ORDERS,
+            t.SUCCESSFUL_HARD_BUNDLING,
+            t.TOTAL_HARD_BUNDLING,
+            t.SUCCESSFUL_PIJAR,
+            t.TOTAL_PIJAR,
+            t.SUCCESSFUL_NEW_SALES,
+            t.TOTAL_NEW_SALES,
+            t.SUCCESSFUL_ADD_SERVICE,
+            t.TOTAL_ADD_SERVICE,
+            t.SUCCESSFUL_MODIFICATION,
+            t.TOTAL_MODIFICATION,
+            t.SUCCESSFUL_EDUCATION,
+            t.TOTAL_EDUCATION,
+            t.SUCCESSFUL_GOVERNMENT,
+            t.TOTAL_GOVERNMENT,
+            t.SUCCESSFUL_HEALTHCARE,
+            t.TOTAL_HEALTHCARE,
+            t.AVG_FULFILLMENT_TIME,
+            t.MEDIAN_FULFILLMENT_TIME,
+            t.AVG_BISNIS_FULFILLMENT_TIME,
+            t.AVG_BASIC_FULFILLMENT_TIME,
+            t.AVG_NEW_SALES_FULFILLMENT_TIME,
+            t.AVG_ADD_SVC_FULFILL_TIME,
             -- Success rates (order-based)
             ROUND(SUCCESSFUL_HSI_ORDERS * 100.0 / NULLIF(TOTAL_HSI_ORDERS, 0), 2) as SUCCESS_RATE_TOTAL,
             ROUND(SUCCESSFUL_BISNIS_ORDERS * 100.0 / NULLIF(HSI_BISNIS_ORDERS, 0), 2) as SUCCESS_RATE_BISNIS,
@@ -474,7 +519,7 @@ module.exports = {
         ROUND(AVG_BISNIS_FULFILLMENT_TIME, 1) as AVG_BISNIS_FULFILLMENT_DAYS,
         ROUND(AVG_BASIC_FULFILLMENT_TIME, 1) as AVG_BASIC_FULFILLMENT_DAYS,
         ROUND(AVG_NEW_SALES_FULFILLMENT_TIME, 1) as AVG_NEW_SALES_FULFILLMENT_DAYS,
-        ROUND(AVG_ADD_SERVICE_FULFILLMENT_TIME, 1) as AVG_ADD_SERVICE_FULFILLMENT_DAYS,
+        ROUND(AVG_ADD_SVC_FULFILL_TIME, 1) as AVG_ADD_SVC_FULFILL_DAYS,
         KATEGORI_PERFORMA,
         SKOR_EFISIENSI,
         RANK() OVER (ORDER BY SUCCESS_RATE_TOTAL DESC, TOTAL_HSI_ORDERS DESC) as RANKING_NASIONAL,
@@ -770,7 +815,7 @@ module.exports = {
             rata_rata_bisnis: `${unit.AVG_BISNIS_FULFILLMENT_DAYS || 0} hari`,
             rata_rata_basic: `${unit.AVG_BASIC_FULFILLMENT_DAYS || 0} hari`,
             rata_rata_penjualan_baru: `${unit.AVG_NEW_SALES_FULFILLMENT_DAYS || 0} hari`,
-            rata_rata_tambah_layanan: `${unit.AVG_ADD_SERVICE_FULFILLMENT_DAYS || 0} hari`
+            rata_rata_tambah_layanan: `${unit.AVG_ADD_SVC_FULFILL_DAYS || 0} hari`
           },
           
           performa_bundling: {

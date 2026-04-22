@@ -161,7 +161,29 @@ module.exports = {
     ),
     
     TEMPORAL_ANALYSIS AS (
-        SELECT t.*,
+        SELECT t.tahun,
+            t.bulan,
+            t.kuartal,
+            t.periode_bulan,
+            t.REGIONAL,
+            t.total_churn_ct0,
+            t.unique_customers_churn,
+            t.unique_internet_services,
+            t.jumlah_witel_terdampak,
+            t.jumlah_sto_terdampak,
+            t.rata_masa_layanan,
+            t.masa_layanan_minimum,
+            t.masa_layanan_maksimum,
+            t.early_churn_count,
+            t.early_churn_rate,
+            t.churn_low_speed,
+            t.churn_medium_speed,
+            t.churn_high_speed,
+            t.churn_premium_speed,
+            t.churn_dbs,
+            t.churn_rbs,
+            t.churn_dss,
+            t.churn_des,
             -- Churn intensity classification
             CASE 
                 WHEN total_churn_ct0 >= 150 THEN 'PUNCAK_CHURN'

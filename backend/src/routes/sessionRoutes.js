@@ -2,6 +2,8 @@
 const express = require('express');
 const router = express.Router();
 const sessionModel = require('../models/sessionModel');
+const chatModel = require('../models/chatModel');
+const { generateWelcomeMessage } = require('../rules/template/welcomeTemplates');
 const authMiddleware = require('../middleware/auth');
 const logger = require('../utils/logger');
 
@@ -81,6 +83,20 @@ router.post('/create', authMiddleware.authenticate, async (req, res) => {
       user_id: userId,
       session_name: session_name.trim()
     });
+
+    // Save welcome message to Oracle so it persists after reload
+    try {
+      const welcomeMsg = generateWelcomeMessage();
+      await chatModel.saveAssistantResponse({
+        user_id: userId,
+        message: welcomeMsg,
+        source: 'welcome',
+        processing_time: 0,
+        session_id: sessionId
+      });
+    } catch (welcomeErr) {
+      logger.warn('Failed to save welcome message to chat history:', welcomeErr.message);
+    }
 
     res.json({
       success: true,

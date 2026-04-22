@@ -351,7 +351,7 @@ module.exports = {
             
             -- Customer-Order-Service relationship metrics
             ROUND(COUNT(DISTINCT ORDER_ID) * 1.0 / NULLIF(COUNT(DISTINCT NCLI), 0), 2) as rata_rata_order_per_pelanggan,
-            ROUND(COUNT(DISTINCT ND_HSI) * 1.0 / NULLIF(COUNT(DISTINCT NCLI), 0), 2) as rata_rata_layanan_per_pelanggan,
+            ROUND(COUNT(DISTINCT ND_HSI) * 1.0 / NULLIF(COUNT(DISTINCT NCLI), 0), 2) as rr_layanan_per_pelanggan,
             ROUND(COUNT(DISTINCT ORDER_ID) * 1.0 / NULLIF(COUNT(DISTINCT ND_HSI), 0), 2) as rata_rata_order_per_layanan,
             
             -- HSI Orders Breakdown
@@ -440,15 +440,75 @@ module.exports = {
     ),
     
     PERINGKAT_PENETRASI AS (
-        SELECT t.*,
+        SELECT t.tahun,
+            t.bulan,
+            t.REGIONAL,
+            t.WITEL,
+            t.DATEL,
+            t.STO,
+            t.total_pesanan,
+            t.total_pelanggan_unik,
+            t.total_layanan_hsi_unik,
+            t.rata_rata_order_per_pelanggan,
+            t.rr_layanan_per_pelanggan,
+            t.rata_rata_order_per_layanan,
+            t.total_pesanan_hsi,
+            t.pesanan_hsi_bisnis,
+            t.pesanan_hsi_basic,
+            t.layanan_hsi_unik,
+            t.layanan_hsi_bisnis_unik,
+            t.layanan_hsi_basic_unik,
+            t.pelanggan_hsi_unik,
+            t.pelanggan_hsi_bisnis_unik,
+            t.pelanggan_hsi_basic_unik,
+            t.penetrasi_hsi_order,
+            t.penetrasi_hsi_pelanggan,
+            t.penetrasi_hsi_layanan,
+            t.penetrasi_hsi_bisnis,
+            t.penetrasi_hsi_basic,
+            t.pesanan_hard_bundling,
+            t.pesanan_bundling_alacarte,
+            t.pesanan_non_bundling,
+            t.penetrasi_pijar,
+            t.penetrasi_oca_int,
+            t.penetrasi_oca_blast,
+            t.penetrasi_netmonk,
+            t.pelanggan_baru_hsi,
+            t.upsell_pelanggan_hsi,
+            t.churn_pelanggan_hsi,
+            t.modifikasi_pelanggan_hsi,
+            t.relokasi_pelanggan_hsi,
+            t.suspend_pelanggan_hsi,
+            t.resume_pelanggan_hsi,
+            t.tingkat_pelanggan_baru,
+            t.tingkat_upsell,
+            t.tingkat_churn,
+            t.ekosistem_dominan,
+            t.keragaman_ekosistem,
+            t.penetrasi_pendidikan,
+            t.penetrasi_pemerintahan,
+            t.penetrasi_kesehatan,
+            t.penetrasi_media,
+            t.provider_dominan,
+            t.keragaman_provider,
+            t.share_layanan_enterprise,
+            t.share_layanan_bisnis,
+            t.hsi_pelanggan_baru,
+            t.hsi_pelanggan_matang,
+            t.penetrasi_pelanggan_baru_hsi,
+            t.persentase_risiko_churn,
+            t.tingkat_kualitas_kontak,
+            t.tingkat_integrasi_pots,
+            t.rata_rata_bandwidth,
+            t.tingkat_keberhasilan,
             -- Ranking Nasional & Regional berdasarkan penetrasi order HSI
             RANK() OVER (PARTITION BY tahun, bulan ORDER BY penetrasi_hsi_order DESC) as peringkat_penetrasi_nasional,
             RANK() OVER (PARTITION BY tahun, bulan, REGIONAL ORDER BY penetrasi_hsi_order DESC) as peringkat_penetrasi_regional,
             RANK() OVER (PARTITION BY tahun, bulan, WITEL ORDER BY penetrasi_hsi_order DESC) as peringkat_penetrasi_witel,
             
             -- Rankings berdasarkan penetrasi pelanggan dan layanan
-            RANK() OVER (PARTITION BY tahun, bulan ORDER BY penetrasi_hsi_pelanggan DESC) as peringkat_penetrasi_pelanggan_nasional,
-            RANK() OVER (PARTITION BY tahun, bulan ORDER BY penetrasi_hsi_layanan DESC) as peringkat_penetrasi_layanan_nasional,
+            RANK() OVER (PARTITION BY tahun, bulan ORDER BY penetrasi_hsi_pelanggan DESC) as prnk_penetrasi_plg_nasional,
+            RANK() OVER (PARTITION BY tahun, bulan ORDER BY penetrasi_hsi_layanan DESC) as prnk_penetrasi_lay_nasional,
             
             -- Granular Rankings untuk DATEL dan STO
             RANK() OVER (PARTITION BY tahun, bulan, DATEL ORDER BY penetrasi_hsi_order DESC) as peringkat_penetrasi_datel,
@@ -461,7 +521,7 @@ module.exports = {
             
             -- Rankings berdasarkan efisiensi customer-order-service
             DENSE_RANK() OVER (PARTITION BY tahun, bulan ORDER BY rata_rata_order_per_layanan DESC) as peringkat_efisiensi_layanan,
-            DENSE_RANK() OVER (PARTITION BY tahun, bulan ORDER BY rata_rata_layanan_per_pelanggan DESC) as peringkat_penetrasi_multi_service,
+            DENSE_RANK() OVER (PARTITION BY tahun, bulan ORDER BY rr_layanan_per_pelanggan DESC) as prnk_penetrasi_multi_svc,
             
             -- Kategori Penetrasi HSI (berdasarkan penetrasi order)
             CASE 
@@ -487,7 +547,7 @@ module.exports = {
             (keragaman_ekosistem * 5) + 
             (CASE WHEN tingkat_churn < 10 THEN 10 ELSE 0 END) +
             (CASE WHEN tingkat_pelanggan_baru > 20 THEN 15 ELSE 0 END) +
-            (CASE WHEN rata_rata_layanan_per_pelanggan < 1.5 THEN 10 ELSE 0 END) as skor_peluang_ditingkatkan,
+            (CASE WHEN rr_layanan_per_pelanggan < 1.5 THEN 10 ELSE 0 END) as skor_peluang_ditingkatkan,
 
             -- Market Maturity Assessment
             CASE 
@@ -651,13 +711,13 @@ module.exports = {
         }));
 
       analisis.analisis_efisiensi.top_efisiensi_layanan_per_pelanggan = data
-        .sort((a, b) => b.rata_rata_layanan_per_pelanggan - a.rata_rata_layanan_per_pelanggan)
+        .sort((a, b) => b.rr_layanan_per_pelanggan - a.rr_layanan_per_pelanggan)
         .slice(0, 10)
         .map(d => ({
           sto: d.STO,
           witel: d.WITEL,
           regional: d.REGIONAL,
-          rata_rata_layanan_per_pelanggan: d.rata_rata_layanan_per_pelanggan,
+          rr_layanan_per_pelanggan: d.rr_layanan_per_pelanggan,
           total_layanan_hsi: d.total_layanan_hsi_unik,
           total_pelanggan: d.total_pelanggan_unik
         }));
@@ -732,7 +792,7 @@ module.exports = {
             total_pelanggan_unik: area.total_pelanggan_unik.toLocaleString('id-ID'),
             total_layanan_hsi_unik: area.total_layanan_hsi_unik.toLocaleString('id-ID'),
             rata_rata_order_per_pelanggan: area.rata_rata_order_per_pelanggan,
-            rata_rata_layanan_per_pelanggan: area.rata_rata_layanan_per_pelanggan,
+            rr_layanan_per_pelanggan: area.rr_layanan_per_pelanggan,
             rata_rata_order_per_layanan: area.rata_rata_order_per_layanan
           },
           metrik_penetrasi: {
@@ -816,10 +876,10 @@ module.exports = {
             posisi_datel: area.peringkat_penetrasi_datel,
             posisi_sto_dalam_regional: area.peringkat_sto_regional,
             posisi_sto_dalam_witel: area.peringkat_sto_witel,
-            peringkat_penetrasi_pelanggan_nasional: area.peringkat_penetrasi_pelanggan_nasional,
-            peringkat_penetrasi_layanan_nasional: area.peringkat_penetrasi_layanan_nasional,
+            prnk_penetrasi_plg_nasional: area.prnk_penetrasi_plg_nasional,
+            prnk_penetrasi_lay_nasional: area.prnk_penetrasi_lay_nasional,
             peringkat_efisiensi_layanan: area.peringkat_efisiensi_layanan,
-            peringkat_penetrasi_multi_service: area.peringkat_penetrasi_multi_service
+            prnk_penetrasi_multi_svc: area.prnk_penetrasi_multi_svc
           },
           wawasan_strategis: this.buatWawasanStrategisDitingkatkan(area, kesehatan_journey, peluang_ekosistem, performa_provider)
         };
@@ -943,9 +1003,9 @@ module.exports = {
       }
 
       // Wawasan efisiensi customer-service
-      if (area.rata_rata_layanan_per_pelanggan < 1.5) {
+      if (area.rr_layanan_per_pelanggan < 1.5) {
         wawasan.push('Peluang cross-sell tinggi dengan rata-rata layanan per pelanggan rendah');
-      } else if (area.rata_rata_layanan_per_pelanggan > 2.5) {
+      } else if (area.rr_layanan_per_pelanggan > 2.5) {
         wawasan.push('Customer loyalty tinggi dengan multiple service adoption');
       }
 
@@ -968,7 +1028,7 @@ module.exports = {
       }
 
       const peluangCrossSell = hasil.filter(r => 
-        parseFloat(r.metrik_fundamental.rata_rata_layanan_per_pelanggan) < 1.5 &&
+        parseFloat(r.metrik_fundamental.rr_layanan_per_pelanggan) < 1.5 &&
         parseInt(r.metrik_fundamental.total_pelanggan_unik.replace(/,/g, '')) > 50
       );
       if (peluangCrossSell.length > 0) {

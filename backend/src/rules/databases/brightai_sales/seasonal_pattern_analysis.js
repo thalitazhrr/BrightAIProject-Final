@@ -234,7 +234,7 @@ module.exports = {
             
             -- Customer-Order-Service relationship metrics
             ROUND(COUNT(DISTINCT ORDER_ID) * 1.0 / NULLIF(COUNT(DISTINCT NCLI), 0), 2) as rata_rata_order_per_pelanggan,
-            ROUND(COUNT(DISTINCT ND_HSI) * 1.0 / NULLIF(COUNT(DISTINCT NCLI), 0), 2) as rata_rata_layanan_per_pelanggan,
+            ROUND(COUNT(DISTINCT ND_HSI) * 1.0 / NULLIF(COUNT(DISTINCT NCLI), 0), 2) as rr_layanan_per_pelanggan,
             ROUND(COUNT(DISTINCT ORDER_ID) * 1.0 / NULLIF(COUNT(DISTINCT ND_HSI), 0), 2) as rata_rata_order_per_layanan,
             
             -- HSI Order counts berdasarkan data aktual menggunakan ORDER_ID
@@ -312,7 +312,7 @@ module.exports = {
             AVG(total_pelanggan_unik) as avg_total_pelanggan,
             AVG(total_layanan_hsi_unik) as avg_total_layanan_hsi,
             AVG(rata_rata_order_per_pelanggan) as avg_order_per_pelanggan_ratio,
-            AVG(rata_rata_layanan_per_pelanggan) as avg_layanan_per_pelanggan_ratio,
+            AVG(rr_layanan_per_pelanggan) as avg_layanan_per_plg_ratio,
             AVG(rata_rata_order_per_layanan) as avg_order_per_layanan_ratio,
             
             -- Order volume statistics
@@ -448,7 +448,7 @@ module.exports = {
         ROUND(avg_total_pelanggan, 0) as rata_rata_total_pelanggan,
         ROUND(avg_total_layanan_hsi, 0) as rata_rata_total_layanan_hsi,
         ROUND(avg_order_per_pelanggan_ratio, 2) as rata_rata_order_per_pelanggan,
-        ROUND(avg_layanan_per_pelanggan_ratio, 2) as rata_rata_layanan_per_pelanggan,
+        ROUND(avg_layanan_per_plg_ratio, 2) as rr_layanan_per_pelanggan,
         ROUND(avg_order_per_layanan_ratio, 2) as rata_rata_order_per_layanan,
         
         -- HSI metrics berdasarkan identifikasi yang tepat
@@ -466,7 +466,7 @@ module.exports = {
         ROUND(avg_success_rate, 1) as rata_rata_success_rate_pct,
         ROUND(avg_bundling_rate, 1) as rata_rata_bundling_rate_pct,
         ROUND(avg_hard_bundling_rate, 1) as rata_rata_hard_bundling_pct,
-        ROUND(avg_digital_penetration, 1) as rata_rata_digital_penetration_pct,
+        ROUND(avg_digital_penetration, 1) as rr_digital_penetration_pct,
         ROUND(avg_voice_combo_rate, 1) as rata_rata_voice_combo_pct,
         ROUND(avg_monthly_bandwidth_kbps/1000, 0) as rata_rata_bandwidth_mbps,
         ROUND(avg_regional_coverage, 0) as rata_rata_cakupan_regional,
@@ -504,7 +504,7 @@ module.exports = {
         ROUND(avg_government_mix_pct, 1) as rata_rata_government_mix_pct,
         ROUND(avg_hospitality_mix_pct, 1) as rata_rata_hospitality_mix_pct,
         ROUND(avg_agriculture_mix_pct, 1) as rata_rata_agriculture_mix_pct,
-        ROUND(avg_manufacturing_mix_pct, 1) as rata_rata_manufacturing_mix_pct,
+        ROUND(avg_manufacturing_mix_pct, 1) as rr_manufacturing_mix_pct,
         ROUND(avg_healthcare_mix_pct, 1) as rata_rata_healthcare_mix_pct,
         seasonal_index_education,
         

@@ -30,7 +30,7 @@ class AuthController {
       }
 
       // Hash password
-      const saltRounds = 12;
+      const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
       // Create user
@@ -93,8 +93,12 @@ class AuthController {
 
       const { email, password } = req.body;
 
+      logger.info(`[LOGIN] Attempting login for email: ${email}`);
+
       // Find user by email
       const user = await userModel.findByEmail(email);
+      logger.info(`[LOGIN] findByEmail result: ${user ? `FOUND user_id=${user.USER_ID}` : 'NOT FOUND (Oracle returned null)'}`);
+
       if (!user) {
         return res.status(401).json({
           success: false,
@@ -111,8 +115,10 @@ class AuthController {
         });
       }
 
-      // Update last login
-      await userModel.updateActivity(user.USER_ID);
+      // Update last login (fire-and-forget — don't block the login response)
+      userModel.updateActivity(user.USER_ID).catch(err =>
+        logger.warn('Failed to update last login timestamp:', err.message)
+      );
 
       logger.info(`User logged in: ${email}`);
 
@@ -284,7 +290,7 @@ class AuthController {
       }
 
       // Hash new password
-      const saltRounds = 12;
+      const saltRounds = 10;
       const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
 
       // Update password

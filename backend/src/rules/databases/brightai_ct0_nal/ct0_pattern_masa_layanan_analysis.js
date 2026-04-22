@@ -152,7 +152,25 @@ module.exports = {
     ),
     
     RISK_ASSESSMENT AS (
-        SELECT t.*,
+        SELECT t.PERIODE,
+            t.REGIONAL,
+            t.WITEL,
+            t.STO,
+            t.DIVISI,
+            t.kategori_masa_layanan,
+            t.jumlah_ct0,
+            t.unique_customers,
+            t.unique_internet_services,
+            t.rata_masa_layanan,
+            t.masa_layanan_minimum,
+            t.masa_layanan_maksimum,
+            t.standar_deviasi_masa_layanan,
+            t.bandwidth_ct0_terbanyak,
+            t.variasi_bandwidth,
+            t.ct0_q1,
+            t.ct0_q2,
+            t.ct0_q3,
+            t.ct0_q4,
             -- Risk scoring berdasarkan pola
             CASE 
                 WHEN kategori_masa_layanan = 'SANGAT_BARU' AND jumlah_ct0 >= 20 THEN 'RISIKO_TINGGI'

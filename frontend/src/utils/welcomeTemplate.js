@@ -16,12 +16,12 @@ const welcomeTemplates = {
     ],
 
     examples: [
-      'Contoh pertanyaan yang bisa Anda ajukan:',
-      'Analisis total order HSI per regional',
-      'Bagaimana performa churn divisi DBS vs RBS?',
-      'Tren revenue HSI 6 bulan terakhir',
-      'Penetrasi HSI di wilayah Jawa Barat',
-      'Analisis customer segmentation HSI',
+      "Contoh pertanyaan yang bisa Anda ajukan:",
+      "- Berapa total order HSI bisnis dan basic bulan ini?\n",
+      "- Segmentasi pelanggan HSI berdasarkan speed dan revenue\n",
+      "- Achievement rate target realisasi HSI per regional?\n",
+      "- Tren revenue HSI bulanan dan pertumbuhannya\n",
+      "- Analisis tingkat churn pelanggan internet per regional\n"
     ],
 
     instruction: 'Silakan ajukan pertanyaan analisis data yang Anda butuhkan!',
