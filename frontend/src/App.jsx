@@ -1065,9 +1065,17 @@ function App() {
     setGuidedStep('question_select');
   };
 
-  const handleQuestionClick = (questionText) => {
+  // Populate input field with selected question (user can edit before sending)
+  const handleQuestionSelect = (questionText) => {
+    setCurrentMessage(questionText);
+  };
+
+  // Send the current input message from guided flow
+  const handleGuidedSend = () => {
+    if (!currentMessage.trim()) return;
     setGuidedStep('awaiting');
-    handleSendMessage(questionText);
+    handleSendMessage(currentMessage.trim());
+    setCurrentMessage('');
   };
 
   const handleGuidedBack = (targetStep) => {
@@ -1080,14 +1088,14 @@ function App() {
   };
 
   // Send message with enhanced authentication and error handling
-  const handleSendMessage = async (messageOverride = null) => {
-    const userMessage = messageOverride || currentMessage.trim();
+  const handleSendMessage = async (messageText = null) => {
+    const userMessage = messageText || currentMessage.trim();
     if (!userMessage || !currentUser || !authService.isAuthenticated()) {
       console.warn('Cannot send message - missing requirements');
       return;
     }
 
-    if (!messageOverride) setCurrentMessage('');
+    if (!messageText) setCurrentMessage('');
     setIsTyping(true);
 
     // Verify current chat exists and belongs to user
@@ -1325,9 +1333,11 @@ function App() {
                     theme={theme}
                     guidedStep={guidedStep}
                     guidedCategory={guidedCategory}
+                    inputValue={currentMessage}
                     onModeSelect={handleModeSelect}
                     onCategorySelect={handleCategorySelect}
-                    onQuestionClick={handleQuestionClick}
+                    onInputChange={setCurrentMessage}
+                    onSend={handleGuidedSend}
                     onBack={handleGuidedBack}
                     onGantiKategori={() => handleGuidedBack('category_select')}
                     onReset={handleGuidedReset}

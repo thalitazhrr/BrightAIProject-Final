@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   BarChart2, Clock, ChevronLeft, TrendingUp, Database,
-  Target, DollarSign, AlertTriangle, RefreshCw
+  Target, DollarSign, AlertTriangle, RefreshCw, Send
 } from 'lucide-react';
 
 // ─── Predefined questions per category ────────────────────────────────────────
@@ -238,36 +238,92 @@ const CategorySelect = ({ theme, onSelect, onBack }) => {
   );
 };
 
-// ─── Step: Question List ───────────────────────────────────────────────────────
-const QuestionSelect = ({ theme, category, onSelect, onBack }) => {
+// ─── Step: Question List + Editable Input ─────────────────────────────────────
+const QuestionSelect = ({ theme, category, inputValue, onInputChange, onSend, onBack }) => {
   const t = theme === 'dark';
   const cat = CATEGORIES.find(c => c.id === category);
   const questions = GUIDED_QUESTIONS[category] || [];
   const c = cat ? COLOR[cat.color][t ? 'dark' : 'light'] : {};
+  const textareaRef = useRef(null);
+
+  // Focus textarea when a question is selected
+  useEffect(() => {
+    if (inputValue && textareaRef.current) {
+      textareaRef.current.focus();
+      // Place cursor at end
+      const len = textareaRef.current.value.length;
+      textareaRef.current.setSelectionRange(len, len);
+    }
+  }, [inputValue]);
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (inputValue.trim()) onSend();
+    }
+  };
 
   return (
     <Panel theme={theme}>
-      <div className="flex items-center justify-between mb-3">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           {cat && <cat.icon className={`w-4 h-4 ${c.icon}`} />}
-          <PanelLabel theme={theme}>{cat?.label} — Pilih Pertanyaan</PanelLabel>
+          <PanelLabel theme={theme}>{cat?.label} — Pilih atau Ketik Pertanyaan</PanelLabel>
         </div>
         <BackBtn theme={theme} onClick={onBack}>Ganti Kategori</BackBtn>
       </div>
-      <div className="flex flex-col gap-1.5 max-h-52 overflow-y-auto pr-1">
+
+      {/* Question suggestion chips */}
+      <div className="flex flex-col gap-1.5 max-h-36 overflow-y-auto pr-1 mb-3">
         {questions.map((q, i) => (
           <button
             key={i}
-            onClick={() => onSelect(q)}
-            className={`text-left px-3.5 py-2.5 rounded-xl border text-sm transition-all duration-150 ${
-              t
-                ? 'bg-slate-800/60 border-slate-700/50 text-slate-200 hover:bg-slate-700/80 hover:border-slate-500 hover:text-white'
-                : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900'
+            onClick={() => onInputChange(q)}
+            className={`text-left px-3.5 py-2 rounded-xl border text-sm transition-all duration-150 ${
+              inputValue === q
+                ? t
+                  ? `${c.bg} ${c.border} ${c.text}`
+                  : `${c.bg} ${c.border} ${c.text}`
+                : t
+                  ? 'bg-slate-800/60 border-slate-700/50 text-slate-300 hover:bg-slate-700/80 hover:border-slate-500 hover:text-white'
+                  : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900'
             } shadow-sm`}
           >
             {q}
           </button>
         ))}
+      </div>
+
+      {/* Editable input + send */}
+      <div className="flex gap-2 items-end">
+        <textarea
+          ref={textareaRef}
+          value={inputValue}
+          onChange={(e) => onInputChange(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Pilih pertanyaan di atas atau ketik sendiri..."
+          rows={2}
+          className={`flex-1 resize-none rounded-xl px-3.5 py-2.5 text-sm border transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 ${
+            t
+              ? 'bg-slate-800/80 border-slate-700 text-white placeholder-slate-500'
+              : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
+          }`}
+        />
+        <button
+          onClick={onSend}
+          disabled={!inputValue.trim()}
+          className={`shrink-0 px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 flex items-center gap-2 ${
+            inputValue.trim()
+              ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm'
+              : t
+                ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
+                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+          }`}
+        >
+          <Send className="w-4 h-4" />
+          <span>Kirim</span>
+        </button>
       </div>
     </Panel>
   );
@@ -343,9 +399,11 @@ const GuidedFlow = ({
   theme,
   guidedStep,
   guidedCategory,
+  inputValue,
   onModeSelect,
   onCategorySelect,
-  onQuestionClick,
+  onInputChange,
+  onSend,
   onBack,
   onGantiKategori,
   onReset,
@@ -368,7 +426,9 @@ const GuidedFlow = ({
         <QuestionSelect
           theme={theme}
           category={guidedCategory}
-          onSelect={onQuestionClick}
+          inputValue={inputValue}
+          onInputChange={onInputChange}
+          onSend={onSend}
           onBack={() => onBack('category_select')}
         />
       );

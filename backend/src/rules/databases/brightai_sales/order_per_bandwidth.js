@@ -190,9 +190,25 @@ module.exports = {
           AND ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD')
     ),
     BANDWIDTH_CATEGORIZED AS (
-        SELECT 
-            *,
-            CASE 
+        SELECT
+            ORDER_ID,
+            NCLI,
+            ND_HSI,
+            REGIONAL,
+            WITEL,
+            ORDER_DATE,
+            TGL_PS,
+            STATUS_RESUME,
+            JENISPSB,
+            PACKAGE_NAME,
+            PRODUCT,
+            bandwidth_kbps,
+            bandwidth_mbps,
+            IS_HSI_BISNIS,
+            IS_HSI_BASIC,
+            BUNDLING_TYPE,
+            HAS_DIGITAL_PRODUCT,
+            CASE
                 WHEN bandwidth_mbps >= 200 THEN '1. Ultra High Speed (200+ Mbps)'
                 WHEN bandwidth_mbps >= 100 THEN '2. High Speed (100-199 Mbps)'
                 WHEN bandwidth_mbps >= 50 THEN '3. Medium Speed (50-99 Mbps)'

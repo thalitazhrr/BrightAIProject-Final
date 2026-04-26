@@ -334,15 +334,28 @@ module.exports = {
             )
     ),
     RANKED_METRICS AS (
-        SELECT 
-            m.*,
+        SELECT
+            m.STO,
+            m.REGIONAL,
+            m.WITEL,
+            m.DATEL,
+            m.TAHUN,
+            m.BULAN,
+            m.total_order_hsi,
+            m.order_hsi_bisnis,
+            m.order_hsi_basic,
+            m.bundling_orders,
+            m.hard_bundling_orders,
+            m.digital_bundling_orders,
             m.unique_customers,
-            m.unique_hsi_services,  -- ADDED
-            m.avg_orders_per_hsi_service,  -- ADDED
+            m.unique_hsi_services,
+            m.avg_orders_per_hsi_service,
+            m.avg_bandwidth_mbps,
+            m.avg_installation_days,
             yoy.yoy_growth,
-            yoy.yoy_hsi_services_growth,  -- ADDED
+            yoy.yoy_hsi_services_growth,
             mom.mom_growth,
-            mom.mom_hsi_services_growth,  -- ADDED
+            mom.mom_hsi_services_growth,
             ROUND(order_hsi_bisnis * 100.0 / NULLIF(total_order_hsi, 0), 2) AS pct_hsi_bisnis,
             ROUND(order_hsi_basic * 100.0 / NULLIF(total_order_hsi, 0), 2) AS pct_hsi_basic,
             ROUND(bundling_orders * 100.0 / NULLIF(total_order_hsi, 0), 2) AS bundling_rate,

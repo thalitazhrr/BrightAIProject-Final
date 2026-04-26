@@ -105,12 +105,14 @@ class RuleEngine {
         dbInfo.database
       );
 
-      // Oracle returns column names in UPPERCASE — normalize to lowercase
-      // so all BUSINESS_LOGIC functions can use lowercase property names consistently
+      // Oracle returns column names in UPPERCASE. Normalize each row so that
+      // both UPPERCASE and lowercase keys exist — rule BUSINESS_LOGIC functions
+      // are inconsistent (some use uppercase, some lowercase), so both must work.
       const normalizedResult = Array.isArray(queryResult)
         ? queryResult.map(row => {
             const normalized = {};
             for (const [key, value] of Object.entries(row)) {
+              normalized[key.toUpperCase()] = value;
               normalized[key.toLowerCase()] = value;
             }
             return normalized;
