@@ -1,69 +1,72 @@
 #!/bin/bash
 
-echo "Starting Telkom HSI BrightAI Application..."
+echo "Starting BrightAI Platform..."
 echo "================================================"
 
-# Function to check if port is in use
-check_port() {
-    if lsof -i :$1 >/dev/null 2>&1; then
-        echo "✅ Port $1 is already in use"
-        return 0
+mkdir -p logs
+
+# ── ML Service (Python) ───────────────────────────────────────────────────────
+echo "🤖 Starting ML Service (port 8000)..."
+if lsof -i :8000 >/dev/null 2>&1; then
+    echo "   ML Service already running on port 8000"
+else
+    cd ml-service
+    if [ ! -d ".venv" ]; then
+        echo "   Creating Python venv & installing deps (first time)..."
+        python3 -m venv .venv
+        source .venv/bin/activate
+        pip install -r requirements.txt -q
     else
-        echo "❌ Port $1 is not in use"
-        return 1
+        source .venv/bin/activate
     fi
-}
+    .venv/bin/python -m uvicorn main:app --host 127.0.0.1 --port 8000 > ../logs/ml-service.log 2>&1 &
+    ML_PID=$!
+    echo "   ML Service PID: $ML_PID"
+    cd ..
+    sleep 3
+fi
 
-# Check backend
-echo "🔍 Checking Backend (Port 3001)..."
-if ! check_port 3001; then
-    echo "Starting Backend..."
+# ── Backend (Node.js) ─────────────────────────────────────────────────────────
+echo "🖥️  Starting Backend (port 3001)..."
+if lsof -i :3001 >/dev/null 2>&1; then
+    echo "   Backend already running on port 3001"
+else
     cd backend
-    npm start &
+    npm start > ../logs/backend.log 2>&1 &
     BACKEND_PID=$!
+    echo "   Backend PID: $BACKEND_PID"
     cd ..
-    echo "Backend PID: $BACKEND_PID"
     sleep 3
 fi
 
-# Check frontend
-echo "🔍 Checking Frontend (Port 3000)..."
-if ! check_port 3000; then
-    echo "Starting Frontend..."
+# ── Frontend (React) ──────────────────────────────────────────────────────────
+echo "🌐 Starting Frontend (port 3000)..."
+if lsof -i :3000 >/dev/null 2>&1; then
+    echo "   Frontend already running on port 3000"
+else
     cd frontend
-    npm start &
+    npm start > ../logs/frontend.log 2>&1 &
     FRONTEND_PID=$!
+    echo "   Frontend PID: $FRONTEND_PID"
     cd ..
-    echo "Frontend PID: $FRONTEND_PID"
-    sleep 3
 fi
 
+echo ""
 echo "================================================"
-echo "🎉 Application Status:"
-echo "Backend:  http://localhost:3001"
-echo "Frontend: http://localhost:3000"
+echo "✅ BrightAI Platform Running:"
+echo "   Frontend  : http://localhost:3000"
+echo "   Backend   : http://localhost:3001"
+echo "   ML Service: http://localhost:8000/docs"
+echo ""
+echo "📋 Login: admin / admin123"
+echo ""
+echo "📊 Untuk evaluasi forecasting:"
+echo "   1. Buka http://localhost:8000/docs"
+echo "   2. POST /forecast/train  → training model"
+echo "   3. POST /forecast/predict → lihat hasil + KPI"
 echo "================================================"
-echo "📋 Login Credentials:"
-echo "Username: admin"
-echo "Password: admin123"
-echo "================================================"
-echo "⚠️  To stop the application, press Ctrl+C or run:"
-echo "   pkill -f 'node server.js'"
-echo "   pkill -f 'react-scripts'"
-echo "================================================"
+echo "Logs ada di folder logs/"
+echo "Tekan Ctrl+C untuk stop semua"
+echo ""
 
-# Wait for user input
-echo "Press Enter to check application status..."
-read
-
-# Test both servers
-echo "🧪 Testing Backend..."
-curl -s http://localhost:3001/api/auth/login -H "Content-Type: application/json" -d '{"username": "admin", "password": "admin123"}' | head -c 100
-echo
-
-echo "🧪 Testing Frontend..."
-curl -s http://localhost:3000 | head -c 100
-echo
-
-echo "✅ Both servers should be running now!"
-echo "Open your browser and go to: http://localhost:3000"
+wait

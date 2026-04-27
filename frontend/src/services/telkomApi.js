@@ -8,6 +8,7 @@ class TelkomApiService {
     const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
     this.baseURL = process.env.REACT_APP_TELKOM_URL || `${apiUrl}/api/telkom`;
     this.aiBaseURL = process.env.REACT_APP_AI_URL || `${apiUrl}/api/chat`;
+    this.forecastBaseURL = `${apiUrl}/api/forecast`;
     this.timeout = 15000; // Increased to 15 seconds for real data
     this.retryAttempts = 2; // Increased retry attempts for better reliability
     this.retryDelay = 500; // 500ms base delay
@@ -527,6 +528,72 @@ class TelkomApiService {
       console.error('Failed to fetch AI quick insights:', error);
       return { success: false, data: {} };
     }
+  }
+
+  // ===== FORECAST ENDPOINTS =====
+
+  async _forecastCall(path, options = {}) {
+    const url = `${this.forecastBaseURL}${path}`;
+    if (!authService.isAuthenticated()) throw new Error('Authentication required. Please log in.');
+    const authHeaders = authService.getAuthHeader();
+    const config = {
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', ...authHeaders, ...options.headers },
+      ...options,
+    };
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s for training
+    try {
+      const response = await fetch(url, { ...config, signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        if (response.status === 401) { authService.logout(); throw new Error('Authentication expired.'); }
+        throw new Error(err.detail || err.error || `HTTP ${response.status}`);
+      }
+      return await response.json();
+    } catch (e) {
+      clearTimeout(timeoutId);
+      throw e;
+    }
+  }
+
+  async getForecastHealth() {
+    return this._forecastCall('/health');
+  }
+
+  async getAvailableMetrics() {
+    return this._forecastCall('/available-metrics');
+  }
+
+  async getModelStatus() {
+    return this._forecastCall('/model-status');
+  }
+
+  async getWitels(metric, regional = null) {
+    const params = new URLSearchParams({ metric });
+    if (regional && regional !== 'NASIONAL') params.append('regional', regional);
+    return this._forecastCall(`/witels?${params}`);
+  }
+
+  async getForecastDataPreview(metric, regional = null, witel = null, limit = 12) {
+    const params = new URLSearchParams({ metric, limit });
+    if (regional && regional !== 'NASIONAL') params.append('regional', regional);
+    if (witel) params.append('witel', witel);
+    return this._forecastCall(`/data-preview?${params}`);
+  }
+
+  async trainForecastModel({ model_type = 'gru', metric, regional = 'NASIONAL', witel = null, epochs = 100 }) {
+    return this._forecastCall('/train', {
+      method: 'POST',
+      body: JSON.stringify({ model_type, metric, regional, witel, epochs }),
+    });
+  }
+
+  async predictForecast({ model_type = 'gru', metric, regional = 'NASIONAL', witel = null }) {
+    return this._forecastCall('/predict', {
+      method: 'POST',
+      body: JSON.stringify({ model_type, metric, regional, witel }),
+    });
   }
 
   // ===== UTILITY ENDPOINTS =====

@@ -716,7 +716,7 @@ function App() {
   const chatEndRef = useRef(null);
 
   // Guided flow state
-  const [guidedStep, setGuidedStep] = useState('mode_select'); // 'mode_select' | 'category_select' | 'question_select' | 'awaiting' | 'post_answer'
+  const [guidedStep, setGuidedStep] = useState('mode_select'); // 'mode_select' | 'forecast_select' | 'category_select' | 'question_select' | 'awaiting' | 'post_answer'
   const [guidedCategory, setGuidedCategory] = useState(null);
   const prevIsTypingRef = useRef(false);
 
@@ -1040,21 +1040,7 @@ function App() {
   // Guided flow handlers
   const handleModeSelect = (mode) => {
     if (mode === 'forecast') {
-      // Add a bot message explaining the module is coming soon
-      const userId = currentUser?.id || currentUser?.userId;
-      const forecastMsg = {
-        id: `forecast_${Date.now()}`,
-        text: '## Prediksi 1 Bulan Kedepan\n\nModul **Time Series Forecasting** sedang dalam pengembangan dan akan segera tersedia.\n\nSilakan gunakan **Analisis Saat Ini** untuk mengeksplorasi kondisi dan performa HSI terkini.',
-        isBot: true,
-        timestamp: new Date().toISOString(),
-        userId,
-      };
-      setChats(prev => prev.map(chat =>
-        chat.id === activeChat
-          ? { ...chat, messages: [...chat.messages, forecastMsg] }
-          : chat
-      ));
-      // Stay on mode_select so user can pick Analisis Saat Ini
+      setGuidedStep('forecast_select');
       return;
     }
     setGuidedStep('category_select');

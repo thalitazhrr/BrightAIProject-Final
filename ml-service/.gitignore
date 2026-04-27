@@ -1,0 +1,19 @@
+# Model files (bisa besar, tidak perlu di-commit)
+saved_models/*.pth
+saved_models/*.ckpt
+saved_models/*.pkl
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store

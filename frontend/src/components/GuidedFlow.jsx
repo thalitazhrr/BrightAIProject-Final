@@ -3,6 +3,7 @@ import {
   BarChart2, Clock, ChevronLeft, TrendingUp, Database,
   Target, DollarSign, AlertTriangle, RefreshCw, Send
 } from 'lucide-react';
+import ForecastPanel from './ForecastPanel';
 
 // ─── Predefined questions per category ────────────────────────────────────────
 export const GUIDED_QUESTIONS = {
@@ -172,29 +173,24 @@ const ModeSelect = ({ theme, onSelect }) => {
           </div>
         </button>
 
-        {/* Prediksi 1 Bulan (coming soon) */}
+        {/* Prediksi 1 Bulan */}
         <button
           onClick={() => onSelect('forecast')}
-          className={`relative flex flex-col items-start gap-2 p-4 rounded-xl border-2 transition-all duration-200 text-left ${
+          className={`flex flex-col items-start gap-2 p-4 rounded-xl border-2 transition-all duration-200 text-left ${
             t
-              ? 'bg-slate-700/20 border-slate-600/40 hover:bg-slate-700/40'
-              : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+              ? 'bg-purple-600/10 border-purple-500/30 hover:bg-purple-600/20 hover:border-purple-400/60'
+              : 'bg-purple-50 border-purple-200 hover:bg-purple-100 hover:border-purple-300'
           }`}
         >
-          <Clock className={`w-6 h-6 ${t ? 'text-slate-400' : 'text-gray-400'}`} />
+          <TrendingUp className={`w-6 h-6 ${t ? 'text-purple-400' : 'text-purple-600'}`} />
           <div>
-            <p className={`font-semibold text-sm ${t ? 'text-slate-300' : 'text-gray-600'}`}>
+            <p className={`font-semibold text-sm ${t ? 'text-white' : 'text-gray-900'}`}>
               Prediksi 1 Bulan Kedepan
             </p>
-            <p className={`text-xs mt-0.5 leading-relaxed ${t ? 'text-slate-500' : 'text-gray-400'}`}>
+            <p className={`text-xs mt-0.5 leading-relaxed ${t ? 'text-slate-400' : 'text-gray-500'}`}>
               Forecasting berbasis time series
             </p>
           </div>
-          <span className={`absolute top-2 right-2 text-xs px-1.5 py-0.5 rounded-md font-medium ${
-            t ? 'bg-slate-600/80 text-slate-400' : 'bg-gray-200 text-gray-500'
-          }`}>
-            Segera
-          </span>
         </button>
       </div>
     </Panel>
@@ -411,6 +407,14 @@ const GuidedFlow = ({
   switch (guidedStep) {
     case 'mode_select':
       return <ModeSelect theme={theme} onSelect={onModeSelect} />;
+
+    case 'forecast_select':
+      return (
+        <ForecastPanel
+          theme={theme}
+          onBack={() => onBack('mode_select')}
+        />
+      );
 
     case 'category_select':
       return (

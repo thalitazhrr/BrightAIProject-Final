@@ -9,9 +9,10 @@ const logger = require('./src/utils/logger');
 const { errorHandler } = require('./src/middleware/errorHandler');
 const { initializePools } = require('./config/database');
 
-const authRoutes = require('./src/routes/authRoutes');
-const chatRoutes = require('./src/routes/chatRoutes');
-const sessionRoutes = require('./src/routes/sessionRoutes');
+const authRoutes     = require('./src/routes/authRoutes');
+const chatRoutes     = require('./src/routes/chatRoutes');
+const sessionRoutes  = require('./src/routes/sessionRoutes');
+const forecastRoutes = require('./src/routes/forecastRoutes');
 
 const app = express();
 
@@ -38,9 +39,10 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/chat', chatRoutes);
+app.use('/api/auth',     authRoutes);
+app.use('/api/chat',     chatRoutes);
 app.use('/api/sessions', sessionRoutes);
+app.use('/api/forecast', forecastRoutes);
 
 // Health check endpoint - sesuai dengan yang ada di startup message
 app.get('/api/telkom/health', (req, res) => {
