@@ -596,6 +596,10 @@ class TelkomApiService {
     });
   }
 
+  async getTrainingHistory() {
+    return this._forecastCall('/training-history');
+  }
+
   // ===== UTILITY ENDPOINTS =====
 
   // Get available filter options

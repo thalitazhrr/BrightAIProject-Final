@@ -17,6 +17,7 @@ from __future__ import annotations
 import oracledb
 import pandas as pd
 import logging
+from datetime import datetime
 from typing import Optional
 
 import config
@@ -629,4 +630,13 @@ def get_series(
         raise ValueError(f"Tidak ada data untuk metric='{metric}', {scope}")
 
     df = df[["periode", "regional", "witel", "value"]].sort_values("periode")
+
+    # Hapus bulan berjalan (data belum lengkap)
+    current_month = pd.Timestamp(datetime.now().strftime("%Y-%m-01"))
+    df = df[df["periode"] < current_month]
+
+    if df.empty:
+        scope = f"regional={regional or 'semua'}, witel={witel or 'semua'}"
+        raise ValueError(f"Tidak ada data lengkap untuk metric='{metric}', {scope}")
+
     return df

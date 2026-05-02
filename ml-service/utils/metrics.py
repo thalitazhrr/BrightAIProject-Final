@@ -22,7 +22,15 @@ def rmse(y_true: np.ndarray, y_pred: np.ndarray) -> float:
 
 
 def mape(y_true: np.ndarray, y_pred: np.ndarray) -> float:
-    return float(np.mean(np.abs((y_true - y_pred) / (np.abs(y_true) + EPS))) * 100)
+    """
+    MAPE dengan filter nilai aktual terlalu kecil (< 1% dari mean).
+    Mencegah explosion ketika ada bulan dengan nilai mendekati nol.
+    """
+    threshold = max(1.0, np.mean(np.abs(y_true)) * 0.01)
+    mask = np.abs(y_true) >= threshold
+    if mask.sum() == 0:
+        return float("nan")
+    return float(np.mean(np.abs((y_true[mask] - y_pred[mask]) / (np.abs(y_true[mask]) + EPS))) * 100)
 
 
 def smape(y_true: np.ndarray, y_pred: np.ndarray) -> float:
@@ -111,11 +119,10 @@ def all_metrics(
         result["mase"]        = round(mase(y_true, y_pred, y_train, m=m), 4)
         result["skill_score"] = round(skill_score(y_true, y_pred, baseline), 4)
 
-    # KPI status (pass/fail)
+    # KPI status (pass/fail) — short-term forecast (horizon=1 bulan)
     result["kpi"] = {
         "mase_ok":        result.get("mase", 999) < 1.0,
         "smape_short_ok": result["smape"] < 15.0,
-        "smape_med_ok":   result["smape"] < 25.0,
         "skill_ok":       result.get("skill_score", -999) > 0.20,
     }
 

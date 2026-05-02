@@ -6,8 +6,8 @@ class ValidationMiddleware {
     body('message')
       .notEmpty()
       .withMessage('Message is required')
-      .isLength({ min: 1, max: 1000 })
-      .withMessage('Message must be between 1 and 1000 characters'),
+      .isLength({ min: 1, max: 5000 })
+      .withMessage('Message must be between 1 and 5000 characters'),
     body('userId')
       .optional()
       .isNumeric()

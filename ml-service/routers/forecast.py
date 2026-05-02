@@ -50,7 +50,8 @@ class TrainRequest(BaseModel):
             "Contoh: 'WITEL JATIM UTARA'. Kosongkan untuk cukup di level regional."
         )
     )
-    epochs: int = Field(default=100, ge=10, le=500)
+    epochs: int = Field(default=300, ge=10, le=500, description="Max epoch (early stopping akan berhenti lebih awal)")
+    window_size: int = Field(default=0, ge=0, le=36, description="Window bulan historis (0 = auto-tune pilih terbaik)")
 
 
 class PredictRequest(BaseModel):
@@ -152,6 +153,7 @@ def train_model(req: TrainRequest, background_tasks: BackgroundTasks):
                     regional=req.regional,
                     witel=req.witel,
                     epochs=req.epochs,
+                    window_size=req.window_size,
                 )
             logger.info(f"Training selesai: {result}")
         except Exception as e:

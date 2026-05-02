@@ -403,6 +403,7 @@ const GuidedFlow = ({
   onBack,
   onGantiKategori,
   onReset,
+  onSendToChat,
 }) => {
   switch (guidedStep) {
     case 'mode_select':
@@ -413,6 +414,7 @@ const GuidedFlow = ({
         <ForecastPanel
           theme={theme}
           onBack={() => onBack('mode_select')}
+          onSendToChat={onSendToChat}
         />
       );
 

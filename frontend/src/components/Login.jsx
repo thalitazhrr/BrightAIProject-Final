@@ -1,6 +1,6 @@
 // Login Component
 import React, { useState } from 'react';
-import { Lock, Mail, Eye, EyeOff, LogIn, UserPlus, User, Target } from 'lucide-react';
+import { Lock, Mail, Eye, EyeOff, LogIn, UserPlus, User } from 'lucide-react';
 
 const Login = ({ onLogin, theme = 'dark' }) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -105,8 +105,8 @@ const Login = ({ onLogin, theme = 'dark' }) => {
 
         {/* Logo */}
         <div className="relative z-10 flex items-center gap-3">
-          <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-            <Target className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+            <img src="/images/logotelkom.png" alt="Telkom" className="w-7 h-7 object-contain" />
           </div>
           <span className="text-white font-bold text-lg">Telkom HSI BrightAI</span>
         </div>
@@ -152,7 +152,7 @@ const Login = ({ onLogin, theme = 'dark' }) => {
           <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${
             theme === 'dark' ? 'bg-blue-600' : 'bg-blue-500'
           }`}>
-            <Target className="w-5 h-5 text-white" />
+            <img src="/images/logotelkom.png" alt="Telkom" className="w-6 h-6 object-contain" />
           </div>
           <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
             Welcome to BrightAI

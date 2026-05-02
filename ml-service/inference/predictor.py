@@ -6,6 +6,7 @@ Mendukung GRU, LSTM, dan TFT.
 from __future__ import annotations
 
 import logging
+import time
 from pathlib import Path
 from typing import Literal, Optional
 
@@ -71,6 +72,7 @@ def predict_gru_lstm(
     """
     Ambil data terbaru dari Oracle → prediksi bulan berikutnya.
     """
+    _t_start = time.perf_counter()
     reg_display = regional_display(regional)
     is_nasional = reg_display == "NASIONAL" and not witel
     reg_param   = None if is_nasional else regional
@@ -118,6 +120,9 @@ def predict_gru_lstm(
 
     next_period = str(pd.Timestamp(last_period) + pd.DateOffset(months=1))[:7]
 
+    inference_ms = round((time.perf_counter() - _t_start) * 1000, 1)
+    logger.info(f"[INFERENCE] {model_type.upper()} {metric} {reg_display}{'/'+witel if witel else ''} → {round(pred_value,2)} | {inference_ms}ms")
+
     return {
         "metric":      metric,
         "regional":    reg_display,
@@ -133,6 +138,7 @@ def predict_gru_lstm(
             "level": "90%",
         },
         "change_pct": round((pred_value - last_actual) / max(last_actual, 1) * 100, 2),
+        "inference_ms": inference_ms,
     }
 
 

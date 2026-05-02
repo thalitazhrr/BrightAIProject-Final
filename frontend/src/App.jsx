@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Bot, Send, Settings, Sun, Moon, Loader,
-  User, Target, X, Trash2, LogOut, RefreshCw,
+  User, X, Trash2, LogOut, RefreshCw,
   Plus, Search, Zap, Clock, Wifi, WifiOff, ChevronDown, ChevronUp, Menu,
   Eye, EyeOff
 } from 'lucide-react';
@@ -290,12 +290,10 @@ const Sidebar = ({ activeView, setActiveView, theme, notifications }) => {
       theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/70'
     } flex flex-col items-center py-5 gap-2`}>
       {/* Logo */}
-      <div className={`w-10 h-10 mb-2 ${
-        theme === 'dark'
-          ? 'bg-gradient-to-br from-blue-600 to-blue-800'
-          : 'bg-gradient-to-br from-blue-500 to-sky-600'
-      } rounded-xl flex items-center justify-center shadow-lg`}>
-        <Target className="w-5 h-5 text-white" />
+      <div className={`w-10 h-10 mb-2 rounded-xl flex items-center justify-center shadow-lg ${
+        theme === 'dark' ? 'bg-blue-600' : 'bg-blue-500'
+      }`}>
+        <img src="/images/logotelkom.png" alt="Telkom" className="w-7 h-7 object-contain" />
       </div>
 
       {/* Divider */}
@@ -529,7 +527,7 @@ const ChatMessage = ({ message, isBot, theme }) => {
         <div className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center self-end ${
           theme === 'dark' ? 'bg-blue-600' : 'bg-blue-500'
         }`}>
-          <Bot className="w-4 h-4 text-white" />
+          <img src="/images/logotelkom.png" alt="Telkom" className="w-6 h-6 object-contain" />
         </div>
       )}
 
@@ -718,6 +716,8 @@ function App() {
   // Guided flow state
   const [guidedStep, setGuidedStep] = useState('mode_select'); // 'mode_select' | 'forecast_select' | 'category_select' | 'question_select' | 'awaiting' | 'post_answer'
   const [guidedCategory, setGuidedCategory] = useState(null);
+  const [panelHeight, setPanelHeight] = useState(300);
+  const isDraggingRef = useRef(false);
   const prevIsTypingRef = useRef(false);
 
   // Profile form state
@@ -1006,7 +1006,7 @@ function App() {
         setChats(prev => [chatWithRealId, ...prev]);
         setActiveChat(savedChat.session_id);
 
-        console.log('✅ New chat created successfully with welcome:', savedChat.session_id);
+        console.log(' New chat created successfully with welcome:', savedChat.session_id);
       } else {
         console.error('❌ Failed to save chat to database');
         alert('Failed to create new chat. Please try again.');
@@ -1094,13 +1094,24 @@ function App() {
 
     const userId = currentUser.id || currentUser.userId;
     const messageId = `m${Date.now().toString(36)}${Math.random().toString(36).substr(2, 2)}`;
-    
+
+    // Forecast message: tampilkan teks rapi di chat, kirim JSON ke backend
+    const isForecast = userMessage.startsWith('__FORECAST__:');
+    let displayText = userMessage;
+    if (isForecast) {
+      try {
+        const d = JSON.parse(userMessage.slice('__FORECAST__:'.length));
+        const scope = d.witel ? `${d.regional} / ${d.witel}` : d.regional;
+        displayText = `📊 Prediksi ${d.metricLabel} — ${scope} untuk ${d.forecastPeriod}`;
+      } catch (e) { displayText = 'Prediksi Forecasting'; }
+    }
+
     try {
       // Add user message to chat locally first
-      const userMessageObj = { 
+      const userMessageObj = {
         id: messageId,
-        text: userMessage, 
-        isBot: false, 
+        text: displayText,
+        isBot: false,
         timestamp: new Date().toISOString(),
         userId: userId
       };
@@ -1108,7 +1119,7 @@ function App() {
       // First real user message → update title locally and in Oracle
       const isFirstUserMessage = !currentChatObj.messages.some(m => !m.isBot);
       const newTitle = isFirstUserMessage
-        ? (userMessage.slice(0, 50) + (userMessage.length > 50 ? '...' : ''))
+        ? (displayText.slice(0, 50) + (displayText.length > 50 ? '...' : ''))
         : currentChatObj.title;
 
       if (isFirstUserMessage) {
@@ -1121,7 +1132,7 @@ function App() {
       const updatedChat = {
         ...currentChatObj,
         messages: [...currentChatObj.messages, userMessageObj],
-        lastMessage: userMessage,
+        lastMessage: displayText,
         updatedAt: new Date().toISOString(),
         title: newTitle
       };
@@ -1132,14 +1143,20 @@ function App() {
         return [mapped.find(c => c.id === activeChat), ...mapped.filter(c => c.id !== activeChat)];
       });
 
-      // Send to AI using correct endpoint
-      const response = await apiCall('/chat/message', {
-        method: 'POST',
-        body: JSON.stringify({
-          message: userMessage,
-          sessionId: activeChat
-        })
-      });
+      // Kirim ke endpoint yang tepat: forecast → /chat/forecast-result, analisis → /chat/message
+      let response;
+      if (isForecast) {
+        const forecastData = JSON.parse(userMessage.slice('__FORECAST__:'.length));
+        response = await apiCall('/chat/forecast-result', {
+          method: 'POST',
+          body: JSON.stringify({ data: forecastData, sessionId: activeChat })
+        });
+      } else {
+        response = await apiCall('/chat/message', {
+          method: 'POST',
+          body: JSON.stringify({ message: userMessage, sessionId: activeChat })
+        });
+      }
 
       // Process AI response - handle various response formats safely
       let aiMessage;
@@ -1314,7 +1331,36 @@ function App() {
                     <div ref={chatEndRef} />
                   </div>
 
+                  {/* Resize handle */}
+                  <div
+                    onMouseDown={(e) => {
+                      isDraggingRef.current = true;
+                      const startY = e.clientY;
+                      const startH = panelHeight;
+                      const onMove = (ev) => {
+                        if (!isDraggingRef.current) return;
+                        const diff = startY - ev.clientY;
+                        setPanelHeight(Math.min(600, Math.max(120, startH + diff)));
+                      };
+                      const onUp = () => {
+                        isDraggingRef.current = false;
+                        window.removeEventListener('mousemove', onMove);
+                        window.removeEventListener('mouseup', onUp);
+                      };
+                      window.addEventListener('mousemove', onMove);
+                      window.addEventListener('mouseup', onUp);
+                    }}
+                    className={`h-1.5 w-full cursor-row-resize flex items-center justify-center group shrink-0 ${
+                      theme === 'dark' ? 'hover:bg-slate-700/60' : 'hover:bg-gray-200/80'
+                    }`}
+                  >
+                    <div className={`w-8 h-0.5 rounded-full transition-colors ${
+                      theme === 'dark' ? 'bg-slate-600 group-hover:bg-slate-400' : 'bg-gray-300 group-hover:bg-gray-500'
+                    }`} />
+                  </div>
+
                   {/* Guided Flow Controls (replaces free-form input) */}
+                  <div style={{ height: panelHeight, overflowY: 'auto', flexShrink: 0 }}>
                   <GuidedFlow
                     theme={theme}
                     guidedStep={guidedStep}
@@ -1327,7 +1373,9 @@ function App() {
                     onBack={handleGuidedBack}
                     onGantiKategori={() => handleGuidedBack('category_select')}
                     onReset={handleGuidedReset}
+                    onSendToChat={handleSendMessage}
                   />
+                  </div>
                 </>
               ) : (
                 <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">

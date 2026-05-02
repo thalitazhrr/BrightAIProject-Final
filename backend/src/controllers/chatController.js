@@ -78,6 +78,70 @@ class ChatController {
         });
       }
 
+      // Check if it's a forecast result message
+      logger.info(`[FORECAST CHECK] message starts with __FORECAST__: ${trimmedMessage.startsWith('__FORECAST__:')} | length: ${trimmedMessage.length} | preview: ${trimmedMessage.slice(0, 40)}`);
+      if (trimmedMessage.startsWith('__FORECAST__:')) {
+        try {
+          const data = JSON.parse(trimmedMessage.slice('__FORECAST__:'.length));
+          const pct     = data.changePct ?? 0;
+          const isUp    = pct >= 0;
+          const absPct  = Math.abs(pct).toFixed(2);
+          const arah    = isUp ? 'meningkat' : 'menurun';
+          const scope   = data.witel ? `${data.regional} / ${data.witel}` : data.regional;
+
+          let magnitude = '';
+          if (absPct < 2)       magnitude = 'relatif stabil';
+          else if (absPct < 10) magnitude = `${arah} moderat sebesar ${absPct}%`;
+          else if (absPct < 25) magnitude = `${arah} cukup signifikan sebesar ${absPct}%`;
+          else                  magnitude = `${arah} sangat signifikan sebesar ${absPct}%`;
+
+          let konteks = '';
+          if (data.metric === 'churn_hsi' && isUp)
+            konteks = '\n\n⚠️ **Perlu perhatian** — kenaikan churn mengindikasikan risiko kehilangan pelanggan lebih tinggi. Disarankan evaluasi program retensi.';
+          else if (data.metric === 'churn_hsi' && !isUp)
+            konteks = '\n\n **Positif** — penurunan churn menunjukkan program retensi pelanggan berjalan baik.';
+          else if (['order_hsi','revenue_hsi','recurring_revenue'].includes(data.metric) && isUp)
+            konteks = '\n\n **Tren positif** — pastikan kesiapan operasional (SDM, infrastruktur) untuk mengakomodasi pertumbuhan ini.';
+          else if (['order_hsi','revenue_hsi','recurring_revenue'].includes(data.metric) && !isUp)
+            konteks = '\n\n⚠️ **Perlu investigasi** — penurunan ini perlu dikaji: apakah faktor musiman, kompetitor, atau penurunan struktural.';
+          else if (data.metric === 'avg_install_days' && isUp)
+            konteks = '\n\n⚠️ **Perlu perhatian** — waktu instalasi lebih lama berdampak pada kepuasan pelanggan. Evaluasi proses instalasi.';
+          else if (data.metric === 'fulfillment_rate' && !isUp)
+            konteks = '\n\n⚠️ **Waspada** — penurunan fulfillment rate mengindikasikan potensi gangguan operasional.';
+
+          const fmt = (v, u) => {
+            const rounded = Math.round(Number(v));
+            if (u === 'Rp') return `Rp ${rounded.toLocaleString('id-ID')}`;
+            if (u === '%')  return `${rounded}%`;
+            return `${rounded.toLocaleString('id-ID')} ${u}`;
+          };
+
+          response = `## Analisis Prediksi ${data.metricLabel} — ${scope}
+
+Berdasarkan model **${data.model}** dengan data historis hingga **${data.lastPeriod}**, nilai **${data.metricLabel}** pada **${data.forecastPeriod}** diprediksi **${magnitude}** dari ${fmt(data.lastActual, data.unit)} menjadi **${fmt(data.prediction, data.unit)}**.
+
+| Keterangan | Nilai |
+|---|---|
+| Aktual ${data.lastPeriod} | ${fmt(data.lastActual, data.unit)} |
+| Prediksi ${data.forecastPeriod} | **${fmt(data.prediction, data.unit)}** |
+| Perubahan | ${isUp ? '+' : ''}${pct}% |
+| Batas Bawah (${data.ciLevel}) | ${fmt(data.ciLower, data.unit)} |
+| Batas Atas (${data.ciLevel}) | ${fmt(data.ciUpper, data.unit)} |
+| Model | ${data.model} |
+| Scope | ${scope} |
+| Waktu Inferensi | ${data.inferenceMs != null ? data.inferenceMs + ' ms' : 'N/A'} |
+${konteks}`;
+
+          responseData.message = response;
+          responseData.source = 'forecast';
+          responseData.processing_time = Date.now() - startTime;
+          await chatModel.saveAssistantResponse(responseData);
+          return res.json({ success: true, source: 'forecast', response, session_id });
+        } catch (e) {
+          logger.error('Forecast message parse error:', e);
+        }
+      }
+
       // Check if it's a help request
       if (queryProcessor.isHelpQuery(trimmedMessage)) {
         response = generateFallbackResponse('general_help');
@@ -161,6 +225,96 @@ class ChatController {
         response: errorResponse,
         error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
       });
+    }
+  }
+
+  // Handle forecast result — dedicated endpoint, no rule engine
+  async processForecastResult(req, res) {
+    try {
+      const { data, sessionId } = req.body;
+      const userId = req.user.id;
+
+      if (!data) {
+        return res.status(400).json({ success: false, error: 'Forecast data required' });
+      }
+
+      let session_id = sessionId;
+      if (!session_id) {
+        try {
+          session_id = await sessionModel.create({
+            user_id: userId,
+            session_name: `Chat ${new Date().toISOString().slice(0, 16)}`
+          });
+        } catch {
+          session_id = chatModel.generateSessionId();
+        }
+      }
+
+      const startTime = Date.now();
+      const scope   = data.witel ? `${data.regional} / ${data.witel}` : data.regional;
+      const pct     = data.changePct ?? 0;
+      const isUp    = pct >= 0;
+      const absPct  = Math.abs(pct).toFixed(2);
+      const arah    = isUp ? 'meningkat' : 'menurun';
+
+      let magnitude = '';
+      if (absPct < 2)       magnitude = 'relatif stabil';
+      else if (absPct < 10) magnitude = `${arah} moderat sebesar ${absPct}%`;
+      else if (absPct < 25) magnitude = `${arah} cukup signifikan sebesar ${absPct}%`;
+      else                  magnitude = `${arah} sangat signifikan sebesar ${absPct}%`;
+
+      let konteks = '';
+      if (data.metric === 'churn_hsi' && isUp)
+        konteks = '\n\n⚠️ **Perlu perhatian** — kenaikan churn mengindikasikan risiko kehilangan pelanggan lebih tinggi. Disarankan evaluasi program retensi.';
+      else if (data.metric === 'churn_hsi' && !isUp)
+        konteks = '\n\n **Positif** — penurunan churn menunjukkan program retensi pelanggan berjalan baik.';
+      else if (['order_hsi','revenue_hsi','recurring_revenue'].includes(data.metric) && isUp)
+        konteks = '\n\n **Tren positif** — pastikan kesiapan operasional (SDM, infrastruktur) untuk mengakomodasi pertumbuhan ini.';
+      else if (['order_hsi','revenue_hsi','recurring_revenue'].includes(data.metric) && !isUp)
+        konteks = '\n\n⚠️ **Perlu investigasi** — penurunan ini perlu dikaji: apakah faktor musiman, kompetitor, atau penurunan struktural.';
+      else if (data.metric === 'avg_install_days' && isUp)
+        konteks = '\n\n⚠️ **Perlu perhatian** — waktu instalasi lebih lama berdampak pada kepuasan pelanggan.';
+      else if (data.metric === 'fulfillment_rate' && !isUp)
+        konteks = '\n\n⚠️ **Waspada** — penurunan fulfillment rate mengindikasikan potensi gangguan operasional.';
+
+      const fmt = (v, u) => {
+        if (u === 'Rp') return `Rp ${Number(v).toLocaleString('id-ID')}`;
+        if (u === '%')  return `${v}%`;
+        return `${Number(v).toLocaleString('id-ID')} ${u}`;
+      };
+
+      const userText = `📊 Prediksi ${data.metricLabel} — ${scope} untuk ${data.forecastPeriod}`;
+      const response = `## Analisis Prediksi ${data.metricLabel} — ${scope}
+
+Berdasarkan model **${data.model}** dengan data historis hingga **${data.lastPeriod}**, nilai **${data.metricLabel}** pada **${data.forecastPeriod}** diprediksi **${magnitude}** dari ${fmt(data.lastActual, data.unit)} menjadi **${fmt(data.prediction, data.unit)}**.
+
+| Keterangan | Nilai |
+|---|---|
+| Aktual ${data.lastPeriod} | ${fmt(data.lastActual, data.unit)} |
+| Prediksi ${data.forecastPeriod} | **${fmt(data.prediction, data.unit)}** |
+| Perubahan | ${isUp ? '+' : ''}${pct}% |
+| Batas Bawah (${data.ciLevel}) | ${fmt(data.ciLower, data.unit)} |
+| Batas Atas (${data.ciLevel}) | ${fmt(data.ciUpper, data.unit)} |
+| Model | ${data.model} |
+| Scope | ${scope} |
+| Waktu Inferensi | ${data.inferenceMs != null ? data.inferenceMs + ' ms' : 'N/A'} |
+${konteks}`;
+
+      // Simpan user message
+      await chatModel.saveUserMessage({ user_id: userId, message: userText, session_id });
+      try { await sessionModel.incrementMessageCount(session_id); } catch {}
+
+      // Simpan AI response
+      const processing_time = Date.now() - startTime;
+      await chatModel.saveAssistantResponse({
+        user_id: userId, session_id, message: response,
+        source: 'rule_based', processing_time
+      });
+
+      return res.json({ success: true, source: 'forecast', response, session_id });
+    } catch (error) {
+      logger.error('processForecastResult error:', error);
+      return res.status(500).json({ success: false, error: 'Failed to process forecast result' });
     }
   }
 

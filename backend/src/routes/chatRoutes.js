@@ -5,12 +5,19 @@ const chatController = require('../controllers/chatController');
 const auth = require('../middleware/auth');
 const validation = require('../middleware/validation');
 
-// Main chat endpoint
+// Main chat endpoint (rule-based analysis)
 router.post(
-  '/message', 
-  auth.authenticate, 
-  validation.validateChatMessage, 
+  '/message',
+  auth.authenticate,
+  validation.validateChatMessage,
   chatController.processMessage.bind(chatController)
+);
+
+// Forecast result endpoint — bypass rule engine, langsung ke NLG template
+router.post(
+  '/forecast-result',
+  auth.authenticate,
+  chatController.processForecastResult.bind(chatController)
 );
 
 // Get chat history
