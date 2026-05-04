@@ -5,6 +5,7 @@ Semua endpoint FastAPI untuk forecasting.
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 from typing import Literal, Optional
 
 from fastapi import APIRouter, HTTPException, BackgroundTasks
@@ -224,6 +225,39 @@ def training_history():
     try:
         history = json.loads(history_path.read_text())
         return {"total": len(history), "history": list(reversed(history))}  # terbaru dulu
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/training-history")
+def delete_training_history(trained_at: str):
+    """Hapus satu entry training history berdasarkan trained_at, dan hapus model file-nya."""
+    import json, config
+    history_path = config.SAVED_MODELS_DIR / "training_history.json"
+    if not history_path.exists():
+        raise HTTPException(status_code=404, detail="History tidak ditemukan")
+    try:
+        history = json.loads(history_path.read_text())
+        entry = next((h for h in history if h.get("trained_at") == trained_at), None)
+        if not entry:
+            raise HTTPException(status_code=404, detail=f"Entry '{trained_at}' tidak ditemukan")
+
+        # Hapus model file
+        model_path = Path(entry.get("model_path", ""))
+        scaler_path = model_path.with_name(model_path.stem + "_scaler.pkl")
+        deleted_files = []
+        for f in [model_path, scaler_path]:
+            if f.exists():
+                f.unlink()
+                deleted_files.append(f.name)
+
+        # Hapus dari history
+        history = [h for h in history if h.get("trained_at") != trained_at]
+        history_path.write_text(json.dumps(history, indent=2, default=str))
+
+        return {"status": "deleted", "trained_at": trained_at, "deleted_files": deleted_files}
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

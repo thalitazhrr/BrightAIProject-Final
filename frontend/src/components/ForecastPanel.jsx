@@ -97,6 +97,37 @@ const HistoryTable = ({ theme }) => {
       .finally(() => setLoading(false));
   };
 
+  const handleDelete = async (trained_at) => {
+    if (!window.confirm('Hapus entry ini beserta model file-nya?')) return;
+    try {
+      await telkomApi.deleteTrainingHistory(trained_at);
+      setHistory(prev => prev.filter(h => h.trained_at !== trained_at));
+    } catch (e) {
+      alert('Gagal menghapus: ' + (e.message || 'Unknown error'));
+    }
+  };
+
+  const handleDownloadCSV = () => {
+    const cols = ['trained_at','model_type','metric','regional','witel','data_points','window_size','epochs_run','last_period','last_actual','forecast_period','prediction','change_pct','smape','mase','skill_score','kpi_pass'];
+    const rows = history.map(h => {
+      const vm  = h.val_metrics || {};
+      const kpi = vm.kpi || {};
+      const allPass = kpi.mase_ok && kpi.smape_short_ok && kpi.skill_ok;
+      return [
+        h.trained_at, h.model_type, h.metric, h.regional, h.witel || '',
+        h.data_points, h.window_size, h.epochs_run,
+        h.last_period || '', h.last_actual ?? '', h.forecast_period || '', h.prediction ?? '', h.change_pct ?? '',
+        vm.smape?.toFixed(2) || '', vm.mase?.toFixed(4) || '', vm.skill_score?.toFixed(4) || '',
+        allPass ? 'PASS' : 'PARTIAL'
+      ].map(v => `"${v}"`).join(',');
+    });
+    const csv = [cols.join(','), ...rows].join('\n');
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    const a   = document.createElement('a');
+    a.href = url; a.download = 'training_history.csv'; a.click();
+    URL.revokeObjectURL(url);
+  };
+
   useEffect(() => { if (open) load(); }, [open]);
 
   const thCls = `px-2 py-1.5 text-left text-xs font-semibold ${t ? 'text-slate-400' : 'text-gray-500'}`;
@@ -118,12 +149,16 @@ const HistoryTable = ({ theme }) => {
         </div>
         <div className="flex items-center gap-2">
           {open && (
-            <button
-              onClick={e => { e.stopPropagation(); load(); }}
-              className={`text-xs px-2 py-0.5 rounded ${t ? 'text-slate-400 hover:text-white' : 'text-gray-400 hover:text-gray-700'}`}
-            >
-              Refresh
-            </button>
+            <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
+              <button onClick={handleDownloadCSV}
+                className={`text-xs px-2 py-0.5 rounded border ${t ? 'text-slate-300 border-slate-600 hover:bg-slate-700' : 'text-gray-600 border-gray-300 hover:bg-gray-100'}`}>
+                Download CSV
+              </button>
+              <button onClick={load}
+                className={`text-xs px-2 py-0.5 rounded ${t ? 'text-slate-400 hover:text-white' : 'text-gray-400 hover:text-gray-700'}`}>
+                Refresh
+              </button>
+            </div>
           )}
           {open ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </div>
@@ -150,10 +185,15 @@ const HistoryTable = ({ theme }) => {
                   <th className={thCls}>Model</th>
                   <th className={thCls}>Bulan Data</th>
                   <th className={thCls}>Window</th>
-                  <th className={thCls}>sMAPE (short)</th>
+                  <th className={thCls}>Epoch</th>
+                  <th className={thCls}>Bulan Prediksi</th>
+                  <th className={thCls}>Hasil Prediksi</th>
+                  <th className={thCls}>Perubahan</th>
+                  <th className={thCls}>sMAPE</th>
                   <th className={thCls}>MASE</th>
                   <th className={thCls}>Skill</th>
                   <th className={thCls}>KPI</th>
+                  <th className={thCls}></th>
                 </tr>
               </thead>
               <tbody>
@@ -174,7 +214,19 @@ const HistoryTable = ({ theme }) => {
                       <td className={tdCls}>{h.witel || '-'}</td>
                       <td className={`${tdCls} font-medium uppercase`}>{h.model_type}</td>
                       <td className={tdCls}>{h.data_points} bln</td>
-                      <td className={tdCls}>{h.window_size || '-'}</td>
+                      <td className={tdCls}>{h.window_size ?? '-'}</td>
+                      <td className={tdCls}>{h.epochs_run ?? '-'}</td>
+                      <td className={tdCls}>{h.forecast_period || '-'}</td>
+                      <td className={tdCls}>{h.prediction != null ? Math.round(h.prediction).toLocaleString('id-ID') : '-'}</td>
+                      <td className={tdCls}>
+                        {h.change_pct != null ? (
+                          <span className={h.change_pct >= 0
+                            ? t ? 'text-green-400' : 'text-green-600'
+                            : t ? 'text-red-400' : 'text-red-600'}>
+                            {h.change_pct >= 0 ? '+' : ''}{h.change_pct}%
+                          </span>
+                        ) : '-'}
+                      </td>
                       <td className={tdCls}>{vm.smape?.toFixed(1)}%</td>
                       <td className={tdCls}>{vm.mase?.toFixed(3)}</td>
                       <td className={tdCls}>{vm.skill_score?.toFixed(3)}</td>
@@ -186,6 +238,12 @@ const HistoryTable = ({ theme }) => {
                         }`}>
                           {allPass ? 'PASS' : 'PARTIAL'}
                         </span>
+                      </td>
+                      <td className={tdCls}>
+                        <button onClick={() => handleDelete(h.trained_at)}
+                          className={`text-xs px-1.5 py-0.5 rounded border ${t ? 'border-red-800 text-red-400 hover:bg-red-900/30' : 'border-red-200 text-red-500 hover:bg-red-50'}`}>
+                          Hapus
+                        </button>
                       </td>
                     </tr>
                   );
@@ -414,26 +472,6 @@ const ForecastPanel = ({ theme, onBack, onSendToChat }) => {
             </select>
           </div>
         )}
-      </div>
-
-      {/* Training hyperparameters */}
-      <div className="flex gap-3 mb-3">
-        <div className="flex-1">
-          <label className={`block text-xs mb-1 ${t ? 'text-slate-400' : 'text-gray-500'}`}>
-            Max Epochs
-          </label>
-          <input type="number" min={10} max={500} value={trainEpochs} onChange={e => setTrainEpochs(Number(e.target.value))}
-            className={`w-full text-xs px-2 py-1.5 rounded-lg border ${t ? 'bg-slate-700 border-slate-600 text-white' : 'bg-white border-gray-300 text-gray-800'}`} />
-          <p className={`text-xs mt-0.5 ${t ? 'text-slate-500' : 'text-gray-400'}`}>Early stopping aktif</p>
-        </div>
-        <div className="flex-1">
-          <label className={`block text-xs mb-1 ${t ? 'text-slate-400' : 'text-gray-500'}`}>
-            Window (bulan)
-          </label>
-          <input type="number" min={0} max={36} value={windowSize} onChange={e => setWindowSize(Number(e.target.value))}
-            className={`w-full text-xs px-2 py-1.5 rounded-lg border ${t ? 'bg-slate-700 border-slate-600 text-white' : 'bg-white border-gray-300 text-gray-800'}`} />
-          <p className={`text-xs mt-0.5 ${t ? 'text-slate-500' : 'text-gray-400'}`}>0 = auto-tune</p>
-        </div>
       </div>
 
       {/* Action buttons */}

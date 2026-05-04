@@ -98,4 +98,12 @@ router.post('/predict', auth.authenticate, (req, res) => {
   proxyToML(req, res, '/forecast/predict', 'POST', req.body);
 });
 
+/** Hapus entry history + model file */
+router.delete('/training-history', auth.authenticate, (req, res) => {
+  const { trained_at } = req.query;
+  const params = new URLSearchParams();
+  if (trained_at) params.set('trained_at', trained_at);
+  proxyToML(req, res, `/forecast/training-history?${params}`, 'DELETE');
+});
+
 module.exports = router;

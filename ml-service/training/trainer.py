@@ -21,6 +21,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 
 import config
+import pandas as pd
 from data.fetcher import get_series, aggregate_national, regional_display
 from utils.preprocessing import prepare_series, make_windows, train_val_split, load_scaler, inverse_scale
 from utils.metrics import all_metrics
@@ -315,22 +316,39 @@ def train(
     )
     logger.info(f"[TRAIN] Model final disimpan: {model_path.name} (window={window_size}, epoch={final_epoch})")
 
-    # ── 8. Simpan history ──────────────────────────────────────────────────────
+    # ── 8. Prediksi bulan berikutnya dengan model final ───────────────────────────
+    last_scaled     = scaled[-window_size:]
+    x_pred          = torch.tensor(last_scaled, dtype=torch.float32).unsqueeze(0).unsqueeze(-1)
+    final_model.eval()
+    with torch.no_grad():
+        pred_s = float(final_model(x_pred).numpy().flatten()[0])
+    pred_val        = max(0.0, float(inverse_scale(np.array([pred_s]), scaler)[0]))
+    last_actual_val = float(inverse_scale(scaled[-1:], scaler)[0])
+    last_period     = str(df["periode"].iloc[-1])[:7]
+    forecast_period = str(pd.Timestamp(last_period) + pd.DateOffset(months=1))[:7]
+    change_pct      = round((pred_val - last_actual_val) / max(abs(last_actual_val), 1) * 100, 2)
+
+    # ── 9. Simpan history ──────────────────────────────────────────────────────
     result = {
-        "status":      "success",
-        "model_type":  model_type,
-        "metric":      metric,
-        "regional":    reg_display,
-        "witel":       witel,
-        "data_points": n_data,
-        "window_size": window_size,
-        "n_test":      n_test,
-        "auto_tuned":  auto_tuned,
-        "epochs_run":  final_epoch,
-        "eval_method": "walk-forward",
-        "val_metrics": metrics,
-        "model_path":  str(model_path),
-        "trained_at":  datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "status":         "success",
+        "model_type":     model_type,
+        "metric":         metric,
+        "regional":       reg_display,
+        "witel":          witel,
+        "data_points":    n_data,
+        "window_size":    window_size,
+        "n_test":         n_test,
+        "auto_tuned":     auto_tuned,
+        "epochs_run":     final_epoch,
+        "eval_method":    "walk-forward",
+        "last_period":    last_period,
+        "last_actual":    round(last_actual_val, 2),
+        "forecast_period": forecast_period,
+        "prediction":     round(pred_val, 2),
+        "change_pct":     change_pct,
+        "val_metrics":    metrics,
+        "model_path":     str(model_path),
+        "trained_at":     datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
 
     history_path = config.SAVED_MODELS_DIR / "training_history.json"

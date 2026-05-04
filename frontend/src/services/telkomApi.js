@@ -600,6 +600,11 @@ class TelkomApiService {
     return this._forecastCall('/training-history');
   }
 
+  async deleteTrainingHistory(trained_at) {
+    const params = new URLSearchParams({ trained_at });
+    return this._forecastCall(`/training-history?${params}`, { method: 'DELETE' });
+  }
+
   // ===== UTILITY ENDPOINTS =====
 
   // Get available filter options
