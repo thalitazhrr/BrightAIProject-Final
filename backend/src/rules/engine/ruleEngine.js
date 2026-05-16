@@ -63,7 +63,7 @@ class RuleEngine {
 
       const executionResult = await this.executeRule(matchResult.rule, userInput, context);
       
-      const response = await responseBuilder.buildResponse(executionResult, matchResult.rule);
+      const response = await responseBuilder.buildResponse(executionResult, matchResult.rule, userInput);
       
       const result = {
         success: true,

@@ -25,7 +25,7 @@ module.exports = {
 
       // Performance terms familiar
       'tingkat keberhasilan', 'success rate', 'penetrasi hsi',
-      'distribusi order', 'ranking sto', 'evaluasi sto'
+      'ranking sto', 'evaluasi sto', 'distribusi sto', 'sebaran sto'
     ],
 
     supporting: [
@@ -44,6 +44,9 @@ module.exports = {
       const lowerInput = input.toLowerCase();
       let score = 0;
 
+      // STO coverage analysis requires 'sto' to be present
+      if (!lowerInput.includes('sto')) return 0;
+
       // Check primary keywords
       const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
@@ -56,6 +59,9 @@ module.exports = {
 
       if (primaryMatches > 0) {
         score = 60 + (primaryMatches * 20) + (supportingMatches * 5);
+      } else {
+        // 'sto' alone without primary keyword gives lower base score
+        score = 40 + (supportingMatches * 5);
       }
 
       return Math.min(score, 100);

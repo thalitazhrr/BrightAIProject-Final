@@ -356,19 +356,19 @@ module.exports = {
             yoy.yoy_hsi_services_growth,
             mom.mom_growth,
             mom.mom_hsi_services_growth,
-            ROUND(order_hsi_bisnis * 100.0 / NULLIF(total_order_hsi, 0), 2) AS pct_hsi_bisnis,
-            ROUND(order_hsi_basic * 100.0 / NULLIF(total_order_hsi, 0), 2) AS pct_hsi_basic,
-            ROUND(bundling_orders * 100.0 / NULLIF(total_order_hsi, 0), 2) AS bundling_rate,
-            ROUND(hard_bundling_orders * 100.0 / NULLIF(bundling_orders, 0), 2) AS hard_bundling_pct,
-            ROUND(digital_bundling_orders * 100.0 / NULLIF(total_order_hsi, 0), 2) AS digital_bundling_rate,
-            DENSE_RANK() OVER (PARTITION BY TAHUN, BULAN ORDER BY total_order_hsi DESC) AS rank_nasional,
-            DENSE_RANK() OVER (PARTITION BY TAHUN, BULAN, REGIONAL ORDER BY total_order_hsi DESC) AS rank_in_regional,
-            DENSE_RANK() OVER (PARTITION BY TAHUN, BULAN, WITEL ORDER BY total_order_hsi DESC) AS rank_in_witel,
-            DENSE_RANK() OVER (PARTITION BY TAHUN, BULAN, DATEL ORDER BY total_order_hsi DESC) AS rank_in_datel,
-            DENSE_RANK() OVER (PARTITION BY TAHUN, BULAN, DATEL, STO ORDER BY total_order_hsi DESC) AS rank_in_sto,
-            ROUND(total_order_hsi * 100.0 / SUM(total_order_hsi) OVER(PARTITION BY TAHUN, BULAN), 2) AS share_nasional,
-            ROUND(total_order_hsi * 100.0 / SUM(total_order_hsi) OVER(PARTITION BY TAHUN, BULAN, REGIONAL), 2) AS share_in_regional,
-            ROUND(total_order_hsi * 100.0 / SUM(total_order_hsi) OVER(PARTITION BY TAHUN, BULAN, WITEL), 2) AS share_in_witel
+            ROUND(m.order_hsi_bisnis * 100.0 / NULLIF(m.total_order_hsi, 0), 2) AS pct_hsi_bisnis,
+            ROUND(m.order_hsi_basic * 100.0 / NULLIF(m.total_order_hsi, 0), 2) AS pct_hsi_basic,
+            ROUND(m.bundling_orders * 100.0 / NULLIF(m.total_order_hsi, 0), 2) AS bundling_rate,
+            ROUND(m.hard_bundling_orders * 100.0 / NULLIF(m.bundling_orders, 0), 2) AS hard_bundling_pct,
+            ROUND(m.digital_bundling_orders * 100.0 / NULLIF(m.total_order_hsi, 0), 2) AS digital_bundling_rate,
+            DENSE_RANK() OVER (PARTITION BY m.TAHUN, m.BULAN ORDER BY m.total_order_hsi DESC) AS rank_nasional,
+            DENSE_RANK() OVER (PARTITION BY m.TAHUN, m.BULAN, m.REGIONAL ORDER BY m.total_order_hsi DESC) AS rank_in_regional,
+            DENSE_RANK() OVER (PARTITION BY m.TAHUN, m.BULAN, m.WITEL ORDER BY m.total_order_hsi DESC) AS rank_in_witel,
+            DENSE_RANK() OVER (PARTITION BY m.TAHUN, m.BULAN, m.DATEL ORDER BY m.total_order_hsi DESC) AS rank_in_datel,
+            DENSE_RANK() OVER (PARTITION BY m.TAHUN, m.BULAN, m.DATEL, m.STO ORDER BY m.total_order_hsi DESC) AS rank_in_sto,
+            ROUND(m.total_order_hsi * 100.0 / NULLIF(SUM(m.total_order_hsi) OVER(PARTITION BY m.TAHUN, m.BULAN), 0), 2) AS share_nasional,
+            ROUND(m.total_order_hsi * 100.0 / NULLIF(SUM(m.total_order_hsi) OVER(PARTITION BY m.TAHUN, m.BULAN, m.REGIONAL), 0), 2) AS share_in_regional,
+            ROUND(m.total_order_hsi * 100.0 / NULLIF(SUM(m.total_order_hsi) OVER(PARTITION BY m.TAHUN, m.BULAN, m.WITEL), 0), 2) AS share_in_witel
         FROM MONTHLY_HSI_AGGREGATION m
         LEFT JOIN YOY_COMPARISON yoy ON m.STO = yoy.STO AND m.TAHUN = yoy.TAHUN AND m.BULAN = yoy.BULAN
         LEFT JOIN MOM_COMPARISON mom ON m.STO = mom.STO AND m.TAHUN = mom.TAHUN AND m.BULAN = mom.BULAN
@@ -419,11 +419,15 @@ module.exports = {
     
     formatIndonesianResponse: function(data) {
       // Group data by current month for main analysis
-      const currentMonth = Math.max(...data.map(d => d.BULAN));
-      const currentYear = Math.max(...data.map(d => d.TAHUN));
+      // Find the latest (year, month) PAIR — not independent maxes
+      const latestPeriod = data.reduce((best, d) => {
+        const score = (d.TAHUN || 0) * 12 + (d.BULAN || 0);
+        return score > best.score ? { score, tahun: d.TAHUN, bulan: d.BULAN } : best;
+      }, { score: -Infinity, tahun: 0, bulan: 0 });
+      const currentYear = latestPeriod.tahun;
+      const currentMonth = latestPeriod.bulan;
       const currentData = data.filter(d => d.TAHUN === currentYear && d.BULAN === currentMonth);
       
-      const summary = this.generateGeographicSummary(currentData);
       const top_performers = currentData.slice(0, 10);
       
       // Monthly trend analysis

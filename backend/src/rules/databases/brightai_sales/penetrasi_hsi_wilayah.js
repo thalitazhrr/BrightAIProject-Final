@@ -560,11 +560,11 @@ module.exports = {
 
             -- Competitive Positioning
             DENSE_RANK() OVER (PARTITION BY WITEL ORDER BY total_pesanan_hsi DESC) as posisi_kompetitif_witel,
-            total_pesanan_hsi * 100.0 / SUM(total_pesanan_hsi) OVER (PARTITION BY WITEL) as pangsa_pasar_dalam_witel,
+            total_pesanan_hsi * 100.0 / NULLIF(SUM(total_pesanan_hsi) OVER (PARTITION BY WITEL), 0) as pangsa_pasar_dalam_witel,
             
             -- Service efficiency positioning
             DENSE_RANK() OVER (PARTITION BY WITEL ORDER BY rata_rata_order_per_layanan DESC) as posisi_efisiensi_witel,
-            pelanggan_hsi_unik * 100.0 / SUM(pelanggan_hsi_unik) OVER (PARTITION BY WITEL) as pangsa_pelanggan_dalam_witel
+            pelanggan_hsi_unik * 100.0 / NULLIF(SUM(pelanggan_hsi_unik) OVER (PARTITION BY WITEL), 0) as pangsa_pelanggan_dalam_witel
             
         FROM ANALISIS_PENETRASI t
     )

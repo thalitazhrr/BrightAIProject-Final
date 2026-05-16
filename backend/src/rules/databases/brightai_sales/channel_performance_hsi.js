@@ -341,7 +341,7 @@ module.exports = {
             t.STO_COVERAGE,
             t.PREMIUM_PRODUCT_FOCUS,
             -- Market share calculation
-            ROUND(HSI_ORDERS * 100.0 / SUM(HSI_ORDERS) OVER(), 2) as MARKET_SHARE_PCT,
+            ROUND(HSI_ORDERS * 100.0 / NULLIF(SUM(HSI_ORDERS) OVER(), 0), 2) as MARKET_SHARE_PCT,
             
             -- Effectiveness score calculation
             ROUND(

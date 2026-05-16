@@ -9,7 +9,6 @@ const METRICS = [
   { value: 'revenue_hsi',       label: 'Revenue HSI',       unit: 'Rp',        model: 'lstm' },
   { value: 'churn_hsi',         label: 'Churn HSI',         unit: 'pelanggan', model: 'gru'  },
   { value: 'realisasi_hsi',     label: 'Realisasi HSI',     unit: 'SSL',       model: 'lstm' },
-  { value: 'subscriber_hsi',    label: 'Subscriber HSI',    unit: 'pelanggan', model: 'tft'  },
   { value: 'fulfillment_rate',  label: 'Fulfillment Rate',  unit: '%',         model: 'gru'  },
   { value: 'recurring_revenue', label: 'Recurring Revenue', unit: 'Rp',        model: 'lstm' },
   { value: 'avg_install_days',  label: 'Avg Install Days',  unit: 'hari',      model: 'gru'  },
@@ -291,7 +290,7 @@ const ForecastPanel = ({ theme, onBack, onSendToChat }) => {
   const [explanation, setExplanation] = useState('');
   const [predictError, setPredictError]   = useState('');
 
-  const selectedMetric = METRICS.find(m => m.value === metric);
+  const selectedMetric = METRICS.find(m => m.value === metric) || METRICS[0];
   const activeModel    = modelOverride || selectedMetric.model;
 
   const handleTrain = async () => {
@@ -314,19 +313,27 @@ const ForecastPanel = ({ theme, onBack, onSendToChat }) => {
         try {
           const hist = await telkomApi.getTrainingHistory();
           const entries = hist.history || [];
+          const startedAtStr = startedAt.slice(0, 19).replace('T', ' ');
           const found = entries.find(h =>
             h.metric === metric &&
             h.regional === (regional || 'NASIONAL') &&
             (h.witel || null) === (witel || null) &&
-            h.trained_at > startedAt.slice(0, 19).replace('T', ' ')
+            h.trained_at > startedAtStr
           );
           if (found) {
             clearInterval(pollRef.current);
-            setTrainStatus('done');
-            setTrainDone(true);
-            // Log detail ke console untuk developer, bukan ditampilkan ke user
-            console.log('[Training selesai]', found.val_metrics);
-            setTrainMsg('Model berhasil diperbarui. Anda dapat melakukan prediksi sekarang.');
+            if (found.status === 'failed') {
+              setTrainStatus('error');
+              setTrainMsg(`Training gagal: ${found.error || 'Unknown error'}`);
+            } else {
+              setTrainStatus('done');
+              setTrainDone(true);
+              setTrainMsg(
+                found.is_best === false
+                  ? 'Training selesai — model lama lebih baik, tidak diperbarui.'
+                  : 'Model berhasil diperbarui. Anda dapat melakukan prediksi sekarang.'
+              );
+            }
           }
         } catch {}
       }, 5000);
@@ -556,23 +563,6 @@ const ForecastPanel = ({ theme, onBack, onSendToChat }) => {
         </div>
       )}
 
-      {/* Penjelasan template NLG */}
-      {explanation && (
-        <div className={`rounded-xl border p-3 mb-2 text-xs leading-relaxed ${
-          t ? 'bg-slate-800/40 border-slate-700/50 text-slate-300' : 'bg-gray-50 border-gray-200 text-gray-700'
-        }`}>
-          {explanation.split('\n').map((line, i) => {
-            if (!line.trim()) return <div key={i} className="h-2" />;
-            // bold **text**
-            const parts = line.split(/\*\*(.*?)\*\*/g);
-            return (
-              <p key={i} className="mb-0.5">
-                {parts.map((p, j) => j % 2 === 1 ? <strong key={j}>{p}</strong> : p)}
-              </p>
-            );
-          })}
-        </div>
-      )}
 
       {/* Training history table */}
       <HistoryTable theme={theme} />

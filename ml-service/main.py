@@ -26,6 +26,45 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def _migrate_history_is_best():
+    """
+    Otomatis mark is_best=True pada entry terbaik per kombinasi
+    (metric, model_type, regional, witel) di training_history.json.
+    Dijalankan sekali setiap startup — idempotent.
+    """
+    import json
+    hp = config.SAVED_MODELS_DIR / "training_history.json"
+    if not hp.exists():
+        return
+    try:
+        history = json.loads(hp.read_text())
+    except Exception:
+        return
+
+    # Temukan entry terbaik (smape terkecil, skill tertinggi) per kombinasi
+    best_idx: dict = {}
+    for i, h in enumerate(history):
+        if not h.get("val_metrics") or h.get("status") == "failed":
+            continue
+        key = (h.get("metric"), h.get("model_type"), h.get("regional"), h.get("witel"))
+        vm  = h["val_metrics"]
+        score = (vm.get("smape", 999), -vm.get("skill_score", -999))
+        if key not in best_idx or score < best_idx[key][1]:
+            best_idx[key] = (i, score)
+
+    best_set = {i for i, _ in best_idx.values()}
+    changed = False
+    for i, h in enumerate(history):
+        want = (i in best_set)
+        if h.get("is_best") != want:
+            h["is_best"] = want
+            changed = True
+
+    if changed:
+        hp.write_text(json.dumps(history, indent=2, default=str))
+        logger.info(f"[STARTUP] History migrated — {len(best_set)} entries marked as is_best")
+
+
 # ── Startup / Shutdown ────────────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -33,6 +72,7 @@ async def lifespan(app: FastAPI):
     logger.info(f"Oracle DSN : {config.DB_DSN}")
     logger.info(f"Oracle User: {config.DB_USER}")
     logger.info(f"Models dir : {config.SAVED_MODELS_DIR}")
+    _migrate_history_is_best()
     yield
     logger.info("BrightAI ML Service stopped.")
 

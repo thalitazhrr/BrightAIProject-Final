@@ -227,7 +227,7 @@ module.exports = {
             
             -- Market share calculation (relative to total churn)
             ROUND(
-                (total_churn_ct0 * 100.0 / SUM(total_churn_ct0) OVER (PARTITION BY PERIODE)), 2
+                (total_churn_ct0 * 100.0 / NULLIF(SUM(total_churn_ct0) OVER (PARTITION BY PERIODE), 0)), 2
             ) as kontribusi_persen_total_churn,
             
             -- Trend analysis

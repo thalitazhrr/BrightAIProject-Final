@@ -115,8 +115,24 @@ def predict_gru_lstm(
     ci_lower = round(pred_value * 0.90, 2)
     ci_upper = round(pred_value * 1.10, 2)
 
-    last_actual = float(df["value"].iloc[-1])
-    last_period = str(df["periode"].iloc[-1])[:7]
+    # Deteksi partial/incomplete data di bulan terakhir:
+    # jika nilai terakhir < 30% dari median historis, anggap data belum lengkap
+    # → pakai bulan sebelumnya sebagai referensi last_actual
+    values_all = df["value"].values
+    median_val = float(np.median(values_all[:-1])) if len(values_all) > 1 else float(values_all[-1])
+    last_raw   = float(df["value"].iloc[-1])
+    partial_data = (median_val > 0 and last_raw < median_val * 0.30)
+
+    if partial_data and len(df) >= 2:
+        last_actual = float(df["value"].iloc[-2])
+        last_period = str(df["periode"].iloc[-2])[:7]
+        logger.warning(
+            f"[INFERENCE] Data bulan terakhir terdeteksi partial "
+            f"({last_raw:.0f} vs median {median_val:.0f}) — pakai periode sebelumnya: {last_period}"
+        )
+    else:
+        last_actual = last_raw
+        last_period = str(df["periode"].iloc[-1])[:7]
 
     next_period = str(pd.Timestamp(last_period) + pd.DateOffset(months=1))[:7]
 
@@ -139,6 +155,7 @@ def predict_gru_lstm(
         },
         "change_pct": round((pred_value - last_actual) / max(last_actual, 1) * 100, 2),
         "inference_ms": inference_ms,
+        "partial_data_warning": partial_data,
     }
 
 
@@ -175,7 +192,6 @@ def predict_tft(
     model.eval()
 
     from models.tft_model import build_tft_dataset
-    import pandas as pd
     from torch.utils.data import DataLoader
 
     df = get_series(metric, reg_param, witel)

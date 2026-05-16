@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   BarChart2, Clock, ChevronLeft, TrendingUp, Database,
   Target, DollarSign, AlertTriangle, RefreshCw, Send
@@ -60,6 +60,12 @@ export const CATEGORIES = [
     icon: TrendingUp,
     description: 'Order, penetrasi & channel penjualan',
     color: 'blue',
+    detailedDescription:
+      'Kategori Sales menyajikan analisis menyeluruh terhadap aktivitas penjualan layanan HSI (High Speed Internet). ' +
+      'Cakupan analisis meliputi jumlah total order HSI Bisnis dan HSI Basic, distribusi order berdasarkan wilayah regional dan witel, ' +
+      'serta segmentasi berdasarkan kategori bandwidth. Selain itu, kategori ini juga mencakup analisis tingkat penetrasi HSI di setiap wilayah, ' +
+      'evaluasi efektivitas saluran penjualan, tren pertumbuhan order secara bulanan maupun tahunan, ' +
+      'tingkat keberhasilan proses fulfillment, serta rata-rata waktu instalasi layanan per wilayah.',
   },
   {
     id: 'dapros',
@@ -67,6 +73,12 @@ export const CATEGORIES = [
     icon: Database,
     description: 'Profil & segmentasi pelanggan',
     color: 'purple',
+    detailedDescription:
+      'Kategori Data Proses menampilkan profil dan karakteristik pelanggan HSI secara mendalam. ' +
+      'Analisis mencakup segmentasi pelanggan berdasarkan kecepatan layanan dan kontribusi pendapatan, ' +
+      'distribusi geografis pelanggan di seluruh wilayah Indonesia, serta analisis loyalitas dan masa berlangganan pelanggan. ' +
+      'Kategori ini juga menyajikan profil pendapatan pelanggan per segmen, distribusi kecepatan layanan yang digunakan, ' +
+      'tingkat penetrasi produk digital yang dibundel dengan HSI, serta pola kombinasi layanan yang dipilih oleh pelanggan.',
   },
   {
     id: 'target',
@@ -74,6 +86,12 @@ export const CATEGORIES = [
     icon: Target,
     description: 'Pencapaian target & realisasi',
     color: 'green',
+    detailedDescription:
+      'Kategori Target menyajikan perbandingan antara target yang ditetapkan dengan realisasi pencapaian layanan HSI. ' +
+      'Analisis meliputi tingkat pencapaian target realisasi HSI per wilayah regional, tren pertumbuhan realisasi terhadap target secara bulanan, ' +
+      'serta evaluasi kinerja setiap regional berdasarkan persentase pencapaian. ' +
+      'Kategori ini juga mencakup segmentasi performa HSI Bisnis dan HSI Basic dibandingkan dengan target masing-masing, ' +
+      'serta analisis posisi kompetitif HSI terhadap target pangsa pasar yang telah ditetapkan.',
   },
   {
     id: 'revenue',
@@ -81,6 +99,12 @@ export const CATEGORIES = [
     icon: DollarSign,
     description: 'Pendapatan & tren revenue',
     color: 'amber',
+    detailedDescription:
+      'Kategori Revenue menyajikan analisis pendapatan layanan HSI secara komprehensif. ' +
+      'Cakupan analisis meliputi tren revenue HSI bulanan beserta pertumbuhannya, kontribusi revenue per wilayah regional, ' +
+      'serta analisis siklus hidup pelanggan terhadap pendapatan yang dihasilkan. ' +
+      'Selain itu, kategori ini juga mencakup klasifikasi revenue berdasarkan akun GL, analisis revenue lintas wilayah geografis, ' +
+      'strategi peningkatan skala revenue HSI, serta pola perilaku pelanggan yang memengaruhi besaran pendapatan.',
   },
   {
     id: 'churn',
@@ -88,6 +112,12 @@ export const CATEGORIES = [
     icon: AlertTriangle,
     description: 'Retensi & pola churn pelanggan',
     color: 'red',
+    detailedDescription:
+      'Kategori Churn menyajikan analisis kehilangan pelanggan atau penonaktifan layanan (CT0) pada layanan HSI. ' +
+      'Analisis mencakup tingkat churn pelanggan internet per wilayah regional, perbandingan churn rate antar divisi layanan HSI, ' +
+      'serta pola churn berdasarkan kategori bandwidth dan lama masa berlangganan. ' +
+      'Kategori ini juga menampilkan evaluasi kinerja churn per witel, identifikasi periode risiko churn tertinggi, ' +
+      'serta pola CT0 pelanggan berdasarkan siklus masa layanan bulanan dan kuartalan.',
   },
 ];
 
@@ -200,24 +230,33 @@ const ModeSelect = ({ theme, onSelect }) => {
 // ─── Step: Category Selection ──────────────────────────────────────────────────
 const CategorySelect = ({ theme, onSelect, onBack }) => {
   const t = theme === 'dark';
+  const [hoveredCat, setHoveredCat] = useState(null);
+  const hovered = CATEGORIES.find(c => c.id === hoveredCat);
+
   return (
     <Panel theme={theme}>
       <div className="flex items-center justify-between mb-3">
         <PanelLabel theme={theme}>Pilih Kategori Analisis</PanelLabel>
         <BackBtn theme={theme} onClick={onBack}>Kembali</BackBtn>
       </div>
+
+      {/* Category buttons */}
       <div className="grid grid-cols-5 gap-2">
         {CATEGORIES.map(cat => {
           const Icon = cat.icon;
           const c = COLOR[cat.color][t ? 'dark' : 'light'];
+          const isHovered = hoveredCat === cat.id;
           return (
             <button
               key={cat.id}
               onClick={() => onSelect(cat.id)}
-              title={cat.description}
+              onMouseEnter={() => setHoveredCat(cat.id)}
+              onMouseLeave={() => setHoveredCat(null)}
               className={`flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all duration-200 text-center ${
                 c.bg
-              } ${c.border} ${c.hover}`}
+              } ${isHovered ? c.border.replace('/30', '/70') : c.border} ${c.hover} ${
+                isHovered ? 'scale-105 shadow-md' : ''
+              }`}
             >
               <Icon className={`w-5 h-5 ${c.icon}`} />
               <span className={`text-xs font-semibold leading-tight ${c.text}`}>
@@ -227,9 +266,34 @@ const CategorySelect = ({ theme, onSelect, onBack }) => {
           );
         })}
       </div>
-      <p className={`text-xs mt-2 ${t ? 'text-slate-500' : 'text-gray-400'}`}>
-        Arahkan kursor ke kategori untuk melihat deskripsi
-      </p>
+
+      {/* Description panel — shown on hover, hint text when none hovered */}
+      <div className={`mt-3 min-h-[3.5rem] rounded-xl px-3 py-2.5 transition-all duration-200 border ${
+        hovered
+          ? t
+            ? `${COLOR[hovered.color].dark.bg} ${COLOR[hovered.color].dark.border}`
+            : `${COLOR[hovered.color].light.bg} ${COLOR[hovered.color].light.border}`
+          : t
+            ? 'bg-transparent border-slate-700/30'
+            : 'bg-transparent border-gray-100'
+      }`}>
+        {hovered ? (
+          <div>
+            <p className={`text-xs font-semibold mb-1 ${
+              t ? COLOR[hovered.color].dark.text : COLOR[hovered.color].light.text
+            }`}>
+              {hovered.label}
+            </p>
+            <p className={`text-xs leading-relaxed ${t ? 'text-slate-300' : 'text-gray-700'}`}>
+              {hovered.detailedDescription}
+            </p>
+          </div>
+        ) : (
+          <p className={`text-xs italic ${t ? 'text-slate-600' : 'text-gray-400'}`}>
+            Arahkan kursor ke kategori untuk melihat deskripsi lengkapnya.
+          </p>
+        )}
+      </div>
     </Panel>
   );
 };

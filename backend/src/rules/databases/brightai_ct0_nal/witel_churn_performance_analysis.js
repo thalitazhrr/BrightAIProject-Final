@@ -201,7 +201,7 @@ module.exports = {
             
             -- Percentage contribution to regional churn
             ROUND(
-                (total_churn_ct0 * 100.0 / SUM(total_churn_ct0) OVER (PARTITION BY PERIODE, REGIONAL)), 2
+                (total_churn_ct0 * 100.0 / NULLIF(SUM(total_churn_ct0) OVER (PARTITION BY PERIODE, REGIONAL), 0)), 2
             ) as kontribusi_persen_regional,
             
             -- Trend calculation

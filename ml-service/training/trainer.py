@@ -298,23 +298,66 @@ def train(
         early_stopping_patience=25,
     )
 
-    # ── 7. Simpan model ────────────────────────────────────────────────────────
-    torch.save(
-        {
-            "state_dict":  final_model.state_dict(),
-            "model_type":  model_type,
-            "metric":      metric,
-            "regional":    reg_display,
-            "witel":       witel,
-            "window_size": window_size,
-            "horizon":     horizon,
-            "hidden_size": config.HIDDEN_SIZE,
-            "num_layers":  config.NUM_LAYERS,
-            "dropout":     config.DROPOUT,
-        },
-        model_path,
-    )
-    logger.info(f"[TRAIN] Model final disimpan: {model_path.name} (window={window_size}, epoch={final_epoch})")
+    # ── 7. Benchmark vs history — simpan hanya jika lebih baik ───────────────
+    history_path = config.SAVED_MODELS_DIR / "training_history.json"
+    _history_all = []
+    if history_path.exists():
+        try:
+            _history_all = json.loads(history_path.read_text())
+        except Exception:
+            _history_all = []
+
+    # Cari best previous run untuk kombinasi metric+regional+witel yang sama
+    def _score(entry):
+        m = entry.get("val_metrics", {})
+        return (m.get("smape", 999), -m.get("skill_score", -999))  # (smape asc, skill desc)
+
+    prev_best = None
+    for h in _history_all:
+        if (h.get("metric") == metric
+                and h.get("model_type") == model_type
+                and h.get("regional") == reg_display
+                and h.get("witel") == witel
+                and h.get("val_metrics")
+                and h.get("is_best") is True):  # hanya entry yang explicitly is_best=True
+            if prev_best is None or _score(h) < _score(prev_best):
+                prev_best = h
+
+    curr_smape  = metrics.get("smape", 999)
+    curr_skill  = metrics.get("skill_score", -999)
+    is_best     = True
+    benchmark   = None
+
+    if prev_best is not None:
+        pb_smape = prev_best["val_metrics"].get("smape", 999)
+        pb_skill = prev_best["val_metrics"].get("skill_score", -999)
+        benchmark = {
+            "prev_smape":       pb_smape,
+            "prev_skill_score": pb_skill,
+            "prev_trained_at":  prev_best.get("trained_at"),
+        }
+        # Menang jika sMAPE lebih rendah, atau sMAPE sama tapi skill lebih tinggi
+        is_best = (curr_smape, -curr_skill) < (pb_smape, -pb_skill)
+
+    if is_best:
+        torch.save(
+            {
+                "state_dict":  final_model.state_dict(),
+                "model_type":  model_type,
+                "metric":      metric,
+                "regional":    reg_display,
+                "witel":       witel,
+                "window_size": window_size,
+                "horizon":     horizon,
+                "hidden_size": config.HIDDEN_SIZE,
+                "num_layers":  config.NUM_LAYERS,
+                "dropout":     config.DROPOUT,
+            },
+            model_path,
+        )
+        logger.info(f"[TRAIN] ✅ Model baru LEBIH BAIK — disimpan: {model_path.name} (sMAPE {curr_smape:.2f}% vs prev {benchmark['prev_smape']:.2f}%)" if benchmark else f"[TRAIN] ✅ Model pertama disimpan: {model_path.name}")
+    else:
+        logger.info(f"[TRAIN] ⏭ Model lama LEBIH BAIK — tidak overwrite {model_path.name} (sMAPE {curr_smape:.2f}% vs prev best {benchmark['prev_smape']:.2f}%)")
 
     # ── 8. Prediksi bulan berikutnya dengan model final ───────────────────────────
     last_scaled     = scaled[-window_size:]
@@ -323,8 +366,21 @@ def train(
     with torch.no_grad():
         pred_s = float(final_model(x_pred).numpy().flatten()[0])
     pred_val        = max(0.0, float(inverse_scale(np.array([pred_s]), scaler)[0]))
-    last_actual_val = float(inverse_scale(scaled[-1:], scaler)[0])
-    last_period     = str(df["periode"].iloc[-1])[:7]
+    raw_last_val    = float(inverse_scale(scaled[-1:], scaler)[0])
+
+    # Deteksi partial data: jika bulan terakhir < 30% median, pakai bulan sebelumnya
+    all_vals     = df["value"].values
+    median_val   = float(np.median(all_vals[:-1])) if len(all_vals) > 1 else raw_last_val
+    partial_data = (median_val > 0 and raw_last_val < median_val * 0.30)
+
+    if partial_data and len(df) >= 2:
+        last_actual_val = float(df["value"].iloc[-2])
+        last_period     = str(df["periode"].iloc[-2])[:7]
+        logger.warning(f"[TRAIN] Partial data terdeteksi (last={raw_last_val:.0f} vs median={median_val:.0f}) — referensi: {last_period}")
+    else:
+        last_actual_val = raw_last_val
+        last_period     = str(df["periode"].iloc[-1])[:7]
+
     forecast_period = str(pd.Timestamp(last_period) + pd.DateOffset(months=1))[:7]
     change_pct      = round((pred_val - last_actual_val) / max(abs(last_actual_val), 1) * 100, 2)
 
@@ -347,18 +403,13 @@ def train(
         "prediction":     round(pred_val, 2),
         "change_pct":     change_pct,
         "val_metrics":    metrics,
+        "is_best":        is_best,
+        "benchmark":      benchmark,
         "model_path":     str(model_path),
         "trained_at":     datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
 
-    history_path = config.SAVED_MODELS_DIR / "training_history.json"
-    history = []
-    if history_path.exists():
-        try:
-            history = json.loads(history_path.read_text())
-        except Exception:
-            history = []
-    history.append(result)
-    history_path.write_text(json.dumps(history, indent=2, default=str))
+    _history_all.append(result)
+    history_path.write_text(json.dumps(_history_all, indent=2, default=str))
 
     return result

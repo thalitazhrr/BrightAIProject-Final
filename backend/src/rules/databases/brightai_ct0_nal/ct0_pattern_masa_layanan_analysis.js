@@ -187,7 +187,7 @@ module.exports = {
             
             -- Percentage contribution
             ROUND(
-                (jumlah_ct0 * 100.0 / SUM(jumlah_ct0) OVER (PARTITION BY PERIODE, REGIONAL)), 2
+                (jumlah_ct0 * 100.0 / NULLIF(SUM(jumlah_ct0) OVER (PARTITION BY PERIODE, REGIONAL), 0)), 2
             ) as kontribusi_persen_regional
             
         FROM PATTERN_SUMMARY t

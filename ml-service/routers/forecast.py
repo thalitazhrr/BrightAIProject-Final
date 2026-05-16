@@ -21,7 +21,6 @@ MetricType = Literal[
     "revenue_hsi",
     "churn_hsi",
     "realisasi_hsi",
-    "subscriber_hsi",
     "fulfillment_rate",
     "recurring_revenue",
     "avg_install_days",
@@ -139,13 +138,7 @@ def train_model(req: TrainRequest, background_tasks: BackgroundTasks):
     def _run_training():
         try:
             if req.model_type == "tft":
-                from training.tft_trainer import train_tft
-                result = train_tft(
-                    metric=req.metric,
-                    regional=req.regional,
-                    witel=req.witel,
-                    epochs=req.epochs,
-                )
+                raise RuntimeError("TFT tidak tersedia (pytorch_lightning tidak terinstall). Gunakan GRU atau LSTM.")
             else:
                 from training.trainer import train
                 result = train(
@@ -159,6 +152,25 @@ def train_model(req: TrainRequest, background_tasks: BackgroundTasks):
             logger.info(f"Training selesai: {result}")
         except Exception as e:
             logger.error(f"Training error: {e}", exc_info=True)
+            # Catat kegagalan ke history agar terlihat di UI
+            import json, config as _cfg
+            from datetime import datetime
+            from data.fetcher import regional_display
+            _hp = _cfg.SAVED_MODELS_DIR / "training_history.json"
+            _hist = []
+            if _hp.exists():
+                try: _hist = json.loads(_hp.read_text())
+                except Exception: pass
+            _hist.append({
+                "status":     "failed",
+                "model_type": req.model_type,
+                "metric":     req.metric,
+                "regional":   regional_display(req.regional),
+                "witel":      req.witel,
+                "error":      str(e),
+                "trained_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            })
+            _hp.write_text(json.dumps(_hist, indent=2, default=str))
 
     background_tasks.add_task(_run_training)
 

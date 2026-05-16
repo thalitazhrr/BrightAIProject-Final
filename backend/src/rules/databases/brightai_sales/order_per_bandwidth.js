@@ -276,8 +276,8 @@ module.exports = {
             avg_orders_per_hsi_service,  -- ADDED
             avg_hsi_services_per_customer,  -- ADDED
             -- Market share
-            ROUND(total_orders_hsi * 100.0 / SUM(total_orders_hsi) OVER(), 2) as market_share_pct,
-            ROUND(unique_hsi_services * 100.0 / SUM(unique_hsi_services) OVER(), 2) as service_share_pct,  -- ADDED
+            ROUND(total_orders_hsi * 100.0 / NULLIF(SUM(total_orders_hsi) OVER(), 0), 2) as market_share_pct,
+            ROUND(unique_hsi_services * 100.0 / NULLIF(SUM(unique_hsi_services) OVER(), 0), 2) as service_share_pct,  -- ADDED
             -- Customer metrics
             ROUND(unique_customers * 100.0 / total_orders_hsi, 2) as customer_order_ratio,
             -- Bandwidth stats
@@ -300,7 +300,7 @@ module.exports = {
             DENSE_RANK() OVER (ORDER BY total_orders_hsi DESC) as popularity_rank,
             DENSE_RANK() OVER (ORDER BY unique_hsi_services DESC) as service_volume_rank,  -- ADDED
             DENSE_RANK() OVER (ORDER BY avg_mbps DESC) as speed_rank,
-            DENSE_RANK() OVER (ORDER BY bundling_rate DESC) as bundling_rank,
+            DENSE_RANK() OVER (ORDER BY ROUND(bundling_orders * 100.0 / NULLIF(total_orders_hsi, 0), 2) DESC) as bundling_rank,
             DENSE_RANK() OVER (ORDER BY avg_orders_per_hsi_service DESC) as efficiency_rank  -- ADDED
         FROM BANDWIDTH_METRICS
     )
