@@ -22,7 +22,7 @@ from utils.preprocessing import load_scaler, inverse_scale
 
 logger = logging.getLogger(__name__)
 
-ModelType = Literal["gru", "lstm", "tft"]
+ModelType = Literal["gru", "lstm", "tft", "prophet"]
 
 
 def _model_tag(model_type: str, metric: str, regional: str, witel: Optional[str]) -> str:
@@ -223,6 +223,94 @@ def predict_tft(
     }
 
 
+def predict_prophet(
+    metric: str,
+    regional: str = "NASIONAL",
+    witel: Optional[str] = None,
+) -> dict:
+    """Load Prophet model (.json) dan prediksi 1 bulan ke depan."""
+    try:
+        from prophet.serialize import model_from_json
+    except ImportError:
+        raise RuntimeError("prophet tidak terinstall. Jalankan: pip install prophet")
+
+    import warnings
+    _t_start = time.perf_counter()
+    reg_display = regional_display(regional)
+    is_nasional = reg_display == "NASIONAL" and not witel
+    reg_param   = None if is_nasional else regional
+
+    # Path model
+    reg_part = reg_display.lower().replace("-", "").replace(" ", "_")
+    tag = f"prophet_{metric}_{reg_part}"
+    if witel:
+        tag += f"_{witel.lower().replace(' ', '_')}"
+    model_path = config.SAVED_MODELS_DIR / f"{tag}.json"
+
+    if not model_path.exists():
+        raise FileNotFoundError(
+            f"Prophet model belum ditraining: {model_path.name}. "
+            "Jalankan POST /forecast/train dengan model_type=prophet terlebih dahulu."
+        )
+
+    with open(model_path, "r", encoding="utf-8") as f:
+        model = model_from_json(f.read())
+
+    # Ambil data terbaru untuk referensi last_period
+    df = get_series(metric, reg_param, witel)
+    if is_nasional:
+        df = aggregate_national(df)
+    df = df.sort_values("periode")
+
+    # Deteksi partial data
+    all_vals   = df["value"].values
+    raw_last   = float(all_vals[-1])
+    median_val = float(np.median(all_vals[:-1])) if len(all_vals) > 1 else raw_last
+    partial    = (median_val > 0 and raw_last < median_val * 0.30)
+
+    if partial and len(df) >= 2:
+        last_actual = float(df["value"].iloc[-2])
+        last_period = str(df["periode"].iloc[-2])[:7]
+        logger.warning(f"[INFERENCE] PROPHET partial data — pakai periode: {last_period}")
+    else:
+        last_actual = raw_last
+        last_period = str(df["periode"].iloc[-1])[:7]
+
+    future_ds = pd.Timestamp(last_period + "-01") + pd.DateOffset(months=1)
+    future    = pd.DataFrame({"ds": [future_ds]})
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        forecast = model.predict(future)
+
+    pred_val  = max(0.0, float(forecast["yhat"].iloc[0]))
+    ci_lower  = max(0.0, round(float(forecast["yhat_lower"].iloc[0]), 2))
+    ci_upper  = round(float(forecast["yhat_upper"].iloc[0]), 2)
+    next_period  = str(future_ds)[:7]
+    inference_ms = round((time.perf_counter() - _t_start) * 1000, 1)
+
+    logger.info(f"[INFERENCE] PROPHET {metric} {reg_display}{'/'+witel if witel else ''} → {round(pred_val,2)} | {inference_ms}ms")
+
+    return {
+        "metric":      metric,
+        "regional":    reg_display,
+        "witel":       witel,
+        "model_used":  "PROPHET",
+        "last_period": last_period,
+        "last_actual": round(last_actual, 2),
+        "forecast_period": next_period,
+        "prediction":  round(pred_val, 2),
+        "confidence_interval": {
+            "lower": ci_lower,
+            "upper": ci_upper,
+            "level": "90%",
+        },
+        "change_pct": round((pred_val - last_actual) / max(abs(last_actual), 1) * 100, 2),
+        "inference_ms": inference_ms,
+        "partial_data_warning": partial,
+    }
+
+
 def predict(
     model_type: ModelType,
     metric: str,
@@ -232,4 +320,6 @@ def predict(
     """Entry point tunggal untuk semua model."""
     if model_type == "tft":
         return predict_tft(metric, regional, witel)
+    if model_type == "prophet":
+        return predict_prophet(metric, regional, witel)
     return predict_gru_lstm(model_type, metric, regional, witel)

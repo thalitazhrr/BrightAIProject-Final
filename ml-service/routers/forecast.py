@@ -28,9 +28,9 @@ MetricType = Literal[
 
 
 class TrainRequest(BaseModel):
-    model_type: Literal["gru", "lstm", "tft"] = Field(
+    model_type: Literal["gru", "lstm", "tft", "prophet"] = Field(
         default="gru",
-        description="Jenis model: gru | lstm | tft"
+        description="Jenis model: gru | lstm | tft | prophet"
     )
     metric: MetricType = Field(
         default="order_hsi",
@@ -55,7 +55,7 @@ class TrainRequest(BaseModel):
 
 
 class PredictRequest(BaseModel):
-    model_type: Literal["gru", "lstm", "tft"] = "gru"
+    model_type: Literal["gru", "lstm", "tft", "prophet"] = "gru"
     metric: MetricType = "order_hsi"
     regional: str = Field(
         default="NASIONAL",
@@ -138,7 +138,14 @@ def train_model(req: TrainRequest, background_tasks: BackgroundTasks):
     def _run_training():
         try:
             if req.model_type == "tft":
-                raise RuntimeError("TFT tidak tersedia (pytorch_lightning tidak terinstall). Gunakan GRU atau LSTM.")
+                raise RuntimeError("TFT tidak tersedia (pytorch_lightning tidak terinstall). Gunakan GRU, LSTM, atau Prophet.")
+            elif req.model_type == "prophet":
+                from training.prophet_trainer import train_prophet
+                result = train_prophet(
+                    metric=req.metric,
+                    regional=req.regional,
+                    witel=req.witel,
+                )
             else:
                 from training.trainer import train
                 result = train(

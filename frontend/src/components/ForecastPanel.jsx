@@ -443,8 +443,8 @@ const ForecastPanel = ({ theme, onBack, onSendToChat }) => {
             {METRICS.map(m => <option key={m.value} value={m.value}>{m.label} ({m.unit})</option>)}
           </select>
           {/* Model selector */}
-          <div className="flex gap-1.5 mt-2">
-            {['', 'gru', 'lstm'].map(m => (
+          <div className="flex gap-1.5 mt-2 flex-wrap">
+            {['', 'gru', 'lstm', 'prophet'].map(m => (
               <button key={m} onClick={() => { setModelOverride(m); setResult(null); setPredictStatus(null); }}
                 className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
                   (m === '' ? modelOverride === '' : modelOverride === m)
