@@ -226,10 +226,23 @@ def train(
     scaled, scaler = prepare_series(df, scaler_path)
     # prepare_series sudah menyimpan scaler ke disk
 
+    # ── 2b. Deteksi partial data untuk evaluasi ───────────────────────────────
+    # Jika bulan terakhir < 30% median, bulan itu belum selesai → exclude dari eval
+    all_vals_raw = df["value"].values.astype(float)
+    median_raw   = float(np.median(all_vals_raw[:-1])) if len(all_vals_raw) > 1 else all_vals_raw[-1]
+    is_partial   = median_raw > 0 and all_vals_raw[-1] < median_raw * 0.30
+    if is_partial:
+        logger.warning(f"[TRAIN] Partial data terdeteksi (last={all_vals_raw[-1]:.0f} vs median={median_raw:.0f}) — exclude dari walk-forward eval")
+        scaled_eval = scaled[:-1]
+        n_eval      = n_data - 1
+    else:
+        scaled_eval = scaled
+        n_eval      = n_data
+
     # ── 3. Tentukan walk-forward test window ──────────────────────────────────
     # Gunakan min(6, ~15% data) bulan terakhir sebagai walk-forward test
-    n_test    = max(3, min(6, n_data // 7))
-    n_pretrain = n_data - n_test
+    n_test    = max(3, min(6, n_eval // 7))
+    n_pretrain = n_eval - n_test
     logger.info(f"[TRAIN] Walk-forward: {n_test} bulan terakhir sebagai test")
 
     min_needed = 3 + horizon + 4   # minimum absolute
@@ -252,7 +265,7 @@ def train(
             logger.info(f"  Mencoba window={w} ...")
             try:
                 _, vl, _ = _train_single(
-                    model_type, scaled[:n_pretrain], w, horizon,
+                    model_type, scaled_eval[:n_pretrain], w, horizon,
                     epochs=150, batch_size=batch_size, lr=lr,
                     early_stopping_patience=20,
                 )
@@ -272,7 +285,7 @@ def train(
     # ── 5. Walk-forward evaluation ─────────────────────────────────────────────
     logger.info(f"[TRAIN] Walk-forward eval ({n_test} langkah) ...")
     preds_scaled, actuals_scaled = _walk_forward_eval(
-        model_type, scaled, window_size, horizon, batch_size, lr, n_test
+        model_type, scaled_eval, window_size, horizon, batch_size, lr, n_test
     )
 
     # Konversi ke skala asli untuk metrics
@@ -411,5 +424,21 @@ def train(
 
     _history_all.append(result)
     history_path.write_text(json.dumps(_history_all, indent=2, default=str))
+
+    # Update tabel hasil internal
+    try:
+        from utils.results_writer import update_results
+        update_results(
+            model_type=model_type,
+            metric=metric,
+            regional=reg_display,
+            witel=witel,
+            val_metrics=metrics,
+            data_points=n_data,
+            n_test=n_test,
+            trained_at=result["trained_at"],
+        )
+    except Exception as e:
+        logger.warning(f"[RESULTS] Gagal update tabel hasil: {e}")
 
     return result

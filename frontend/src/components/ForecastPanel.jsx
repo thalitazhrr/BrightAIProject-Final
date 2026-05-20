@@ -80,6 +80,208 @@ Rentang kepercayaan ${ci?.level}: **${formatValue(ci?.lower, unit)} – ${format
 ${konteks}`;
 }
 
+// ─── Model Comparison Table ────────────────────────────────────────────────────
+
+const VERDICT_CONFIG = {
+  deep_learning_justified: { label: 'Deep Learning Terjustifikasi', color: 'green' },
+  baseline_sufficient:     { label: 'Baseline Sudah Cukup',         color: 'blue'  },
+  marginal_improvement:    { label: 'Perbedaan Kecil',              color: 'yellow'},
+  no_baseline_trained:     { label: 'Baseline Belum Ditraining',    color: 'gray'  },
+};
+
+const ModelComparisonTable = ({ theme, metric, regional, witel }) => {
+  const t = theme === 'dark';
+  const [open, setOpen]       = useState(false);
+  const [data, setData]       = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError]     = useState('');
+
+  const load = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await telkomApi.compareModels(metric, regional, witel || null);
+      setData(res);
+    } catch (e) {
+      setError(e.message || 'Gagal memuat perbandingan.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (open) load();
+  }, [open, metric, regional, witel]);
+
+  const rankColor = (rank, total) => {
+    if (rank === 1) return t ? 'text-green-400' : 'text-green-600';
+    if (rank === total) return t ? 'text-red-400' : 'text-red-500';
+    return t ? 'text-slate-300' : 'text-gray-700';
+  };
+
+  const categoryBadge = (cat) => cat === 'baseline'
+    ? (t ? 'bg-purple-900/40 text-purple-300' : 'bg-purple-50 text-purple-700')
+    : (t ? 'bg-blue-900/40 text-blue-300'   : 'bg-blue-50 text-blue-700');
+
+  const verdictStyle = (verdict) => {
+    const map = {
+      deep_learning_justified: t ? 'bg-green-900/30 border-green-700/50 text-green-300'  : 'bg-green-50 border-green-200 text-green-800',
+      baseline_sufficient:     t ? 'bg-blue-900/30 border-blue-700/50 text-blue-300'    : 'bg-blue-50 border-blue-200 text-blue-800',
+      marginal_improvement:    t ? 'bg-yellow-900/30 border-yellow-700/50 text-yellow-300' : 'bg-yellow-50 border-yellow-200 text-yellow-800',
+      no_baseline_trained:     t ? 'bg-slate-800/60 border-slate-600 text-slate-400'    : 'bg-gray-50 border-gray-200 text-gray-600',
+    };
+    return map[verdict] || map.no_baseline_trained;
+  };
+
+  const thCls = `px-2 py-1.5 text-left text-xs font-semibold ${t ? 'text-slate-400' : 'text-gray-500'}`;
+  const tdCls = `px-2 py-1.5 text-xs`;
+
+  return (
+    <div className={`rounded-xl border mt-3 overflow-hidden ${t ? 'border-slate-700/60' : 'border-gray-200'}`}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        className={`w-full flex items-center justify-between px-3 py-2.5 text-left transition-colors ${
+          t ? 'bg-slate-800/60 hover:bg-slate-700/60' : 'bg-gray-50 hover:bg-gray-100'
+        }`}
+      >
+        <div className="flex items-center gap-2">
+          <BarChart2 className={`w-4 h-4 ${t ? 'text-purple-400' : 'text-purple-600'}`} />
+          <span className={`text-xs font-semibold ${t ? 'text-slate-300' : 'text-gray-700'}`}>
+            Perbandingan Model (Metodologi TA)
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          {open && (
+            <button onClick={e => { e.stopPropagation(); load(); }}
+              className={`text-xs px-2 py-0.5 rounded ${t ? 'text-slate-400 hover:text-white' : 'text-gray-400 hover:text-gray-700'}`}>
+              Refresh
+            </button>
+          )}
+          {open ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+        </div>
+      </button>
+
+      {open && (
+        <div className={`${t ? 'bg-slate-900/40' : 'bg-white'}`}>
+          {loading ? (
+            <div className="flex items-center gap-2 px-3 py-4 text-xs text-slate-400">
+              <Loader className="w-3.5 h-3.5 animate-spin" /> Menghitung perbandingan...
+            </div>
+          ) : error ? (
+            <p className="px-3 py-3 text-xs text-red-400">{error}</p>
+          ) : !data || data.models.length === 0 ? (
+            <div className={`px-3 py-4 text-xs ${t ? 'text-slate-500' : 'text-gray-400'}`}>
+              <p className="font-medium mb-1">Belum ada model yang dibandingkan.</p>
+              <p>Train minimal 1 model untuk metrik + regional ini terlebih dahulu.</p>
+              <p className={`mt-2 ${t ? 'text-slate-600' : 'text-gray-300'}`}>Urutan ideal: ARIMA → Prophet → LSTM → GRU</p>
+            </div>
+          ) : (
+            <div className="px-3 py-3 space-y-3">
+
+              {/* Rekomendasi */}
+              {data.recommendation && (
+                <div className={`p-3 rounded-lg border text-xs ${verdictStyle(data.recommendation.verdict)}`}>
+                  <div className="flex items-start gap-2">
+                    <div className="flex-1">
+                      <p className="font-semibold mb-1">
+                        {VERDICT_CONFIG[data.recommendation.verdict]?.label} — {data.recommendation.winner}
+                      </p>
+                      <p className="leading-relaxed opacity-90">{data.recommendation.message}</p>
+                      {data.recommendation.skill_vs_baseline != null && (
+                        <p className="mt-1 font-medium">
+                          Skill vs baseline terbaik: {data.recommendation.skill_vs_baseline >= 0 ? '+' : ''}
+                          {(data.recommendation.skill_vs_baseline * 100).toFixed(1)}%
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Ranking table */}
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-max">
+                  <thead>
+                    <tr className={`border-b ${t ? 'border-slate-700' : 'border-gray-200'}`}>
+                      <th className={thCls}>Rank</th>
+                      <th className={thCls}>Model</th>
+                      <th className={thCls}>Kategori</th>
+                      <th className={thCls + ' text-right'}>sMAPE ↓</th>
+                      <th className={thCls + ' text-right'}>MASE ↓</th>
+                      <th className={thCls + ' text-right'}>Skill vs Naive</th>
+                      <th className={thCls + ' text-right'}>Skill vs Baseline</th>
+                      <th className={thCls + ' text-center'}>KPI</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.models.map(m => (
+                      <tr key={m.model_type}
+                        className={`border-b transition-colors ${
+                          t ? 'border-slate-800 hover:bg-slate-800/40' : 'border-gray-100 hover:bg-gray-50'
+                        } ${m.rank === 1 ? (t ? 'bg-green-900/10' : 'bg-green-50/60') : ''}`}>
+                        <td className={`${tdCls} font-bold ${rankColor(m.rank, data.models.length)}`}>
+                          {m.rank === 1 ? '🥇' : m.rank === 2 ? '🥈' : m.rank === 3 ? '🥉' : `#${m.rank}`}
+                        </td>
+                        <td className={`${tdCls} font-semibold uppercase ${t ? 'text-white' : 'text-gray-900'}`}>
+                          {m.model_type}
+                          {m.arima_meta && (
+                            <span className={`ml-1 font-normal ${t ? 'text-slate-500' : 'text-gray-400'}`}>
+                              {`(${m.arima_meta.order[0]},${m.arima_meta.order[1]},${m.arima_meta.order[2]})`}
+                              {m.arima_meta.use_seasonal ? `(${m.arima_meta.seasonal_order[0]},${m.arima_meta.seasonal_order[1]},${m.arima_meta.seasonal_order[2]},12)` : ''}
+                            </span>
+                          )}
+                        </td>
+                        <td className={tdCls}>
+                          <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${categoryBadge(m.category)}`}>
+                            {m.category}
+                          </span>
+                        </td>
+                        <td className={`${tdCls} text-right font-mono ${rankColor(m.rank, data.models.length)}`}>
+                          {m.smape.toFixed(2)}%
+                        </td>
+                        <td className={`${tdCls} text-right font-mono ${t ? 'text-slate-300' : 'text-gray-700'}`}>
+                          {m.mase.toFixed(3)}
+                        </td>
+                        <td className={`${tdCls} text-right font-mono ${
+                          m.skill_score_vs_naive > 0
+                            ? t ? 'text-green-400' : 'text-green-600'
+                            : t ? 'text-red-400' : 'text-red-500'
+                        }`}>
+                          {m.skill_score_vs_naive != null ? `${(m.skill_score_vs_naive * 100).toFixed(1)}%` : '—'}
+                        </td>
+                        <td className={`${tdCls} text-right font-mono ${
+                          m.skill_vs_best_baseline == null
+                            ? t ? 'text-slate-600' : 'text-gray-400'
+                            : m.skill_vs_best_baseline > 0
+                              ? t ? 'text-green-400' : 'text-green-600'
+                              : t ? 'text-red-400' : 'text-red-500'
+                        }`}>
+                          {m.skill_vs_best_baseline != null
+                            ? `${m.skill_vs_best_baseline >= 0 ? '+' : ''}${(m.skill_vs_best_baseline * 100).toFixed(1)}%`
+                            : m.category === 'baseline' ? '—' : 'N/A'}
+                        </td>
+                        <td className={`${tdCls} text-center`}>
+                          {m.kpi_pass ? '✅' : '❌'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Legend */}
+              <div className={`text-xs pt-1 ${t ? 'text-slate-600' : 'text-gray-400'}`}>
+                <span className="mr-3">Skill vs Naive: dibanding seasonal naive (lag-12)</span>
+                <span>Skill vs Baseline: dibanding {data.best_baseline?.toUpperCase() || 'baseline'} — metrik utama TA</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ─── Training History Table ────────────────────────────────────────────────────
 
 const HistoryTable = ({ theme }) => {
@@ -444,7 +646,7 @@ const ForecastPanel = ({ theme, onBack, onSendToChat }) => {
           </select>
           {/* Model selector */}
           <div className="flex gap-1.5 mt-2 flex-wrap">
-            {['', 'gru', 'lstm', 'prophet'].map(m => (
+            {['', 'gru', 'lstm', 'prophet', 'arima'].map(m => (
               <button key={m} onClick={() => { setModelOverride(m); setResult(null); setPredictStatus(null); }}
                 className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
                   (m === '' ? modelOverride === '' : modelOverride === m)
@@ -563,6 +765,9 @@ const ForecastPanel = ({ theme, onBack, onSendToChat }) => {
         </div>
       )}
 
+
+      {/* Model comparison table (Tugas Akhir methodology) */}
+      <ModelComparisonTable theme={theme} metric={metric} regional={regional} witel={witel} />
 
       {/* Training history table */}
       <HistoryTable theme={theme} />

@@ -1,0 +1,5 @@
+modul,level,regional,witel,data_points,n_test,MAE,RMSE,MAPE,sMAPE,MASE,Skill_vs_Naive,KPI_pass,trained_at
+churn_hsi,nasional,NASIONAL,-,40,5,2416.9299,2625.6133,21.1043,22.9724,0.5158,0.1488,True,2026-05-20 23:15:07
+order_hsi,nasional,NASIONAL,-,55,6,3431.4119,3904.083,15.1347,16.498,0.5207,0.0627,True,2026-05-20 23:43:10
+order_hsi,witel,REG-1,ACEH,42,6,137.1332,175.1882,21.0537,24.221,0.8145,-0.0171,True,2026-05-20 22:59:51
+realisasi_hsi,nasional,NASIONAL,-,25,3,5545.8306,8190.4175,460.2304,63.8844,0.4544,-0.1703,False,2026-05-15 00:30:56

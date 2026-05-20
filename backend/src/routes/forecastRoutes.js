@@ -106,4 +106,14 @@ router.delete('/training-history', auth.authenticate, (req, res) => {
   proxyToML(req, res, `/forecast/training-history?${params}`, 'DELETE');
 });
 
+/** Perbandingan semua model untuk metric+regional yang sama */
+router.get('/compare-models', auth.authenticate, (req, res) => {
+  const { metric, regional, witel } = req.query;
+  const params = new URLSearchParams();
+  if (metric)   params.set('metric',   metric);
+  if (regional) params.set('regional', regional);
+  if (witel)    params.set('witel',    witel);
+  proxyToML(req, res, `/forecast/compare-models?${params}`);
+});
+
 module.exports = router;

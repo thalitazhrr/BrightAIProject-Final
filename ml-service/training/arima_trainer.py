@@ -1,16 +1,20 @@
 """
-training/prophet_trainer.py
-Training Prophet sebagai baseline model dengan walk-forward validation.
+training/arima_trainer.py
+Training SARIMA (Seasonal ARIMA) sebagai baseline model ke-2.
 
-Prophet = model additif: y(t) = g(t) + s(t) + h(t) + ε
-  - g(t): trend piecewise linear dengan changepoints otomatis
-  - s(t): seasonality tahunan (Fourier series)
-  - h(t): efek hari libur (Idul Fitri, Idul Adha)
+auto_arima dari pmdarima otomatis memilih parameter (p,d,q)(P,D,Q)m terbaik
+berdasarkan AIC — tidak perlu tuning manual.
+
+Untuk data bulanan telekomunikasi:
+  - m = 12 (seasonality tahunan)
+  - seasonal=True jika data >= 24 bulan, False jika lebih pendek
+  - Walk-forward validation (sama seperti Prophet dan GRU/LSTM)
 """
 from __future__ import annotations
 
 import json
 import logging
+import pickle
 import warnings
 from datetime import datetime
 from pathlib import Path
@@ -30,83 +34,70 @@ logger = logging.getLogger(__name__)
 
 def _model_tag(metric: str, regional: str, witel: Optional[str]) -> str:
     reg_part = regional.lower().replace("-", "").replace(" ", "_")
-    tag = f"prophet_{metric}_{reg_part}"
+    tag = f"arima_{metric}_{reg_part}"
     if witel:
         tag += f"_{witel.lower().replace(' ', '_')}"
     return tag
 
 
 def _model_path(metric: str, regional: str, witel: Optional[str] = None) -> Path:
-    return config.SAVED_MODELS_DIR / f"{_model_tag(metric, regional, witel)}.json"
+    return config.SAVED_MODELS_DIR / f"{_model_tag(metric, regional, witel)}.pkl"
 
 
-def _make_prophet_df(df: pd.DataFrame) -> pd.DataFrame:
-    """Convert Oracle df → Prophet format: ds (datetime), y (value)."""
-    return pd.DataFrame({
-        "ds": pd.to_datetime(df["periode"].astype(str).str[:7] + "-01"),
-        "y":  df["value"].astype(float).values,
-    }).sort_values("ds").reset_index(drop=True)
-
-
-def _indonesian_holidays() -> pd.DataFrame:
-    """Idul Fitri dan Idul Adha 2018–2028 sebagai holiday effects."""
-    lebaran = [
-        "2018-06-15", "2019-06-05", "2020-05-24", "2021-05-13",
-        "2022-05-02", "2023-04-21", "2024-04-10", "2025-03-30",
-        "2026-03-20", "2027-03-09", "2028-02-27",
-    ]
-    idul_adha = [
-        "2018-08-22", "2019-08-11", "2020-07-31", "2021-07-20",
-        "2022-07-09", "2023-06-28", "2024-06-17", "2025-06-06",
-        "2026-05-26", "2027-05-16", "2028-05-04",
-    ]
-    rows = (
-        [{"holiday": "lebaran",    "ds": d, "lower_window": -2, "upper_window": 3} for d in lebaran] +
-        [{"holiday": "idul_adha",  "ds": d, "lower_window": -1, "upper_window": 2} for d in idul_adha]
-    )
-    df = pd.DataFrame(rows)
-    df["ds"] = pd.to_datetime(df["ds"])
-    return df
-
-
-def _build_prophet(n_data: int):
+def _fit_arima(y: np.ndarray, seasonal: bool):
     """
-    Buat Prophet model dengan konfigurasi telecom monthly Indonesia.
-    Gunakan multiplicative jika data >= 24 bulan (lebih stabil untuk tren bertumbuh).
+    Fit auto_arima pada array y.
+    Mengembalikan model pmdarima yang sudah di-fit.
     """
-    from prophet import Prophet
-    mode = "multiplicative" if n_data >= 24 else "additive"
-    return Prophet(
-        yearly_seasonality=True,
-        weekly_seasonality=False,
-        daily_seasonality=False,
-        seasonality_mode=mode,
-        changepoint_prior_scale=0.05,
-        seasonality_prior_scale=10.0,
-        interval_width=0.90,
-        holidays=_indonesian_holidays(),
-    )
+    import pmdarima as pm
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        model = pm.auto_arima(
+            y,
+            seasonal=seasonal,
+            m=12,
+            start_p=0, start_q=0, max_p=3, max_q=3,
+            start_P=0, start_Q=0, max_P=1, max_Q=1,
+            d=None, D=None,                     # auto-detect differencing
+            seasonal_test="ch",                 # Canova-Hansen, lebih robust untuk series pendek vs OCSB default
+            information_criterion="aic",
+            stepwise=True,                       # jauh lebih cepat dari grid search
+            suppress_warnings=True,
+            error_action="ignore",
+        )
+    return model
+
+
+def _predict_one(model, alpha: float = 0.10) -> tuple[float, float, float]:
+    """Prediksi 1 langkah ke depan beserta confidence interval."""
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        preds, conf = model.predict(n_periods=1, return_conf_int=True, alpha=alpha)
+    yhat  = max(0.0, float(preds[0]))
+    lower = max(0.0, float(conf[0][0]))
+    upper = float(conf[0][1])
+    return yhat, lower, upper
 
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 
-def train_prophet(
+def train_arima(
     metric: str,
     regional: str = "NASIONAL",
     witel: Optional[str] = None,
 ) -> dict:
     """
-    Latih Prophet dengan walk-forward validation → simpan model .json.
-    Fungsi ini mengikuti output format yang sama dengan training/trainer.py.
+    Latih SARIMA dengan auto_arima + walk-forward validation → simpan model .pkl.
+    Output format identik dengan prophet_trainer dan trainer (GRU/LSTM).
     """
     try:
-        from prophet.serialize import model_to_json  # noqa: F401
+        import pmdarima as pm  # noqa: F401
     except ImportError:
-        raise RuntimeError("prophet tidak terinstall. Jalankan: pip install prophet")
+        raise RuntimeError("pmdarima tidak terinstall. Jalankan: pip install pmdarima")
 
     reg_display = regional_display(regional)
     log_scope   = reg_display + (f" / {witel}" if witel else "")
-    logger.info(f"[PROPHET] Training | {metric} | {log_scope}")
+    logger.info(f"[ARIMA] Training | {metric} | {log_scope}")
 
     is_nasional = regional.upper() == "NASIONAL" and not witel
     reg_param   = None if is_nasional else regional
@@ -118,66 +109,60 @@ def train_prophet(
 
     df     = df.sort_values("periode")
     n_data = len(df)
-    logger.info(f"[PROPHET] {n_data} bulan data tersedia")
+    logger.info(f"[ARIMA] {n_data} bulan data tersedia")
 
-    if n_data < 12:
-        raise ValueError(f"Data terlalu sedikit untuk Prophet: {n_data} baris (butuh min 12)")
+    if n_data < 6:
+        raise ValueError(f"Data terlalu sedikit untuk ARIMA: {n_data} baris (butuh min 6)")
 
-    prophet_df = _make_prophet_df(df)
+    y_all   = df["value"].values.astype(float)
+    # Gunakan SARIMA hanya jika data cukup untuk seasonal differencing (min 2 siklus = 24 bln)
+    use_seasonal = (n_data >= 24)
+    logger.info(f"[ARIMA] Mode: {'SARIMA(m=12)' if use_seasonal else 'ARIMA (non-seasonal)'}")
 
     # Deteksi partial data — exclude bulan terakhir dari walk-forward eval jika belum selesai
-    y_vals     = df["value"].values.astype(float)
-    median_raw = float(np.median(y_vals[:-1])) if len(y_vals) > 1 else y_vals[-1]
-    is_partial = median_raw > 0 and y_vals[-1] < median_raw * 0.30
+    median_raw = float(np.median(y_all[:-1])) if len(y_all) > 1 else y_all[-1]
+    is_partial = median_raw > 0 and y_all[-1] < median_raw * 0.30
     if is_partial:
-        logger.warning(f"[PROPHET] Partial data terdeteksi (last={y_vals[-1]:.0f} vs median={median_raw:.0f}) — exclude dari walk-forward eval")
-        prophet_eval = prophet_df.iloc[:-1].reset_index(drop=True)
-        n_eval       = n_data - 1
+        logger.warning(f"[ARIMA] Partial data terdeteksi (last={y_all[-1]:.0f} vs median={median_raw:.0f}) — exclude dari walk-forward eval")
+        y_eval = y_all[:-1]
+        n_eval = n_data - 1
     else:
-        prophet_eval = prophet_df
-        n_eval       = n_data
+        y_eval = y_all
+        n_eval = n_data
 
     # ── 2. Walk-forward evaluation ─────────────────────────────────────────────
     n_test = max(3, min(6, n_eval // 7))
-    logger.info(f"[PROPHET] Walk-forward: {n_test} langkah")
+    logger.info(f"[ARIMA] Walk-forward: {n_test} langkah")
 
     preds, actuals = [], []
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        for i in range(n_test):
-            train_end = n_eval - n_test + i
-            if train_end < 6:
-                continue
-            train_df = prophet_eval.iloc[:train_end].copy()
-            model = _build_prophet(len(train_df))
-            model.fit(train_df)
-
-            next_ds  = train_df["ds"].max() + pd.DateOffset(months=1)
-            forecast = model.predict(pd.DataFrame({"ds": [next_ds]}))
-
-            preds.append(float(forecast["yhat"].iloc[0]))
-            actuals.append(float(prophet_eval["y"].iloc[train_end]))
+    for i in range(n_test):
+        train_end = n_eval - n_test + i
+        if train_end < 6:
+            continue
+        train_y = y_eval[:train_end]
+        model   = _fit_arima(train_y, seasonal=use_seasonal)
+        yhat, _, _ = _predict_one(model)
+        preds.append(yhat)
+        actuals.append(float(y_eval[train_end]))
+        logger.info(f"[ARIMA]   step {i+1}/{n_test} order={model.order} seasonal={model.seasonal_order} → {yhat:.2f} (actual={y_eval[train_end]:.2f})")
 
     preds_arr   = np.array(preds, dtype=np.float32)
     actuals_arr = np.array(actuals, dtype=np.float32)
-    y_all_real  = df["value"].values.astype(np.float32)
 
-    metrics = all_metrics(actuals_arr, preds_arr, y_train=y_all_real, m=12)
-    logger.info(f"[PROPHET] Metrics: {metrics}")
+    metrics = all_metrics(actuals_arr, preds_arr, y_train=y_eval.astype(np.float32), m=12)
+    logger.info(f"[ARIMA] Metrics: {metrics}")
 
     kpi = metrics.get("kpi", {})
     logger.info(
-        f"[PROPHET] KPI — MASE<1: {kpi.get('mase_ok','?')} | "
+        f"[ARIMA] KPI — MASE<1: {kpi.get('mase_ok','?')} | "
         f"sMAPE<30%: {kpi.get('smape_short_ok','?')} | "
         f"Skill>-0.1: {kpi.get('skill_ok','?')}"
     )
 
     # ── 3. Final model pada semua data ─────────────────────────────────────────
-    logger.info(f"[PROPHET] Training final model ({n_data} bulan) ...")
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        final_model = _build_prophet(n_data)
-        final_model.fit(prophet_df)
+    logger.info(f"[ARIMA] Training final model ({n_data} bulan) ...")
+    final_model = _fit_arima(y_all, seasonal=use_seasonal)
+    logger.info(f"[ARIMA] Final order={final_model.order} seasonal={final_model.seasonal_order}")
 
     # ── 4. Benchmark vs history ────────────────────────────────────────────────
     model_path   = _model_path(metric, reg_display, witel)
@@ -196,7 +181,7 @@ def train_prophet(
     prev_best = None
     for h in _hist_all:
         if (h.get("metric") == metric
-                and h.get("model_type") == "prophet"
+                and h.get("model_type") == "arima"
                 and h.get("regional") == reg_display
                 and h.get("witel") == witel
                 and h.get("val_metrics")
@@ -220,14 +205,13 @@ def train_prophet(
         is_best = (curr_smape, -curr_skill) < (pb_smape, -pb_skill)
 
     if is_best:
-        from prophet.serialize import model_to_json
-        model_path.write_text(model_to_json(final_model), encoding="utf-8")
+        model_path.write_bytes(pickle.dumps(final_model))
         logger.info(
-            f"[PROPHET] ✅ Model disimpan: {model_path.name}"
+            f"[ARIMA] ✅ Model disimpan: {model_path.name}"
             + (f" (sMAPE {curr_smape:.2f}% vs prev {benchmark['prev_smape']:.2f}%)" if benchmark else "")
         )
     else:
-        logger.info(f"[PROPHET] ⏭ Model lama lebih baik — tidak overwrite {model_path.name}")
+        logger.info(f"[ARIMA] ⏭ Model lama lebih baik — tidak overwrite {model_path.name}")
 
     # ── 5. Prediksi bulan berikutnya ──────────────────────────────────────────
     all_vals   = df["value"].values
@@ -238,27 +222,26 @@ def train_prophet(
     if partial and len(df) >= 2:
         last_actual = float(df["value"].iloc[-2])
         last_period = str(df["periode"].iloc[-2])[:7]
-        logger.warning(f"[PROPHET] Partial data terdeteksi — referensi: {last_period}")
+        logger.warning(f"[ARIMA] Partial data terdeteksi — referensi: {last_period}")
     else:
         last_actual = raw_last
         last_period = str(df["periode"].iloc[-1])[:7]
 
-    last_ds    = prophet_df["ds"].max()
-    future_ds  = last_ds + pd.DateOffset(months=1)
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        forecast = final_model.predict(pd.DataFrame({"ds": [future_ds]}))
-
-    pred_val  = max(0.0, float(forecast["yhat"].iloc[0]))
-    ci_lower  = max(0.0, round(float(forecast["yhat_lower"].iloc[0]), 2))
-    ci_upper  = round(float(forecast["yhat_upper"].iloc[0]), 2)
-    next_period = str(future_ds)[:7]
+    pred_val, ci_lower, ci_upper = _predict_one(final_model, alpha=0.10)
+    next_period = str(pd.Timestamp(last_period + "-01") + pd.DateOffset(months=1))[:7]
     change_pct  = round((pred_val - last_actual) / max(abs(last_actual), 1) * 100, 2)
+
+    arima_meta = {
+        "order":         list(final_model.order),
+        "seasonal_order": list(final_model.seasonal_order),
+        "aic":           round(float(final_model.aic()), 2),
+        "use_seasonal":  use_seasonal,
+    }
 
     # ── 6. Simpan history ──────────────────────────────────────────────────────
     result = {
         "status":          "success",
-        "model_type":      "prophet",
+        "model_type":      "arima",
         "metric":          metric,
         "regional":        reg_display,
         "witel":           witel,
@@ -268,6 +251,7 @@ def train_prophet(
         "auto_tuned":      True,
         "epochs_run":      None,
         "eval_method":     "walk-forward",
+        "arima_meta":      arima_meta,
         "last_period":     last_period,
         "last_actual":     round(last_actual, 2),
         "forecast_period": next_period,
@@ -287,7 +271,7 @@ def train_prophet(
     try:
         from utils.results_writer import update_results
         update_results(
-            model_type="prophet",
+            model_type="arima",
             metric=metric,
             regional=reg_display,
             witel=witel,

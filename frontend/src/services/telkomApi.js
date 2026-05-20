@@ -605,6 +605,12 @@ class TelkomApiService {
     return this._forecastCall(`/training-history?${params}`, { method: 'DELETE' });
   }
 
+  async compareModels(metric, regional = 'NASIONAL', witel = null) {
+    const params = new URLSearchParams({ metric, regional });
+    if (witel) params.append('witel', witel);
+    return this._forecastCall(`/compare-models?${params}`);
+  }
+
   // ===== UTILITY ENDPOINTS =====
 
   // Get available filter options
