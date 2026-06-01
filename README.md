@@ -1,246 +1,284 @@
-# Telkom HSI BrightAI Platform
+# BrightAI — Business Intelligence Chatbot
 
-**AI-Powered HSI Analytics & Intelligence Dashboard untuk Telkom**
+**Rule-based BI Chatbot with Natural Language Generation & Time Series Forecasting**
 
-## 📋 Overview
+## Overview
 
-Platform **BrightAI** adalah solusi analytics dan intelligence untuk manajemen HSI (High Speed Internet) Telkom yang menggabungkan:
+BrightAI is a Business Intelligence system built as an interactive chatbot that allows internal users to query enterprise data using natural Indonesian language. The system combines:
 
-- **📊 Real-time Dashboard** - Monitoring performa HSI
-- **🤖 AI Assistant** - Analisis data dengan natural language  
-- **🔐 Secure Authentication** - Bcrypt + JWT authentication
-- **⚡ Optimized Performance** - Fast response dengan database integration
+- **🤖 Rule-Based Chatbot** — 30+ analytic rules across 5 business data domains
+- **📊 Natural Language Generation** — Template-based NLG that converts SQL results into Indonesian narrative
+- **📈 Time Series Forecasting** — GRU & LSTM deep learning models for business metric prediction
+- **🔐 Secure Authentication** — JWT + bcrypt with rate limiting and security middleware
 
 ---
 
-## ✨ Fitur Utama
+## Architecture
 
-### 🏢 BrightInsight Dashboard
-- Overview statistics (total orders, completion rate, regional coverage)
-- Regional performance analysis dengan completion rate
-- Package analytics dan trending paket IndiHome
-- Real-time charts dan visualisasi data
+```
+┌──────────────┐     ┌───────────────────┐     ┌──────────────────┐
+│   Frontend   │────▶│     Backend       │────▶│   ML Service     │
+│  React.js    │◀────│  Node.js/Express  │◀────│  FastAPI/PyTorch  │
+│  :3000       │     │  :3001            │     │  :8000           │
+└──────────────┘     └────────┬──────────┘     └────────┬─────────┘
+                              │                         │
+                              ▼                         ▼
+                     ┌────────────────────────────────────────────┐
+                     │           Oracle Database (DWH)            │
+                     │  User data · Chat history · Analytics data │
+                     └────────────────────────────────────────────┘
+```
 
-### 🤖 BrightAI Assistant  
-- Natural language chat dalam bahasa Indonesia
-- Smart analytics dan insight otomatis dari data HSI
-- Contextual responses berdasarkan data real-time
-- Multi-session chat support dengan database
+**Three-tier architecture:**
 
-### 🔒 Security Features
-- Environment variables untuk JWT secrets
-- Token-based authentication dengan secure expiry
-- Input validation dan error handling
+| Layer | Technology | Port | Role |
+|-------|-----------|------|------|
+| Frontend | React.js 18, Tailwind CSS | 3000 | Chat UI, Forecast Panel, Guided Flow |
+| Backend | Node.js, Express.js | 3001 | Rule engine, Intent classification, NLG, Auth |
+| ML Service | Python, FastAPI, PyTorch | 8000 | GRU/LSTM training & inference |
+
+---
+
+## Project Structure
+
+```
+BrightAIProject-Final/
+├── README.md
+│
+├── backend/                        # Node.js/Express API Server
+│   ├── server.js                   # Entry point: Express init, middleware, routes
+│   ├── config/
+│   │   └── database.js             # Oracle connection pool & query executor
+│   ├── src/
+│   │   ├── controllers/
+│   │   │   ├── authController.js   # Register, login, profile management
+│   │   │   └── chatController.js   # Chat message handling & rule dispatch
+│   │   ├── models/                 # User, ChatHistory, Session models
+│   │   ├── routes/
+│   │   │   ├── authRoutes.js       # /api/auth/*
+│   │   │   ├── chatRoutes.js       # /api/chat/*
+│   │   │   ├── forecastRoutes.js   # /api/forecast/* (proxy to ML)
+│   │   │   └── sessionRoutes.js    # /api/sessions/*
+│   │   ├── rules/
+│   │   │   ├── engine/
+│   │   │   │   ├── ruleEngine.js         # Core rule execution & geo-filter injection
+│   │   │   │   ├── queryProcessor.js     # Rule matching & keyword scoring
+│   │   │   │   ├── intentClassifier.js   # Weighted keyword intent classification
+│   │   │   │   ├── responseBuilder.js    # Response formatting
+│   │   │   │   ├── nlgGenerator.js       # NLG orchestration
+│   │   │   │   └── templateLibrary.js    # Response templates per intent
+│   │   │   ├── databases/               # Rule definitions per domain
+│   │   │   └── config/                  # Rule registry & table mappings
+│   │   ├── middleware/             # JWT auth middleware
+│   │   └── utils/                  # Logger, cache, helpers
+│   └── package.json
+│
+├── ml-service/                     # Python FastAPI ML Microservice
+│   ├── main.py                     # FastAPI app, CORS, lifespan
+│   ├── config.py                   # Oracle credentials, hyperparameters, paths
+│   ├── routers/
+│   │   └── forecast.py             # Train & predict API endpoints
+│   ├── models/
+│   │   ├── gru_model.py            # GRU architecture (torch.nn.Module)
+│   │   └── lstm_model.py           # LSTM architecture (torch.nn.Module)
+│   ├── training/
+│   │   └── trainer.py              # Walk-forward validation, auto-tune, benchmarking
+│   ├── inference/
+│   │   └── predictor.py            # Real-time prediction pipeline
+│   ├── utils/
+│   │   ├── preprocessing.py        # MinMaxScaler, sliding window, data split
+│   │   └── metrics.py              # MAE, RMSE, sMAPE, MASE, Skill Score
+│   ├── saved_models/               # Trained .pth models & .pkl scalers
+│   └── requirements.txt
+│
+├── frontend/                       # React.js Frontend
+│   ├── src/
+│   │   ├── App.jsx                 # Main app: chat, auth, navigation
+│   │   ├── components/
+│   │   │   ├── Login.jsx           # Auth: login & registration
+│   │   │   ├── ChatHistory.jsx     # Session list, search, delete
+│   │   │   ├── ForecastPanel.jsx   # Forecast: metric/model/region selection
+│   │   │   └── GuidedFlow.jsx      # Step-by-step guided analytics
+│   │   ├── services/               # API client (axios)
+│   │   └── utils/                  # Helpers
+│   └── package.json
+│
+└── LaporanTA_18222023/             # Thesis Report (LaTeX)
+```
 
 ---
 
 ## Quick Start
 
 ### Prerequisites
-- **Node.js** 18+
-- **PostgreSQL** (optional, untuk fitur database)
 
-### 1. Clone & Install
-```bash
-git clone <repository-url>
-cd BrightAIProject
-npm run install-all
-```
+- **Node.js** ≥ 16
+- **Python** ≥ 3.9
+- **Oracle Database** (with DWH schema access)
 
-### 2. Setup Environment
-```bash
-# Backend
-cd backend
-cp .env.example .env
-# Edit .env dengan konfigurasi database Anda
+### 1. Backend
 
-# Frontend  
-cd ../frontend
-cp .env.example .env
-cd ..
-```
-
-### 3. Jalankan Aplikasi
-```bash
-# Start both servers
-npm run dev
-```
-
-### 4. Akses Aplikasi
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:3001
-- **Health Check**: http://localhost:3001/health
-
----
-
-## 🔑 Default Login
-
-```
-👤 Admin Account:
-   Username: admin
-   Password: admin123
-```
-
-**⚠️ Ganti credentials ini di production!**
-
----
-
-## 📁 Struktur Project
-
-```
-BrightAIProject/
-├── README.md
-├── package.json
-├── backend/                 # Express.js API Server
-│   ├── .env                # Environment variables
-│   ├── server.js           # Main server file
-│   └── src/
-│       ├── config/         # Database config
-│       ├── models/         # Data models (User, Chat)
-│       └── middleware/     # Authentication middleware
-│
-├── frontend/               # React Frontend
-│   ├── src/
-│   │   ├── App.jsx        # Main component
-│   │   ├── components/    # UI components
-│   │   └── services/      # API services
-│   └── public/
-│
-└── data/                  # Sample HSI data
-    └── SALES_ORDER.xlsx
-```
-
-### Frontend (.env)
-```bash
-REACT_APP_API_URL=http://localhost:3001
-PORT=3000
-```
-
----
-
-## 🌐 API Endpoints
-
-### Authentication
-- `POST /api/auth/login` - User login
-- `POST /api/auth/register` - User registration
-- `GET /api/auth/verify` - Token verification
-
-### Dashboard
-- `GET /api/telkom/dashboard/data` - Dashboard data
-- `GET /api/telkom/health` - Health check
-
-### AI Chat
-- `POST /api/ai/chat` - Send message to AI
-- `GET /api/chats` - Get user chats
-- `POST /api/chats` - Create new chat
-- `GET /api/chats/:id/messages` - Get chat messages
-- `POST /api/chats/:id/messages` - Add message
-
----
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**❌ "JWT_SECRET not configured"**
 ```bash
 cd backend
-echo 'JWT_SECRET=your-secret-key-here' >> .env
+cp .env.example .env    # Configure Oracle DB credentials & JWT secret
+npm install
+npm start               # Starts on :3001
 ```
 
-**❌ Database connection failed**
-- Pastikan PostgreSQL berjalan
-- Cek credentials di `.env` file
-- Server tetap akan jalan tanpa database (mode fallback)
-
-**❌ "Network Error" di frontend**
-```bash
-# Pastikan backend berjalan
-curl http://localhost:3001/health
+**Required `.env` variables:**
+```env
+PORT=3001
+JWT_SECRET=your-secret-key
+ORACLE_USER=your_user
+ORACLE_PASSWORD=your_password
+ORACLE_CONNECT_STRING=your_host:1521/your_service
 ```
 
-**❌ Port sudah digunakan**
+### 2. ML Service
+
 ```bash
-# Hentikan proses yang ada
-pkill -f "node.*server"
-# Atau ganti port di .env
+cd ml-service
+python -m venv .venv
+source .venv/bin/activate       # macOS/Linux
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+```
+
+### 3. Frontend
+
+```bash
+cd frontend
+npm install
+npm start               # Starts on :3000
+```
+
+### 4. Access
+
+| Service | URL |
+|---------|-----|
+| Frontend | http://localhost:3000 |
+| Backend API | http://localhost:3001 |
+| ML Service (Swagger) | http://localhost:8000/docs |
+| Health Check | http://localhost:3001/api/telkom/health |
+
+---
+
+## API Endpoints
+
+### Authentication (`/api/auth`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | Register new user |
+| POST | `/api/auth/login` | Login & receive JWT token |
+| GET | `/api/auth/profile` | Get user profile (auth required) |
+| PUT | `/api/auth/profile` | Update user profile |
+| PUT | `/api/auth/password` | Change password |
+
+### Chat (`/api/chat`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/chat/message` | Send message to chatbot |
+| GET | `/api/chat/history` | Get conversation history |
+| GET | `/api/chat/session/:id` | Get messages in a session |
+| DELETE | `/api/chat/history` | Clear chat history |
+| GET | `/api/chat/capabilities` | List available rules & capabilities |
+
+### Sessions (`/api/sessions`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/sessions` | List all chat sessions |
+
+### Forecast (`/api/forecast`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/forecast/*` | Proxy to ML Service (train/predict) |
+
+### ML Service Direct (`localhost:8000`)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/forecast/train` | Train a GRU/LSTM model |
+| POST | `/forecast/predict` | Run prediction with saved model |
+| GET | `/forecast/models` | List available trained models |
+| GET | `/health` | ML service health check |
+
+---
+
+## Key Features
+
+### Rule Engine
+- 30+ analytic rules across 5 domains: **Sales**, **Revenue**, **Target**, **Customer Data (Dapros)**, **Churn (CT0)**
+- Dynamic geographic filter injection (regional & witel)
+- MD5-based query result caching (30 min TTL)
+
+### Intent Classification
+- 7 intents: `quantity`, `trend`, `comparison`, `location`, `reason`, `performance`, `detail`
+- 8 focus areas: `order`, `revenue`, `churn`, `fulfillment`, `subscriber`, `bundling`, `digital`, `target`
+- Sub-millisecond classification latency
+
+### NLG (Natural Language Generation)
+- Template-based responses in Indonesian Markdown
+- 3+ template variations per intent to avoid monotony
+- 100% factual accuracy (all numbers from DB, no hallucination)
+
+### Time Series Forecasting
+- **Models**: GRU, LSTM (2-layer stacked, hidden_size=64, dropout=0.2)
+- **Training**: Walk-forward validation, early stopping, auto-tune window size
+- **Evaluation**: MAE, RMSE, sMAPE, MASE, Skill Score with KPI thresholds
+- **Benchmarking**: New model only saved if it beats the previous best
+
+---
+
+## Security
+
+- **Helmet** — HTTP security headers
+- **CORS** — Configurable cross-origin policy
+- **Rate Limiter** — 100 requests / 15 min per IP
+- **JWT** — 24h token expiry, issuer validation
+- **bcrypt** — 10 salt rounds for password hashing
+- **Input Validation** — `express-validator` on all auth endpoints
+
+---
+
+## Tech Stack
+
+| Component | Technology |
+|-----------|-----------|
+| Frontend | React.js 18, Tailwind CSS |
+| Backend | Node.js, Express.js |
+| ML Service | Python, FastAPI, PyTorch |
+| Database | Oracle Database (DWH) |
+| Auth | JWT, bcrypt |
+| DB Driver | node-oracledb, oracledb (Python) |
+| Data Processing | Pandas, NumPy, Scikit-learn |
+
+---
+
+## Troubleshooting
+
+**Oracle Thick mode warning**
+```
+This is normal if Oracle Instant Client is not installed locally.
+The app falls back to Thin mode automatically.
+```
+
+**Port already in use**
+```bash
+# Find and kill the process
+lsof -i :3001    # or :8000, :3000
+kill -9 <PID>
+```
+
+**ML Service can't connect to Oracle**
+```bash
+# Ensure Oracle DB credentials are set in ml-service/config.py
+# or via environment variables
 ```
 
 ---
 
-## 📚 Development Commands
-
-### Root Commands
-```bash
-npm run dev            # Start both servers  
-npm run install-all    # Install all dependencies
-npm run backend        # Start backend only
-npm run frontend       # Start frontend only
-```
-
-### Backend Commands
-```bash
-npm start              # Start production server
-npm run dev            # Start dengan nodemon
-```
-
-### Frontend Commands  
-```bash
-npm start              # Start development server
-npm run build          # Build for production
-```
-
----
-
-## 🔄 Database Setup (Optional)
-
-Jika ingin menggunakan database PostgreSQL:
-
-### 1. Install PostgreSQL
-```bash
-# Ubuntu/Debian
-sudo apt install postgresql postgresql-contrib
-
-# macOS
-brew install postgresql
-```
-
-### 2. Create Database
-```sql
-CREATE DATABASE telkom_brightai_db;
-CREATE USER postgres WITH PASSWORD 'your-password';
-GRANT ALL PRIVILEGES ON DATABASE telkom_brightai_db TO postgres;
-```
-
-### 3. Update Environment
-```bash
-# Update backend/.env dengan credentials database Anda
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=telkom_brightai_db  
-DB_USER=postgres
-DB_PASSWORD=your-password
-```
-
-**💡 Note**: Aplikasi akan otomatis membuat tabel yang diperlukan saat startup.
-
----
-
-## 🛡️ Security Notes
-
-1. **Environment Variables**: Jangan commit file `.env` ke repository
-2. **Production**: Ganti semua default passwords dan secrets
-3. **Database**: Gunakan credentials yang kuat untuk database
-4. **JWT**: Set expiry time yang sesuai dengan kebutuhan
-
----
-
-## 📞 Support
-
-Untuk issue atau pertanyaan:
-- Buka GitHub Issues di repository ini
-- Contact: HSI Development Team
-
----
-
-*AI-Powered HSI Analytics Platform untuk Telkom Indonesia*
+*BrightAI — Business Intelligence Chatbot Platform*
