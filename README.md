@@ -8,7 +8,7 @@ BrightAI is a Business Intelligence system built as an interactive chatbot that 
 
 - **🤖 Rule-Based Chatbot** — 30+ analytic rules across 5 business data domains
 - **📊 Natural Language Generation** — Template-based NLG that converts SQL results into Indonesian narrative
-- **📈 Time Series Forecasting** — GRU & LSTM deep learning models for business metric prediction
+- **📈 Time Series Forecasting** — GRU, LSTM, ARIMA (SARIMA), & Prophet models for business metric prediction
 - **🔐 Secure Authentication** — JWT + bcrypt with rate limiting and security middleware
 
 ---
@@ -35,7 +35,7 @@ BrightAI is a Business Intelligence system built as an interactive chatbot that 
 |-------|-----------|------|------|
 | Frontend | React.js 18, Tailwind CSS | 3000 | Chat UI, Forecast Panel, Guided Flow |
 | Backend | Node.js, Express.js | 3001 | Rule engine, Intent classification, NLG, Auth |
-| ML Service | Python, FastAPI, PyTorch | 8000 | GRU/LSTM training & inference |
+| ML Service | Python, FastAPI, PyTorch | 8000 | GRU/LSTM/ARIMA/Prophet training & inference |
 
 ---
 
@@ -82,13 +82,15 @@ BrightAIProject-Final/
 │   │   ├── gru_model.py            # GRU architecture (torch.nn.Module)
 │   │   └── lstm_model.py           # LSTM architecture (torch.nn.Module)
 │   ├── training/
-│   │   └── trainer.py              # Walk-forward validation, auto-tune, benchmarking
+│   │   ├── trainer.py              # GRU/LSTM walk-forward training
+│   │   ├── arima_trainer.py        # SARIMA via pmdarima (auto_arima)
+│   │   └── prophet_trainer.py      # Prophet forecasting
 │   ├── inference/
 │   │   └── predictor.py            # Real-time prediction pipeline
 │   ├── utils/
 │   │   ├── preprocessing.py        # MinMaxScaler, sliding window, data split
 │   │   └── metrics.py              # MAE, RMSE, sMAPE, MASE, Skill Score
-│   ├── saved_models/               # Trained .pth models & .pkl scalers
+│   ├── saved_models/               # Trained models (.pth, .pkl, .json) — 700+ files
 │   └── requirements.txt
 │
 ├── frontend/                       # React.js Frontend
@@ -201,7 +203,7 @@ npm start               # Starts on :3000
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/forecast/train` | Train a GRU/LSTM model |
+| POST | `/forecast/train` | Train a GRU/LSTM/ARIMA/Prophet model |
 | POST | `/forecast/predict` | Run prediction with saved model |
 | GET | `/forecast/models` | List available trained models |
 | GET | `/health` | ML service health check |
@@ -226,10 +228,12 @@ npm start               # Starts on :3000
 - 100% factual accuracy (all numbers from DB, no hallucination)
 
 ### Time Series Forecasting
-- **Models**: GRU, LSTM (2-layer stacked, hidden_size=64, dropout=0.2)
+- **Deep Learning**: GRU, LSTM (2-layer stacked, hidden_size=64, dropout=0.2)
+- **Statistical**: ARIMA/SARIMA via `pmdarima` (auto_arima with AIC), Prophet
 - **Training**: Walk-forward validation, early stopping, auto-tune window size
 - **Evaluation**: MAE, RMSE, sMAPE, MASE, Skill Score with KPI thresholds
 - **Benchmarking**: New model only saved if it beats the previous best
+- **Scale**: 700+ pre-trained models across all metrics, regions, and witel
 
 ---
 
@@ -250,7 +254,7 @@ npm start               # Starts on :3000
 |-----------|-----------|
 | Frontend | React.js 18, Tailwind CSS |
 | Backend | Node.js, Express.js |
-| ML Service | Python, FastAPI, PyTorch |
+| ML Service | Python, FastAPI, PyTorch, pmdarima, Prophet |
 | Database | Oracle Database (DWH) |
 | Auth | JWT, bcrypt |
 | DB Driver | node-oracledb, oracledb (Python) |
