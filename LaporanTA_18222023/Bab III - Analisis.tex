@@ -1,0 +1,1438 @@
+% % ============================================================================================
+% % BAB III ANALISIS MASALAH
+% % Pembagian subbab tidak rigid dan dapat bervariasi. Bab ini minimal berisi analisis kebutuhan
+% % fungsional dan nonfungsional, analisis berbagai alternatif solusi yang dapat ditawarkan, dan
+% % metode pemilihan solusi yang diusulkan.
+% % ============================================================================================
+% \chapter{ANALISIS MASALAH}
+% \label{chap:analisis-masalah}
+% \section{Analisis Kondisi Saat Ini}
+% Menurut \textcite{laudon2020}, gambarkan terlebih dahulu model konseptual sistem yang ada saat ini. Model konseptual ini berisi berbagai komponen atau subsitem dan interaksi antarsubsistem tersebut. Setelah itu, berikan penjelasan tentang masalah yang ada pada sistem tersebut. Paragraf berikut berisi contoh penjabaran masalah sistem informasi fasilitas kesehatan untuk pasien \autocite{pressman2019}. 
+% \section{Analisis Kebutuhan}
+% \lipsum[4]
+% \subsection{Identifikasi Masalah Pengguna}
+% \lipsum[5]
+% \subsection{Kebutuhan Fungsional}
+% \lipsum[6]
+% \subsection{Kebutuhan Nonfungsional}
+% \lipsum[7]
+
+% \section{Analisis Pemilihan Solusi}
+% \subsection{Alternatif Solusi}
+% \lipsum[8]
+% \subsection{Analisis Penentuan Solusi}
+% \lipsum[9]
+% ===============================================================================
+% BAB III - ANALISIS MASALAH (VERSI FINAL LENGKAP DENGAN KBBI)
+% ===============================================================================
+
+\chapter{ANALISIS MASALAH}
+
+Bab ini menyajikan analisis mendalam terhadap kondisi sistem \textit{Business Intelligence} saat ini, identifikasi masalah pengguna, kebutuhan fungsional dan nonfungsional sistem, serta analisis pemilihan solusi teknologi yang paling tepat. Pembahasan mencakup evaluasi sistem \textit{Business Intelligence} yang ada, identifikasi tantangan dalam pengambilan keputusan berbasis data, dan justifikasi pemilihan pendekatan \textit{chatbot} berbasis aturan kueri, pemrosesan bahasa alami, dan peramalan deret waktu sebagai solusi yang paling sesuai dengan kebutuhan organisasi modern.
+
+% ==============================================================================
+\section{Analisis Kondisi Saat Ini}
+% ==============================================================================
+
+Analisis permasalahan yang dikaji dalam penelitian ini menggunakan pendekatan CRISP-DM (\textit{Cross-Industry Standard Process for Data Mining}). Metodologi ini terdiri dari enam tahapan utama, yaitu pemahaman bisnis (\textit{business understanding}), pemahaman data (\textit{data understanding}), penyiapan data (\textit{data preparation}), pemodelan (\textit{modeling}), evaluasi (\textit{evaluation}), dan penerapan (\textit{deployment}). Masing-masing tahapan dijelaskan lebih lanjut dalam bab ini beserta kegiatan-kegiatan yang dilakukan pada setiap fase, untuk menunjukkan bagaimana sistem dikembangkan secara terstruktur guna menjawab kebutuhan analisis dan prediksi kinerja bisnis secara otomatis dan responsif.
+
+\subsection{Pemahaman Bisnis (\textit{Business Understanding})}
+
+Permasalahan besar yang diangkat dalam penelitian ini adalah ketidakefisienan dan kurangnya responsivitas dalam proses analisis data bisnis untuk pengambilan keputusan strategis. Banyak organisasi, terutama perusahaan skala menengah dan besar, masih mengandalkan sistem \textit{business intelligence} berbasis dasbor visual statis dan pelaporan manual yang memerlukan intervensi tim teknologi informasi atau analis data untuk setiap permintaan analisis berdasarkan kebutuhan khusus. Proses ini tidak hanya memakan waktu, tetapi juga berpotensi menimbulkan keterlambatan dalam pengambilan keputusan yang berdampak pada daya saing perusahaan dan kemampuan merespons dinamika bisnis secara proaktif.
+
+Kekurangan dari sistem \textit{business intelligence} konvensional ini sebagian besar bersumber dari beberapa faktor kritis. Pertama, keterbatasan akses analitik berbasis percakapan yang menyebabkan pengguna internal tidak dapat memperoleh wawasan terkait indikator bisnis pelanggan seperti pesanan, pencapaian target penjualan, tingkat kepergian pelanggan, serta pendapatan secara cepat dan intuitif. Kedua, ketiadaan fitur prediksi yang mudah diakses oleh pengguna nonteknis sehingga perencanaan kapasitas, evaluasi target, dan penetapan strategi bisnis menjadi kurang responsif terhadap tren dan dinamika masa depan. Ketiga, minimnya integrasi antara aturan kueri berbasis dan pemrosesan bahasa alami dalam sistem BI internal, yang menyebabkan proses pencarian data, penyaringan metrik utama, serta penyusunan laporan kinerja bisnis masih harus dilakukan secara manual dan berulang. Keempat, kurangnya analitik interaktif dan wawasan prediktif waktu nyata melalui antarmuka percakapan yang mudah diakses oleh seluruh pengguna internal.
+
+Kondisi sistem saat ini dapat dijabarkan lebih rinci sebagai berikut.
+
+\begin{enumerate}
+
+\item \textbf{Responsivitas Terbatas}
+
+Dasbor statis hanya menampilkan metrik yang telah didefinisikan sebelumnya dan tidak dapat menjawab pertanyaan mendadak atau spesifik dari pengguna bisnis. Pengguna harus menunggu tim teknologi informasi untuk membuat kueri khusus atau laporan baru, yang dapat memakan waktu beberapa jam hingga beberapa hari.
+
+\item \textbf{Ketergantungan pada Tim Teknis}
+
+Setiap permintaan kueri khusus atau analisis berdasarkan kebutuhan khusus harus diproses oleh tim teknologi informasi atau analis data, menciptakan kemacetan dan memperlambat waktu respons. Hal ini menghambat kemampuan organisasi untuk mengambil keputusan secara cepat dan tepat waktu.
+
+\item \textbf{Kurangnya Kemampuan Prediktif}
+
+Prediksi tren kinerja bisnis seperti volume penjualan, tingkat kepergian pelanggan, atau proyeksi pendapatan masih dilakukan secara manual menggunakan lembar sebar atau alat sederhana lainnya, tanpa memanfaatkan model peramalan yang canggih berbasis pembelajaran mesin atau peramalan deret waktu.
+
+\item \textbf{Akses yang Tidak Fleksibel}
+
+Sistem \textit{business intelligence} umumnya hanya dapat diakses melalui komputer pribadi dengan antarmuka khusus yang memerlukan pengetahuan teknis, tidak mendukung akses perangkat genggam atau antarmuka percakapan yang intuitif bagi pengguna nonteknis.
+
+\item \textbf{Integrasi Data Terbatas}
+
+Data berasal dari berbagai sumber seperti sistem manajemen hubungan pelanggan, sistem perencanaan sumber daya perusahaan, dan basis data transaksi, namun belum terintegrasi sepenuhnya dalam satu mesin kueri terpadu dan mudah diakses melalui antarmuka bahasa alami.
+
+\item \textbf{Ketiadaan Antarmuka Percakapan}
+
+Sistem \textit{business intelligence} saat ini tidak menyediakan antarmuka percakapan yang memungkinkan pengguna berinteraksi dengan data menggunakan bahasa wajar sehingga pengguna harus memahami struktur data dan terminologi teknis untuk dapat mengakses informasi yang dibutuhkan.
+
+\end{enumerate}
+
+Permasalahan ini dapat diatasi melalui implementasi sistem \textit{business intelligence} berbasis \textit{chatbot} yang mengintegrasikan teknologi aturan kueri berbasis, pemrosesan bahasa alami, dan algoritma peramalan deret waktu. Pendekatan ini memungkinkan pengguna internal untuk mengajukan pertanyaan dalam bahasa wajar, mendapatkan respons yang cepat dan akurat, serta memperoleh prediksi tren bisnis secara otomatis tanpa memerlukan keahlian teknis khusus.
+
+Pada penelitian ini, penulis memilih untuk mengimplementasikan klasifikasi maksud berbasis pencocokan pola dengan mekanisme nilai keyakinan untuk mengidentifikasi maksud pengguna dari kueri bahasa wajar, pembangkitan bahasa alami berbasis templat untuk menghasilkan respons naratif yang beragam namun tetap aman dan terkontrol, serta model peramalan deret waktu untuk menghasilkan prediksi terhadap indikator bisnis pelanggan seperti volume pesanan, pencapaian target penjualan, tingkat kepergian pelanggan, dan proyeksi pendapatan.
+
+Oleh karena itu, berdasarkan rumusan masalah yang telah dijelaskan pada Bab I, penelitian ini bertujuan untuk merancang dan mengimplementasikan sebuah sistem \textit{business intelligence} berbasis \textit{chatbot} yang mampu memfasilitasi pengguna internal dalam menganalisis dan memprediksi indikator bisnis pelanggan secara interaktif dan waktu nyata. Sistem ini diharapkan dapat mengurangi beban kerja manual, meningkatkan responsivitas pengambilan keputusan, serta memberikan solusi terintegrasi yang siap diterapkan dalam praktik bisnis riil untuk meningkatkan daya saing organisasi di era digital.
+
+% ==============================================================================
+\section{Analisis Kebutuhan}
+% ==============================================================================
+
+Pada tahap awal pemahaman masalah dan solusi, analisis kebutuhan menjadi langkah dasar untuk memahami fitur dan karakteristik yang harus dimiliki oleh sistem agar dapat berfungsi sesuai tujuan. Dalam konteks tugas akhir ini, sistem dirancang untuk mengotomatisasi proses analisis dan prediksi kinerja bisnis berbasis data pelanggan menggunakan teknologi kecerdasan buatan, khususnya pemrosesan bahasa alami, klasifikasi maksud berbasis pola, dan peramalan deret waktu.
+
+Analisis kebutuhan dibagi menjadi tiga kategori utama, yaitu identifikasi masalah pengguna, kebutuhan fungsional, dan kebutuhan nonfungsional. Identifikasi masalah pengguna berfokus pada pemahaman mendalam terhadap tantangan yang dihadapi oleh pengguna internal dalam mengakses dan menganalisis data bisnis. Kebutuhan fungsional berfokus pada fitur utama yang harus dimiliki sistem agar dapat menjalankan fungsinya secara efektif, seperti kemampuan memproses pertanyaan bahasa wajar, mengklasifikasikan maksud, mengeksekusi kueri ke gudang data, menghasilkan respons naratif, serta melakukan peramalan otomatis. Sementara itu, kebutuhan nonfungsional mencakup aspek teknis dan kualitas sistem, seperti keamanan data, performa, skalabilitas, ketersediaan, dan kemudahan penggunaan.
+
+Pemahaman yang mendalam terhadap ketiga aspek kebutuhan ini menjadi fondasi penting dalam proses desain, implementasi, dan evaluasi sistem. Berikut ini adalah analisis kebutuhan yang telah disusun berdasarkan tujuan sistem dan karakteristik pengguna.
+
+\subsection{Identifikasi Masalah Pengguna}
+
+Pengguna dari sistem yang dikembangkan dalam penelitian ini adalah pengguna internal perusahaan, yang meliputi manajer, supervisor, analis bisnis, dan staf operasional yang terlibat dalam pengelolaan dan analisis data kinerja bisnis terkait pelanggan. Pengguna ini berasal dari berbagai departemen seperti penjualan, layanan pelanggan, pemasaran, dan manajemen strategis yang membutuhkan akses cepat terhadap wawasan bisnis untuk mendukung pengambilan keputusan harian maupun strategis.
+
+Saat ini, mayoritas pengguna internal masih mengandalkan sistem \textit{business intelligence} konvensional yang berbasis dasbor visual statis dan pelaporan manual. Pendekatan ini memiliki beberapa keterbatasan signifikan yang menghambat efektivitas pengambilan keputusan:
+
+\begin{enumerate}
+
+\item \textbf{Keterlambatan Respons terhadap Pertanyaan Bisnis}
+
+Pengguna sering mengalami keterlambatan dalam memperoleh jawaban atas pertanyaan bisnis yang mendesak. Ketika membutuhkan wawasan spesifik yang tidak tersedia di dasbor yang ada, seperti perbandingan performa penjualan antar segmen pelanggan atau analisis tren kepergian pada periode tertentu, pengguna harus menunggu tim teknologi informasi atau analis data untuk membuat kueri khusus. Waktu tunggu ini dapat berkisar antara beberapa jam hingga beberapa hari, tergantung pada kompleksitas pertanyaan dan beban kerja tim teknis. Keterlambatan ini mengakibatkan pengambilan keputusan menjadi terhambat dan peluang bisnis yang peka waktu dapat terlewatkan.
+
+\item \textbf{Kesulitan Mengakses Analisis Berdasarkan Kebutuhan Khusus}
+
+Banyak pertanyaan bisnis yang bersifat berdasarkan kebutuhan khusus atau unik tidak dapat dijawab oleh dasbor statis yang telah dikonfigurasi sebelumnya. Pengguna harus menjelaskan kebutuhan analisis mereka secara detail kepada tim teknologi informasi melalui surat elektronik, sistem tiket, atau komunikasi langsung, yang kemudian memerlukan waktu bagi tim teknis untuk memahami persyaratan, membuat kueri yang sesuai, dan menghasilkan laporan. Proses ini tidak efisien, memakan waktu, dan rentan terhadap kesalahpahaman antara pengguna bisnis dan tim teknis yang dapat menyebabkan hasil analisis tidak sesuai dengan kebutuhan.
+
+\item \textbf{Ketiadaan Kemampuan Prediksi Otomatis}
+
+Analisis prediktif untuk tren kinerja bisnis seperti proyeksi volume penjualan, prediksi tingkat kepergian pelanggan, atau estimasi pencapaian target pendapatan masih dilakukan secara manual menggunakan lembar sebar atau alat analisis sederhana. Pengguna harus mengunduh data historis, melakukan perhitungan manual, atau meminta tim ilmu data untuk membuat prediksi khusus. Proses ini tidak dapat diperluas, memakan waktu, dan prediksi yang dihasilkan tidak selalu terkini mengikuti perubahan data terbaru. Ketiadaan prediksi otomatis membuat organisasi kurang siap dalam mengantisipasi tren atau risiko bisnis yang dapat berdampak pada strategi dan alokasi sumber daya.
+
+\item \textbf{Akses yang Tidak Ramah Pengguna Nonteknis}
+
+Dasbor \textit{business intelligence} yang tersedia sering kali dirancang dengan asumsi bahwa pengguna memiliki pengetahuan teknis tentang struktur data, dimensi, metrik, dan terminologi basis data. Pengguna nonteknis, seperti manajer atau staf operasional yang tidak memiliki latar belakang teknis, sering merasa kesulitan dan kewalahan dengan berbagai tapis, daftar tarik, dan opsi yang tersedia. Antarmuka tidak intuitif, tidak mendukung kueri berbasis bahasa wajar, dan memerlukan kurva pembelajaran yang tinggi. Hal ini menyebabkan banyak pengguna potensial tidak memanfaatkan sistem \textit{business intelligence} secara optimal atau bahkan menghindari penggunaannya sama sekali.
+
+\item \textbf{Fragmentasi Akses Wawasan}
+
+Wawasan bisnis yang dibutuhkan untuk pengambilan keputusan tersebar di berbagai sistem, dasbor, laporan, dan alat yang berbeda. Pengguna harus membuka berbagai aplikasi atau modul untuk mendapatkan gambaran lengkap tentang kinerja bisnis, kemudian mengintegrasikan data secara manual di lembar sebar atau membuat dokumen analisis mereka sendiri. Fragmentasi ini meningkatkan risiko ketidakkonsistenan data, kesalahan manusia dalam proses konsolidasi, dan redundansi pekerjaan karena pengguna yang berbeda mungkin melakukan analisis yang sama secara terpisah tanpa berbagi hasil.
+
+\end{enumerate}
+
+Tantangan-tantangan ini menghadirkan kebutuhan mendesak untuk mengembangkan sistem \textit{business intelligence} yang lebih responsif, intuitif, dan terintegrasi, dengan kemampuan \textit{chatbot} untuk antarmuka percakapan yang ramah pengguna, klasifikasi maksud yang cerdas untuk pengalihan kueri yang efisien, pembangkitan respons naratif yang beragam dan mudah dipahami, serta peramalan otomatis untuk prediksi kinerja bisnis. Sistem yang diusulkan diharapkan dapat mengatasi keterbatasan tersebut dan memberikan nilai tambah signifikan bagi organisasi dalam meningkatkan kecepatan, akurasi, dan kualitas pengambilan keputusan berbasis data.
+\subsection{Kebutuhan Fungsional}
+
+Kebutuhan fungsional menggambarkan fitur-fitur utama yang harus dimiliki oleh sistem \textit{business intelligence} berbasis \textit{chatbot} agar dapat memenuhi tujuan penelitian dan mengatasi masalah pengguna yang telah diidentifikasi. Setiap kebutuhan fungsional dirancang untuk mendukung proses analisis dan prediksi kinerja bisnis secara otomatis, responsif, dan mudah diakses oleh pengguna internal dengan berbagai tingkat keahlian teknis.
+
+Berikut merupakan daftar kebutuhan fungsional yang telah disusun berdasarkan analisis mendalam terhadap proses bisnis, alur interaksi pengguna, dan arsitektur sistem yang diusulkan:
+
+\begin{longtable}{|p{1.3cm}|p{4.5cm}|p{7cm}|}
+\caption{Kebutuhan Fungsional Sistem \textit{Chatbot} BI}
+\label{tab:kebutuhan-fungsional} \\
+\hline
+\textbf{ID} & \textbf{Nama Kebutuhan} & \textbf{Deskripsi} \\
+\hline
+\endfirsthead
+
+\multicolumn{3}{c}%
+{\tablename\ \thetable\ -- {Kebutuhan Fungsional Sistem \textit{Chatbot} BI (lanjutan)}} \\
+\hline
+\textbf{ID} & \textbf{Nama Kebutuhan} & \textbf{Deskripsi} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{3}{r}{\textit{Bersambung ke halaman berikutnya}} \\
+\endfoot
+
+\hline
+\endlastfoot
+
+FR-1 & Penerimaan Pertanyaan Bahasa Alami & 
+\textbf{Tujuan}: Memungkinkan pengguna mengajukan pertanyaan atau permintaan analisis dalam Bahasa Indonesia secara wajar melalui antarmuka \textit{chatbot}. \\
+& & \textbf{Masukan}: Teks pertanyaan dari pengguna dalam bentuk bahasa wajar (contoh: "Berapa total penjualan bulan ini?" atau "Prediksi tingkat kepergian pelanggan 3 bulan ke depan"). \\
+& & \textbf{Keluaran}: Pertanyaan tersimpan dan diproses oleh sistem untuk tahap berikutnya. \\
+\hline
+
+FR-2 & Klasifikasi Maksud dan Pemberian Nilai Keyakinan & 
+\textbf{Tujuan}: Mengidentifikasi maksud utama pengguna dari pertanyaan menggunakan pencocokan pola dan menghitung nilai keyakinan untuk menentukan tingkat kepercayaan sistem. \\
+& & \textbf{Masukan}: Teks pertanyaan hasil pemrosesan awal. \\
+& & \textbf{Keluaran}: Maksud teridentifikasi beserta nilai keyakinan (0-1) dan parameter terkait (entitas, dimensi waktu, metrik). \\
+\hline
+
+FR-3 & Pengalihan Kueri Berdasarkan Tingkat Keyakinan & 
+\textbf{Tujuan}: Mengarahkan kueri ke modul pemrosesan yang sesuai berdasarkan nilai keyakinan klasifikasi maksud. \\
+& & \textbf{Masukan}: Maksud dan nilai keyakinan. \\
+& & \textbf{Keluaran}: Jika nilai keyakinan $\geq$ 0,70: kueri diteruskan ke mesin kueri berbasis aturan. Jika nilai keyakinan $<$ 0,50: kueri diteruskan ke modul pemrosesan bahasa alami lanjutan atau permintaan klarifikasi ke pengguna. \\
+\hline
+
+FR-4 & Eksekusi Kueri ke Gudang Data & 
+\textbf{Tujuan}: Mengambil data relevan dari gudang data atau mart data internal berdasarkan maksud dan parameter yang telah diidentifikasi. \\
+& & \textbf{Masukan}: Maksud, entitas, dan parameter kueri. \\
+& & \textbf{Keluaran}: Data hasil kueri dalam format terstruktur (JSON, tabel). \\
+\hline
+
+FR-5 & Penciptaan Respons Naratif Berbasis Templat & 
+\textbf{Tujuan}: Menghasilkan respons dalam bentuk teks naratif yang mudah dipahami menggunakan pembangkitan bahasa alami berbasis templat. \\
+& & \textbf{Masukan}: Data hasil kueri dan konteks percakapan. \\
+& & \textbf{Keluaran}: Teks respons naratif yang beragam dan wajar (contoh: "Penjualan pada bulan Oktober mencapai Rp 5,2 miliar, meningkat 15\% dari bulan sebelumnya"). \\
+\hline
+
+FR-6 & Dukungan Penggalian Data dan Analisis Perbandingan & 
+\textbf{Tujuan}: Memungkinkan pengguna melakukan eksplorasi data lebih dalam dari tingkat ringkasan ke tingkat detail, serta membandingkan metrik antar periode, segmen, atau dimensi. \\
+& & \textbf{Masukan}: Permintaan penggalian data atau perbandingan dari pengguna. \\
+& & \textbf{Keluaran}: Data detail atau hasil perbandingan dengan statistik perubahan (delta, persentase, tren). \\
+\hline
+
+FR-7 & Peramalan Deret Waktu & 
+\textbf{Tujuan}: Menghasilkan prediksi otomatis terhadap indikator kinerja bisnis menggunakan model \textit{Time Series Forecasting}. \\
+& & \textbf{Masukan}: Data historis dan cakrawala prediksi yang diminta (harian, mingguan, bulanan). \\
+& & \textbf{Keluaran}: Nilai prediksi, selang kepercayaan, tren, dan visualisasi grafik. \\
+\hline
+
+FR-8 & Manajemen Riwayat Percakapan dan Sesi & 
+\textbf{Tujuan}: Menyimpan riwayat percakapan pengguna untuk memudahkan pelacakan dan konteks percakapan yang berkelanjutan. \\
+& & \textbf{Masukan}: Interaksi pengguna dengan sistem. \\
+& & \textbf{Keluaran}: Riwayat percakapan tersimpan dan dapat diakses kembali oleh pengguna. \\
+\hline
+
+FR-9 & Autentikasi dan Otorisasi Pengguna & 
+\textbf{Tujuan}: Memastikan hanya pengguna yang berwenang dapat mengakses sistem dan data sesuai dengan peran mereka. \\
+& & \textbf{Masukan}: Kredensial pengguna (nama pengguna, sandi). \\
+& & \textbf{Keluaran}: Akses sistem berdasarkan kendali akses berbasis peran. \\
+\hline
+
+FR-10 & Mekanisme Pengunduran dan Penanganan Kesalahan & 
+\textbf{Tujuan}: Menangani kueri yang tidak dapat dipahami atau diproses dengan memberikan respons alternatif atau permintaan klarifikasi. \\
+& & \textbf{Masukan}: Kueri dengan nilai keyakinan rendah atau kesalahan pemrosesan. \\
+& & \textbf{Keluaran}: Pesan klarifikasi, saran pertanyaan alternatif, atau eskalasi ke dukungan manusia. \\
+\hline
+
+\end{longtable}
+
+Kebutuhan-kebutuhan fungsional di atas dirancang untuk menciptakan sistem yang komprehensif, responsif, dan mudah digunakan, yang mampu mengotomatisasi sebagian besar tugas analisis dan prediksi bisnis, mengurangi ketergantungan pada tim teknis, serta memberdayakan pengguna internal untuk mengakses wawasan yang mereka butuhkan dengan cepat dan efisien.
+
+\subsection{Kebutuhan Nonfungsional}
+
+Kebutuhan nonfungsional menggambarkan karakteristik kualitas sistem yang harus dipenuhi untuk memastikan sistem dapat beroperasi dengan baik, aman, andal, dan memberikan pengalaman pengguna yang optimal. Kebutuhan nonfungsional mencakup aspek-aspek seperti performa, keamanan, ketersediaan, skalabilitas, kemudahan penggunaan, dan pemeliharaan sistem.
+
+Berikut merupakan daftar kebutuhan nonfungsional yang telah disusun untuk sistem \textit{Business Intelligence} berbasis \textit{chatbot}:
+
+\begin{longtable}{|p{1.3cm}|p{4.5cm}|p{7cm}|}
+\caption{Kebutuhan Nonfungsional Sistem \textit{Chatbot} BI}
+\label{tab:kebutuhan-nonfungsional} \\
+\hline
+\textbf{ID} & \textbf{Nama Kebutuhan} & \textbf{Deskripsi} \\
+\hline
+\endfirsthead
+
+\multicolumn{3}{c}%
+{\tablename\ \thetable\ -- {Kebutuhan Nonfungsional Sistem \textit{Chatbot} BI (lanjutan)}} \\
+\hline
+\textbf{ID} & \textbf{Nama Kebutuhan} & \textbf{Deskripsi} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{3}{r}{\textit{Bersambung ke halaman berikutnya}} \\
+\endfoot
+
+\hline
+\endlastfoot
+
+NF-1 & Keamanan Data dan Privasi & Sistem harus memastikan keamanan data internal perusahaan dengan menerapkan enkripsi data saat dalam perjalanan (TLS/SSL) dan saat penyimpanan. Sistem harus mengimplementasikan kendali akses berbasis peran yang ketat untuk memastikan pengguna hanya dapat mengakses data sesuai dengan peran dan wewenang mereka. Sistem harus mencegah kebocoran data sensitif, suntikan perintah berbahaya, atau akses tidak sah. Pencatatan dan jejak audit untuk semua aktivitas kueri dan akses data harus diimplementasikan untuk kepatuhan dan analisis forensik. \\
+\hline
+
+NF-2 & Ketersediaan Sistem & Sistem harus memiliki tingkat ketersediaan minimal 99\% agar dapat diakses kapan saja oleh pengguna internal. Sistem harus dilengkapi dengan mekanisme redundansi dan pengalihan otomatis untuk memastikan kontinuitas layanan. Jika terjadi kesalahan pada saat eksekusi kueri atau penciptaan respons, sistem harus memiliki mekanisme pengunduran yang elegan dan penanganan kesalahan yang memadai serta memberikan pesan kesalahan yang informatif kepada pengguna. \\
+\hline
+
+NF-3 & Performa dan Waktu Respons & Sistem harus mampu memberikan waktu respons maksimal 2 detik untuk 95\% dari kueri tipikal. Dalam kueri kompleks yang memerlukan peramalan atau analisis data besar, waktu respons maksimal adalah 5 detik. Sistem harus dapat memproses minimal 100 kueri per menit pada kondisi beban normal dan hingga 1000 kueri per jam pada kondisi beban puncak tanpa penurunan performa yang signifikan. \\
+\hline
+
+NF-4 & Skalabilitas & Sistem harus mampu menangani peningkatan jumlah pengguna dan volume data secara horizontal dengan menambahkan server atau simpul tambahan. Infrastruktur harus dirancang dengan arsitektur layanan mikro atau penerapan terkontainer untuk memudahkan penskalaan. Basis data dan mesin kueri harus dioptimalkan untuk menangani volume data yang besar tanpa penurunan performa. \\
+\hline
+
+NF-5 & Kemudahan Penggunaan & Antarmuka \textit{chatbot} harus intuitif dan mudah digunakan oleh pengguna nonteknis tanpa memerlukan pelatihan ekstensif. Sistem harus menyediakan panduan kontekstual dan saran pertanyaan untuk membantu pengguna merumuskan kueri. Riwayat percakapan dan manajemen sesi harus didukung untuk memudahkan pengguna melacak interaksi sebelumnya. Mekanisme umpan balik harus tersedia untuk perbaikan berkelanjutan berdasarkan masukan pengguna. \\
+\hline
+
+NF-6 & Kemudahan Pemeliharaan & Sistem harus mudah dipelihara dengan dokumentasi kode, antarmuka program aplikasi, dan arsitektur yang lengkap dan jelas. Templat, aturan berbasis pola, dan pemetaan maksud harus mudah diperbarui oleh tim tanpa memerlukan penerapan ulang sistem atau waktu henti. Sistem harus dirancang secara modular sehingga mudah untuk menambahkan maksud baru, aturan baru, atau model peramalan baru di masa depan. \\
+\hline
+
+NF-7 & Kompatibilitas dan Aksesibilitas & Sistem harus dapat diakses dari berbagai platform (\textit{web}, perangkat genggam, komputer pribadi) dan perangkat (ponsel pintar, tablet, komputer pribadi/laptop) dengan faktor bentuk yang berbeda. Antarmuka harus responsif dan mendukung berbagai ukuran layar. Sistem harus kompatibel dengan peramban umum seperti Chrome, Firefox, Edge, dan Safari, serta mendukung berbagai sistem operasi (Windows, macOS, Linux, iOS, Android). \\
+\hline
+
+NF-8 & Keandalan & Sistem harus memiliki tingkat keandalan yang tinggi dengan kemampuan menangani kesalahan dan kondisi tidak normal tanpa berhenti. Sistem harus memiliki mekanisme pengulangan otomatis untuk proses yang gagal dan pencatatan komprehensif untuk analisis penyebab akar. Hasil prediksi dan analisis harus konsisten dan dapat direproduksi dengan data masukan yang sama. \\
+\hline
+
+NF-9 & Integritas Data & Sistem harus memastikan bahwa data yang diambil, diproses, dan disajikan kepada pengguna adalah akurat dan tidak mengalami kerusakan. Hasil ekstraksi dari gudang data tidak boleh rusak, hilang, atau berubah saat disimpan, diproses, atau diekspor. Sistem harus mengimplementasikan validasi data dan penjumlahan cek untuk memastikan integritas data di seluruh saluran pemrosesan. \\
+\hline
+
+NF-10 & Ekstensibilitas & Sistem harus dirancang dengan arsitektur yang fleksibel dan modular untuk memungkinkan penambahan fitur baru di masa depan, seperti integrasi dengan sistem eksternal (ERP, CRM), penambahan model pembelajaran mesin baru, atau perluasan ke domain bisnis lainnya. Antarmuka program aplikasi yang terdokumentasi dengan baik harus disediakan untuk memfasilitasi integrasi dengan sistem lain. \\
+\hline
+
+\end{longtable}
+
+Kebutuhan nonfungsional ini dirancang untuk memastikan bahwa sistem tidak hanya dapat menjalankan fungsi-fungsi yang diharapkan, tetapi juga memiliki kualitas teknis yang tinggi, aman, andal, dan memberikan pengalaman pengguna yang memuaskan. Pencapaian kebutuhan nonfungsional ini akan dievaluasi melalui pengujian performa, pengujian keamanan, pengujian beban, dan survei kepuasan pengguna pada tahap implementasi dan evaluasi sistem.
+
+% ==============================================================================
+\section{Analisis Pemilihan Solusi}
+% ==============================================================================
+
+Analisis permasalahan yang dikaji dalam penelitian ini menggunakan pendekatan kesesuaian masalah-solusi, yaitu dengan mencocokkan kebutuhan nyata yang terjadi di lapangan dengan solusi teknologi yang paling tepat guna. Pendekatan ini mempertimbangkan berbagai alternatif solusi yang tersedia, mengevaluasi kelebihan dan kekurangan masing-masing, serta memilih solusi yang paling optimal berdasarkan kriteria yang telah ditetapkan menggunakan metode \textit{Balanced Scorecard}.
+
+Pemilihan solusi yang tepat sangat penting untuk memastikan bahwa sistem yang dikembangkan dapat mengatasi masalah pengguna secara efektif, memberikan nilai tambah yang signifikan bagi organisasi, serta berkelanjutan untuk pengembangan jangka panjang. Analisis ini akan membantu memvalidasi bahwa solusi yang dipilih adalah yang paling sesuai dengan kondisi, kebutuhan, dan tujuan strategis organisasi.
+
+\subsection{Alternatif Solusi}
+
+Dalam rangka meningkatkan efisiensi analisis dan prediksi kinerja bisnis serta mengatasi keterbatasan sistem \textit{business intelligence} konvensional, terdapat beberapa alternatif solusi teknologi yang dapat dipertimbangkan. Setiap alternatif memiliki karakteristik, kelebihan, dan kekurangan yang berbeda, yang perlu dievaluasi secara komprehensif untuk menentukan solusi yang paling optimal.
+
+Berikut adalah empat alternatif solusi utama yang telah diidentifikasi dan dianalisis berdasarkan studi literatur, praktik industri, dan kebutuhan spesifik organisasi:
+
+\begin{longtable}{|c|p{2cm}|p{3.65cm}|p{2.7cm}|p{3cm}|}
+\caption{Perbandingan Alternatif Solusi Teknologi}
+\label{tab:alternatif-solusi} \\
+\hline
+\textbf{No} & \textbf{Nama Solusi} & \textbf{Deskripsi} & \textbf{Kelebihan} & \textbf{Kekurangan} \\
+\hline
+\endfirsthead
+
+\multicolumn{5}{c}%
+{\tablename\ \thetable\ -- {Perbandingan Alternatif Solusi Teknologi (lanjutan)}} \\
+\hline
+\textbf{No} & \textbf{Nama Solusi} & \textbf{Deskripsi} & \textbf{Kelebihan} & \textbf{Kekurangan} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{5}{r}{\textit{Bersambung ke halaman berikutnya}} \\
+\endfoot
+
+\hline
+\endlastfoot
+
+1 & 
+\textit{Chatbot} Berbasis Aturan Sederhana & 
+Menggunakan \textit{chatbot} dengan pencocokan pola yang sangat kaku, hanya merespons pola kalimat yang telah ditentukan sebelumnya. Sistem hanya dapat menangani kueri terstruktur dengan format tetap, tidak mampu memahami variasi bahasa wajar yang kompleks. Tidak ada model peramalan, hanya pengambilan data dari basis data. & 
+
+\begin{enumerate}[leftmargin=*, nosep, noitemsep]
+\item Implementasi cepat dan hemat biaya
+\item Mudah dipelihara untuk aturan sederhana
+\item Tidak memerlukan infrastruktur kompleks
+\item Kontrol penuh atas respons sistem
+\end{enumerate} & 
+
+\begin{enumerate}[leftmargin=*, nosep, noitemsep]
+\item Tidak dapat diperluas untuk kebutuhan BI modern
+\item Pengguna harus menyesuaikan dengan pola tetap
+\item Tidak mampu menjawab kueri kompleks
+\item Tidak ada kemampuan prediktif
+\item Pengalaman pengguna terbatas
+\end{enumerate} \\
+\hline
+
+2 & 
+\textit{Chatbot} BI dengan Klasifikasi Maksud Berbasis Pola, Pembangkitan Bahasa Alami Berbasis Templat, dan Peramalan Deret Waktu & 
+Mengimplementasikan sistem BI \textit{chatbot} yang terintegrasi dengan tiga komponen, yaitu klasifikasi maksud berbasis pola dengan pemberian nilai keyakinan, pembangkitan bahasa alami berbasis templat untuk respons yang beragam namun aman, dan model peramalan deret waktu untuk prediksi otomatis. & 
+
+\begin{enumerate}[leftmargin=*, nosep, noitemsep]
+\item Mampu menangani variasi bahasa wajar kompleks
+\item Respons beragam dan wajar
+\item Dukungan peramalan otomatis
+\item Adaptif terhadap kebutuhan dinamis
+\item Pengalaman pengguna unggul
+\item Keamanan terjaga dengan templat
+\item Dapat diperluas secara fleksibel
+\end{enumerate} & 
+
+\begin{enumerate}[leftmargin=*, nosep, noitemsep]
+\item Kompleksitas implementasi lebih tinggi
+\item Memerlukan usaha awal untuk desain
+\item Pemeliharaan butuh keahlian berbagai bidang
+\item Biaya infrastruktur lebih tinggi
+\end{enumerate} \\
+\hline
+
+3 & 
+Dasbor BI Interaktif Tradisional dengan Peningkatan & 
+Tetap menggunakan dasbor BI visual yang sudah ada, dengan peningkatan untuk interaktivitas yang lebih baik. Pengguna dapat melakukan penggalian data, penyaringan, dan agregasi melalui kontrol antarmuka pengguna yang lebih intuitif. Menambahkan fitur analitik layanan mandiri dan aplikasi dasbor perangkat genggam. & 
+
+\begin{enumerate}[leftmargin=*, nosep, noitemsep]
+\item Teknologi matang dan terbukti
+\item Dukungan komunitas dan alat kaya
+\item Tata kelola data dan keamanan mapan
+\item Akrab bagi organisasi dengan alat BI tradisional
+\end{enumerate} & 
+
+\begin{enumerate}[leftmargin=*, nosep, noitemsep]
+\item Tidak mendukung kueri bahasa wajar
+\item Tidak ada antarmuka percakapan
+\item Dukungan terbatas untuk peramalan
+\item Tetap memerlukan keahlian teknis
+\item Tidak dapat diperluas untuk bisnis peka waktu
+\end{enumerate} \\
+\hline
+
+4 & 
+Chatbot BI Berbasis Model Bahasa Besar (\textit{Large Language Model}) & 
+Mengimplementasikan chatbot BI yang memanfaatkan arsitektur Transformer penuh dengan model bahasa besar pra-latih seperti GPT, BERT, atau varian lainnya. Sistem menggunakan pembelajaran mendalam untuk pemahaman bahasa alami yang sangat canggih, mampu menangani kueri kompleks dengan konteks multiturn, dan menghasilkan respons naratif yang sangat wajar. Model dapat disetel-halus (fine-tuned) dengan data domain spesifik untuk meningkatkan akurasi. & 
+
+\begin{enumerate}[leftmargin=*, nosep, noitemsep]
+\item Pemahaman bahasa alami paling canggih
+\item Kemampuan konteks percakapan mendalam
+\item Respons sangat wajar dan beragam
+\item Dapat menangani kueri sangat kompleks
+\item Adaptif terhadap variasi bahasa ekstrem
+\item Pembelajaran berkelanjutan dari interaksi
+\end{enumerate} & 
+
+\begin{enumerate}[leftmargin=*, nosep, noitemsep]
+\item Biaya komputasi sangat tinggi
+\item Memerlukan infrastruktur GPU berkinerja tinggi
+\item Risiko halusinasi dan respons tidak akurat
+\item Sulit mengontrol keluaran secara deterministik
+\item Potensi kebocoran data sensitif
+\item Kompleksitas implementasi sangat tinggi
+\item Ketergantungan pada penyedia model eksternal
+\item Latensi respons lebih tinggi
+\end{enumerate} \\
+\hline
+
+\end{longtable}
+
+Berikut adalah penjelasan empat alternatif solusi utama yang telah diidentifikasi dan dianalisis berdasarkan tabel di atas:
+\begin{enumerate}
+    \item\textbf{Alternatif 1: \textit{Chatbot} Berbasis Aturan Sederhana}
+    
+    Solusi ini mengimplementasikan \textit{chatbot} dengan pendekatan berbasis aturan yang sederhana, menggunakan pencocokan pola berbasis ekspresi reguler atau pencocokan langsung. Sistem hanya dapat merespons pertanyaan dengan format yang telah didefinisikan sebelumnya dan tidak memiliki kemampuan untuk memahami variasi bahasa atau konteks yang kompleks. Fitur yang tersedia terbatas pada pengambilan data sederhana dari basis data tanpa kemampuan analisis lanjutan atau prediksi. Antarmuka juga terbatas dan tidak dioptimasi untuk pengalaman pengguna yang baik pada perangkat genggam.
+
+    \item\textbf{Alternatif 2: \textit{Chatbot} BI dengan Klasifikasi Maksud Berbasis Pola, Pembangkitan Bahasa Alami Berbasis Templat, dan Peramalan Deret Waktu}
+
+    Solusi ini merupakan pendekatan komprehensif yang mengintegrasikan tiga komponen teknologi utama. Pertama, klasifikasi maksud berbasis pola dengan mekanisme pemberian nilai keyakinan untuk mengidentifikasi maksud pengguna dari kueri bahasa wajar dengan akurasi tinggi. Kedua, pembangkitan bahasa alami berbasis templat untuk menghasilkan respons naratif yang variatif, wajar, dan mudah dipahami sambil menjaga keamanan data internal melalui pembatasan pada templat yang telah diverifikasi. Ketiga, model peramalan deret waktu untuk menghasilkan prediksi otomatis terhadap indikator kinerja bisnis seperti volume penjualan, tingkat kepergian pelanggan, dan proyeksi pendapatan. Sistem ini dirancang dengan arsitektur modular yang dapat diperluas dan diperbesar, mendukung akses berbagai platform (web, perangkat genggam, komputer pribadi), dan menerapkan kontrol keamanan yang ketat.
+
+    \item\textbf{Alternatif 3: Dasbor BI Interaktif Tradisional dengan Peningkatan}
+
+    Solusi ini mempertahankan pendekatan dasbor BI visual yang sudah ada dengan menambahkan peningkatan pada aspek interaktivitas dan kemudahan penggunaan. Fitur penggalian data lebih dalam, penyaringan lanjutan, dan pembuatan laporan khusus ditingkatkan dengan antarmuka yang lebih intuitif. Sistem ini juga dilengkapi dengan aplikasi dasbor perangkat genggam untuk akses data dari perangkat bergerak. Namun, solusi ini tidak menyediakan antarmuka percakapan berbasis bahasa wajar dan kemampuan prediktif yang otomatis.
+
+    \item\textbf{Alternatif 4: \textit{Chatbot} BI Berbasis Model Bahasa Besar (\textit{Large Language Model})}
+
+    Berbeda dengan ketiga alternatif sebelumnya yang menggunakan pendekatan terstruktur atau semi-terstruktur, alternatif keempat ini memanfaatkan paradigma pembelajaran mesin yang sepenuhnya berbasis data dengan arsitektur jaringan saraf tiruan yang sangat mendalam. Solusi ini mengimplementasikan \textit{chatbot} BI yang memanfaatkan arsitektur \textit{Transformer} penuh dengan model bahasa besar pra-latih seperti GPT, BERT, T5, atau varian lainnya. Sistem menggunakan pembelajaran mendalam untuk pemahaman bahasa alami yang sangat canggih, mampu menangani kueri kompleks dengan konteks percakapan multiturn, dan menghasilkan respons naratif yang sangat wajar menyerupai komunikasi manusia. Model dapat disetel-halus (\textit{fine-tuned}) dengan data domain spesifik organisasi untuk meningkatkan akurasi dan relevansi respons terhadap konteks bisnis. Sistem ini memanfaatkan kemampuan pemodelan bahasa yang telah dilatih pada korpus teks masif untuk memahami nuansa, konteks implisit, dan melakukan inferensi kompleks dari pertanyaan pengguna. Namun, solusi ini memerlukan infrastruktur komputasi dengan GPU berkinerja tinggi untuk inferensi cepat, menimbulkan tantangan dalam hal kontrol deterministik terhadap keluaran, dan menghadapi risiko halusinasi dengan model dapat menghasilkan respons yang terdengar meyakinkan tetapi faktanya tidak akurat atau tidak berdasar pada data nyata. Implementasi juga memerlukan pertimbangan ketat terhadap keamanan data untuk mencegah kebocoran informasi sensitif melalui model, serta strategi mitigasi risiko untuk memastikan keandalan respons dalam konteks pengambilan keputusan bisnis kritis.
+\end{enumerate}
+
+\subsection{Analisis Penentuan Solusi}
+
+Dalam menentukan solusi terbaik untuk meningkatkan sistem \textit{Business Intelligence} dan mengatasi masalah yang telah diidentifikasi, digunakan kerangka evaluasi \textit{Balanced Scorecard} (BSC) untuk membandingkan setiap alternatif secara sistematis. Metode ini menilai masing-masing solusi dari empat perspektif yang saling melengkapi, yaitu \textit{Financial}, \textit{Customer}, \textit{Internal Business Process}, dan \textit{Learning and Growth} sehingga evaluasi tidak hanya berfokus pada biaya dan investasi awal, tetapi juga pada dampak terhadap kepuasan pengguna, kelancaran proses operasional, serta penguatan kapabilitas analitik dan pembelajaran organisasi. Pendekatan ini membantu memastikan bahwa solusi yang dipilih benar-benar sejalan dengan tujuan jangka panjang dan arah pengembangan sistem \textit{Business Intelligence} di perusahaan.
+
+Berikut adalah analisis mendalam untuk setiap solusi berdasarkan keempat perspektif \textit{Balanced Scorecard}:
+
+\subsubsection{Solusi 1: \textit{Chatbot} Berbasis Aturan Sederhana}
+
+\begin{longtable}{|p{3.5cm}|p{9cm}|}
+\caption{Analisis \textit{Balanced Scorecard} untuk Aturan Sederhana}
+\label{tab:bsc-solusi1} \\
+\hline
+\textbf{Perspektif} & \textbf{Penilaian} \\
+\hline
+\endfirsthead
+
+\multicolumn{2}{c}%
+{\tablename\ \thetable\ -- {Analisis \textit{Balanced Scorecard} untuk Aturan Sederhana (lanjutan)}} \\
+\hline
+\textbf{Perspektif} & \textbf{Penilaian} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{2}{r}{\textit{Bersambung ke halaman berikutnya}} \\
+\endfoot
+
+\hline
+\endlastfoot
+
+\textit{Financial} & Solusi ini memerlukan investasi awal yang rendah hingga sedang karena tidak membutuhkan infrastruktur komputasi yang kompleks atau model pembelajaran mesin yang canggih. Biaya operasional juga relatif rendah karena sistem dapat dijalankan pada peladen sederhana. Namun, pengembalian investasi jangka panjang rendah karena sistem tidak dapat diperluas dan akan memerlukan perancangan ulang besar ketika kebutuhan bisnis berkembang. Penghematan dari otomasi terbatas karena sistem hanya dapat menangani kueri yang sangat terstruktur dan sederhana sehingga sebagian besar pekerjaan analisis masih memerlukan intervensi manual. Biaya peluang tinggi karena organisasi kehilangan peluang untuk mengoptimalkan pengambilan keputusan berbasis data secara cepat dan responsif. \\
+\hline
+
+\textit{Customer} (Pengguna) & Solusi ini menawarkan pengalaman pengguna yang cukup terbatas. Pengguna harus menyesuaikan diri dengan format kueri yang kaku dan tidak fleksibel, yang tidak sesuai dengan cara berpikir dan berkomunikasi wajar mereka. Sistem tidak dapat memahami variasi pertanyaan atau konteks yang kompleks sehingga sering kali pengguna harus mencoba beberapa kali dengan perumusan yang berbeda untuk mendapatkan hasil yang diinginkan. Hal ini menyebabkan frustrasi dan menurunkan tingkat kepuasan pengguna. Tingkat adopsi sistem cenderung rendah karena pengguna merasa sistem tidak memberikan nilai tambah yang signifikan dibandingkan dengan metode yang sudah ada. \\
+\hline
+
+\textit{Internal Business Process} & Dari perspektif proses bisnis , solusi ini hanya menawarkan otomasi minimal untuk kueri yang sangat terstruktur dan berulang. Proses analisis manual masih tetap diperlukan untuk sebagian besar pertanyaan bisnis yang bersifat khusus atau kompleks sehingga hambatan dalam alur analisis data tidak teratasi secara efektif. Waktu penyelesaian untuk mendapatkan wawasan bisnis tidak berkurang secara signifikan. Sistem juga tidak mendukung analisis lanjutan seperti penggalian data lebih dalam, perbandingan multidimensi, atau deteksi anomali sehingga kemampuan organisasi untuk melakukan analisis mendalam tetap terbatas. \\
+\hline
+
+\textit{Learning and Growth} & Solusi ini memberikan kesempatan yang sangat terbatas untuk pembelajaran dan pertumbuhan organisasi. Teknologi yang digunakan relatif sederhana dan tidak mendorong tim untuk mengembangkan keahlian baru dalam bidang kecerdasan buatan, pembelajaran mesin, atau analitik lanjutan. Organisasi tidak memperoleh keunggulan kompetitif teknologi dan tidak membangun kapabilitas yang dapat menjadi pembeda di pasar. Sistem juga tidak menyediakan landasan untuk inovasi masa depan atau integrasi dengan teknologi yang lebih canggih. \\
+\hline
+
+\end{longtable}
+
+\subsubsection{Solusi 2: \textit{Chatbot} BI dengan Klasifikasi Maksud Berbasis Pola, Pembangkitan Bahasa Alami Berbasis Templat, dan Peramalan Deret Waktu}
+
+\begin{longtable}{|p{3.5cm}|p{9cm}|}
+\caption{Analisis \textit{Balanced Scorecard} untuk BI Komprehensif}
+\label{tab:bsc-solusi2} \\
+\hline
+\textbf{Perspektif} & \textbf{Penilaian} \\
+\hline
+\endfirsthead
+
+\multicolumn{2}{c}%
+{\tablename\ \thetable\ -- {Analisis \textit{Balanced Scorecard} untuk BI Komprehensif (lanjutan)}} \\
+\hline
+\textbf{Perspektif} & \textbf{Penilaian} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{2}{r}{\textit{Bersambung ke halaman berikutnya}} \\
+\endfoot
+
+\hline
+\endlastfoot
+
+\textit{Financial} & Solusi ini memerlukan investasi awal yang lebih tinggi, mencakup biaya untuk pengembangan sistem yang kompleks, pengadaan infrastruktur komputasi yang memadai (termasuk kemungkinan GPU untuk model peramalan), dan pelatihan model kecerdasan buatan. Namun, pengembalian investasi jangka panjang sangat tinggi karena sistem memberikan nilai tambah yang signifikan melalui beberapa jalur,  yaitu pengurangan dramatis dalam waktu analisis dari jam atau hari menjadi detik yang memungkinkan pengambilan keputusan lebih cepat dan responsif, penghematan biaya tenaga kerja karena analis dan tim TI tidak perlu menghabiskan waktu untuk kueri rutin dan dapat fokus pada tugas-tugas yang lebih strategis, peningkatan kualitas keputusan bisnis berdasarkan wawasan prediktif yang akurat, yang dapat menghasilkan peningkatan pendapatan atau penghematan biaya yang signifikan, dan skalabilitas yang baik dengan biaya tambahan untuk menambahkan pengguna atau kueri baru relatif rendah setelah sistem terbangun. Sistem ini juga memberikan keunggulan kompetitif yang dapat berdampak pada posisi pasar dan profitabilitas jangka panjang organisasi. \\
+\hline
+
+\textit{Customer} (Pengguna) & Solusi ini menawarkan pengalaman pengguna yang sangat unggul. Antarmuka percakapan yang wajar dan akrab memungkinkan pengguna untuk mengajukan pertanyaan dengan cara yang sama seperti mereka berbicara dengan rekan manusia, tanpa perlu mempelajari tata bahasa khusus atau terminologi teknis. Sistem dapat memahami berbagai variasi pertanyaan dan konteks sehingga mengurangi frustrasi pengguna. Respons yang dihasilkan bersifat naratif, beragam, dan mudah dipahami, bukan hanya tabel angka yang kering. Kemampuan prediktif otomatis memberikan nilai tambah yang signifikan bagi pengguna, memungkinkan mereka untuk mengantisipasi tren dan membuat keputusan proaktif. Aksesibilitas berbagai platform (web, perangkat genggam, komputer pribadi) memastikan pengguna dapat mengakses wawasan setiap membutuhkannya. Tingkat kepuasan dan adopsi pengguna diperkirakan sangat tinggi karena sistem memberikan nilai nyata dan mudah digunakan. \\
+\hline
+
+\textit{Internal Business Process} & Dari perspektif proses bisnis, solusi ini menawarkan transformasi yang fundamental. Otomasi maksimal untuk hampir semua jenis kueri analitik, dari yang sederhana hingga yang kompleks, menghilangkan hambatan yang selama ini menghalangi alur analisis data. Proses bisnis dapat menjadi lebih lincah dan responsif terhadap perubahan kondisi pasar atau internal. Waktu penyelesaian untuk mendapatkan wawasan berkurang drastis, memungkinkan organisasi untuk mengidentifikasi masalah, peluang, atau tren lebih cepat dan mengambil tindakan yang tepat. Kemampuan peramalan otomatis mendukung perencanaan yang lebih akurat untuk alokasi sumber daya, penetapan target, dan strategi bisnis. Sistem juga memfasilitasi budaya berbasis data dengan keputusan dibuat berdasarkan wawasan objektif bukan hanya intuisi. \\
+\hline
+
+\textit{Learning and Growth} & Solusi ini memberikan kesempatan tertinggi untuk pembelajaran dan pertumbuhan organisasi. Implementasi teknologi kecerdasan buatan seperti pemrosesan bahasa alami, klasifikasi maksud berbasis pola, pembangkitan bahasa alami berbasis templat, dan peramalan deret waktu memungkinkan tim untuk mengembangkan keahlian baru yang sangat relevan di era digital. Organisasi membangun kapabilitas internal dalam bidang kecerdasan buatan dan pembelajaran mesin yang dapat menjadi fondasi untuk inovasi-inovasi masa depan, seperti ekspansi ke domain lain (\textit{chatbot} layanan pelanggan, sistem rekomendasi, deteksi penipuan). Sistem menciptakan keunggulan kompetitif teknologi yang membedakan organisasi dari kompetitor. Platform yang dibangun bersifat dapat diperluas dan dapat menjadi basis untuk pengembangan solusi analitik yang lebih canggih di masa depan. Budaya inovasi dan adopsi teknologi terdorong, memposisikan organisasi sebagai pemimpin dalam transformasi digital di industrinya. \\
+\hline
+
+\end{longtable}
+
+\subsubsection{Solusi 3: Dasbor BI Interaktif Tradisional dengan Peningkatan}
+
+\begin{longtable}{|p{3.5cm}|p{9cm}|}
+\caption{Analisis \textit{Balanced Scorecard} untuk BI Tradisional}
+\label{tab:bsc-solusi3} \\
+\hline
+\textbf{Perspektif} & \textbf{Penilaian} \\
+\hline
+\endfirsthead
+
+\multicolumn{2}{c}%
+{\tablename\ \thetable\ -- {Analisis \textit{Balanced Scorecard} untuk BI Tradisional (lanjutan)}} \\
+\hline
+\textbf{Perspektif} & \textbf{Penilaian} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{2}{r}{\textit{Bersambung ke halaman berikutnya}} \\
+\endfoot
+
+\hline
+\endlastfoot
+
+\textit{Financial} & Solusi ini memerlukan investasi yang sedang, terutama untuk meningkatkan antarmuka pengguna dan menambahkan fitur interaktivitas pada dasbor yang sudah ada. Biaya lisensi untuk alat BI komersial dapat cukup signifikan, terutama jika organisasi menggunakan platform seperti Tableau, Power BI, atau Qlik. Pengembalian investasi berada di tingkat menengah karena peningkatan efisiensi terbatas pada perbaikan antarmuka pengguna dan kemudahan akses, tanpa transformasi fundamental dalam cara pengguna berinteraksi dengan data. Penghematan biaya tenaga kerja terbatas karena pengguna masih memerlukan keahlian teknis untuk memanfaatkan fitur analitik layanan mandiri secara efektif. Tidak ada kemampuan prediktif otomatis yang dapat memberikan nilai tambah signifikan untuk perencanaan strategis. \\
+\hline
+
+\textit{Customer} (Pengguna) & Solusi ini membuat pengalaman pengguna mengalami peningkatan dibandingkan dengan sistem lama, terutama dalam hal visualisasi data dan kemudahan navigasi. Dasbor yang lebih interaktif dengan fitur penggalian data lebih dalam dan penyaringan lanjutan memberikan fleksibilitas lebih besar bagi pengguna untuk mengeksplorasi data. Aplikasi perangkat genggam memungkinkan akses data dari perangkat bergerak, meningkatkan kemudahan akses. Namun, solusi ini masih tidak mendukung kueri bahasa wajar atau antarmuka percakapan sehingga pengguna nonteknis tetap menghadapi kurva pembelajaran yang cukup tinggi. Sistem tidak dapat menjawab pertanyaan khusus yang kompleks tanpa konfigurasi tambahan dari tim TI. Kepuasan pengguna berada di tingkat menengah karena peningkatan yang diberikan bersifat bertahap, bukan transformatif. \\
+\hline
+
+\textit{Internal Business Process} & Dari perspektif proses bisnis, solusi ini memberikan peningkatan yang sedang hingga tinggi dalam efisiensi operasional. Pengguna yang memiliki keahlian teknis dapat melakukan analisis sendiri tanpa selalu bergantung pada tim TI, mengurangi beban kerja analis. Fitur analitik layanan mandiri memungkinkan eksplorasi data yang lebih fleksibel untuk pengguna yang terlatih. Namun, untuk pengguna nonteknis atau pertanyaan yang sangat spesifik dan kompleks, sistem masih memerlukan intervensi manual dari tim analitik. Tidak ada dukungan untuk analisis prediktif otomatis sehingga organisasi tidak dapat memanfaatkan kemampuan peramalan untuk perencanaan strategis yang lebih baik. Proses tetap tidak dapat diperluas untuk kebutuhan bisnis yang sangat dinamis dan peka waktu. \\
+\hline
+
+\textit{Learning and Growth} & Solusi ini memberikan kesempatan sedang untuk pembelajaran dan pertumbuhan. Organisasi dapat meningkatkan literasi data tim melalui pelatihan penggunaan alat BI dan fitur analitik layanan mandiri. Penguasaan alat BI populer seperti Tableau atau Power BI dapat menjadi keahlian yang berharga bagi karyawan. Namun, solusi ini tidak mendorong inovasi teknologi yang signifikan atau pengembangan kapabilitas dalam bidang kecerdasan buatan dan pembelajaran mesin. Organisasi tidak membangun pembeda teknologi yang kuat dan tetap bergantung pada vendor eksternal untuk sebagian besar fitur dan inovasi. Platform ini juga terbatas dalam hal kemampuan perluasan untuk pengembangan solusi khusus atau integrasi dengan teknologi yang lebih canggih di masa depan. \\
+\hline
+
+\end{longtable}
+
+\subsubsection*{Solusi 4: Chatbot BI Berbasis Model Bahasa Besar (\textit{Large Language Model})}
+
+\begin{longtable}{|p{3.5cm}|p{9cm}|}
+\caption{Analisis \textit{Balanced Scorecard} untuk LLM}
+\label{tab:bsc-solusi4} \\
+\hline
+\textbf{Perspektif} & \textbf{Penilaian} \\
+\hline
+\endfirsthead
+
+\multicolumn{2}{c}%
+{\tablename\ \thetable\ -- {Analisis \textit{Balanced Scorecard} untuk LLM (lanjutan)}} \\
+\hline
+\textbf{Perspektif} & \textbf{Penilaian} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{2}{r}{\textit{Bersambung ke halaman berikutnya}} \\
+\endfoot
+
+\hline
+\endlastfoot
+
+\textit{Financial} & Solusi ini memerlukan investasi awal yang sangat tinggi, mencakup biaya lisensi atau akses API untuk model bahasa besar komersial (seperti GPT-4 atau Claude), pengadaan infrastruktur komputasi dengan GPU berkinerja tinggi untuk inferensi cepat, dan biaya pengembangan untuk integrasi sistem yang kompleks. Biaya operasional juga sangat signifikan karena setiap kueri memerlukan sumber daya komputasi yang besar, terutama untuk model dengan miliaran parameter. Dalam model berbasis API, biaya per token dapat terakumulasi dengan cepat pada skala organisasi besar. Pengembalian investasi berada pada tingkat sedang hingga tinggi dalam jangka panjang, bergantung pada seberapa baik organisasi dapat mengelola risiko halusinasi dan memastikan akurasi respons. Nilai tambah utama berasal dari kemampuan pemahaman bahasa yang sangat canggih dan fleksibilitas dalam menangani kueri kompleks yang tidak terstruktur. Namun, ketidakpastian dalam kontrol keluaran dan risiko kesalahan dapat membatasi pengembalian investasi jika tidak dikelola dengan baik. Biaya peluang juga perlu dipertimbangkan jika organisasi mengalami insiden kebocoran data atau respons yang tidak akurat yang berdampak pada keputusan bisnis. \\
+\hline
+
+\textit{Customer} (Pengguna) & Solusi ini menawarkan pengalaman pengguna yang sangat unggul dalam hal kewajaran interaksi dan fleksibilitas komunikasi. Pengguna dapat mengajukan pertanyaan dengan cara yang sangat wajar, termasuk kueri yang kompleks, ambigu, atau memerlukan pemahaman konteks mendalam yang sulit ditangani sistem konvensional. Model bahasa besar dapat memahami nuansa, konteks percakapan multiturn, dan bahkan inferensi implisit dari pertanyaan pengguna. Respons yang dihasilkan sangat naratif, koheren, dan menyerupai komunikasi manusia, yang meningkatkan kepuasan pengguna secara signifikan. Namun, terdapat risiko bahwa sistem dapat menghasilkan respons yang terdengar meyakinkan tetapi faktanya tidak akurat (halusinasi), yang dapat menyesatkan pengguna dan menurunkan kepercayaan terhadap sistem. Pengguna nonteknis mungkin tidak dapat membedakan respons yang akurat dari yang dihasilkan secara spekulatif. Dalam mempertahankan kepuasan tinggi, sistem memerlukan mekanisme validasi dan verifikasi yang ketat, serta transparansi mengenai tingkat keyakinan respons. \\
+\hline
+
+\textit{Internal Business Process} & Dari perspektif proses bisnis, solusi ini memberikan fleksibilitas tertinggi dalam menangani berbagai jenis kueri analitik, termasuk yang sangat kompleks, tidak terstruktur, atau belum pernah ditemui sebelumnya. Kemampuan model untuk memahami konteks yang dalam dan melakukan inferensi dapat mengurangi kebutuhan untuk konfigurasi manual atau pemrograman khusus untuk kasus penggunaan baru. Sistem dapat beradaptasi dengan perubahan kebutuhan bisnis dengan lebih organik. Namun, ketidakdeterministikan keluaran model bahasa besar menimbulkan tantangan dalam proses bisnis yang memerlukan konsistensi dan akurasi tinggi. Risiko halusinasi dapat menyebabkan keputusan bisnis yang salah jika tidak ada mekanisme validasi yang memadai. Latensi respons yang lebih tinggi dibandingkan solusi berbasis pola juga dapat menjadi hambatan untuk proses bisnis yang sangat sensitif terhadap waktu. Integrasi dengan sistem keamanan dan tata kelola data memerlukan perhatian khusus untuk memastikan bahwa model tidak secara tidak sengaja mengekspos informasi sensitif atau melanggar kebijakan privasi. \\
+\hline
+
+\textit{Learning and Growth} & Solusi ini memberikan kesempatan sangat tinggi untuk pembelajaran dan pertumbuhan organisasi dalam bidang teknologi modern. Implementasi model bahasa besar memungkinkan tim untuk mengembangkan keahlian dalam pembelajaran mendalam, arsitektur Transformer, penyetelan-halus model, dan teknik prompt engineering yang merupakan kompetensi sangat relevan di era kecerdasan buatan generatif. Organisasi dapat memposisikan diri sebagai pelopor dalam adopsi teknologi kecerdasan buatan paling canggih. Namun, ketergantungan pada model dan infrastruktur dari penyedia eksternal (seperti OpenAI atau Anthropic) dapat membatasi kontrol organisasi terhadap teknologi inti dan menimbulkan risiko vendor \textit{lock-in}. Jika menggunakan model sumber terbuka, organisasi memerlukan investasi signifikan dalam keahlian spesialisasi untuk pelatihan, penyetelan, dan pemeliharaan model. Platform ini membuka peluang untuk inovasi masa depan seperti asisten virtual multidomain, sistem rekomendasi kontekstual, atau analitik prediktif yang sangat canggih, tetapi memerlukan komitmen jangka panjang dalam pengembangan kapabilitas dan manajemen risiko. \\
+\hline
+
+\end{longtable}
+
+\subsubsection{Matriks Perbandingan \textit{Balanced Scorecard}}
+
+Dalam memberikan gambaran yang lebih komprehensif, berikut adalah matriks perbandingan ketiga solusi berdasarkan keempat perspektif \textit{Balanced Scorecard}, beserta karakteristik pengguna yang paling sesuai untuk masing-masing solusi:
+
+\begin{longtable}{|p{2cm}|p{1.75cm}|p{1.5cm}|p{1.5cm}|p{1.25cm}|p{3cm}|}
+\caption{Perbandingan \textit{Balanced Scorecard} Alternatif Solusi}
+\label{tab:matriks-bsc} \\
+\hline
+\textbf{Solusi} & \textbf{\textit{Financial}} & \textbf{\textit{Customer}} & \textbf{\textit{Process}} & \textbf{L\&G} & \textbf{Digunakan oleh} \\
+\hline
+\endfirsthead
+
+\multicolumn{6}{c}%
+{\tablename\ \thetable\ -- {Perbandingan \textit{Balanced Scorecard} Alternatif Solusi (lanjutan)}} \\
+\hline
+\textbf{Solusi} & \textbf{\textit{Financial}} & \textbf{\textit{Customer}} & \textbf{\textit{Process}} & \textbf{L\&G} & \textbf{Digunakan oleh} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{6}{r}{\textit{Bersambung ke halaman berikutnya}} \\
+\endfoot
+
+\hline
+\endlastfoot
+
+\textit{Chatbot} Berbasis Aturan Sederhana & 
+Rendah-Sedang & 
+Rendah-Sedang & 
+Rendah & 
+Rendah & 
+Organisasi kecil dengan kebutuhan analitik sangat terbatas dan kueri yang sangat terstruktur \\
+\hline
+
+\textit{Chatbot} BI dengan Klasifikasi Maksud, Pembangkitan Bahasa Alami, dan Peramalan Deret Waktu & 
+Sedang-Tinggi (ROI Tinggi) & 
+Sangat Tinggi & 
+Sangat Tinggi & 
+Sangat Tinggi & 
+Organisasi menengah hingga besar dengan volume data tinggi, kebutuhan analitik kompleks, dan fokus pada transformasi digital berbasis AI \\
+\hline
+
+Dasbor BI Interaktif Tradisional dengan Peningkatan & 
+Sedang & 
+Sedang & 
+Sedang-Tinggi & 
+Sedang & 
+Organisasi yang sudah memiliki investasi besar dalam alat BI tradisional dan ingin peningkatan bertahap \\
+\hline
+
+Chatbot BI Berbasis Model Bahasa Besar (LLM) & 
+Sedang-Tinggi (Biaya Tinggi) & 
+Sangat Tinggi (dengan Risiko) & 
+Tinggi (dengan Tantangan) & 
+Sangat Tinggi & 
+Organisasi besar dengan anggaran signifikan, infrastruktur AI matang, kebutuhan pemahaman bahasa sangat kompleks, dan kapabilitas manajemen risiko AI yang kuat \\
+\hline
+
+\end{longtable}
+
+\subsubsection{Kesimpulan Pemilihan Solusi}
+
+Berdasarkan analisis komprehensif menggunakan metode \textit{Balanced Scorecard} pada keempat perspektif (\textit{Financial}, \textit{Customer}, \textit{Internal Business Process}, dan \textit{Learning and Growth}), \textbf{Solusi 2: \textit{Chatbot} BI dengan Klasifikasi Maksud Berbasis Pola, Pembangkitan Bahasa Alami Berbasis Templat, dan Peramalan Deret Waktu} adalah solusi yang paling optimal dan direkomendasikan untuk diimplementasikan.
+
+Perlu dicatat bahwa Solusi 4 (Chatbot BI Berbasis Model Bahasa Besar) menawarkan kemampuan pemahaman bahasa alami yang paling canggih dan pengalaman pengguna yang sangat unggul. Namun, solusi ini memiliki beberapa kelemahan kritis yang membuatnya kurang optimal untuk konteks penelitian ini, yaitu biaya implementasi dan operasional yang sangat tinggi yang dapat tidak proporsional dengan kebutuhan organisasi menengah, risiko halusinasi dan respons tidak akurat yang dapat berdampak serius pada keputusan bisnis berbasis data, dan kesulitan dalam mengontrol keluaran secara deterministik yang penting untuk sistem BI dengan keperluan konsistensi dan akurabilitas, potensi kebocoran data sensitif melalui model yang tidak sepenuhnya dikontrol organisasi, dan ketergantungan pada penyedia model eksternal yang menimbulkan risiko keberlanjutan jangka panjang. Meskipun teknologi ini sangat menjanjikan untuk masa depan, untuk implementasi praktis dalam konteks organisasi yang memerlukan keseimbangan antara inovasi dan stabilitas, Solusi 2 tetap menjadi pilihan yang paling optimal.
+
+Berikut alasan utama pemilihan Solusi 2 adalah sebagai berikut.
+
+\begin{enumerate}
+    \item \textbf{Keselarasan dengan Kebutuhan}
+    
+    Solusi 2 secara langsung mengatasi semua masalah pengguna yang telah diidentifikasi, termasuk keterlambatan respons, kesulitan akses analisis khusus, ketiadaan kemampuan prediksi otomatis, dan akses yang tidak ramah pengguna nonteknis. Solusi ini memenuhi seluruh kebutuhan fungsional dan nonfungsional yang telah disusun secara komprehensif.
+    
+    \item \textbf{Skalabilitas dan Adaptabilitas}
+    
+    Sistem yang diusulkan dirancang dengan arsitektur modular dan dapat diperluas yang dapat diadaptasi terhadap perubahan kebutuhan bisnis di masa depan tanpa memerlukan perancangan ulang besar. Kemampuan untuk menambahkan maksud baru, aturan baru, atau model peramalan baru secara mudah memberikan fleksibilitas jangka panjang.
+    
+    \item \textbf{Tahan Masa Depan dan Platform untuk Inovasi}
+    
+    Platform yang dibangun membuka pintu untuk inovasi-inovasi masa depan seperti ekspansi ke domain lain (\textit{chatbot} layanan pelanggan, sistem rekomendasi, deteksi penipuan), integrasi dengan sistem eksternal (ERP, CRM), atau pengembangan kemampuan analitik lanjutan lainnya. Investasi dalam platform ini tidak hanya memberikan nilai untuk kebutuhan saat ini, tetapi juga menjadi fondasi untuk transformasi digital organisasi secara keseluruhan.
+    
+    \item \textbf{Pengembalian Investasi dan Justifikasi Finansial}
+    
+    Meskipun investasi awal lebih tinggi dibandingkan alternatif lain, pengembalian investasi jangka panjang sangat menarik karena penghematan biaya tenaga kerja yang signifikan (analis dapat fokus pada tugas strategis), pengambilan keputusan yang lebih cepat dan akurat (yang dapat berdampak langsung pada pendapatan atau penghematan biaya), dan peningkatan daya saing organisasi. Berdasarkan studi dari berbagai industri, implementasi sistem analitik prediktif berbasis kecerdasan buatan dapat meningkatkan efisiensi operasional hingga 30\% dan mempercepat pengambilan keputusan hingga 85\% (Shah, 2025).
+    
+    \item \textbf{Keunggulan Kompetitif dan Diferensiasi}
+    
+    Implementasi \textit{chatbot} BI canggih dengan kemampuan kecerdasan buatan dan pembelajaran mesin memberikan keunggulan kompetitif bagi organisasi, meningkatkan kelincahan dan kecepatan pengambilan keputusan dibandingkan kompetitor yang masih menggunakan sistem konvensional. Organisasi yang mampu menganalisis data dan merespons tren pasar lebih cepat memiliki posisi yang lebih kuat dalam persaingan bisnis.
+    
+    \item \textbf{Adopsi Pengguna dan Kepuasan}
+    
+    Antarmuka percakapan berbasis bahasa wajar memiliki tingkat adopsi yang jauh lebih tinggi dibandingkan dasbor tradisional karena lebih intuitif dan tidak memerlukan pelatihan ekstensif. Statistik industri menunjukkan bahwa \textit{chatbot} dapat menangani hingga 80\% pertanyaan standar secara otomatis (Fullview, 2025), yang secara signifikan mengurangi beban kerja tim dan meningkatkan kepuasan pengguna.
+    
+    \item \textbf{Keamanan dan Kontrol Data}
+    
+    Pendekatan pembangkitan bahasa alami berbasis templat memberikan kontrol penuh atas respons yang dihasilkan sistem, memastikan bahwa tidak ada kebocoran data sensitif atau informasi yang tidak seharusnya diungkapkan. Hal ini sangat penting untuk sistem yang beroperasi dengan data internal perusahaan yang bersifat rahasia.
+    
+    \item \textbf{Pembelajaran dan Pertumbuhan Organisasi}
+    
+    Implementasi solusi ini memungkinkan organisasi untuk membangun kapabilitas internal dalam bidang kecerdasan buatan, pembelajaran mesin, dan analitik lanjutan, yang merupakan keahlian kritis di era digital. Tim akan mengembangkan pengetahuan dan pengalaman yang berharga yang dapat diterapkan pada proyek-proyek inovasi lainnya di masa depan.
+\end{enumerate}
+
+Dengan pemilihan Solusi 2, organisasi akan dapat mencapai transformasi digital yang signifikan dalam domain \textit{Business Intelligence} dan analitik, meningkatkan efisiensi operasional, kecepatan pengambilan keputusan, dan memposisikan diri sebagai pemimpin dalam pemanfaatan teknologi kecerdasan buatan untuk keunggulan kompetitif di pasar yang semakin berbasis data.
+
+Solusi yang dipilih juga sejalan dengan tren global dengan pasar kecerdasan buatan percakapan diproyeksikan mencapai USD 49,7 miliar pada tahun 2025 (Qaltivate, 2025), pasar pemrosesan bahasa alami tumbuh dengan CAGR 28,6\% mencapai USD 438,08 miliar pada tahun 2034 (Precedence Research, 2025), dan pasar peramalan deret waktu diperkirakan mencapai USD 36,9 miliar pada tahun 2032 (WiseGuy Reports, 2024). Pertumbuhan pasar yang eksponensial ini menunjukkan bahwa investasi dalam teknologi-teknologi ini bukan hanya relevan untuk saat ini, tetapi juga strategis untuk jangka panjang.
+
+\section{Pemahaman dan Analisis Data (\textit{Data Understanding})}
+
+Tahap pemahaman data (\textit{data understanding}) merupakan fase kedua dalam metodologi CRISP-DM yang bertujuan untuk mengumpulkan data awal, mengidentifikasi karakteristik data, mendeteksi permasalahan kualitas data, serta menemukan wawasan awal yang dapat membentuk hipotesis terhadap informasi tersembunyi dalam data. Pada konteks pengembangan sistem \textit{Business Intelligence} berbasis \textit{chatbot}, tahap ini berfokus pada eksplorasi komprehensif terhadap lima domain data utama yang tersimpan dalam skema \texttt{USER} pada \textit{Enterprise Data Warehouse}.
+
+\subsection{Sumber Data dan Arsitektur Penyimpanan}
+
+Sistem peramalan dan analisis performa berbasis \textit{chatbot} terhubung secara langsung dengan sumber data utama berupa \textit{Enterprise Data Warehouse} (EDW) yang menggunakan basis data Oracle pada server dengan skema \texttt{USER}. Koneksi yang diatur menggunakan metode \textit{connection pooling} serta \textit{parameter binding} untuk menjamin efisiensi dan keamanan saat eksekusi kueri. Skema \texttt{USER} berisi lima domain utama yang masing-masing memiliki fokus bisnis dan struktur data berbeda.
+
+\begin{table}[h]
+\centering
+\caption{Ringkasan Domain Data pada Skema USER}
+\label{tab:ringkasan-domain}
+\begin{tabular}{|p{3.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Domain Data} & \textbf{Jumlah Aturan Bisnis} & \textbf{Fokus Bisnis} \\
+\hline
+\texttt{SALES} & 12 & Analisis volume pesanan, kinerja kanal penjualan, dan penetrasi layanan pada berbagai wilayah operasional \\
+\hline
+\texttt{REVENUE} & 8 & Evaluasi pendapatan, profitabilitas pelanggan, dan distribusi pendapatan per wilayah dan segmen \\
+\hline
+\texttt{DATA\_PROSES} & 7 & Segmentasi dan profiling pelanggan berbasis data pemasangan, keaktifan digital, dan program loyalitas \\
+\hline
+\texttt{TARGET} & 5 & Pemantauan pencapaian target kinerja dan analisis kesenjangan terhadap target periode \\
+\hline
+\texttt{CT0} & 6 & Identifikasi potensi \textit{churn} pelanggan dan strategi retensi melalui analisis siklus hidup layanan \\
+\hline
+\end{tabular}
+\end{table}
+
+Kelima kategori strategi bisnis utama yang tercermin dalam 38 aturan tersebut secara komprehensif menggambarkan berbagai aspek analisis yang mendukung pengambilan keputusan berbasis data. Kategori pertama, yaitu \textit{Churn Analysis}, terdiri dari enam aturan yang secara khusus menganalisis pola perpindahan pelanggan, tingkat retensi di tingkat regional, serta strategi mitigasi \textit{churn} yang efektif untuk mempertahankan pelanggan dan mengurangi potensi kehilangan pelanggan strategis. Selanjutnya, kategori kedua, \textit{Customer Intelligence}, mencakup tujuh aturan yang berfokus pada analisis loyalitas pelanggan, segmentasi profil berdasarkan karakteristik demografis maupun perilaku, serta proses transformasi digital yang mendukung personalisasi layanan dan peningkatan pengalaman pelanggan secara keseluruhan. Kategori ketiga, \textit{Revenue Analytics}, terdiri dari delapan aturan yang menitikberatkan pada analisis pendapatan lintas wilayah geografis, perilaku pelanggan terhadap pendapatan, siklus hidup pelanggan, serta strategi penetrasi pasar yang optimal untuk meningkatkan profitabilitas. Pada kategori keempat, \textit{Order and Operations}, terdapat dua belas aturan yang mengkaji performa kanal penjualan, tingkat pemenuhan pesanan, tren pertumbuhan volume penjualan, serta efisiensi operasional yang berkontribusi terhadap peningkatan layanan dan penguatan proses bisnis. Terakhir, kategori kelima, \textit{Performance and Target}, mencakup lima aturan yang memberikan evaluasi terhadap KPI dan melakukan benchmarking secara kompetitif terhadap target kinerja di tingkat regional maupun segmentasi pelanggan sehingga memungkinkan pengawasan dan pengendalian yang lebih efektif terhadap pencapaian strategi bisnis secara menyeluruh.
+
+\begin{figure}[H] 
+  \centering
+  \includegraphics[width=1\textwidth,
+                   height=0.3\textheight,
+                   keepaspectratio]{images/detailrb}
+  \caption{Detail \textit{Rule-Based} yang Telah Ada}
+  \label{fig:detailrb}
+\end{figure}
+
+\subsubsection{Domain SALES}
+
+Domain \texttt{SALES} merupakan domain utama yang merepresentasikan informasi terkait volume permintaan, performa penjualan, serta penetrasi layanan pada berbagai tingkatan wilayah operasional. Tabel ini menyajikan struktur data yang komprehensif, mencakup dimensi geografis, waktu, produk, serta atribut pelanggan dan metrik performa layanan. Tabel~\ref{tab:spesifikasi-sales} menyajikan spesifikasi lengkap domain ini.
+
+\begin{table}[h]
+\centering
+\caption{Spesifikasi Domain Data Sales}
+\label{tab:spesifikasi-sales}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Komponen} & \textbf{Deskripsi dan Atribut} \\
+\hline
+Tabel & \texttt{USER.SALES} \\
+\hline
+Fokus Bisnis & Analisis volume pesanan, kinerja kanal penjualan, serta penetrasi layanan pada tiap wilayah operasional \\
+\hline
+Hierarki Wilayah & \texttt{REGIONAL}, \texttt{WITEL}, \texttt{DATEL}, \texttt{CSTO}, \texttt{LSTO}, \texttt{STO} \\
+\hline
+Dimensi Waktu & \texttt{YEAR\_ID}, \texttt{MONTH\_ID}, \texttt{PERIODE} \\
+\hline
+Metrik Pemesanan & \texttt{ORDER\_ID}, \texttt{TOTAL\_ORDER}, \texttt{ORDER\_STATUS} \\
+\hline
+Produk dan Pelanggan & \texttt{PRODTYPE}, \texttt{BANDWIDTH}, \texttt{PACKAGE\_TYPE}, \texttt{SERVICE\_TYPE}, \texttt{CUSTOMER\_ID}, \texttt{CUSTOMER\_TYPE}, \texttt{SEGMENT} \\
+\hline
+Metrik Performa & \texttt{COMPLETION\_RATE}, \texttt{FULFILLMENT\_STATUS} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Domain REVENUE}
+
+Domain \texttt{\texttt{REVENUE}} dirancang untuk mendukung analisis pendapatan, profitabilitas, serta distribusi pendapatan pada berbagai lapisan wilayah operasional. Domain ini memuat data yang mencakup identitas pelanggan, dimensi geografis, periode waktu, serta metrik utama terkait pendapatan yang dihasilkan per pelanggan maupun per layanan. Tabel~\ref{tab:spesifikasi-revenue} menyajikan spesifikasi lengkap domain ini.
+
+\begin{table}[h]
+\centering
+\caption{Spesifikasi Domain Data Revenue}
+\label{tab:spesifikasi-revenue}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Komponen} & \textbf{Deskripsi dan Atribut} \\
+\hline
+Tabel & \texttt{USER.REVENUE} \\
+\hline
+Fokus Bisnis & Evaluasi pendapatan, profitabilitas pelanggan, dan distribusi pendapatan per wilayah dan segmen bisnis \\
+\hline
+Identitas Pelanggan & \texttt{NIP\_NAS}, \texttt{NCLI}, \texttt{ND} \\
+\hline
+Wilayah Tagihan & \texttt{REGIONAL\_BILL}, \texttt{WITEL\_BILL}, \texttt{DATEL}, \texttt{CSTO}, \texttt{LSTO} \\
+\hline
+Dimensi Waktu & \texttt{YEAR\_ID}, \texttt{MONTH\_ID} \\
+\hline
+Metrik Pendapatan & \texttt{REVENUE}, \texttt{TOTAL\_REVENUE}, \texttt{MONTHLY\_REVENUE} \\
+\hline
+Hierarki Layanan & \texttt{SERVICE\_HIERARCHY}, \texttt{GL\_ACCOUNT}, \texttt{PRODUCT\_TYPE} \\
+\hline
+Metrik Kinerja & \texttt{REVENUE\_PER\_PELANGGAN}, \texttt{REVENUE\_PER\_NCLI} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Domain DATA\_PROSES}
+
+Domain \texttt{DATA\_PROSES} secara khusus dikembangkan untuk mendukung proses profiling dan segmentasi pelanggan secara komprehensif. Domain ini dirancang untuk mengidentifikasi atribut pelanggan, tingkat digitalisasi, serta segmentasi berdasarkan perilaku dan karakteristik layanan. Melalui data yang diperbarui secara berkala, \texttt{DATA\_PROSES} memungkinkan analisis longitudinal terkait penetrasi produk digital, partisipasi dalam program loyalitas, dan atribut layanan pelanggan secara geografis maupun demografis. Tabel~\ref{tab:spesifikasi-dapros} menyajikan spesifikasi lengkap domain ini.
+
+\begin{table}[h]
+\centering
+\caption{Spesifikasi Domain Data Proses}
+\label{tab:spesifikasi-dapros}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Komponen} & \textbf{Deskripsi dan Atribut} \\
+\hline
+Tabel & \texttt{USER.DATA\_PROSES} \\
+\hline
+Fokus Bisnis & Segmentasi dan profiling pelanggan berbasis data pemasangan, keaktifan digital, dan status loyalitas \\
+\hline
+Identitas Pelanggan & \texttt{NOTEL}, \texttt{ND\_REFERENCE}, \texttt{NCLI}, \texttt{PERIOD} \\
+\hline
+Atribut Produk & \texttt{PRODTYPE}, \texttt{PLBLCL}, \texttt{SPEED}, \texttt{PACK\_NAME} \\
+\hline
+Hierarki Wilayah & \texttt{REGIONAL}, \texttt{WITEL}, \texttt{TELDA}, \texttt{STO} \\
+\hline
+Atribut Pelanggan & \texttt{IS\_DINAS}, \texttt{IS\_POTS}, \texttt{IS\_IPTV}, \texttt{CGEST}, \texttt{LGEST} \\
+\hline
+Indikator Digital dan Loyalitas & \texttt{LOY\_PROGRAM}, \texttt{P\_DIGITAL}, \texttt{KW\_IH} \\
+\hline
+Metrik Pendapatan & \texttt{TREMS\_REV\_P}, \texttt{TREMS\_REV\_REF}, \texttt{ADDON\_PRICE} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Domain TARGET}
+
+Domain \texttt{TARGET} difokuskan pada evaluasi target kinerja, analisis kesenjangan (\textit{gap analysis}), serta pemantauan pencapaian strategi penjualan dan layanan. Domain ini memungkinkan manajemen untuk membandingkan antara nilai target dan realisasi, sekaligus mengukur tingkat pencapaian dalam berbagai konteks wilayah, produk, dan waktu. Tabel~\ref{tab:spesifikasi-target} menyajikan spesifikasi lengkap domain ini.
+
+\begin{table}[h]
+\centering
+\caption{Spesifikasi Domain Data Target}
+\label{tab:spesifikasi-target}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Komponen} & \textbf{Deskripsi dan Atribut} \\
+\hline
+Tabel & \texttt{USER.TARGET} \\
+\hline
+Fokus Bisnis & Pemantauan pencapaian target unit dan analisis kesenjangan terhadap target periode bulanan dan tahunan \\
+\hline
+Target dan Capaian & \texttt{TARGET\_VALUE}, \texttt{REALISASI}, \texttt{ACHIEVEMENT\_RATE} \\
+\hline
+Hierarki Wilayah & \texttt{REGIONAL}, \texttt{WITEL}, \texttt{TREG}, \texttt{SEGMEN} \\
+\hline
+Dimensi Waktu & \texttt{PERIODE}, \texttt{BULAN}, \texttt{TAHUN} \\
+\hline
+Klasifikasi Produk & \texttt{PRODUCT\_TYPE}, \texttt{SERVICE\_TYPE} \\
+\hline
+Metrik Evaluasi & \texttt{GAP\_ANALYSIS}, \texttt{PERFORMANCE\_SCORE} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Domain CT0}
+
+Domain \texttt{CT0} dirancang untuk menganalisis perilaku \textit{churn} pelanggan serta strategi retensi yang berkaitan dengan siklus hidup layanan. Domain ini memungkinkan pengukuran tingkat \textit{churn}, identifikasi pelanggan dengan risiko tinggi, serta pelacakan masa aktif layanan pelanggan. Struktur data dalam \texttt{CT0} mencakup status pelanggan, metrik \textit{churn}, alasan perpindahan layanan, serta parameter durasi berlangganan. Tabel~\ref{tab:spesifikasi-churn} menyajikan spesifikasi lengkap domain ini.
+
+\begin{table}[h]
+\centering
+\caption{Spesifikasi Domain Data Churn}
+\label{tab:spesifikasi-churn}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Komponen} & \textbf{Deskripsi dan Atribut} \\
+\hline
+Tabel & \texttt{USER.CT0} \\
+\hline
+Fokus Bisnis & Identifikasi pelanggan dengan potensi \textit{churn} dan perumusan strategi retensi berbasis analisis siklus hidup \\
+\hline
+Status Pelanggan & \texttt{CUSTOMER\_ID}, \texttt{STATUS\_LAYANAN}, \texttt{CHURN\_FLAG} \\
+\hline
+Metrik \textit{Churn} & \texttt{CHURN\_RATE}, \texttt{CHURN\_DATE}, \texttt{RETENTION\_RATE} \\
+\hline
+Hierarki Wilayah & \texttt{REGIONAL}, \texttt{WITEL}, \texttt{DATEL} \\
+\hline
+Atribut Layanan & \texttt{BANDWIDTH}, \texttt{SERVICE\_TYPE}, \texttt{TENURE} \\
+\hline
+Dimensi Siklus Hidup & \texttt{MASA\_LAYANAN}, \texttt{PERIODE\_CHURN}, \texttt{REASON\_CODE} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Analisis Kualitas Data}
+\label{subsec:kualitas-data}
+
+Evaluasi kualitas data untuk peramalan deret waktu (\textit{time series forecasting}) meliputi tiga aspek utama, yaitu kelengkapan dan konsistensi data, struktur temporal, serta relevansi fitur. Proses evaluasi ini bertujuan untuk memastikan bahwa data yang digunakan memenuhi standar kualitas yang diperlukan untuk menghasilkan model peramalan yang akurat dan andal.
+
+\subsubsection{Kelengkapan dan Konsistensi Data}
+
+Pemeriksaan kelengkapan data dilakukan untuk mengidentifikasi nilai yang hilang (\textit{missing values}) atau ketidakkonsistenan dalam interval pengambilan sampel. Data deret waktu sangat bergantung pada observasi sekuensial sehingga \textit{timestamp} yang hilang atau interval pengambilan sampel yang tidak konsisten dapat menyebabkan asumsi model menjadi tidak valid. Tabel~\ref{tab:kualitas-data} menyajikan hasil pemeriksaan kualitas data untuk setiap domain berdasarkan kriteria kelengkapan.
+
+\begin{table}[h]
+\centering
+\caption{Hasil Pemeriksaan Kualitas Data per Domain}
+\label{tab:kualitas-data}
+\begin{tabular}{|p{3.9cm}|p{2.3cm}|p{1.5cm}|p{2cm}|p{2.6cm}|}
+\hline
+\textbf{Domain} & \textbf{Kelengkapan (\%)} & \textbf{\textit{Missing}} (\%) & \textbf{Duplikat} & \textbf{Anomali} \\
+\hline
+SALES & 98.5 & 1.5 & Minimal & Teridentifikasi \\
+\hline
+\texttt{REVENUE} & 99.2 & 0.8 & Minimal & Teridentifikasi \\
+\hline
+DATA\_PROSES & 97.8 & 2.2 & Sedang & Teridentifikasi \\
+\hline
+TARGET & 99.0 & 1.0 & Minimal & Teridentifikasi \\
+\hline
+CT0 & 96.5 & 3.5 & Sedang & Teridentifikasi \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Analisis Struktur Temporal}
+
+Analisis struktur temporal bertujuan untuk mengidentifikasi pola yang dapat dipelajari oleh model, seperti tren (\textit{trend}), musiman (\textit{seasonality}), dan siklus (\textit{cycle}). Pengujian statistik seperti \textit{Augmented Dickey-Fuller test} digunakan untuk memeriksa stasioneritas data. Data non-stasioner mungkin memerlukan transformasi diferensiasi (\textit{differencing}) atau transformasi lainnya sebelum dapat digunakan untuk pemodelan.
+
+Hasil pengujian stasioneritas menunjukkan bahwa:
+\begin{enumerate}
+    \item Domain SALES menunjukkan pola musiman yang jelas dengan siklus tahunan
+    \item Domain \texttt{REVENUE} memiliki tren pertumbuhan yang stabil dengan volatilitas sedang
+    \item Domain CT0 menunjukkan fluktuasi musiman terkait periode kontrak pelanggan
+\end{enumerate}
+
+\subsubsection{Analisis Relevansi Fitur}
+
+Dalam peramalan multivariat, fitur-fitur yang digunakan harus memiliki hubungan logis dengan variabel target. Analisis korelasi dan pengetahuan domain digunakan untuk menyaring fitur-fitur yang relevan. Pemeriksaan terhadap potensi \textit{data leakage} (fitur yang mengandung informasi masa depan) juga dilakukan untuk mencegah bias dalam model.
+
+\subsection{Atribut Relasional Antar-Domain}
+\label{subsec:atribut-relasional}
+
+Dalam menjamin interoperabilitas antar-domain, sistem memanfaatkan sejumlah atribut utama yang bersifat relasional. Atribut-atribut ini digunakan sebagai parameter utama dalam penyusunan aturan (\textit{rules}) pada masing-masing domain data, memungkinkan sistem untuk membentuk kondisi logika yang terstruktur dan presisi. Tabel~\ref{tab:atribut-relasional} menyajikan atribut utama relasional yang menghubungkan kelima domain data.
+
+\begin{table}[h]
+\centering
+\caption{Atribut Utama Relasional Antar-Domain}
+\label{tab:atribut-relasional}
+\begin{tabular}{|p{3.5cm}|p{8cm}|}
+\hline
+\textbf{Dimensi Relasional} & \textbf{Atribut Kunci} \\
+\hline
+Dimensi Waktu & \texttt{YEAR\_ID}, \texttt{MONTH\_ID}, \texttt{PERIODE}, \texttt{BULAN}, \texttt{TAHUN} \\
+\hline
+Hierarki Wilayah & \texttt{REGIONAL}, \texttt{WITEL}, \texttt{DATEL}, \texttt{STO}, \texttt{CSTO}, \texttt{LSTO} \\
+\hline
+Identitas Pelanggan & \texttt{CUSTOMER\_ID}, \texttt{NCLI}, \texttt{ND}, \texttt{NOTEL}, \texttt{NIP\_NAS} \\
+\hline
+Klasifikasi Produk & \texttt{PRODTYPE}, \texttt{PRODUCT\_TYPE}, \texttt{SERVICE\_TYPE}, \texttt{PACKAGE\_TYPE} \\
+\hline
+Alur Analitik Utama & \texttt{ORDER\_ID}, \texttt{CHURN\_FLAG}, \texttt{REVENUE}, \texttt{TARGET\_VALUE} \\
+\hline
+\end{tabular}
+\end{table}
+
+Kolom-kolom relasional tersebut memungkinkan sistem untuk membentuk kondisi logika yang terstruktur dan presisi, seperti:
+\begin{enumerate}
+    \item Segmentasi pelanggan berdasarkan hierarki wilayah dan klasifikasi produk
+    \item Evaluasi performa layanan dalam rentang waktu tertentu per regional atau \textit{witel}
+    \item Identifikasi potensi \textit{churn} pada produk dan paket layanan tertentu per segmen pelanggan
+    \item Analisis tren pendapatan lintas wilayah dengan dimensi waktu yang konsisten
+\end{enumerate}
+
+Dengan memanfaatkan atribut-atribut ini dalam definisi aturan, sistem dapat menghasilkan \textit{insight} yang relevan dan dapat ditindaklanjuti, sesuai dengan konteks bisnis yang sedang dianalisis.
+
+\section{Persiapan Data (\textit{Data Preparation})}
+
+Tahap persiapan data (\textit{data preparation}) merupakan fase ketiga dalam metodologi CRISP-DM yang mencakup seluruh aktivitas untuk membangun dataset final yang akan digunakan dalam proses pemodelan. Tahap ini meliputi pembersihan data (\textit{data cleaning}), transformasi data (\textit{data transformation}), reduksi data (\textit{data reduction}), serta rekayasa fitur (\textit{feature engineering}) untuk menghasilkan data berkualitas tinggi yang siap diproses oleh algoritma peramalan deret waktu.
+
+\subsection{Pembersihan Data}
+\label{subsec:pembersihan-data}
+
+Proses pembersihan data bertujuan untuk menangani permasalahan kualitas data yang teridentifikasi pada tahap pemahaman data. Aktivitas pembersihan data mencakup penanganan nilai hilang, penghapusan duplikasi, serta deteksi dan penanganan \textit{outlier}.
+
+\subsubsection{Penanganan Nilai Hilang}
+
+Data deret waktu sering kali mengandung nilai yang hilang (\textit{missing values}) yang dapat ditangani menggunakan beberapa teknik. Teknik \textit{forward fill} mempropagasi nilai observasi terakhir ke depan hingga ditemukan nilai baru, sedangkan \textit{backward fill} melakukan sebaliknya. Teknik interpolasi memperkirakan nilai yang hilang berdasarkan titik data di sekitarnya. Pemilihan teknik penanganan nilai hilang disesuaikan dengan karakteristik data dan konteks bisnis. Tabel~\ref{tab:teknik-missing} menyajikan teknik penanganan nilai hilang yang digunakan untuk setiap jenis atribut.
+
+\begin{table}[h]
+\centering
+\caption{Teknik Penanganan Nilai Hilang per Jenis Atribut}
+\label{tab:teknik-missing}
+\begin{tabular}{|p{3.5cm}|p{3.5cm}|p{5.5cm}|}
+\hline
+\textbf{Jenis Atribut} & \textbf{Teknik Imputasi} & \textbf{Justifikasi} \\
+\hline
+Metrik Numerik Kontinu & Interpolasi Linear & Mempertahankan kontinuitas dan tren temporal \\
+\hline
+Atribut Kategorikal & Modus (Nilai Paling Sering) & Menggunakan nilai yang paling representatif \\
+\hline
+Identitas Pelanggan & Penghapusan Rekaman & Rekaman tanpa identitas tidak dapat digunakan \\
+\hline
+Dimensi Waktu & \textit{Forward Fill} & Mempertahankan konsistensi periode waktu \\
+\hline
+Variabel Target & Tidak Diimputasi & Menghindari bias pada variabel target prediksi \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Penghapusan Duplikasi}
+
+Rekaman duplikat diidentifikasi berdasarkan kombinasi kunci unik yang terdiri dari \texttt{CUSTOMER\_ID}, \texttt{PERIODE}, dan \texttt{PRODUCT\_TYPE}. Rekaman duplikat dihapus dengan mempertahankan rekaman terbaru berdasarkan \textit{timestamp} pembaruan. Proses ini memastikan bahwa setiap kombinasi pelanggan, periode, dan produk hanya memiliki satu rekaman yang valid dan tidak ada redundansi data yang dapat menyebabkan bias dalam model.
+
+\subsubsection{Deteksi dan Penanganan \textit{Outlier}}
+
+Deteksi \textit{outlier} dilakukan menggunakan metode \textit{Modified Z-Score} yang diusulkan oleh Iglewiscz dan Hoaglin. Nilai dengan skor modifikasi $|M_i| > 3.5$ dikategorikan sebagai \textit{outlier}. Penanganan \textit{outlier} dilakukan dengan pendekatan \textit{winsorization}, yaitu mengganti nilai ekstrem dengan batas persentil tertentu (persentil ke-1 dan ke-99) untuk mempertahankan informasi temporal tanpa menghapus rekaman secara keseluruhan.
+
+\subsection{Transformasi Data}
+\label{subsec:transformasi-data}
+
+Transformasi data dilakukan untuk menyesuaikan format dan skala data agar sesuai dengan kebutuhan algoritma pemodelan. Proses transformasi mencakup normalisasi, standardisasi, transformasi logaritmik, serta pengkodean fitur kategorikal.
+
+\subsubsection{Normalisasi dan Standardisasi}
+
+Normalisasi dan standardisasi merupakan teknik penskalaan data yang kritis untuk model \textit{deep learning} guna mencegah ketidakstabilan pembelajaran dan meningkatkan performa model. Tabel~\ref{tab:teknik-scaling} menyajikan teknik penskalaan yang digunakan untuk setiap kategori fitur dalam sistem.
+
+\begin{table}[h]
+\centering
+\caption{Teknik Penskalaan per Kategori Fitur}
+\label{tab:teknik-scaling}
+\begin{tabular}{|p{3.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Kategori Fitur} & \textbf{Teknik Penskalaan} & \textbf{Justifikasi} \\
+\hline
+Metrik Pendapatan & Standardisasi Z-Score & Distribusi mendekati normal dengan rentang lebar \\
+\hline
+Volume Pesanan & Normalisasi Min-Max & Distribusi seragam dengan batas jelas (0--1) \\
+\hline
+Tingkat \textit{Churn} & Normalisasi Min-Max & Nilai terbatas pada rentang 0--1 \\
+\hline
+Pencapaian Target & Standardisasi Z-Score & Memungkinkan representasi nilai negatif (di bawah target) \\
+\hline
+Fitur Temporal & Normalisasi Min-Max & Mempertahankan skala relatif antar periode \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Transformasi Logaritmik}
+
+Dalam fitur dengan distribusi \textit{skewed} (miring), transformasi logaritmik diterapkan untuk mengurangi kemiriman dan membuat distribusi lebih mendekati normal. Transformasi ini meningkatkan performa model dengan memastikan data terdistribusi lebih simetris. Penambahan konstanta 1 dilakukan untuk menangani nilai nol dalam data.
+
+\subsubsection{Pengkodean Fitur Kategorikal}
+
+Fitur kategorikal dikonversi menjadi representasi numerik menggunakan teknik \textit{one-hot encoding} untuk kategori dengan kardinalitas rendah (kurang dari 10 nilai unik) dan \textit{label encoding} untuk kategori dengan kardinalitas tinggi. Tabel~\ref{tab:encoding} menyajikan teknik pengkodean yang digunakan untuk setiap fitur kategorikal utama.
+
+\begin{table}[h]
+\centering
+\caption{Teknik Pengkodean Fitur Kategorikal}
+\label{tab:encoding}
+\begin{tabular}{|p{3.5cm}|c|p{3cm}|p{3.5cm}|}
+\hline
+\textbf{Fitur Kategorikal} & \textbf{Kardinalitas} & \textbf{Teknik Pengkodean} & \textbf{Dimensi Hasil} \\
+\hline
+\texttt{REGIONAL} & 7 & \textit{One-Hot Encoding} & 7 fitur biner \\
+\hline
+\texttt{WITEL} & >50 & \textit{Label Encoding} & 1 fitur integer \\
+\hline
+\texttt{SEGMENT} & 5 & \textit{One-Hot Encoding} & 5 fitur biner \\
+\hline
+\texttt{PRODTYPE} & >20 & \textit{Label Encoding} & 1 fitur integer \\
+\hline
+\texttt{SERVICE\_TYPE} & 8 & \textit{One-Hot Encoding} & 8 fitur biner \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Rekayasa Fitur untuk Peramalan Deret Waktu}
+\label{subsec:feature-engineering}
+
+Rekayasa fitur (\textit{feature engineering}) merupakan proses pembuatan fitur baru dari data mentah untuk meningkatkan akurasi model prediksi. Dalam konteks peramalan deret waktu, rekayasa fitur mencakup pembuatan fitur temporal, fitur \textit{lag}, fitur agregat, dan fitur interaksi.
+
+\subsubsection{Fitur Temporal}
+
+Fitur temporal diekstraksi dari dimensi waktu untuk menangkap pola musiman dan siklis dalam data. Tabel~\ref{tab:fitur-temporal} menyajikan fitur temporal yang dihasilkan.
+
+\begin{table}[h]
+\centering
+\caption{Fitur Temporal yang Dihasilkan}
+\label{tab:fitur-temporal}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Fitur Temporal} & \textbf{Deskripsi dan Formula} \\
+\hline
+\texttt{MONTH\_SIN}, \texttt{MONTH\_COS} & Representasi siklis bulan menggunakan transformasi sinus dan kosinus untuk menangkap periodisitas musiman \\
+\hline
+\texttt{QUARTER} & Klasifikasi kuartal tahun (Q1, Q2, Q3, Q4) untuk mengidentifikasi pola per kuartal \\
+\hline
+\texttt{IS\_YEAR\_END} & Indikator biner akhir tahun (November--Desember) untuk pengaruh periode puncak \\
+\hline
+\texttt{IS\_QUARTER\_END} & Indikator biner akhir kuartal untuk mendeteksi efek pembatasan periode \\
+\hline
+\texttt{DAYS\_IN\_MONTH} & Jumlah hari dalam bulan bersangkutan untuk normalisasi berdasarkan durasi periode \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Fitur \textit{Lag} dan \textit{Rolling Statistics}}
+
+Fitur \textit{lag} dibuat dengan menggeser nilai variabel target ke periode sebelumnya untuk menangkap dependensi temporal. Selain itu, statistik bergulir (\textit{rolling statistics}) dihitung untuk menangkap tren dan volatilitas. Tabel~\ref{tab:fitur-lag} menyajikan fitur \textit{lag} dan statistik bergulir yang dihasilkan.
+
+\begin{table}[h]
+\centering
+\caption{Fitur Lag dan Statistik Bergulir}
+\label{tab:fitur-lag}
+\begin{tabular}{|p{4.5cm}|p{9cm}|}
+\hline
+\textbf{Fitur} & \textbf{Deskripsi} \\
+\hline
+\texttt{LAG\_1, LAG\_3, LAG\_6, LAG\_12} & Nilai variabel target pada 1, 3, 6, dan 12 periode sebelumnya untuk menangkap dependensi \\
+\hline
+\texttt{ROLLING\_MEAN\_3, ROLLING\_MEAN\_6} & Rata-rata bergerak 3 dan 6 periode untuk mengidentifikasi tren jangka pendek dan menengah \\
+\hline
+\texttt{ROLLING\_STD\_3, ROLLING\_STD\_6} & Simpangan baku bergerak untuk mengukur volatilitas data \\
+\hline
+\texttt{ROLLING\_MIN\_6, ROLLING\_MAX\_6} & Nilai minimum dan maksimum bergerak 6 periode untuk mendeteksi rentang variasi \\
+\hline
+\texttt{DIFF\_1, DIFF\_12} & Diferensiasi orde 1 dan 12 untuk menangani non-stasioneritas dan pola musiman \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Fitur Agregat per Entitas}
+
+Fitur agregat dihitung untuk setiap entitas (pelanggan, wilayah, produk) guna menangkap karakteristik historis yang dapat memengaruhi nilai target. Tabel~\ref{tab:fitur-agregat} menyajikan fitur agregat yang dihasilkan.
+
+\begin{table}[h]
+\centering
+\caption{Fitur Agregat per Entitas}
+\label{tab:fitur-agregat}
+\begin{tabular}{|p{4.5cm}|p{9cm}|}
+\hline
+\textbf{Fitur Agregat} & \textbf{Deskripsi dan Perhitungan} \\
+\hline
+\texttt{CUSTOMER\_AVG\_REVENUE} & Rata-rata pendapatan historis per pelanggan dihitung dari semua periode sebelumnya \\
+\hline
+\texttt{REGION\_TOTAL\_ORDER} & Total pesanan historis per regional untuk mengukur skala operasional regional \\
+\hline
+\texttt{PRODUCT\_CHURN\_RATE} & Tingkat \textit{churn} historis per jenis produk untuk mengidentifikasi produk berisiko tinggi \\
+\hline
+\texttt{SEGMENT\_TARGET\_ ACHIEVEMENT} & Rata-rata pencapaian target per segmen pelanggan untuk konteks pencapaian relatif \\
+\hline
+\texttt{WITEL\_REVENUE\_GROWTH} & Pertumbuhan pendapatan per wilayah telekomunikasi untuk menangkap tren pertumbuhan regional \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Pembagian Data untuk Pelatihan dan Evaluasi}
+\label{subsec:split-data}
+
+Pembagian data untuk model peramalan deret waktu menggunakan pendekatan \textit{time-based split} untuk mencegah \textit{data leakage} dan memastikan evaluasi yang realistis. Data dibagi berdasarkan urutan waktu dengan proporsi yang disajikan pada Tabel~\ref{tab:split-data}.
+
+\begin{table}[h]
+\centering
+\caption{Pembagian Data untuk Pelatihan dan Evaluasi}
+\label{tab:split-data}
+\begin{tabular}{|p{3.5cm}|c|p{7.5cm}|}
+\hline
+\textbf{\textit{Dataset}} & \textbf{Proporsi} & \textbf{Keterangan dan Tujuan} \\
+\hline
+\textit{\textit{Training Set}} & 70\% & Data historis terlama untuk melatih model dan pembelajaran parameter \\
+\hline
+\textit{\textit{Validation Set}} & 15\% & Data periode tengah untuk \textit{hyperparameter tuning} dan evaluasi intermediat \\
+\hline
+\textit{\textit{Test Set}} & 15\% & Data periode terbaru untuk evaluasi akhir model pada data yang belum pernah dilihat \\
+\hline
+\end{tabular}
+\end{table}
+
+Selain pembagian statis, sistem juga mengimplementasikan \textit{rolling-origin cross-validation} untuk evaluasi yang lebih robust, dengan jendela pelatihan bergerak maju secara bertahap dan model dievaluasi pada beberapa horizon prediksi.
+
+\subsection{Penyimpanan \textit{Dataset} Final}
+\label{subsec:penyimpanan-dataset}
+
+Dataset yang telah melalui proses persiapan disimpan dalam format yang terstruktur untuk memudahkan akses oleh modul pemodelan. Setiap dataset disimpan dengan metadata yang mencakup \textit{timestamp} pembuatan, versi skema, statistik deskriptif, dan parameter transformasi yang digunakan. Penyimpanan parameter transformasi (\textit{scaler}, \textit{encoder}) memungkinkan transformasi yang konsisten pada data baru saat inferensi sistem.
+
+
+\section{Pemodelan Data (\textit{Data Modelling})}
+\label{sec:data-modelling}
+
+Tahap pemodelan data (\textit{modeling}) merupakan fase keempat dalam metodologi CRISP-DM yang berfokus pada pemilihan teknik pemodelan, perancangan arsitektur model, konfigurasi \textit{hyperparameter}, serta pelatihan model menggunakan dataset yang telah dipersiapkan. Pada penelitian ini, pemodelan data mencakup tiga komponen utama, yaitu model peramalan deret waktu berbasis pembelajaran mendalam, model klasifikasi \textit{intent} berbasis pola, dan model pembangkitan bahasa alami berbasis templat.
+
+\subsection{Arsitektur Model Peramalan Deret Waktu}
+\label{subsec:arsitektur-forecasting}
+
+Sistem peramalan dalam penelitian ini memanfaatkan pendekatan berbasis pembelajaran mendalam (\textit{deep learning}) yang dirancang khusus untuk menangani data deret waktu multivariat (\textit{multivariate time series}) dengan pola temporal yang kompleks. Sistem menggunakan tiga arsitektur utama, yaitu LSTM (\textit{Long Short-Term Memory}), GRU (\textit{Gated Recurrent Unit}), dan TFT (\textit{Temporal Fusion Transformer}), serta kombinasi hibrida dari algoritma-algoritma tersebut untuk memaksimalkan akurasi prediksi terhadap indikator kinerja bisnis.
+
+\subsubsection{Model LSTM (\textit{Long Short-Term Memory})}
+
+LSTM merupakan jenis jaringan saraf berulang (\textit{Recurrent Neural Network}, RNN) yang dirancang untuk mengatasi masalah gradien menghilang (\textit{vanishing gradient}) pada RNN tradisional dan mampu mempelajari dependensi jangka panjang dalam data sekuens. Arsitektur LSTM terdiri dari sel memori dan tiga gerbang utama yang diuraikan pada Tabel~\ref{tab:lstm-gates}.
+
+\begin{table}[h]
+\centering
+\caption{Komponen Gerbang pada Arsitektur LSTM}
+\label{tab:lstm-gates}
+\begin{tabular}{|p{2.5cm}|p{3.5cm}|p{6.5cm}|}
+\hline
+\textbf{Gerbang} & \textbf{Formula Umum} & \textbf{Fungsi dalam Arsitektur} \\
+\hline
+\textit{Forget Gate} & $f_t = \sigma(W_f \cdot [h_{t-1}, x_t] + b_f)$ & Menentukan informasi dari sel memori periode sebelumnya yang harus dibuang \\
+\hline
+\textit{Input Gate} & $i_t = \sigma(W_i \cdot [h_{t-1}, x_t] + b_i)$ & Menentukan informasi baru dari input periode saat ini yang akan disimpan \\
+\hline
+\textit{Output Gate} & $o_t = \sigma(W_o \cdot [h_{t-1}, x_t] + b_o)$ & Menentukan bagian sel memori yang menjadi keluaran tersembunyi \\
+\hline
+\end{tabular}
+\end{table}
+
+Keunggulan LSTM terletak pada kemampuannya untuk mempelajari dependensi jangka panjang dengan stabil dan menangani data deret waktu yang memiliki pola kompleks. Struktur gerbang memungkinkan model untuk secara selektif menyimpan, melupakan, dan menggunakan informasi dari periode-periode sebelumnya.
+
+\subsubsection{Model GRU (\textit{Gated Recurrent Unit})}
+
+GRU merupakan varian yang lebih sederhana dari LSTM dengan jumlah parameter yang lebih sedikit sehingga lebih efisien dalam menangkap dan mempertahankan dependensi jangka pendek dan jangka panjang dalam data deret waktu. GRU menggunakan dua gerbang utama, yaitu \textit{update gate} dan \textit{reset gate}. Tabel~\ref{tab:gru-gates} menyajikan komponen gerbang pada arsitektur GRU.
+
+\begin{table}[h]
+\centering
+\caption{Komponen Gerbang pada Arsitektur GRU}
+\label{tab:gru-gates}
+\begin{tabular}{|p{2.5cm}|p{3.5cm}|p{6.5cm}|}
+\hline
+\textbf{Gerbang} & \textbf{Formula Umum} & \textbf{Fungsi dalam Arsitektur} \\
+\hline
+\textit{Update Gate} & $z_t = \sigma(W_z \cdot [h_{t-1}, x_t] + b_z)$ & Mengontrol seberapa banyak informasi dari \textit{hidden state} lama yang dipertahankan \\
+\hline
+\textit{Reset Gate} & $r_t = \sigma(W_r \cdot [h_{t-1}, x_t] + b_r)$ & Mengontrol seberapa banyak informasi dari \textit{hidden state} lama yang diabaikan \\
+\hline
+\end{tabular}
+\end{table}
+
+Dibandingkan dengan LSTM, GRU memiliki struktur yang lebih sederhana dengan lebih sedikit parameter sehingga dapat meningkatkan kecepatan pelatihan sebesar 20--30\% tanpa mengorbankan akurasi secara signifikan pada banyak kasus penggunaan.
+
+\subsubsection{Model TFT (\textit{Temporal Fusion Transformer})}
+
+\textit{Temporal Fusion Transformer} (TFT) merupakan arsitektur berbasis mekanisme perhatian (\textit{attention}) yang dirancang untuk menangani peramalan deret waktu \textit{multi-horizon} dan multivariat secara efektif. TFT menggabungkan kekuatan LSTM untuk pemrosesan pola jangka pendek dan menengah dengan mekanisme \textit{self-attention} untuk menangkap dependensi jangka panjang. Tabel~\ref{tab:tft-components} menyajikan komponen utama arsitektur TFT.
+
+\begin{table}[h]
+\centering
+\caption{Komponen Utama Arsitektur TFT}
+\label{tab:tft-components}
+\begin{tabular}{|p{3.5cm}|p{3.5cm}|p{5.5cm}|}
+\hline
+\textbf{Lapisan Komponen} & \textbf{Fungsi Utama} & \textbf{Inovasi Teknis} \\
+\hline
+\textit{Variable Selection Network} (VSN) & Seleksi dinamis fitur penting & Pembobotan fitur yang dipelajari model untuk setiap langkah waktu \\
+\hline
+\textit{Gated Residual Network} (GRN) & Pemrosesan nonlinear data & Koneksi \textit{skip} dengan gerbang berbasis GRU untuk kontrol kedalaman \\
+\hline
+\textit{LSTM Encoder-Decoder} & Pemrosesan pola temporal & Integrasi informasi statis ke \textit{hidden state} inisial \\
+\hline
+\textit{Multi-Head Attention} & Pembelajaran dependensi jangka panjang & Berbagi \textit{values} antar kepala perhatian untuk fleksibilitas \\
+\hline
+\textit{Quantile Output} & Peramalan probabilistik & Interval kepercayaan untuk pengambilan keputusan berbasis risiko \\
+\hline
+\end{tabular}
+\end{table}
+
+Keunggulan utama TFT adalah kemampuannya untuk memproses tiga jenis masukan secara terpisah, yaitu masukan statis seperti identitas pelanggan dan lokasi geografis, masukan variabel masa lalu yang hanya tersedia di masa lalu, dan masukan variabel masa depan yang diketahui seperti promosi yang direncanakan. TFT juga menghasilkan prediksi kuantil yang memungkinkan pengambilan keputusan berbasis interval kepercayaan.
+
+\subsubsection{Perbandingan Karakteristik Model}
+
+Tabel~\ref{tab:perbandingan-model} menyajikan perbandingan karakteristik ketiga arsitektur model peramalan yang digunakan dalam penelitian ini.
+
+\begin{table}[h]
+\centering
+\caption{Perbandingan Karakteristik Model Peramalan}
+\label{tab:perbandingan-model}
+\begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|p{3cm}|}
+\hline
+\textbf{Aspek Perbandingan} & \textbf{LSTM} & \textbf{GRU} & \textbf{TFT} \\
+\hline
+Kompleksitas Arsitektur & Tinggi & Sedang & Sangat Tinggi \\
+\hline
+Jumlah Parameter & Banyak & Lebih sedikit & Paling banyak \\
+\hline
+Kecepatan Pelatihan & Lambat & Cepat & Paling lambat \\
+\hline
+Pembelajaran Dependensi Jangka Panjang & Baik & Baik & Sangat Baik \\
+\hline
+Interpretabilitas Model & Rendah & Rendah & Tinggi (\textit{attention weights}) \\
+\hline
+Kemampuan Multi-Horizon & Terbatas & Terbatas & Sangat Baik \\
+\hline
+Kebutuhan Volume Data & Sedang & Sedang & Tinggi \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Konfigurasi \textit{Hyperparameter}}
+\label{subsec:hyperparameter}
+
+Konfigurasi \textit{hyperparameter} untuk setiap arsitektur model ditetapkan berdasarkan praktik terbaik dari literatur dan disesuaikan melalui proses \textit{hyperparameter tuning} menggunakan validasi silang berbasis waktu (\textit{time-based cross-validation}). Tabel~\ref{tab:hyperparameter} menyajikan konfigurasi \textit{hyperparameter} untuk setiap model.
+
+\begin{table}[h]
+\caption{Konfigurasi \textit{Hyperparameter} Model}
+\label{tab:hyperparameter}
+\begin{tabular}{|p{3.5cm}|c|c|c|}
+\hline
+\textbf{\textit{Hyperparameter}} & \textbf{LSTM} & \textbf{GRU} & \textbf{TFT} \\
+\hline
+Jumlah Lapisan Berulang & 2--3 & 2--3 & 2 \\
+\hline
+Ukuran \textit{Hidden State} & 64--256 & 64--256 & 160 \\
+\hline
+Tingkat \textit{Dropout} & 0.1--0.3 & 0.1--0.3 & 0.1 \\
+\hline
+\textit{Learning Rate} & $10^{-3}$--$10^{-4}$ & $10^{-3}$--$10^{-4}$ & $10^{-3}$ \\
+\hline
+Ukuran \textit{Batch} & 32--256 & 32--256 & 64 \\
+\hline
+Jumlah \textit{Epoch} Maksimum & 100 & 100 & 100 \\
+\hline
+\textit{Early Stopping Patience} & 10 & 10 & 10 \\
+\hline
+Panjang Sekuens Masukan & 12 & 12 & 12 \\
+\hline
+Horizon Prediksi & 1--6 & 1--6 & 3--6 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Strategi Pelatihan Model}
+\label{subsec:strategi-pelatihan}
+
+Strategi pelatihan model dirancang untuk mengoptimalkan akurasi prediksi sekaligus mencegah \textit{overfitting}. Beberapa teknik yang diimplementasikan meliputi \textit{early stopping}, regularisasi, serta pemilihan fungsi kerugian yang sesuai dengan karakteristik masalah.
+
+\subsubsection{\textit{Early Stopping}}
+
+Mekanisme \textit{early stopping} diimplementasikan untuk menghentikan pelatihan jika \textit{validation loss} tidak mengalami perbaikan selama 10 \textit{epoch} berturut-turut. Bobot model terbaik (\textit{best weights}) dipulihkan setelah pelatihan dihentikan untuk memastikan model menggunakan konfigurasi parameter terbaik.
+
+\subsubsection{Regularisasi}
+
+Teknik regularisasi yang digunakan mencakup \textit{dropout} untuk mencegah \textit{overfitting} dengan secara acak menonaktifkan sebagian neuron selama pelatihan, serta regularisasi L2 (\textit{weight decay}) untuk membatasi magnitude bobot model.
+
+\subsubsection{Fungsi Kerugian}
+
+Pemilihan fungsi kerugian disesuaikan dengan karakteristik masalah prediksi. Tabel~\ref{tab:loss-function} menyajikan fungsi kerugian yang digunakan untuk setiap jenis prediksi.
+
+\begin{table}[h]
+\centering
+\caption{Fungsi Kerugian untuk Setiap Jenis Prediksi}
+\label{tab:loss-function}
+\begin{tabular}{|p{3.5cm}|p{3cm}|p{6cm}|}
+\hline
+\textbf{Jenis Prediksi} & \textbf{Fungsi Kerugian} & \textbf{Kegunaan dan Formula} \\
+\hline
+Prediksi Titik Numerik & \textit{Mean Squared Error} (MSE) & Mengukur rata-rata kuadrat kesalahan prediksi untuk nilai kontinu \\
+\hline
+Prediksi Kuantil & \textit{Quantile Loss (Pinball Loss)} & Menghasilkan interval kepercayaan untuk pengambilan keputusan berbasis risiko \\
+\hline
+Prediksi \textit{Churn} Biner & \textit{Binary Cross-Entropy} & Mengklasifikasi status \textit{churn} pelanggan dengan probabilitas calibrated \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Model Klasifikasi \textit{Intent} Berbasis Pola}
+\label{subsec:model-intent}
+
+Model klasifikasi \textit{intent} menggunakan pendekatan pencocokan pola (\textit{pattern matching}) yang dikombinasikan dengan mekanisme \textit{confidence scoring} untuk mengidentifikasi maksud pengguna dari kueri bahasa alami. Sistem dirancang untuk mengenali 20--30 \textit{intent} utama yang berkaitan dengan analisis dan prediksi indikator bisnis pelanggan.
+
+Dalam setiap \textit{intent}, didefinisikan sekumpulan pola (\textit{pattern}) yang mencakup variasi pertanyaan yang mungkin diajukan pengguna. Sistem menghitung skor kecocokan (\textit{matching score}) antara kueri pengguna dengan setiap pola dan menghasilkan \textit{confidence score} dalam rentang 0--1. Ambang batas (\textit{threshold}) ditetapkan pada nilai 0,70; kueri dengan \textit{confidence score} di atas ambang batas diteruskan ke modul pemrosesan kueri, sedangkan kueri di bawah ambang batas memicu permintaan klarifikasi kepada pengguna.
+
+\subsection{Model Pembangkitan Bahasa Alami Berbasis Templat}
+\label{subsec:model-nlg}
+
+Model pembangkitan bahasa alami (\textit{Natural Language Generation}, NLG) menggunakan pendekatan berbasis templat untuk menghasilkan respons naratif dari data terstruktur. Sistem memetakan setiap \textit{intent} ke satu atau lebih templat respons yang berisi \textit{placeholder} untuk diisi dengan data aktual hasil kueri.
+
+Dalam meningkatkan variasi dan kealamian respons, sistem mengimplementasikan beberapa templat untuk setiap skenario dan memilih secara acak atau berdasarkan konteks. Selain itu, model \textit{template rewriting} berbasis transformer (T5) dapat digunakan untuk memperbaiki koherensi dan kealamian teks yang dihasilkan tanpa mengorbankan akurasi faktual.
+
+\subsection{Integrasi Model dalam Arsitektur Sistem}
+\label{subsec:integrasi-model}
+
+Ketiga komponen model (peramalan deret waktu, klasifikasi \textit{intent}, dan NLG) diintegrasikan dalam arsitektur sistem \textit{chatbot} BI dalam alur berikut.
+
+\begin{enumerate}
+    \item Kueri pengguna diterima oleh modul klasifikasi \textit{intent}
+    \item \textit{Intent} dan parameter entitas diekstraksi dari kueri
+    \item Berdasarkan \textit{intent}, sistem mengarahkan ke modul yang sesuai:
+    \begin{enumerate}
+        \item Analisis deskriptif: Eksekusi kueri ke \textit{data warehouse}
+        \item Analisis prediktif: Invokasi model peramalan deret waktu
+    \end{enumerate}
+    \item Hasil diproses oleh modul NLG untuk menghasilkan respons naratif yang mudah dipahami
+    \item Respons ditampilkan kepada pengguna melalui antarmuka \textit{chatbot}
+\end{enumerate}
+
+Tabel~\ref{tab:integrasi-model} menyajikan ringkasan integrasi model dalam sistem.
+
+\begin{table}[h]
+\centering
+\caption{Integrasi Model dalam Arsitektur Sistem}
+\label{tab:integrasi-model}
+\begin{tabular}{|p{3cm}|p{3.5cm}|p{3cm}|p{3cm}|}
+\hline
+\textbf{Komponen Sistem} & \textbf{Teknik/Model} & \textbf{Masukan} & \textbf{Keluaran} \\
+\hline
+Klasifikasi \textit{Intent} & \textit{Pattern Matching} + \textit{Confidence Scoring} & Kueri teks pengguna & \textit{Intent}, entitas, confidence score \\
+\hline
+Peramalan Deret Waktu & LSTM / GRU / TFT & Data historis + fitur rekayasa & Prediksi + interval kepercayaan \\
+\hline
+Pembangkitan Respons & \textit{Template-based} NLG + T5 Rewriting & Data hasil kueri / prediksi & Teks naratif yang responsif \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+% % ============================================================================================
+% % BAB III ANALISIS MASALAH
+% % Pembagian subbab tidak rigid dan dapat bervariasi. Bab ini minimal berisi analisis kebutuhan
+% % fungsional dan nonfungsional, analisis berbagai alternatif solusi yang dapat ditawarkan, dan
+% % metode pemilihan solusi yang diusulkan.
+% % ============================================================================================
+% \cleardoublepage
+% \chapter{ANALISIS MASALAH}
+% \label{chap:analisis-masalah}
+% Bab ini membahas analisis masalah yang ada pada sistem saat ini, analisis kebutuhan yang diperlukan
+% untuk menyelesaikan masalah tersebut, serta analisis pemilihan solusi yang diusulkan. Secara garis besar,
+% bab ini membahas hal-hal berikut:
+% \begin{enumerate}[1.]
+%     \item Deskripsi hasil analisis dari persoalan yang sedang ditangani dalam TA;
+%     \item Penjelasan tentang solusi yang ditawarkan (dapat berupa algoritma, konsep desain, formula, atau gabungannya) 
+%     pada level konsep dan detail yang cukup untuk merealisasikan solusinya; dan
+%     \item Penjelasan tentang pendekatan yang dipilih dalam menyelesaikan persoalan TA.
+% \end{enumerate}
+% Subbab-subbab dalam bab ini dapat disesuaikan dengan kebutuhan topik TA yang dibahas. Berikut adalah contoh pembagian subbab
+% yang dapat digunakan sebagai referensi (judul subbab dapat diubah sesuai dengan hal yang hendak dibahas dalam subbab tersebut).
+
+% \section{Analisis Kondisi Saat Ini}
+% Menurut \textcite{laudon2020}, gambarkan terlebih dahulu model konseptual sistem yang ada saat ini. Model konseptual ini berisi berbagai komponen atau subsitem dan interaksi antarsubsistem tersebut. Setelah itu, berikan penjelasan tentang masalah yang ada pada sistem tersebut. Paragraf berikut berisi contoh penjabaran masalah sistem informasi fasilitas kesehatan untuk pasien \autocite{pressman2019}. 
+% \section{Analisis Kebutuhan}
+% \lipsum[4]
+% \subsection{Identifikasi Masalah Pengguna}
+% \lipsum[5]
+% \subsection{Kebutuhan Fungsional}
+% \lipsum[6]
+% \subsection{Kebutuhan Nonfungsional}
+% \lipsum[7]
+
+% \section{Analisis Pemilihan Solusi}
+% \subsection{Alternatif Solusi}
+% \lipsum[8]
+% \subsection{Analisis Penentuan Solusi}
+% \lipsum[9]

@@ -1,0 +1,4 @@
+metric,model,regional,witel,smape_prev,error
+churn_hsi,prophet,REG-1,SUMBAGSEL,92.6287,"DPY-4011: the database or network closed the connection
+[Errno 32] Broken pipe"
+churn_hsi,prophet,REG-3,SOLO JATENG TIMUR,66.8881,[Errno 57] Socket is not connected

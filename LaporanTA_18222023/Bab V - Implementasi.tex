@@ -1,0 +1,487 @@
+% ==========================================
+% BAB V IMPLEMENTASI
+% ==========================================
+\cleardoublepage
+\chapter{IMPLEMENTASI}
+\label{chap:implementasi}
+
+Bab ini menyajikan implementasi sistem \textit{Business Intelligence} berbasis \textit{rule-based chatbot} yang telah dirancang pada bab sebelumnya. Pembahasan mencakup arsitektur sistem yang diimplementasikan, implementasi setiap komponen utama, serta integrasi antar-komponen menjadi satu kesatuan sistem yang fungsional.
+
+\section{Arsitektur Sistem Terimplementasi}
+\label{sec:arsitektur-terimplementasi}
+
+Sistem BrightAI diimplementasikan dengan arsitektur tiga lapis (\textit{three-tier architecture}) yang memisahkan tanggung jawab setiap komponen secara jelas. Ketiga lapis tersebut adalah sebagai berikut.
+
+\begin{enumerate}
+    \item \textbf{\textit{Frontend} (React.js)}: Antarmuka pengguna berbasis web yang menyediakan fitur percakapan \textit{chatbot}, panel peramalan, dan manajemen profil pengguna. \textit{Frontend} berjalan pada porta 3000 dan berkomunikasi dengan \textit{backend} melalui \textit{RESTful API}.
+    \item \textbf{\textit{Backend} (Node.js/Express)}: Peladen utama yang menangani autentikasi, manajemen sesi, eksekusi mesin aturan (\textit{rule engine}), klasifikasi maksud (\textit{intent classification}), pembangkitan bahasa alami (NLG), serta komunikasi dengan basis data Oracle. \textit{Backend} berjalan pada porta 3001.
+    \item \textbf{Layanan \textit{Machine Learning} (FastAPI/PyTorch)}: Layanan terpisah yang menangani pelatihan dan inferensi model peramalan deret waktu berbasis GRU dan LSTM. Layanan ini berjalan pada porta 8000 dan diakses oleh \textit{backend} melalui permintaan HTTP internal.
+\end{enumerate}
+
+Ketiga lapis terhubung ke Oracle Database yang berfungsi sebagai \textit{Enterprise Data Warehouse} (DWH) sekaligus penyimpan data operasional sistem (pengguna, riwayat percakapan, dan sesi).
+
+\section{Implementasi \textit{Backend} (Node.js/Express)}
+\label{sec:impl-backend}
+
+\textit{Backend} sistem diimplementasikan menggunakan Node.js dengan \textit{framework} Express.js sebagai fondasi \textit{RESTful API}. Berkas utama \texttt{server.js} menginisialisasi aplikasi Express, mengonfigurasi \textit{middleware}, mendaftarkan rute API, serta mengelola siklus hidup koneksi basis data.
+
+\subsection{Struktur Proyek \textit{Backend}}
+
+Proyek \textit{backend} diorganisasi menggunakan pola arsitektur MVC (\textit{Model-View-Controller}) yang dimodifikasi menjadi struktur berlapis. Tabel~\ref{tab:struktur-backend} menyajikan struktur direktori utama.
+
+\begin{longtable}{|p{4.5cm}|p{8.5cm}|}
+\caption{Struktur Direktori Proyek \textit{Backend}} \label{tab:struktur-backend} \\
+\hline
+\textbf{Direktori/Berkas} & \textbf{Fungsi} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Direktori/Berkas} & \textbf{Fungsi} \\
+\hline
+\endhead
+\hline
+\endfoot
+\texttt{server.js} & Titik masuk utama aplikasi: inisialisasi Express, \textit{middleware}, rute, dan koneksi basis data \\
+\hline
+\texttt{config/database.js} & Konfigurasi koneksi Oracle Database, \textit{connection pooling}, dan eksekutor kueri \\
+\hline
+\texttt{src/controllers/} & Penangan permintaan (\textit{request handler}): \texttt{authController.js} dan \texttt{chatController.js} \\
+\hline
+\texttt{src/models/} & Model data untuk pengguna, riwayat percakapan, dan sesi \\
+\hline
+\texttt{src/routes/} & Definisi rute API: autentikasi, \textit{chat}, sesi, dan peramalan \\
+\hline
+\texttt{src/rules/engine/} & Mesin aturan, klasifikasi maksud, pemroses kueri, dan pembangkit bahasa alami \\
+\hline
+\texttt{src/rules/databases/} & Definisi aturan per domain basis data \\
+\hline
+\texttt{src/rules/config/} & Registri aturan dan konfigurasi pemetaan tabel \\
+\hline
+\texttt{src/middleware/} & \textit{Middleware} autentikasi JWT dan penanganan kesalahan \\
+\hline
+\texttt{src/utils/} & Utilitas: \textit{logger}, \textit{cache}, dan fungsi pembantu \\
+\hline
+\end{longtable}
+
+\subsection{Konfigurasi \textit{Middleware} Keamanan}
+
+Sistem mengimplementasikan beberapa lapisan \textit{middleware} keamanan pada Express.js untuk melindungi API dari ancaman umum. Konfigurasi \textit{middleware} yang diterapkan mencakup:
+
+\begin{enumerate}
+    \item \textbf{Helmet}: Mengatur tajuk HTTP keamanan (\textit{security headers}) untuk mencegah serangan seperti \textit{Cross-Site Scripting} (XSS) dan \textit{clickjacking}.
+    \item \textbf{CORS (\textit{Cross-Origin Resource Sharing})}: Mengizinkan permintaan lintas-asal dari \textit{frontend} yang berjalan pada domain berbeda.
+    \item \textbf{\textit{Rate Limiter}}: Membatasi jumlah permintaan per alamat IP menjadi maksimal 100 permintaan per 15 menit untuk mencegah serangan \textit{brute force} dan \textit{Denial of Service} (DoS).
+    \item \textbf{Pembatasan Ukuran \textit{Payload}}: Membatasi ukuran badan permintaan JSON menjadi maksimal 10 MB.
+\end{enumerate}
+
+\subsection{Koneksi Oracle Database}
+\label{subsec:koneksi-oracle}
+
+Koneksi ke Oracle Database dikelola melalui modul \texttt{config/database.js} menggunakan pustaka \texttt{node-oracledb}. Sistem menggunakan \textit{connection pooling} untuk mengoptimalkan penggunaan koneksi dengan konfigurasi yang disajikan pada Tabel~\ref{tab:pool-config}.
+
+\begin{table}[H]
+\centering
+\caption{Konfigurasi \textit{Connection Pool} Oracle Database}
+\label{tab:pool-config}
+\begin{tabular}{|p{4cm}|c|p{6cm}|}
+\hline
+\textbf{Parameter} & \textbf{Nilai} & \textbf{Keterangan} \\
+\hline
+\texttt{poolMin} & 2 & Jumlah koneksi minimum yang dipertahankan \\
+\hline
+\texttt{poolMax} & 10 & Jumlah koneksi maksimum yang diizinkan \\
+\hline
+\texttt{poolIncrement} & 1 & Penambahan koneksi per permintaan baru \\
+\hline
+\texttt{connectTimeout} & 10 detik & Batas waktu koneksi awal \\
+\hline
+\end{tabular}
+\end{table}
+
+Modul ini juga menyediakan fungsi \texttt{executeQuery} yang menangani eksekusi kueri SQL dengan format keluaran objek (\texttt{OUT\_FORMAT\_OBJECT}), penanganan tipe data CLOB secara otomatis, serta penutupan koneksi yang aman melalui blok \texttt{finally}. Setiap baris hasil kueri yang mengandung CLOB diproses secara asinkron menggunakan \textit{stream} untuk mencegah kebocoran memori.
+
+\subsection{Rute API (\textit{API Routes})}
+
+\textit{Backend} menyediakan empat kelompok rute API utama yang disajikan pada Tabel~\ref{tab:api-routes}.
+
+\begin{longtable}{|p{1.5cm}|p{4cm}|p{7cm}|}
+\caption{Rute API Sistem BrightAI} \label{tab:api-routes} \\
+\hline
+\textbf{Metode} & \textbf{\textit{Endpoint}} & \textbf{Fungsi} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Metode} & \textbf{\textit{Endpoint}} & \textbf{Fungsi} \\
+\hline
+\endhead
+\hline
+\endfoot
+POST & \texttt{/api/auth/register} & Registrasi pengguna baru \\
+\hline
+POST & \texttt{/api/auth/login} & Autentikasi dan penerbitan token JWT \\
+\hline
+GET & \texttt{/api/auth/profile} & Mengambil profil pengguna (memerlukan token) \\
+\hline
+PUT & \texttt{/api/auth/profile} & Memperbarui profil pengguna \\
+\hline
+PUT & \texttt{/api/auth/password} & Mengubah kata sandi \\
+\hline
+POST & \texttt{/api/chat/message} & Mengirim pesan ke \textit{chatbot} dan menerima respons \\
+\hline
+GET & \texttt{/api/chat/history} & Mengambil riwayat percakapan pengguna \\
+\hline
+GET & \texttt{/api/chat/session/:id} & Mengambil pesan dalam satu sesi percakapan \\
+\hline
+DELETE & \texttt{/api/chat/history} & Menghapus riwayat percakapan \\
+\hline
+GET & \texttt{/api/chat/capabilities} & Mengambil daftar kemampuan dan aturan yang tersedia \\
+\hline
+GET & \texttt{/api/sessions} & Mengambil daftar sesi percakapan \\
+\hline
+POST & \texttt{/api/forecast/*} & Meneruskan permintaan peramalan ke layanan ML \\
+\hline
+GET & \texttt{/api/telkom/health} & Pemeriksaan kesehatan (\textit{health check}) sistem \\
+\hline
+\end{longtable}
+
+\section{Implementasi Mesin Aturan (\textit{Rule Engine})}
+\label{sec:impl-rule-engine}
+
+Mesin aturan merupakan komponen inti yang menghubungkan pertanyaan pengguna dengan kueri basis data dan respons naratif. Implementasi mesin aturan terdiri dari empat modul utama yang bekerja secara berurutan.
+
+\subsection{Arsitektur Mesin Aturan}
+
+Alur pemrosesan kueri dalam mesin aturan mengikuti tahapan sebagai berikut.
+
+\begin{enumerate}
+    \item \textbf{Penerimaan Kueri}: Modul \texttt{chatController.js} menerima pesan pengguna dan memeriksa apakah pesan tersebut merupakan sapaan, permintaan bantuan, atau kueri analitik.
+    \item \textbf{Pencocokan Aturan}: Modul \texttt{queryProcessor.js} mencocokkan kueri pengguna dengan aturan yang tersedia menggunakan pencocokan pola kata kunci.
+    \item \textbf{Eksekusi Aturan}: Modul \texttt{ruleEngine.js} mengeksekusi kueri SQL yang terkait dengan aturan yang cocok terhadap Oracle Database, dengan injeksi filter geografis secara dinamis.
+    \item \textbf{Pembangunan Respons}: Modul \texttt{responseBuilder.js} dan \texttt{nlgGenerator.js} mengonversi hasil kueri menjadi narasi dalam bahasa Indonesia.
+\end{enumerate}
+
+\subsection{Struktur Definisi Aturan}
+
+Setiap aturan didefinisikan sebagai objek JavaScript yang memiliki struktur terstandar. Komponen utama setiap aturan disajikan pada Tabel~\ref{tab:struktur-rule}.
+
+\begin{table}[H]
+\centering
+\caption{Komponen Struktur Definisi Aturan}
+\label{tab:struktur-rule}
+\begin{tabular}{|p{3.5cm}|p{9cm}|}
+\hline
+\textbf{Komponen} & \textbf{Deskripsi} \\
+\hline
+\texttt{RULE\_META} & Metadata aturan: identifikasi (\texttt{RULE\_ID}), nama, deskripsi, domain basis data, kategori, dan prioritas eksekusi \\
+\hline
+\texttt{KEYWORDS} & Daftar kata kunci dan pola yang digunakan untuk mencocokkan kueri pengguna dengan aturan \\
+\hline
+\texttt{SQL\_QUERY} & Kueri SQL yang dieksekusi terhadap \textit{Enterprise Data Warehouse} Oracle (skema \texttt{DWH\_MOIS}) \\
+\hline
+\texttt{DATABASE\_CONFIG} & Konfigurasi tabel dan koneksi basis data yang digunakan oleh aturan \\
+\hline
+\texttt{BUSINESS\_LOGIC} & Fungsi pemrosesan logika bisnis, termasuk \texttt{formatIndonesianResponse} untuk mengubah data mentah menjadi struktur terformat \\
+\hline
+\texttt{CACHE\_DURATION} & Durasi penyimpanan hasil kueri dalam \textit{cache} (dalam detik) \\
+\hline
+\end{tabular}
+\end{table}
+
+Sistem mendukung lebih dari 30 aturan analitik yang tersebar di lima domain basis data, yaitu \texttt{BRIGHTAI\_SALES}, \texttt{BRIGHTAI\_REVENUE}, \texttt{BRIGHTAI\_TARGET}, \texttt{BRIGHTAI\_DAPROS}, dan \texttt{BRIGHTAI\_CT0\_NAL}.
+
+\subsection{Injeksi Filter Geografis}
+
+Mesin aturan mengimplementasikan fitur injeksi filter geografis secara dinamis ke dalam kueri SQL pada saat eksekusi. Fitur ini memungkinkan pengguna menyaring data berdasarkan regional atau wilayah telekomunikasi (\textit{witel}) tanpa memerlukan aturan terpisah untuk setiap wilayah. Mekanisme injeksi mendukung dua mode:
+
+\begin{enumerate}
+    \item \textbf{Mode Penampung (\textit{placeholder})}: Jika kueri SQL mengandung penanda \texttt{/* :GEO\_FILTER: */}, penanda tersebut diganti dengan klausa filter yang sesuai.
+    \item \textbf{Mode Injeksi Otomatis}: Jika tidak ada penanda, sistem melakukan pemindaian baris demi baris untuk menemukan blok \texttt{FROM DWH\_MOIS} dan menyisipkan klausa filter pada posisi yang tepat sebelum \texttt{GROUP BY} atau penutup subkueri.
+\end{enumerate}
+
+\subsection{Mekanisme \textit{Caching}}
+
+Hasil eksekusi aturan disimpan dalam \textit{cache} memori menggunakan kunci yang dihasilkan dari \textit{hash} MD5 kombinasi kueri pengguna dan konteks geografis. Setiap entri \textit{cache} memiliki durasi kedaluwarsa yang ditentukan oleh konfigurasi aturan (nilai bawaan: 1800 detik atau 30 menit). Mekanisme ini mengurangi beban kueri terhadap Oracle Database untuk pertanyaan yang sering diajukan.
+
+\section{Implementasi Klasifikasi Maksud (\textit{Intent Classification})}
+\label{sec:impl-intent}
+
+Modul klasifikasi maksud diimplementasikan dalam berkas \texttt{intentClassifier.js} menggunakan pendekatan pencocokan pola kata kunci berbobot (\textit{weighted keyword matching}). Pendekatan ini dipilih karena memberikan latensi rendah (kurang dari 1 milidetik per kueri), interpretabilitas tinggi, dan kemampuan untuk bekerja dengan baik pada domain yang terbatas dan terdefinisi.
+
+\subsection{Arsitektur Klasifikasi}
+
+Sistem mengklasifikasikan setiap kueri pengguna ke dalam dua dimensi: \textit{intent} (maksud) dan \textit{focus} (fokus analisis). Tabel~\ref{tab:intent-impl} menyajikan daftar \textit{intent} yang diimplementasikan beserta contoh kata kunci.
+
+\begin{longtable}{|p{2.5cm}|c|p{7.5cm}|}
+\caption{Daftar \textit{Intent} yang Diimplementasikan} \label{tab:intent-impl} \\
+\hline
+\textbf{\textit{Intent}} & \textbf{Bobot} & \textbf{Contoh Kata Kunci} \\
+\hline
+\endfirsthead
+\hline
+\textbf{\textit{Intent}} & \textbf{Bobot} & \textbf{Contoh Kata Kunci} \\
+\hline
+\endhead
+\hline
+\endfoot
+\textit{quantity} & 3 & berapa, jumlah, total, volume, angka \\
+\hline
+\textit{trend} & 3 & tren, pertumbuhan, naik, turun, MoM, YoY \\
+\hline
+\textit{comparison} & 3 & bandingkan, vs, perbedaan, lebih tinggi \\
+\hline
+\textit{location} & 3 & di mana, regional, witel, wilayah \\
+\hline
+\textit{reason} & 4 & kenapa, mengapa, penyebab, faktor \\
+\hline
+\textit{performance} & 3 & performa, kinerja, pencapaian, target \\
+\hline
+\textit{detail} & 2 & rincian, \textit{breakdown}, distribusi, segmentasi \\
+\hline
+\textit{general} & -- & \textit{Fallback} jika tidak ada kata kunci yang cocok \\
+\hline
+\end{longtable}
+
+\subsection{Algoritma Perhitungan Skor}
+
+Untuk setiap kueri, sistem menghitung skor kecocokan terhadap setiap \textit{intent} dengan mengiterasi daftar kata kunci. Jika sebuah kata kunci ditemukan dalam kueri (menggunakan fungsi \texttt{String.includes}), skor \textit{intent} tersebut ditambah sebesar nilai bobot. \textit{Intent} dengan skor tertinggi dipilih sebagai hasil klasifikasi, dengan nilai keyakinan (\textit{confidence}) dihitung sebagai $\min(100, \text{skor} \times 10)$. Jika seluruh skor bernilai nol, sistem mengembalikan \textit{intent} \texttt{general} sebagai \textit{fallback}.
+
+Selain \textit{intent}, sistem juga mengklasifikasikan fokus analisis ke dalam delapan kategori: \textit{order}, \textit{revenue}, \textit{churn}, \textit{fulfillment}, \textit{subscriber}, \textit{bundling}, \textit{digital}, dan \textit{target}. Kombinasi \textit{intent} dan fokus digunakan oleh modul NLG untuk memilih templat respons yang paling sesuai.
+
+\section{Implementasi Pembangkitan Bahasa Alami (\textit{NLG})}
+\label{sec:impl-nlg}
+
+Modul pembangkitan bahasa alami (NLG) diimplementasikan dalam dua berkas utama: \texttt{nlgGenerator.js} untuk orkestrasi proses dan \texttt{templateLibrary.js} untuk penyimpanan templat respons. Modul ini menghasilkan narasi dalam bahasa Indonesia berformat \textit{Markdown} yang siap ditampilkan pada antarmuka \textit{chatbot}.
+
+\subsection{Alur Pembangkitan Respons}
+
+Proses pembangkitan respons NLG mengikuti empat tahapan berurutan:
+
+\begin{enumerate}
+    \item \textbf{Ekstraksi Konteks}: Fungsi \texttt{extractCtx} mengekstraksi informasi kontekstual dari data terstruktur hasil kueri, meliputi periode analisis, nilai utama, pertumbuhan MoM/YoY, distribusi produk, metrik pelanggan, dan wawasan bisnis.
+    \item \textbf{Klasifikasi \textit{Intent}}: Modul \texttt{intentClassifier} mengklasifikasikan \textit{intent} dan fokus dari pertanyaan asli pengguna.
+    \item \textbf{Pemilihan Templat}: Fungsi \texttt{getTemplate} dari \texttt{templateLibrary} memilih templat yang sesuai berdasarkan \textit{intent} yang teridentifikasi. Setiap \textit{intent} memiliki minimal tiga variasi templat.
+    \item \textbf{Pengisian Data}: Templat yang terpilih diisi dengan data faktual dari konteks. Seluruh angka diformat menggunakan \textit{locale} Indonesia (\texttt{id-ID}).
+\end{enumerate}
+
+\subsection{Peta Subjek Aturan}
+
+Modul NLG mendefinisikan peta subjek (\texttt{RULE\_SUBJEK}) yang memetakan setiap \texttt{RULE\_ID} ke deskripsi subjek dalam bahasa Indonesia. Tabel~\ref{tab:rule-subjek} menyajikan sebagian contoh pemetaan subjek.
+
+\begin{table}[H]
+\centering
+\caption{Contoh Pemetaan Subjek Aturan}
+\label{tab:rule-subjek}
+\begin{tabular}{|p{2.5cm}|p{10cm}|}
+\hline
+\textbf{\texttt{RULE\_ID}} & \textbf{Subjek dalam Bahasa Indonesia} \\
+\hline
+\texttt{ps\_001} & Total \textit{order} HSI (Bisnis dan Basic) \\
+\hline
+\texttt{ps\_002} & \textit{Order} HSI berdasarkan distribusi regional \\
+\hline
+\texttt{mart\_001} & Tren \textit{revenue} layanan HSI \\
+\hline
+\texttt{target\_001} & Realisasi HSI terhadap target \\
+\hline
+\texttt{ct0\_001} & \textit{Churn} pelanggan HSI (CT0) \\
+\hline
+\texttt{dapros\_001} & Distribusi geografis pelanggan HSI \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Format Keluaran}
+
+Respons NLG dihasilkan dalam format \textit{Markdown} yang mendukung:
+
+\begin{enumerate}
+    \item Judul dan subjudul hierarkis (\texttt{\#\#}, \texttt{\#\#\#})
+    \item Tabel data dengan tajuk kolom dan pemisah
+    \item Poin-poin (\textit{bullet points}) untuk wawasan bisnis dan rekomendasi
+    \item Angka diformat sesuai konvensi Indonesia (titik sebagai pemisah ribuan, koma sebagai pemisah desimal)
+    \item Penanda sumber data, jumlah rekaman, dan waktu pemrosesan pada bagian akhir respons
+\end{enumerate}
+
+Akurasi faktual dijamin sebesar 100\% karena seluruh angka dalam respons berasal langsung dari hasil kueri Oracle Database tanpa proses generatif.
+
+\section{Implementasi Layanan \textit{Machine Learning}}
+\label{sec:impl-ml}
+
+Layanan \textit{machine learning} diimplementasikan sebagai layanan mikro (\textit{microservice}) terpisah menggunakan Python dengan \textit{framework} FastAPI dan pustaka PyTorch untuk pemodelan.
+
+\subsection{Struktur Proyek Layanan ML}
+
+Tabel~\ref{tab:struktur-ml} menyajikan struktur direktori layanan \textit{machine learning}.
+
+\begin{table}[H]
+\centering
+\caption{Struktur Direktori Layanan \textit{Machine Learning}}
+\label{tab:struktur-ml}
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Direktori/Berkas} & \textbf{Fungsi} \\
+\hline
+\texttt{main.py} & Titik masuk FastAPI: konfigurasi aplikasi, CORS, dan siklus hidup \\
+\hline
+\texttt{config.py} & Konfigurasi: kredensial Oracle, \textit{hyperparameter} bawaan, jalur penyimpanan model \\
+\hline
+\texttt{routers/forecast.py} & Rute API untuk pelatihan dan prediksi \\
+\hline
+\texttt{models/gru\_model.py} & Definisi arsitektur GRU menggunakan \texttt{torch.nn} \\
+\hline
+\texttt{models/lstm\_model.py} & Definisi arsitektur LSTM menggunakan \texttt{torch.nn} \\
+\hline
+\texttt{training/trainer.py} & \textit{Pipeline} pelatihan dengan \textit{walk-forward validation} \\
+\hline
+\texttt{inference/predictor.py} & \textit{Pipeline} inferensi untuk prediksi waktu nyata \\
+\hline
+\texttt{utils/preprocessing.py} & Normalisasi data, pembuatan \textit{sliding window}, dan pembagian data \\
+\hline
+\texttt{utils/metrics.py} & Perhitungan metrik evaluasi: MAE, RMSE, sMAPE, MASE, \textit{Skill Score} \\
+\hline
+\texttt{saved\_models/} & Penyimpanan model terlatih (\texttt{.pth}) dan \textit{scaler} (\texttt{.pkl}) \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Implementasi Model GRU dan LSTM}
+
+Model GRU dan LSTM diimplementasikan sebagai kelas Python yang mewarisi \texttt{torch.nn.Module}. Kedua model memiliki arsitektur yang serupa dengan perbedaan utama pada jenis sel berulang (\textit{recurrent cell}) yang digunakan. Arsitektur setiap model terdiri dari:
+
+\begin{enumerate}
+    \item \textbf{Lapisan Berulang}: GRU menggunakan \texttt{nn.GRU} dan LSTM menggunakan \texttt{nn.LSTM}, masing-masing dengan 2 lapisan bertumpuk (\textit{stacked layers}) dan ukuran \textit{hidden state} sebesar 64 unit.
+    \item \textbf{Lapisan \textit{Dropout}}: Regularisasi dengan tingkat \textit{dropout} 0,2 diterapkan setelah lapisan berulang untuk mencegah \textit{overfitting}.
+    \item \textbf{Lapisan Linear Keluaran}: Lapisan \texttt{nn.Linear} yang memetakan \textit{hidden state} terakhir ke dimensi horizon prediksi.
+\end{enumerate}
+
+Kedua model menerima masukan berukuran (\textit{batch}, \texttt{window\_size}, 1) dan menghasilkan keluaran berukuran (\textit{batch}, \textit{horizon}). Konfigurasi \textit{hyperparameter} bawaan yang digunakan disajikan pada Tabel~\ref{tab:hyperparameter-impl}.
+
+\begin{table}[H]
+\centering
+\caption{Konfigurasi \textit{Hyperparameter} Model Terimplementasi}
+\label{tab:hyperparameter-impl}
+\begin{tabular}{|p{4cm}|c|p{6.5cm}|}
+\hline
+\textbf{\textit{Hyperparameter}} & \textbf{Nilai} & \textbf{Keterangan} \\
+\hline
+\textit{Window Size} & 12 & Jumlah bulan historis sebagai masukan \\
+\hline
+\textit{Horizon} & 1 & Jumlah bulan yang diprediksi \\
+\hline
+\textit{Hidden Size} & 64 & Dimensi \textit{hidden state} pada lapisan berulang \\
+\hline
+\textit{Num Layers} & 2 & Jumlah lapisan berulang bertumpuk \\
+\hline
+\textit{Dropout} & 0,2 & Tingkat \textit{dropout} untuk regularisasi \\
+\hline
+\textit{Learning Rate} & $10^{-3}$ & Laju pembelajaran awal untuk pengoptimal Adam \\
+\hline
+\textit{Batch Size} & 32 & Ukuran \textit{mini-batch} untuk pelatihan \\
+\hline
+\textit{Epochs} & 100--300 & Jumlah \textit{epoch} maksimum \\
+\hline
+\textit{Early Stopping} & 25 & Jumlah \textit{epoch} tanpa perbaikan sebelum penghentian dini \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{\textit{Pipeline} Pelatihan}
+\label{subsec:pipeline-pelatihan}
+
+\textit{Pipeline} pelatihan diimplementasikan dalam modul \texttt{training/trainer.py} dengan beberapa fitur utama:
+
+\subsubsection{Penyesuaian Otomatis Ukuran Jendela (\textit{Auto-Tune Window Size})}
+
+Ketika pengguna tidak menentukan ukuran jendela (\texttt{window\_size = 0}), sistem secara otomatis mencoba beberapa kandidat ukuran jendela (3, 6, 9, 12) dan memilih yang menghasilkan \textit{validation loss} terendah. Kandidat dibatasi hingga maksimal 50\% dari jumlah data pra-pengujian.
+
+\subsubsection{Validasi \textit{Walk-Forward}}
+
+Evaluasi model menggunakan protokol \textit{walk-forward validation} yang merupakan validasi silang khusus deret waktu. Pada setiap langkah, model dilatih pada seluruh data hingga bulan ke-$t$, kemudian memprediksi bulan ke-$t+1$. Proses ini diulang untuk $n$ bulan terakhir (minimum 3, maksimum 6 bulan) untuk menghasilkan metrik evaluasi yang realistis.
+
+\subsubsection{Mekanisme \textit{Benchmark} terhadap Model Sebelumnya}
+
+Setelah pelatihan selesai, sistem membandingkan metrik model baru dengan model terbaik yang tersimpan sebelumnya untuk kombinasi metrik, tipe model, regional, dan \textit{witel} yang sama. Model baru hanya disimpan jika memiliki sMAPE lebih rendah atau \textit{Skill Score} lebih tinggi. Mekanisme ini mencegah regresi performa akibat pelatihan ulang.
+
+\subsubsection{Deteksi Data Parsial}
+
+Sistem mendeteksi apakah bulan terakhir dalam data berisi data parsial (belum lengkap) dengan membandingkan nilainya terhadap median bulan-bulan sebelumnya. Jika nilai bulan terakhir kurang dari 30\% median, bulan tersebut dikecualikan dari evaluasi \textit{walk-forward} untuk mencegah metrik yang menyesatkan.
+
+\subsection{Praolah Data}
+\label{subsec:praolah-data}
+
+Praolah data diimplementasikan dalam modul \texttt{utils/preprocessing.py} dengan tahapan berikut.
+
+\begin{enumerate}
+    \item \textbf{Normalisasi}: Data dinormalisasi menggunakan \texttt{MinMaxScaler} dari Scikit-learn ke rentang [0, 1]. Parameter \textit{scaler} disimpan ke berkas \texttt{.pkl} untuk digunakan kembali saat inferensi.
+    \item \textbf{Pembuatan \textit{Sliding Window}}: Data yang telah dinormalisasi diubah menjadi pasangan masukan-keluaran (\textit{X}, \textit{y}) menggunakan jendela geser (\textit{sliding window}). Masukan \textit{X} berukuran (\texttt{n\_samples}, \texttt{window\_size}, 1) dan keluaran \textit{y} berukuran (\texttt{n\_samples}, \textit{horizon}).
+    \item \textbf{Pembagian Data}: Data dibagi menjadi \textit{training set} (80\%) dan \textit{validation set} (20\%) secara kronologis tanpa pengacakan untuk mempertahankan urutan temporal.
+\end{enumerate}
+
+\subsection{Metrik Evaluasi Terimplementasi}
+
+Modul \texttt{utils/metrics.py} mengimplementasikan seluruh metrik evaluasi yang dirancang pada Bab~\ref{chap:perancangan}. Fungsi \texttt{all\_metrics} menghitung seluruh metrik dalam satu pemanggilan dan menghasilkan status KPI (\textit{pass/fail}) untuk setiap target performa. Tabel~\ref{tab:metrik-kpi} menyajikan target KPI yang diimplementasikan.
+
+\begin{table}[H]
+\centering
+\caption{Target KPI Metrik Evaluasi Terimplementasi}
+\label{tab:metrik-kpi}
+\begin{tabular}{|p{3.5cm}|p{3cm}|p{5.5cm}|}
+\hline
+\textbf{Metrik} & \textbf{Target KPI} & \textbf{Interpretasi} \\
+\hline
+MASE & $< 1{,}0$ & Model lebih baik dari \textit{seasonal naive forecast} \\
+\hline
+sMAPE (jangka pendek) & $< 30\%$ & Kesalahan persentase simetris yang dapat diterima \\
+\hline
+\textit{Skill Score} & $> -0{,}1$ & Model tidak lebih dari 10\% lebih buruk dari \textit{baseline} \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Implementasi \textit{Frontend} (React.js)}
+\label{sec:impl-frontend}
+
+\textit{Frontend} sistem diimplementasikan menggunakan React.js 18 dengan Tailwind CSS untuk penataan gaya (\textit{styling}). Tabel~\ref{tab:komponen-frontend} menyajikan komponen utama yang diimplementasikan.
+
+\begin{table}[H]
+\centering
+\caption{Komponen Utama \textit{Frontend}}
+\label{tab:komponen-frontend}
+\begin{tabular}{|p{3.5cm}|p{9cm}|}
+\hline
+\textbf{Komponen} & \textbf{Fungsi} \\
+\hline
+\texttt{App.jsx} & Komponen utama yang mengelola navigasi, autentikasi, antarmuka \textit{chatbot}, profil, dan pengaturan \\
+\hline
+\texttt{Login.jsx} & Halaman autentikasi: formulir masuk dan registrasi pengguna baru \\
+\hline
+\texttt{ChatHistory.jsx} & Panel riwayat percakapan: daftar sesi, pencarian, dan penghapusan \\
+\hline
+\texttt{ForecastPanel.jsx} & Panel peramalan: pemilihan metrik, model, cakupan wilayah, dan visualisasi hasil prediksi \\
+\hline
+\texttt{GuidedFlow.jsx} & Alur terpandu yang memandu pengguna memilih domain analisis, wilayah, dan metrik secara bertahap \\
+\hline
+\end{tabular}
+\end{table}
+
+Antarmuka \textit{chatbot} menyediakan area percakapan dengan dukungan render \textit{Markdown} untuk menampilkan tabel, format teks, dan poin-poin yang dihasilkan oleh modul NLG. Pengguna dapat mengetik pertanyaan dalam bahasa Indonesia alami atau menggunakan alur terpandu (\textit{guided flow}) untuk memilih jenis analisis secara interaktif.
+
+\section{Implementasi Autentikasi dan Keamanan}
+\label{sec:impl-auth}
+
+Sistem mengimplementasikan mekanisme autentikasi dan keamanan berbasis standar industri web.
+
+\subsection{Autentikasi Berbasis JWT}
+
+Autentikasi pengguna menggunakan \textit{JSON Web Token} (JWT) dengan konfigurasi berikut.
+
+\begin{enumerate}
+    \item \textbf{Registrasi}: Kata sandi pengguna di-\textit{hash} menggunakan algoritma \textit{bcrypt} dengan 10 putaran \textit{salt} sebelum disimpan ke basis data.
+    \item \textbf{Masuk (\textit{Login})}: Kredensial divalidasi terhadap basis data. Jika valid, peladen menerbitkan token JWT dengan masa berlaku 24 jam dan penerbit (\textit{issuer}) ``brightai-backend''.
+    \item \textbf{Otorisasi}: Setiap permintaan ke rute yang dilindungi harus menyertakan token JWT pada tajuk \texttt{Authorization}. \textit{Middleware} autentikasi memverifikasi dan mendekode token untuk mengidentifikasi pengguna.
+\end{enumerate}
+
+\subsection{Validasi Masukan}
+
+Validasi masukan pengguna diimplementasikan menggunakan pustaka \texttt{express-validator} dengan aturan yang mencakup validasi format surel, panjang minimal kata sandi (6 karakter), keharusan kombinasi huruf besar, huruf kecil, dan angka pada kata sandi, serta sanitasi terhadap serangan injeksi.
+

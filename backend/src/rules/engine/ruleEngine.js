@@ -4,6 +4,7 @@ const queryProcessor = require('./queryProcessor');
 const responseBuilder = require('./responseBuilder');
 const logger = require('../../utils/logger');
 const cache = require('../../utils/cache');
+const { extractGeoContext, getDbValue, getGeoColumns } = require('../utils/geoContextExtractor');
 
 class RuleEngine {
   constructor() {
@@ -39,7 +40,8 @@ class RuleEngine {
 
       const startTime = Date.now();
       
-      const cacheKey = this.generateCacheKey(userInput);
+      const geoContext = extractGeoContext(userInput);
+      const cacheKey = this.generateCacheKey(userInput, geoContext);
       const cachedResult = cache.get(cacheKey);
       if (cachedResult) {
         logger.info(`Cache hit for query: ${userInput}`);
@@ -61,7 +63,7 @@ class RuleEngine {
         };
       }
 
-      const executionResult = await this.executeRule(matchResult.rule, userInput, context);
+      const executionResult = await this.executeRule(matchResult.rule, userInput, context, geoContext);
       
       const response = await responseBuilder.buildResponse(executionResult, matchResult.rule, userInput);
       
@@ -71,6 +73,7 @@ class RuleEngine {
         rule_id: matchResult.rule.RULE_META.RULE_ID,
         rule_name: matchResult.rule.RULE_META.RULE_NAME,
         confidence: matchResult.confidence,
+        geo_scope: geoContext.label,
         data: executionResult.data,
         response: response,
         processing_time: Date.now() - startTime
@@ -91,16 +94,22 @@ class RuleEngine {
     }
   }
 
-  async executeRule(rule, userInput, context) {
+  async executeRule(rule, userInput, context, geoContext) {
     const startTime = Date.now();
-    
+
     try {
       const { executeQuery } = require('../../../config/database');
-      
+
       const dbInfo = this.getDatabaseForRule(rule);
-      
+
+      // Apply geographic filter to the SQL before execution
+      const database = rule.RULE_META.DATABASE;
+      const filteredSQL = this.injectGeoFilter(rule.SQL_QUERY, database, geoContext);
+
+      logger.info(`Executing rule ${rule.RULE_META.RULE_ID} | scope: ${geoContext ? geoContext.scope : 'nasional'}${geoContext && geoContext.dbValue ? ` | value: ${geoContext.dbValue}` : ''}`);
+
       const queryResult = await executeQuery(
-        rule.SQL_QUERY,
+        filteredSQL,
         [],
         dbInfo.database
       );
@@ -170,9 +179,119 @@ class RuleEngine {
     }
   }
 
-  generateCacheKey(userInput) {
+  generateCacheKey(userInput, geoContext) {
     const crypto = require('crypto');
-    return crypto.createHash('md5').update(userInput.toLowerCase().trim()).digest('hex');
+    const geoSuffix = geoContext
+      ? `${geoContext.scope}:${geoContext.dbValue || 'all'}`
+      : 'nasional:all';
+    return crypto.createHash('md5')
+      .update(`${userInput.toLowerCase().trim()}|${geoSuffix}`)
+      .digest('hex');
+  }
+
+  /**
+   * Injects a geographic WHERE filter into an SQL query at runtime.
+   *
+   * Supports two modes:
+   *   1. Placeholder:    if the SQL contains  / * :GEO_FILTER: * /  it is replaced directly.
+   *   2. Auto-inject:    line-by-line scan finds the first FROM DWH_MOIS block and
+   *                      inserts the filter clause just before the closing GROUP BY / ) .
+   */
+  injectGeoFilter(sql, database, geoContext) {
+    if (!geoContext || geoContext.scope === 'nasional') return sql;
+
+    const cols = getGeoColumns(database);
+    const dbValue = getDbValue(geoContext, database);
+    if (!dbValue) return sql;
+
+    let filterClause;
+    if (geoContext.scope === 'regional') {
+      filterClause = `AND ${cols.regional} = '${dbValue}'`;
+    } else if (geoContext.scope === 'witel') {
+      filterClause = `AND ${cols.witel} = '${dbValue}'`;
+    } else {
+      return sql;
+    }
+
+    // Mode 1: explicit placeholder
+    if (sql.includes('/* :GEO_FILTER: */')) {
+      return sql.replace('/* :GEO_FILTER: */', filterClause);
+    }
+
+    // Mode 2: auto-inject via line-by-line scan
+    return this._injectFilterIntoSQL(sql, filterClause);
+  }
+
+  /**
+   * Line-by-line SQL injection.
+   *
+   * Finds the first  FROM DWH_MOIS.xxx  block, locates its WHERE clause, then
+   * tracks parenthesis depth to find the exact end of that WHERE block (right before
+   * GROUP BY / ORDER BY / HAVING  or the CTE-closing  ')' ).
+   * Inserts the filter line at that position.
+   */
+  _injectFilterIntoSQL(sql, filterClause) {
+    const lines = sql.split('\n');
+
+    // Step 1 – find first FROM DWH_MOIS line
+    let fromIdx = -1;
+    for (let i = 0; i < lines.length; i++) {
+      if (/\bFROM\s+DWH_MOIS\./i.test(lines[i])) {
+        fromIdx = i;
+        break;
+      }
+    }
+    if (fromIdx === -1) return sql;
+
+    // Step 2 – find WHERE clause that follows
+    let whereIdx = -1;
+    for (let i = fromIdx + 1; i < lines.length; i++) {
+      if (/^\s*WHERE\b/i.test(lines[i])) {
+        whereIdx = i;
+        break;
+      }
+    }
+    if (whereIdx === -1) return sql;
+
+    // Step 3 – scan forward from WHERE to find the insertion point
+    // Track paren depth so OVER(…) and IN(…) don't confuse the search.
+    let parenDepth = 0;
+    let insertIdx = -1;
+
+    for (let i = whereIdx; i < lines.length; i++) {
+      for (const ch of lines[i]) {
+        if (ch === '(') parenDepth++;
+        if (ch === ')') parenDepth--;
+      }
+
+      // Closing ) of the CTE / subquery
+      if (parenDepth < 0) {
+        insertIdx = i;
+        break;
+      }
+
+      // End-of-WHERE keywords (only at depth 0 and past the WHERE line itself)
+      if (parenDepth === 0 && i > whereIdx &&
+          /^\s*(GROUP\s+BY|ORDER\s+BY|HAVING)\b/i.test(lines[i])) {
+        insertIdx = i;
+        break;
+      }
+    }
+
+    if (insertIdx === -1) return sql;
+
+    // Step 4 – mirror indentation from the nearest preceding AND/WHERE line
+    let indent = '          '; // fallback: 10 spaces
+    for (let i = insertIdx - 1; i >= whereIdx; i--) {
+      const trimmed = lines[i].trimStart();
+      if (trimmed.startsWith('AND ') || /^\s*WHERE\b/i.test(lines[i])) {
+        const m = lines[i].match(/^(\s+)/);
+        if (m) { indent = m[1]; break; }
+      }
+    }
+
+    lines.splice(insertIdx, 0, `${indent}${filterClause}`);
+    return lines.join('\n');
   }
 
   getRuleStats(ruleId) {

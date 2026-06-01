@@ -1,0 +1,68 @@
+\cleardoublepage
+\vspace{2cm}
+\begin{center}
+{\fontsize{14}{16.8}\selectfont\textbf{DAFTAR SIMBOL}}\\[1em]
+\end{center}
+\label{chap:simbol}
+\addcontentsline{toc}{chapter}{DAFTAR SIMBOL}
+\setcounter{chapter}{0}
+\setcounter{section}{0}
+\vspace{2em}
+
+
+
+
+\begin{longtable}{@{} l >{\raggedright\arraybackslash}p{6.5cm} c @{}}
+\multicolumn{1}{l}{\textbf{Notasi}} & \multicolumn{1}{l}{\textbf{Deskripsi}} & \multicolumn{1}{l}{\parbox[c]{3.5cm}{\raggedright \textbf{Pemakaian pertama kali}}} \\
+
+
+
+% \multicolumn{2}{l}{\textbf{Huruf Yunani (Parameter Model dan Metrik)}} \\
+
+$\alpha$ & Tingkat signifikansi statistik (\textit{significance level}) & 45 \\
+$\theta$ & Parameter bobot dalam model \textit{neural network} & 34 \\
+$\sigma$ & Deviasi standar (\textit{standard deviation}) & 38 \\
+$\mu$ & Rata-rata (\textit{mean}) & 38 \\
+$\epsilon$ & Konstanta kecil untuk mencegah pembagian dengan nol pada sMAPE & 42 \\[1ex]
+
+% \multicolumn{2}{l}{\textbf{Operator Matematis}} \\
+
+$\sum$ & Operator penjumlahan & 40 \\
+$\prod$ & Operator perkalian & 41 \\
+$\min$ & Nilai minimum dari suatu himpunan & 43 \\
+$\max$ & Nilai maksimum dari suatu himpunan & 43 \\
+$|x|$ & Nilai absolut dari $x$ & 40 \\[1ex]
+
+% \multicolumn{2}{l}{\textbf{Variabel Deret Waktu dan Jaringan Saraf Tiruan}} \\
+
+$t$ & Indeks waktu (\textit{timestep}) pada data deret waktu & 30 \\
+$y_t$ & Nilai aktual observasi pada waktu ke-$t$ & 30 \\
+$\hat{y}_t$ & Nilai prediksi/ramalan (\textit{forecast}) pada waktu ke-$t$ & 30 \\
+$x_t$ & Vektor masukan (\textit{input}) pada waktu ke-$t$ & 32 \\
+$h_t$ & \textit{Hidden state} pada sel berulang (GRU/LSTM) waktu ke-$t$ & 35 \\
+$c_t$ & \textit{Cell state} pada sel LSTM waktu ke-$t$ & 36 \\
+$m$ & Periode musiman (\textit{seasonality period}, e.g. 12 untuk data bulanan) & 43 \\
+$n$ & Jumlah sampel atau \textit{horizon} prediksi & 40 \\
+$W$ & Matriks bobot (\textit{weight matrix}) pada lapisan \textit{neural network} & 34 \\
+$b$ & Vektor bias (\textit{bias vector}) pada lapisan \textit{neural network} & 34 \\[1ex]
+
+% \multicolumn{2}{l}{\textbf{Fungsi Aktivasi dan Gerbang (Gates)}} \\
+
+$\sigma(x)$ & Fungsi aktivasi \textit{sigmoid} & 34 \\
+$\tanh(x)$ & Fungsi aktivasi \textit{hyperbolic tangent} & 34 \\
+$i_t$ & \textit{Input gate} pada sel LSTM & 36 \\
+$f_t$ & \textit{Forget gate} pada sel LSTM & 36 \\
+$o_t$ & \textit{Output gate} pada sel LSTM & 36 \\
+$r_t$ & \textit{Reset gate} pada sel GRU & 35 \\
+$z_t$ & \textit{Update gate} pada sel GRU & 35 \\[1ex]
+
+% \multicolumn{2}{l}{\textbf{Metrik Evaluasi dan Analisis}} \\
+
+$MAE$ & \textit{Mean Absolute Error} & 40 \\
+$RMSE$ & \textit{Root Mean Squared Error} & 41 \\
+$MAPE$ & \textit{Mean Absolute Percentage Error} & 41 \\
+$sMAPE$ & \textit{symmetric Mean Absolute Percentage Error} & 42 \\
+$MASE$ & \textit{Mean Absolute Scaled Error} & 43 \\
+$SS$ & \textit{Skill Score} & 44 \\[1ex]
+
+\end{longtable}

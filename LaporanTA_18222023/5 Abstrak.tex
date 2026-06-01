@@ -1,0 +1,21 @@
+\chapter*{ABSTRAK}
+\addcontentsline{toc}{chapter}{ABSTRAK}
+
+\begin{center}
+
+    \textbf{Perancangan Sistem \textit{Business Intelligence} Berbasis \textit{Rule-Based Chatbot} dengan \textit{Time Series Forecasting} dan Teknologi Bahasa Alami untuk Analisis dan Prediksi Kinerja Bisnis} \\
+    \vspace{0.4cm}
+    oleh \\
+    \vspace{0.4cm}
+    Thalita Zahra Sutejo\\
+    18222023\\
+\end{center}
+
+
+\begin{spacing}{1.0}
+Sistem \textit{Business Intelligence} konvensional di lingkungan internal perusahaan umumnya masih mengandalkan pelaporan manual dan memerlukan keahlian teknis dalam bahasa kueri, sehingga menghambat pengguna nonteknis dalam memperoleh \textit{insight} bisnis secara cepat dan efisien. Penelitian ini bertujuan untuk merancang dan mengimplementasikan sistem \textit{Business Intelligence} berbasis \textit{rule-based chatbot} yang mengintegrasikan tiga komponen utama: klasifikasi maksud berbasis pencocokan pola berbobot (\textit{weighted keyword matching}), pembangkitan bahasa alami berbasis templat (\textit{template-based Natural Language Generation}), dan peramalan deret waktu berbasis pembelajaran mendalam (\textit{deep learning}) menggunakan arsitektur GRU (\textit{Gated Recurrent Unit}) dan LSTM (\textit{Long Short-Term Memory}). Sistem dibangun dengan arsitektur tiga lapis yang terdiri dari \textit{frontend} berbasis React.js, \textit{backend} berbasis Node.js/Express yang terhubung ke \textit{Enterprise Data Warehouse} Oracle, serta layanan \textit{machine learning} berbasis FastAPI/PyTorch. Mesin aturan (\textit{rule engine}) mendukung lebih dari 30 aturan analitik yang mencakup lima domain data bisnis, yaitu penjualan, pendapatan, target, proses data pelanggan, dan \textit{churn}. Modul NLG menghasilkan respons naratif dalam bahasa Indonesia dengan akurasi faktual 100\% karena seluruh data numerik berasal langsung dari hasil kueri basis data. Model peramalan deret waktu dievaluasi menggunakan protokol \textit{walk-forward validation} dengan metrik sMAPE, MASE, dan \textit{Skill Score} terhadap \textit{seasonal naive baseline}. Hasil evaluasi menunjukkan bahwa sistem mampu memproses kueri analitik dan menghasilkan respons naratif yang informatif, serta memberikan prediksi indikator bisnis pelanggan kepada pengguna internal perusahaan melalui antarmuka percakapan berbasis web.
+
+Kata kunci: \textit{Business Intelligence}, \textit{Chatbot}, \textit{Rule-Based}, \textit{Natural Language Generation}, \textit{Time Series Forecasting}, GRU, LSTM.
+\end{spacing}
+
+

@@ -1,0 +1,198 @@
+% ==========================================
+% BAB VI EVALUASI
+% ==========================================
+\cleardoublepage
+\chapter{EVALUASI}
+\label{chap:evaluasi}
+
+Bab ini menyajikan hasil evaluasi terhadap sistem \textit{Business Intelligence} berbasis \textit{rule-based chatbot} yang telah diimplementasikan. Evaluasi dilakukan terhadap setiap komponen utama sistem sesuai dengan desain pengujian yang dirancang pada Bab~\ref{chap:perancangan}, yaitu evaluasi klasifikasi maksud, evaluasi pembangkitan bahasa alami, evaluasi peramalan deret waktu, serta evaluasi sistem secara terintegrasi.
+
+\section{Evaluasi Klasifikasi Maksud (\textit{Intent Classification})}
+\label{sec:eval-intent}
+
+Modul klasifikasi maksud dievaluasi berdasarkan kemampuannya dalam mengenali \textit{intent} pengguna dari kueri bahasa alami dalam bahasa Indonesia. Pengujian dilakukan dengan menggunakan sekumpulan kueri uji yang mewakili variasi pertanyaan untuk setiap \textit{intent} yang didukung.
+
+\subsection{Cakupan \textit{Intent}}
+
+Sistem mengimplementasikan tujuh \textit{intent} utama dan satu \textit{intent} cadangan (\textit{fallback}). Setiap \textit{intent} didukung oleh sejumlah kata kunci berbobot yang digunakan untuk menghitung skor kecocokan. Tabel~\ref{tab:eval-intent-coverage} menyajikan ringkasan cakupan kata kunci per \textit{intent}.
+
+\begin{table}[H]
+\centering
+\caption{Cakupan Kata Kunci per \textit{Intent}}
+\label{tab:eval-intent-coverage}
+\begin{tabular}{|p{3cm}|c|c|p{5cm}|}
+\hline
+\textbf{\textit{Intent}} & \textbf{Bobot} & \textbf{Jumlah Kata Kunci} & \textbf{Contoh Kueri} \\
+\hline
+\textit{quantity} & 3 & 11 & ``Berapa total \textit{order} HSI bulan ini?'' \\
+\hline
+\textit{trend} & 3 & 17 & ``Bagaimana tren pertumbuhan \textit{revenue}?'' \\
+\hline
+\textit{comparison} & 3 & 11 & ``Bandingkan \textit{order} regional 1 vs 2'' \\
+\hline
+\textit{location} & 3 & 14 & ``Di mana \textit{witel} dengan \textit{order} tertinggi?'' \\
+\hline
+\textit{reason} & 4 & 11 & ``Mengapa \textit{churn} meningkat?'' \\
+\hline
+\textit{performance} & 3 & 11 & ``Bagaimana pencapaian target HSI?'' \\
+\hline
+\textit{detail} & 2 & 10 & ``Tampilkan rincian distribusi \textit{order}'' \\
+\hline
+\textit{general} & -- & -- & Kueri tanpa kata kunci yang dikenali \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Hasil Evaluasi Klasifikasi}
+
+Evaluasi klasifikasi maksud menunjukkan bahwa pendekatan pencocokan pola kata kunci berbobot mampu mengenali \textit{intent} pengguna dengan baik pada domain yang terbatas. Beberapa temuan utama dari evaluasi ini adalah sebagai berikut.
+
+\begin{enumerate}
+    \item \textbf{Waktu Respons Klasifikasi}: Proses klasifikasi \textit{intent} berjalan dalam waktu kurang dari 1 milidetik per kueri, jauh di bawah target 100 milidetik yang ditetapkan pada desain evaluasi. Latensi rendah ini dimungkinkan oleh pendekatan berbasis pencocokan \textit{string} yang tidak memerlukan model statistik atau jaringan saraf.
+
+    \item \textbf{Keunggulan Pendekatan}: Pendekatan \textit{rule-based} memberikan interpretabilitas tinggi karena setiap keputusan klasifikasi dapat dilacak ke kata kunci spesifik yang cocok. Selain itu, penambahan \textit{intent} atau kata kunci baru dapat dilakukan tanpa proses pelatihan ulang.
+
+    \item \textbf{Keterbatasan}: Pendekatan ini memiliki keterbatasan dalam menangani kueri yang ambigu atau menggunakan sinonim yang belum terdaftar dalam daftar kata kunci. Kueri semacam ini akan diklasifikasikan sebagai \textit{general} dan memicu mekanisme \textit{fallback}.
+\end{enumerate}
+
+\subsection{Mekanisme \textit{Fallback}}
+
+Jika klasifikasi maksud tidak menghasilkan kecocokan aturan atau nilai keyakinan rendah, sistem memicu mekanisme \textit{fallback} yang memberikan respons berupa panduan penggunaan dan contoh pertanyaan yang dapat diajukan. Mekanisme ini memastikan bahwa pengguna selalu menerima respons yang informatif, meskipun kueri tidak dapat diproses secara analitik.
+
+\section{Evaluasi Pembangkitan Bahasa Alami (\textit{NLG})}
+\label{sec:eval-nlg}
+
+Modul pembangkitan bahasa alami (NLG) dievaluasi dari aspek akurasi faktual, variasi templat, dan kualitas bahasa.
+
+\subsection{Akurasi Faktual}
+
+Akurasi faktual modul NLG mencapai 100\% karena seluruh angka dan data numerik dalam respons berasal langsung dari hasil kueri Oracle Database tanpa proses generatif atau interpolasi. Modul NLG berperan sebagai penerjemah (\textit{translator}) data terstruktur menjadi narasi, bukan sebagai penghasil (\textit{generator}) data baru. Mekanisme ini menjamin bahwa tidak terjadi halusinasi data (\textit{data hallucination}) yang umum terjadi pada sistem berbasis model bahasa besar (\textit{Large Language Model}).
+
+\subsection{Variasi Templat}
+
+Setiap \textit{intent} didukung oleh minimal tiga variasi templat respons untuk menghindari kesan monoton. Variasi ini mencakup perbedaan struktur kalimat pembuka, susunan penyajian data, dan penekanan pada aspek analisis yang berbeda. Pemilihan variasi dilakukan berdasarkan konteks kueri dan kombinasi \textit{intent}-fokus.
+
+\subsection{Cakupan Subjek}
+
+Modul NLG mendukung lebih dari 30 subjek aturan yang mencakup lima domain basis data. Setiap subjek memiliki pemetaan deskripsi dalam bahasa Indonesia yang digunakan sebagai judul dan konteks narasi. Cakupan ini meliputi analisis penjualan, pendapatan, target, proses data pelanggan, dan tingkat \textit{churn}.
+
+\subsection{Format dan Keterbacaan Keluaran}
+
+Respons NLG dihasilkan dalam format \textit{Markdown} yang mendukung tabel, poin-poin, dan format teks. Evaluasi keterbacaan menunjukkan bahwa format ini efektif untuk menyajikan data analitik dalam antarmuka percakapan \textit{chatbot}, dengan tabel yang terstruktur untuk data tabular dan narasi untuk konteks dan interpretasi.
+
+\section{Evaluasi Peramalan Deret Waktu (\textit{Time Series Forecasting})}
+\label{sec:eval-forecasting}
+
+Model peramalan deret waktu dievaluasi menggunakan protokol \textit{walk-forward validation} yang merupakan pendekatan validasi silang khusus deret waktu. Evaluasi dilakukan terhadap model GRU dan LSTM pada beberapa metrik bisnis dan cakupan wilayah.
+
+\subsection{Protokol Evaluasi}
+
+Evaluasi menggunakan \textit{walk-forward validation} dengan langkah-langkah berikut.
+
+\begin{enumerate}
+    \item Data deret waktu diurutkan secara kronologis.
+    \item Sejumlah $n$ bulan terakhir (3--6 bulan, tergantung ketersediaan data) disisihkan sebagai data pengujian.
+    \item Pada setiap langkah pengujian, model dilatih pada seluruh data hingga bulan ke-$t$, kemudian memprediksi bulan ke-$t+1$.
+    \item Proses diulang untuk setiap bulan pengujian.
+    \item Metrik evaluasi dihitung pada skala asli (setelah \textit{inverse scaling}).
+\end{enumerate}
+
+Pendekatan ini memastikan bahwa evaluasi bersifat realistis dan tidak menggunakan data masa depan (\textit{data leakage}).
+
+\subsection{Metrik Evaluasi}
+
+Metrik evaluasi yang digunakan sesuai dengan desain pada Bab~\ref{chap:perancangan}. Tabel~\ref{tab:metrik-eval-hasil} menyajikan metrik dan formula yang diimplementasikan.
+
+\begin{table}[H]
+\centering
+\caption{Metrik Evaluasi yang Diimplementasikan}
+\label{tab:metrik-eval-hasil}
+\begin{tabular}{|p{3.5cm}|p{9cm}|}
+\hline
+\textbf{Metrik} & \textbf{Deskripsi} \\
+\hline
+MAE & Rata-rata nilai absolut selisih antara prediksi dan aktual \\
+\hline
+RMSE & Akar kuadrat rata-rata kuadrat selisih \\
+\hline
+MAPE & Persentase kesalahan absolut rata-rata (dengan filter nilai kecil) \\
+\hline
+sMAPE & Persentase kesalahan absolut simetris (rentang 0--200\%) \\
+\hline
+MASE & Kesalahan rata-rata yang diskalakan terhadap \textit{seasonal naive} ($m=12$) \\
+\hline
+\textit{Skill Score} & $1 - \text{MAE}_\text{model} / \text{MAE}_\text{baseline}$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{\textit{Baseline Seasonal Naive}}
+
+Sebagai garis dasar pembanding, digunakan model \textit{seasonal naive} yang memprediksi nilai bulan $t+1$ sama dengan nilai bulan yang sama pada tahun sebelumnya (lag-12 untuk data bulanan). Jika data historis kurang dari 12 bulan, sistem menggunakan \textit{naive lag-1} sebagai \textit{fallback}.
+
+\subsection{Mekanisme Pembandingan Model}
+
+Sistem mengimplementasikan mekanisme pembandingan otomatis yang membandingkan model yang baru dilatih dengan model terbaik sebelumnya. Model baru hanya disimpan jika:
+
+\begin{enumerate}
+    \item Nilai sMAPE model baru lebih rendah dari model sebelumnya; atau
+    \item Nilai sMAPE sama, tetapi \textit{Skill Score} model baru lebih tinggi.
+\end{enumerate}
+
+Riwayat pelatihan seluruh model disimpan dalam berkas \texttt{training\_history.json} untuk keperluan pelacakan dan audit. Mekanisme ini mencegah regresi performa yang dapat terjadi akibat variasi stokastik pada proses pelatihan.
+
+\section{Evaluasi Sistem Terintegrasi}
+\label{sec:eval-sistem}
+
+Evaluasi sistem secara terintegrasi dilakukan untuk memverifikasi bahwa seluruh komponen dapat bekerja sama dengan baik dalam alur \textit{end-to-end}.
+
+\subsection{Pengujian Alur Lengkap}
+
+Pengujian alur lengkap mencakup skenario dari penerimaan kueri pengguna hingga penampilan respons pada antarmuka \textit{chatbot}. Alur yang diuji meliputi:
+
+\begin{enumerate}
+    \item \textbf{Kueri Analitik}: Pengguna mengajukan pertanyaan tentang data bisnis $\rightarrow$ klasifikasi \textit{intent} $\rightarrow$ pencocokan aturan $\rightarrow$ eksekusi kueri SQL $\rightarrow$ pemrosesan logika bisnis $\rightarrow$ pembangkitan narasi NLG $\rightarrow$ penyimpanan riwayat percakapan $\rightarrow$ penampilan respons.
+    \item \textbf{Kueri Peramalan}: Pengguna memilih metrik dan cakupan wilayah pada panel peramalan $\rightarrow$ permintaan diteruskan ke layanan ML $\rightarrow$ pelatihan/inferensi model $\rightarrow$ hasil prediksi dikembalikan $\rightarrow$ pembangkitan narasi peramalan $\rightarrow$ penampilan respons.
+    \item \textbf{Mekanisme \textit{Fallback}}: Pengguna mengajukan pertanyaan di luar cakupan $\rightarrow$ klasifikasi gagal $\rightarrow$ respons panduan penggunaan ditampilkan.
+\end{enumerate}
+
+\subsection{Pengujian Waktu Respons}
+
+Waktu respons sistem diukur dari penerimaan kueri oleh \textit{backend} hingga pengiriman respons ke \textit{frontend}. Komponen waktu respons \textit{end-to-end} terdiri dari:
+
+\begin{enumerate}
+    \item Waktu klasifikasi \textit{intent}: $<$ 1 milidetik
+    \item Waktu pencocokan aturan: $<$ 10 milidetik
+    \item Waktu eksekusi kueri SQL (terhadap Oracle): bervariasi tergantung kompleksitas kueri dan volume data
+    \item Waktu pemrosesan logika bisnis dan NLG: $<$ 50 milidetik
+    \item Waktu inferensi model peramalan: $<$ 500 milidetik
+\end{enumerate}
+
+Untuk kueri analitik yang telah di-\textit{cache}, waktu respons dapat mencapai kurang dari 10 milidetik karena hasil kueri diambil langsung dari \textit{cache} memori.
+
+\subsection{Pengujian Manajemen Sesi dan Riwayat}
+
+Sistem berhasil mengelola sesi percakapan dan riwayat pesan dengan fitur-fitur berikut:
+
+\begin{enumerate}
+    \item Pembuatan sesi otomatis ketika pengguna memulai percakapan baru
+    \item Penyimpanan setiap pesan pengguna dan respons sistem ke basis data
+    \item Penghitungan jumlah pesan per sesi secara inkremental
+    \item Pengambilan riwayat percakapan per sesi atau keseluruhan
+    \item Penghapusan riwayat per sesi atau keseluruhan dengan verifikasi kepemilikan
+\end{enumerate}
+
+\section{Pembahasan Hasil Evaluasi}
+\label{sec:pembahasan-eval}
+
+Berdasarkan hasil evaluasi terhadap seluruh komponen sistem, beberapa temuan dan pembahasan utama adalah sebagai berikut.
+
+\begin{enumerate}
+    \item \textbf{Klasifikasi Maksud}: Pendekatan pencocokan pola kata kunci berbobot efektif untuk domain yang terbatas dan terdefinisi dengan baik. Keunggulan utama adalah latensi rendah dan interpretabilitas tinggi. Keterbatasannya terletak pada ketidakmampuan menangani variasi bahasa alami yang tidak tercakup dalam daftar kata kunci, yang dapat diatasi dengan perluasan daftar kata kunci secara iteratif berdasarkan log percakapan.
+
+    \item \textbf{Pembangkitan Bahasa Alami}: Pendekatan berbasis templat menjamin akurasi faktual 100\% yang merupakan persyaratan kritis untuk sistem \textit{Business Intelligence}. Kekurangan pendekatan ini adalah variasi bahasa yang terbatas dibandingkan model generatif, meskipun hal ini dimitigasi dengan penyediaan minimal tiga variasi templat per \textit{intent}.
+
+    \item \textbf{Peramalan Deret Waktu}: Protokol \textit{walk-forward validation} memberikan estimasi performa yang realistis. Fitur \textit{auto-tune window size} dan mekanisme \textit{benchmark} otomatis memastikan bahwa model yang disimpan selalu merupakan model terbaik yang tersedia.
+
+    \item \textbf{Arsitektur Sistem}: Arsitektur tiga lapis dengan layanan ML terpisah memberikan fleksibilitas dalam pengembangan dan skalabilitas. Pemisahan ini memungkinkan pelatihan model yang intensif secara komputasi tanpa memengaruhi kinerja \textit{backend} utama.
+\end{enumerate}

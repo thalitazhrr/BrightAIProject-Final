@@ -83,7 +83,7 @@ def update_results(
 
     new_smape = val_metrics.get("smape", 999)
     level     = _level(regional, witel)
-    witel_val = witel or "-"
+    witel_val = witel.upper() if witel else "-"
 
     new_row = {
         "modul":          metric,

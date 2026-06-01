@@ -280,7 +280,7 @@ export const parseInlineMarkdown = (text, theme = 'dark') => {
     return parts.map((part, index) => {
       if (/^\d/.test(part) && (part.includes(',') || part.endsWith('%') || part.length >= 4)) {
         return (
-          <span key={`number-${index}`} className={`font-semibold ${theme === 'dark' ? 'text-yellow-400' : 'text-orange-600'}`}>
+          <span key={`number-${index}`} className={`font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
             {part}
           </span>
         );
