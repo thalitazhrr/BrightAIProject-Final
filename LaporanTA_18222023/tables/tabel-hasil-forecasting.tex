@@ -1,0 +1,61 @@
+\begin{table}[H]
+\centering
+\caption{Perbandingan Hasil Evaluasi Model Peramalan pada Metrik \textit{Avg Install Days}}
+\label{tab:hasil-forecasting-komparasi}
+\begin{tabular}{|p{2.2cm}|p{1.5cm}|c|c|c|c|}
+\hline
+\textbf{Wilayah} & \textbf{Model} & \textbf{sMAPE (\%)} & \textbf{MASE} & \textbf{\textit{Skill Score}} & \textbf{KPI} \\
+\hline
+\multirow{4}{*}{Nasional} & GRU & $10{,}86$ & $0{,}020$ & $0{,}400$ & LULUS \\
+\cline{2-6}
+ & LSTM & $12{,}18$ & $0{,}023$ & $0{,}350$ & LULUS \\
+\cline{2-6}
+ & ARIMA & $10{,}75$ & $0{,}018$ & $0{,}480$ & LULUS \\
+\cline{2-6}
+ & \textit{Prophet} & $176{,}92$ & $1{,}124$ & $-10{,}00$ & GAGAL \\
+\hline
+\multirow{4}{*}{REG-1} & GRU & $6{,}74$ & $0{,}009$ & $0{,}497$ & LULUS \\
+\cline{2-6}
+ & LSTM & $11{,}77$ & $0{,}016$ & $0{,}149$ & LULUS \\
+\cline{2-6}
+ & ARIMA & $10{,}51$ & $0{,}014$ & $0{,}232$ & LULUS \\
+\cline{2-6}
+ & \textit{Prophet} & $130{,}22$ & $0{,}116$ & $-5{,}253$ & GAGAL \\
+\hline
+\multirow{4}{*}{REG-2} & GRU & $13{,}16$ & $0{,}027$ & $0{,}259$ & LULUS \\
+\cline{2-6}
+ & LSTM & $13{,}45$ & $0{,}027$ & $0{,}252$ & LULUS \\
+\cline{2-6}
+ & ARIMA & $10{,}30$ & $0{,}020$ & $0{,}434$ & LULUS \\
+\cline{2-6}
+ & \textit{Prophet} & $146{,}76$ & $0{,}170$ & $-3{,}725$ & GAGAL \\
+\hline
+\multirow{4}{*}{REG-3} & GRU & $8{,}96$ & $0{,}016$ & $0{,}373$ & LULUS \\
+\cline{2-6}
+ & LSTM & $24{,}61$ & $0{,}051$ & $-0{,}958$ & GAGAL \\
+\cline{2-6}
+ & ARIMA & $41{,}27$ & $0{,}060$ & $-1{,}328$ & GAGAL \\
+\cline{2-6}
+ & \textit{Prophet} & $183{,}97$ & $1{,}649$ & $-10{,}00$ & GAGAL \\
+\hline
+\multirow{4}{*}{REG-4} & GRU & $24{,}61$ & $0{,}164$ & $-0{,}396$ & LDC \\
+\cline{2-6}
+ & LSTM & $31{,}32$ & $0{,}215$ & $-0{,}825$ & GAGAL \\
+\cline{2-6}
+ & ARIMA & $35{,}40$ & $0{,}267$ & $-1{,}269$ & GAGAL \\
+\cline{2-6}
+ & \textit{Prophet} & $191{,}81$ & $1{,}682$ & $-10{,}00$ & GAGAL \\
+\hline
+\multirow{4}{*}{REG-5} & GRU & $18{,}50$ & $0{,}019$ & $0{,}508$ & LULUS \\
+\cline{2-6}
+ & LSTM & $24{,}39$ & $0{,}027$ & $0{,}323$ & LULUS \\
+\cline{2-6}
+ & ARIMA & $20{,}41$ & $0{,}019$ & $0{,}516$ & LULUS \\
+\cline{2-6}
+ & \textit{Prophet} & $153{,}09$ & $0{,}091$ & $-1{,}315$ & GAGAL \\
+\hline
+\end{tabular}
+\begin{flushleft}
+\footnotesize\textit{Keterangan: LDC = Lulus Dengan Catatan (sMAPE $< 30\%$ namun \textit{Skill Score} $\in (-0{,}5;\ -0{,}1]$).}
+\end{flushleft}
+\end{table}

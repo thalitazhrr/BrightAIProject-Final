@@ -1,0 +1,75 @@
+\begin{longtable}{|c|p{2.5cm}|p{9cm}|}
+\caption{Perangkat Lunak dan Teknologi Implementasi Sistem} \label{tab:tools} \\
+\hline
+\textbf{No} & \textbf{Perangkat} & \textbf{Deskripsi} \\
+\hline
+\endfirsthead
+\multicolumn{3}{c}%
+{\tablename\ \thetable\ -- \textit{Lanjutan dari halaman sebelumnya}} \\
+\hline
+\textbf{No} & \textbf{Perangkat} & \textbf{Deskripsi} \\
+\hline
+\endhead
+\hline \multicolumn{3}{r}{\textit{Bersambung ke halaman berikutnya}} \\
+\endfoot
+\hline
+\endlastfoot
+
+1 & Node.js & \textit{Runtime} JavaScript sisi pelayan yang digunakan sebagai \textit{backend} utama sistem. Node.js menjalankan Express.js untuk menyediakan \textit{RESTful API}, mengelola autentikasi pengguna, mengeksekusi mesin aturan (\textit{rule engine}), serta menghasilkan respons naratif melalui modul NLG berbasis templat JavaScript. \\
+\hline
+
+2 & Python & Bahasa pemrograman yang digunakan khusus untuk layanan \textit{machine learning} (\textit{ML Service}). Python menangani pelatihan dan inferensi model peramalan deret waktu berbasis GRU dan LSTM melalui \textit{framework} FastAPI. \\
+\hline
+
+3 & FastAPI & \textit{Framework} Python untuk membangun \textit{RESTful API} dengan performa tinggi dan dokumentasi otomatis (Swagger/OpenAPI). FastAPI digunakan khusus untuk layanan \textit{machine learning} yang menangani permintaan pelatihan dan prediksi model peramalan deret waktu. \\
+\hline
+
+4 & React.js & Pustaka JavaScript untuk membangun antarmuka pengguna yang interaktif dan responsif. React.js digunakan untuk mengembangkan \textit{frontend chatbot} berbasis web dengan fitur percakapan, panel peramalan, dan alur terpandu (\textit{guided flow}). \\
+\hline
+
+5 & Oracle Database & \textit{Enterprise Data Warehouse} (DWH) yang menjadi sumber data utama sistem. Oracle Database digunakan untuk dua tujuan: (1) menyimpan data pengguna, riwayat percakapan, dan sesi melalui \textit{connection pooling} dengan pustaka \texttt{node-oracledb}; dan (2) menyediakan data analitik bisnis dari skema \texttt{DWH\_MOIS} yang mencakup lima domain data (penjualan, pendapatan, target, proses data pelanggan, dan \textit{churn}). \\
+\hline
+
+6 & PyTorch & \textit{Framework deep learning} utama yang digunakan untuk membangun dan melatih model peramalan deret waktu berbasis GRU dan LSTM. PyTorch dipilih karena fleksibilitas dalam pendefinisian arsitektur model kustom dan kemudahan \textit{debugging}. \\
+\hline
+
+7 & Express.js & \textit{Framework} web minimalis untuk Node.js yang digunakan sebagai fondasi \textit{backend} utama. Express.js menangani \textit{routing}, \textit{middleware} keamanan (Helmet, CORS, \textit{rate limiter}), serta integrasi dengan mesin aturan dan modul NLG. \\
+\hline
+
+8 & Pandas & Pustaka Python untuk manipulasi dan analisis data tabular. Pandas digunakan pada tahap \textit{data preparation}, transformasi fitur, dan agregasi data sebelum proses pelatihan model maupun eksekusi kueri. \\
+\hline
+
+9 & NumPy & Pustaka Python untuk komputasi numerik yang menjadi fondasi operasi matematika pada pemrosesan data dan perhitungan metrik evaluasi model. \\
+\hline
+
+10 & Scikit-learn & Pustaka \textit{machine learning} Python yang digunakan untuk praolah data, ekstraksi fitur, perhitungan metrik evaluasi, dan implementasi model \textit{baseline} untuk perbandingan performa. \\
+\hline
+
+11 & \texttt{node-oracledb} & Pustaka Node.js resmi dari Oracle untuk koneksi ke Oracle Database. Pustaka ini mengelola \textit{connection pooling}, eksekusi kueri SQL, dan penanganan tipe data khusus Oracle seperti CLOB. \\
+\hline
+
+12 & Regex (JavaScript) & Modul ekspresi reguler bawaan JavaScript yang digunakan untuk implementasi pencocokan pola (\textit{pattern matching}) dalam klasifikasi maksud berbasis aturan dan ekstraksi konteks geografis dari kueri pengguna. \\
+\hline
+
+13 & Pustaka Templat JavaScript & Modul templat kustom yang dibangun dalam JavaScript untuk implementasi \textit{template-based Natural Language Generation}. Modul ini mendukung lebih dari 30 subjek aturan dengan variasi templat per \textit{intent} yang diisi secara dinamis berdasarkan data hasil kueri Oracle. \\
+\hline
+
+14 & JWT / bcrypt & Pustaka keamanan yang digunakan untuk autentikasi berbasis \textit{JSON Web Token} (JWT) dan enkripsi kata sandi menggunakan algoritma \textit{bcrypt} dengan \textit{salt rounds}. \\
+\hline
+
+15 & Git / GitHub & Sistem kontrol versi dan platform kolaborasi yang digunakan untuk manajemen kode sumber, pelacakan perubahan, dan dokumentasi proyek tugas akhir. \\
+\hline
+
+16 & Jupyter Notebook & Aplikasi \textit{open-source} yang digunakan untuk eksplorasi data, eksperimen model, dan dokumentasi proses analisis dalam format dokumen interaktif yang menggabungkan kode, visualisasi, dan narasi. \\
+\hline
+
+17 & Google Colaboratory & Platform \textit{cloud} dari Google yang menyediakan akses gratis ke GPU untuk pelatihan model \textit{deep learning}. Google Colab digunakan untuk melatih model peramalan deret waktu yang memerlukan komputasi intensif. \\
+\hline
+
+18 & Postman & Aplikasi untuk pengujian dan dokumentasi API. Postman digunakan untuk menguji \textit{endpoint} API \textit{backend} sistem dan memvalidasi respons sebelum integrasi dengan \textit{frontend}. \\
+\hline
+
+19 & Visual Studio Code & \textit{Integrated Development Environment} (IDE) yang digunakan untuk penulisan kode, \textit{debugging}, dan manajemen proyek pengembangan sistem. \\
+\hline
+
+\end{longtable}

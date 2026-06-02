@@ -1,0 +1,35 @@
+\begin{algorithm}[H]
+\caption{Pelatihan GRU/LSTM dengan \textit{Early Stopping} dan \textit{Learning Rate Scheduling}}
+\label{alg:early-stopping}
+\begin{algorithmic}[1]
+\Require Data pelatihan $(X_{\text{train}}, y_{\text{train}})$, data validasi $(X_{\text{val}}, y_{\text{val}})$, model $\mathcal{M}(\cdot;\,\theta)$, jumlah \textit{epoch} maksimum $E$, \textit{patience} $P$
+\Ensure Parameter model terbaik $\theta^*$
+
+\State Inisialisasi parameter $\theta \gets \theta_0$, pengoptimal Adam dengan $\eta = 10^{-3}$
+\State Inisialisasi \texttt{ReduceLROnPlateau} (patience$=10$, factor$=0{,}5$)
+\State $\ell^* \gets \infty$, $\theta^* \gets \theta_0$, $p \gets 0$
+
+\For{$e = 1$ \textbf{hingga} $E$}
+    \For{setiap \textit{mini-batch} $(x_b, y_b)$ dari $X_{\text{train}}$}
+        \State $\hat{y}_b \gets \mathcal{M}(x_b;\,\theta)$
+        \State $\mathcal{L}_{\text{train}} \gets \frac{1}{|x_b|}\sum \left(\hat{y}_b - y_b\right)^2$
+        \State Hitung $\nabla_\theta \mathcal{L}_{\text{train}}$ melalui \textit{backpropagation}
+        \State Kliping gradien: $\nabla_\theta \gets \nabla_\theta \cdot \min\!\left(1,\ \tfrac{1}{\|\nabla_\theta\|}\right)$
+        \State Perbarui $\theta$ menggunakan Adam
+    \EndFor
+    \State $\mathcal{L}_{\text{val}} \gets \frac{1}{|X_{\text{val}}|}\sum \left(\mathcal{M}(X_{\text{val}};\,\theta) - y_{\text{val}}\right)^2$
+    \State Perbarui \textit{scheduler}: kurangi $\eta$ jika $\mathcal{L}_{\text{val}}$ tidak membaik selama 10 \textit{epoch}
+    \If{$\mathcal{L}_{\text{val}} < \ell^*$}
+        \State $\ell^* \gets \mathcal{L}_{\text{val}}$,\quad $\theta^* \gets \theta$,\quad $p \gets 0$
+    \Else
+        \State $p \gets p + 1$
+        \If{$p \geq P$}
+            \State \textbf{break} \Comment{Hentikan pelatihan, cegah \textit{overfitting}}
+        \EndIf
+    \EndIf
+\EndFor
+
+\State Muat kembali $\theta^*$ ke dalam $\mathcal{M}$
+\State \Return $\theta^*$
+\end{algorithmic}
+\end{algorithm}

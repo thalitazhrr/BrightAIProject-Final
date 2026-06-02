@@ -3,6 +3,7 @@
 % ==============================================================================
 
 \chapter{STUDI LITERATUR}
+\label{chap:studi-literatur}
 
 Bab ini menyajikan kajian teoretis dan tinjauan pustaka yang relevan dengan topik penelitian. Pembahasan meliputi konsep \textit{Business Intelligence}, teknologi \textit{chatbot} dan \textit{Conversational AI}, klasifikasi \textit{intent} berbasis pola, pembangkitan bahasa alami berbasis templat, serta peramalan deret waktu yang mendukung analisis dan prediksi permintaan layanan pelanggan. Kajian literatur ini disusun secara sistematis untuk memberikan landasan teoretis yang kuat bagi pengembangan sistem yang diusulkan, dengan fokus pada integrasi \textit{pattern-based intent classification}, \textit{template-based natural language generation}, dan \textit{time series forecasting} dalam satu platform terintegrasi.
 
@@ -43,7 +44,7 @@ Implementasi \textit{semantic layer} yang efektif memungkinkan organisasi untuk 
 
 \section{\textit{Rule-Based Query} dan Implementasinya pada \textit{Chatbot}}
 
-\begin{figure}[H] 
+\begin{figure}[t]
   \centering
   \includegraphics[width=0.46\textwidth,
                    height=0.32\textheight,
@@ -76,7 +77,7 @@ Dalam konteks \textit{Business Intelligence}, beberapa kajian mengusulkan penggu
 % ==============================================================================
 \section{\textit{Pattern-Based Intent Classification} dengan \textit{Confidence Level}}
 % ==============================================================================
-\begin{figure}[H] 
+\begin{figure}[t]
   \centering
   \includegraphics[width=0.46\textwidth,
                    height=0.32\textheight,
@@ -88,7 +89,7 @@ Bagian ini membahas pendekatan klasifikasi \textit{intent} berbasis pola untuk s
 
 \subsection{Konsep \textit{Intent Classification}}
 
-Klasifikasi \textit{intent} adalah proses menentukan niat atau tujuan pengguna dari masukan mereka, yang merupakan tugas fundamental dalam sistem \textit{chatbot} percakapan \autocite{ouaddi2025comparative}. Inti dari \textit{chatbot} berbasis AI adalah komponen NLU yang mengklasifikasikan \textit{intent} pengguna untuk menghasilkan respons yang sesuai. Tugas klasifikasi ini sangat penting karena menentukan alur percakapan dan tindakan yang akan diambil sistem.
+Klasifikasi \textit{intent} adalah proses menentukan niat atau tujuan pengguna dari masukan mereka, yang merupakan tugas fundamental dalam sistem \textit{chatbot} percakapan \autocite{ouaddi2025comparative}. Inti dari \textit{chatbot} berbasis AI adalah komponen NLU\label{abbr:NLU} yang mengklasifikasikan \textit{intent} pengguna untuk menghasilkan respons yang sesuai. Tugas klasifikasi ini sangat penting karena menentukan alur percakapan dan tindakan yang akan diambil sistem.
 
 Pasar \textit{Conversational AI} global diproyeksikan mencapai USD 49,9 miliar pada tahun 2030, meningkat dari USD 10,7 miliar pada tahun 2023, dengan CAGR sebesar 25,2\% \autocite{Qaltivate2025}. Pertumbuhan eksponensial ini didorong oleh meningkatnya adopsi teknologi AI dalam layanan pelanggan dan operasional bisnis. \textit{Chatbot} dapat menjawab hampir 80\% dari semua pertanyaan standar, yang secara signifikan mengurangi beban kerja agen manusia dan mempercepat waktu respons \autocite{Fullview2025}. Statistik ini menunjukkan potensi besar klasifikasi \textit{intent} dalam meningkatkan efisiensi operasional dan kepuasan pengguna.
 
@@ -120,7 +121,7 @@ Sistem menghitung \textit{confidence score} dengan membandingkan \textit{input} 
 
 Jika \textit{confidence score} terbaik jatuh di bawah threshold, sistem akan memicu interaksi \textit{fallback}, biasanya berupa pesan yang meminta klarifikasi atau memberitahu pengguna bahwa sistem tidak memahami pertanyaan. Pengaturan \textit{threshold} yang tepat sangat penting untuk menyeimbangkan antara tingkat otomasi dan akurasi respons \autocite{cyara2024optimum}.
 
-Analisis \textit{threshold} membantu menentukan pengaturan yang optimal berdasarkan \textit{Key Performance Indicators} (KPI) bisnis. Organisasi dapat menyesuaikan \textit{threshold} berdasarkan tiga pendekatan utama. Pendekatan pertama adalah menyesuaikan \textit{threshold} untuk mencapai persentase target respons yang benar. Pendekatan kedua adalah membatasi persentase maksimal respons yang salah. Pendekatan ketiga adalah mengoptimalkan trade-off antara tingkat otomasi dan risiko kesalahan berdasarkan toleransi bisnis \autocite{cyara2024optimum,genesys2023threshold}.
+Analisis \textit{threshold} membantu menentukan pengaturan yang optimal berdasarkan \textit{Key Performance Indicators} (KPI)\label{abbr:KPI} bisnis. Organisasi dapat menyesuaikan \textit{threshold} berdasarkan tiga pendekatan utama. Pendekatan pertama adalah menyesuaikan \textit{threshold} untuk mencapai persentase target respons yang benar. Pendekatan kedua adalah membatasi persentase maksimal respons yang salah. Pendekatan ketiga adalah mengoptimalkan trade-off antara tingkat otomasi dan risiko kesalahan berdasarkan toleransi bisnis \autocite{cyara2024optimum,genesys2023threshold}.
 
 \subsection{Evaluasi Performa \textit{Intent Classification}}
 
@@ -146,11 +147,13 @@ Dalam konteks Agregasi Metrik (\textit{Macro-Average} dengan \textit{Micro-Avera
 
 Pendekatan \textbf{\textit{Macro-Averaging}} ini menghitung metrik (\textit{Precision}, \textit{Recall}, \textit{F1-Score}) untuk setiap kelas secara individual, kemudian mengambil rata-rata aritmatik dari 38 nilai metrik tersebut. Strategi ini memberikan bobot yang sama untuk setiap kelas sehingga mengutamakan performa pada kelas minoritas dan mencegah kelas mayoritas mendominasi hasil evaluasi \autocite{Grandini2020MultiClassMetrics}.
 
+\phantomsection\label{sym:sum}
 \begin{align}
 \text{Presisi}_{\text{makro}} &= \frac{1}{38}\sum_{i=1}^{38} \text{Presisi}_i \\
 \text{Daya Ingat}_{\text{makro}} &= \frac{1}{38}\sum_{i=1}^{38} \text{Daya Ingat}_i \\
 \text{Skor-F1}_{\text{makro}} &= \frac{1}{38}\sum_{i=1}^{38} \text{Skor-F1}_i
 \end{align}
+\eqcaption{Makro-Rata Presisi, Daya Ingat, dan Skor-F1}
 
 Pendekatan \textbf{\textit{Micro-Averaging}} menjumlahkan seluruh nilai TP, FP, dan FN dari semua kelas terlebih dahulu, kemudian menghitung metrik secara global berdasarkan jumlahan tersebut. Strategi ini memberikan bobot yang sama untuk setiap sampel sehingga metrik cenderung didominasi oleh kelas mayoritas dan mengabaikan performa pada kelas minoritas. Dalam klasifikasi multi-kelas, mikro-rata presisi = mikro-rata daya ingat = akurasi\autocite{EvidentlyMultiClass}.
 
@@ -158,6 +161,7 @@ Pendekatan \textbf{\textit{Micro-Averaging}} menjumlahkan seluruh nilai TP, FP, 
 \text{Presisi}_{\text{mikro}} &= \frac{\sum_{i=1}^{38} \text{TP}_i}{\sum_{i=1}^{38} (\text{TP}_i + \text{FP}_i)} \\
 \text{Daya Ingat}_{\text{mikro}} &= \frac{\sum_{i=1}^{38} \text{TP}_i}{\sum_{i=1}^{38} (\text{TP}_i + \text{FN}_i)}
 \end{align}
+\eqcaption{Mikro-Rata Presisi dan Daya Ingat}
 
 Sebagai pendekatan komplementer, rata-rata tertimbang menghitung metrik per-kelas kemudian mengambil rata-rata yang diboboti oleh jumlah sampel di setiap kelas atau \textbf{\textit{Weighted-Averaging}}. Ini mengakomodasi keseimbangan antara kepedulian terhadap kelas minoritas dan representasi data yang ada \autocite{Grandini2020MultiClassMetrics}.
 
@@ -222,7 +226,7 @@ Metrik tambahan terkait \textit{confidence score} meliputi \textit{Average Confi
 % ==============================================================================
 \section{\textit{Template-Based Natural Language Generation}}
 % ==============================================================================
-\begin{figure}[H] 
+\begin{figure}[t]
   \centering
   \includegraphics[width=0.46\textwidth,
                    height=0.32\textheight,
@@ -263,7 +267,7 @@ Implementasi NLG dalam lingkungan perusahaan memerlukan pertimbangan keamanan ya
 
 \textit{Differential Privacy} (DP) adalah kerangka kerja yang memberikan jaminan privasi secara matematis, memastikan bahwa kontribusi individu dalam \textit{dataset} dibatasi \autocite{feyisetan2022differential,mireshghallah2022differentially}. Dalam konteks NLG, DP dapat diterapkan melalui dua pendekatan utama. Pendekatan pertama adalah pelatihan model dengan DP-SGD yang menambahkan noise pada gradien selama pelatihan. Pendekatan kedua adalah perturbasi representasi teks yang menambahkan noise pada \textit{embedding} sebelum generasi.
 
-Parameter privasi $\epsilon$ mengontrol tingkat privasi yang diberikan, dengan nilai $\epsilon$ yang lebih kecil memberikan privasi yang lebih kuat tetapi dapat mengurangi utility model. Implementasi DP dalam NLG memerlukan trade-off yang cermat antara privasi dan kualitas output \autocite{luo2024data}.
+Parameter privasi $\epsilon$\label{sym:epsilon} mengontrol tingkat privasi yang diberikan, dengan nilai $\epsilon$ yang lebih kecil memberikan privasi yang lebih kuat tetapi dapat mengurangi utility model. Implementasi DP dalam NLG memerlukan trade-off yang cermat antara privasi dan kualitas output \autocite{luo2024data}.
 
 \subsubsection{Strategi Keamanan Data dalam NLG}
 
@@ -285,11 +289,11 @@ Evaluasi kualitas keluaran \textit{Natural Language Generation} (NLG) merupakan 
 
 Berbagai survei mengenai evaluasi NLG mengelompokkan metrik otomatis ke dalam beberapa kategori utama, seperti metrik berbasis kecocokan permukaan (\textit{string-matching}), metrik berbasis pemetaan vektor (\textit{embedding-based}), dan metrik berbasis model pembelajaran mesin \autocite{Celikyilmaz2020EvalTextGen,Sai2020NLGSurvey,Gao2024LLMNLG}.
 
-Kategori pertama adalah metrik berbasis referensi yang membandingkan keluaran sistem dengan satu atau beberapa teks rujukan yang ditulis manusia. Contoh yang paling banyak digunakan adalah BLEU (\textit{Bilingual Evaluation Understudy}) yang mengukur kecocokan \textit{n-gram} antara keluaran dan teks rujukan, dengan rumus umum \autocite{Sai2020NLGSurvey}:
+Kategori pertama adalah metrik berbasis referensi yang membandingkan keluaran sistem dengan satu atau beberapa teks rujukan yang ditulis manusia. Contoh yang paling banyak digunakan adalah BLEU\label{abbr:BLEU} (\textit{Bilingual Evaluation Understudy}) yang mengukur kecocokan \textit{n-gram} antara keluaran dan teks rujukan, dengan rumus umum \autocite{Sai2020NLGSurvey}:
 \[
 \text{BLEU (\textit{Bilingual Evaluation Understudy})} = BP \times \exp\left(\sum_{n=1}^{N} w_n \log p_n\right)
 \]
-dengan \(p_n\) menyatakan presisi \textit{n-gram} dan \(BP\) adalah faktor penalti panjang (\textit{brevity penalty}). Metrik lain seperti METEOR (\textit{Metric for Evaluation of Translation with Explicit ORdering}) memasukkan faktor sinonim dan \textit{stemming}, sedangkan ROUGE (\textit{Recall-Oriented Understudy for Gisting Evaluation}) berfokus pada daya ingat (\textit{recall}) dan banyak digunakan untuk evaluasi peringkasan teks \autocite{Celikyilmaz2020EvalTextGen,Sai2020NLGSurvey}.
+dengan \(p_n\) menyatakan presisi \textit{n-gram} dan \(BP\) adalah faktor penalti panjang (\textit{brevity penalty}). Metrik lain seperti METEOR (\textit{Metric for Evaluation of Translation with Explicit ORdering}) memasukkan faktor sinonim dan \textit{stemming}, sedangkan ROUGE\label{abbr:ROUGE} (\textit{Recall-Oriented Understudy for Gisting Evaluation}) berfokus pada daya ingat (\textit{recall}) dan banyak digunakan untuk evaluasi peringkasan teks \autocite{Celikyilmaz2020EvalTextGen,Sai2020NLGSurvey}.
 
 Kategori kedua adalah metrik berbasis penyajian vektor (\textit{embedding-based}), yang menggunakan representasi neural untuk mengukur kesamaan semantik, bukan hanya kesamaan permukaan. Contohnya adalah BERTScore yang memanfaatkan \textit{embedding} BERT untuk menghitung kesamaan kontekstual antara token keluaran dan token rujukan. Metrik ini umumnya menunjukkan korelasi yang lebih baik dengan penilaian manusia dibandingkan metrik \textit{string-matching} murni, terutama ketika terdapat banyak cara wajar untuk mengekspresikan makna yang sama \autocite{Celikyilmaz2020EvalTextGen,Gao2024LLMNLG}.
 
@@ -341,7 +345,7 @@ Berdasarkan informasi tersebut, literatur menyarankan bahwa pemilihan metrik eva
 % ==============================================================================
 \section{\textit{Time Series Forecasting}}
 % ==============================================================================
-\begin{figure}[H] 
+\begin{figure}[t]
   \centering
   \includegraphics[width=0.46\textwidth,
                    height=0.32\textheight,
@@ -350,7 +354,7 @@ Berdasarkan informasi tersebut, literatur menyarankan bahwa pemilihan metrik eva
   \label{fig:tsf}
 \end{figure}
 
-Bagian ini membahas konsep peramalan deret waktu, model-model statistik dan pembelajaran mendalam yang digunakan, serta evaluasi performa yang komprehensif. Pembahasan mencakup ARIMA, SARIMA, LSTM, serta perbandingan karakteristik dan performa masing-masing metode. Pemahaman yang mendalam tentang berbagai pendekatan peramalan ini menjadi fondasi penting dalam memilih dan mengimplementasikan model yang sesuai dengan karakteristik data dan kebutuhan aplikasi.
+Bagian ini membahas konsep peramalan deret waktu, model-model statistik dan pembelajaran mendalam yang digunakan, serta evaluasi performa yang komprehensif. Pembahasan mencakup ARIMA, SARIMA\label{abbr:SARIMA}, LSTM, serta perbandingan karakteristik dan performa masing-masing metode. Pemahaman yang mendalam tentang berbagai pendekatan peramalan ini menjadi fondasi penting dalam memilih dan mengimplementasikan model yang sesuai dengan karakteristik data dan kebutuhan aplikasi.
 
 \subsection{Konsep \textit{Time Series} dan Peramalan}
 
@@ -358,15 +362,48 @@ Bagian ini membahas konsep peramalan deret waktu, model-model statistik dan pemb
 
 Pasar \textit{time series forecasting} global mencapai USD 9,62 miliar pada tahun 2023 dan diperkirakan tumbuh menjadi USD 36,9 miliar pada tahun 2032 dengan CAGR sebesar 16,12\% \autocite{WiseGuyReports2024}. Pertumbuhan ini menunjukkan meningkatnya adopsi teknik peramalan deret waktu di berbagai industri untuk mendukung pengambilan keputusan berbasis data, termasuk peramalan permintaan layanan pelanggan, prediksi penjualan, dan analisis tren bisnis. Proyeksi pertumbuhan pasar ini mengindikasikan relevansi dan urgensi pengembangan sistem peramalan yang akurat dan dapat diandalkan.
 
+\subsection{Model Peramalan Statistik Klasik sebagai \textit{Baseline}}
+\label{subsec:model-statistik}
+
+Sebelum membahas model berbasis pembelajaran mendalam, penting untuk memahami model statistik klasik yang digunakan sebagai \textit{baseline} dalam penelitian ini. Model statistik seperti ARIMA dan Prophet merupakan tolok ukur yang lazim digunakan dalam evaluasi peramalan deret waktu karena sifatnya yang dapat diinterpretasikan, tidak memerlukan data dalam jumlah sangat besar, dan relatif cepat untuk dilatih. Perbandingan terhadap \textit{baseline} statistik ini memungkinkan penilaian yang objektif mengenai apakah model \textit{deep learning} yang lebih kompleks benar-benar memberikan keunggulan yang sepadan dengan biaya komputasi yang lebih tinggi.
+
+\subsubsection{ARIMA dan SARIMA}
+
+ARIMA (\textit{Autoregressive Integrated Moving Average}) adalah model peramalan deret waktu statistik yang menggabungkan tiga komponen utama: komponen autoregresif (AR) yang memodelkan pengaruh nilai masa lalu terhadap nilai saat ini, komponen diferensiasi (I) yang mengubah deret waktu menjadi stasioner melalui operasi selisih, dan komponen rata-rata bergerak (MA) yang memodelkan pengaruh kesalahan masa lalu. Model ARIMA dinotasikan sebagai ARIMA(\(p, d, q\))\label{sym:pdq} di mana \(p\) adalah orde autoregresif, \(d\) adalah derajat diferensiasi, dan \(q\) adalah orde rata-rata bergerak \autocite{Petropoulos2022ForecastingPractice,Spiliotis2020ForecastingBenchmarks}.
+
+Untuk data yang mengandung pola musiman, digunakan model SARIMA (\textit{Seasonal ARIMA}) yang dinotasikan sebagai SARIMA(\(p, d, q\))(\(P, D, Q\))\label{sym:PDQ}\(m\)\label{sym:m} di mana \(P\), \(D\), \(Q\) adalah parameter musiman dan \(m\) adalah periode musiman (misalnya \(m = 12\) untuk data bulanan). SARIMA mampu menangkap pola musiman berulang yang lazim ditemukan pada data bisnis seperti penjualan dan \textit{churn} pelanggan \autocite{Petropoulos2022ForecastingPractice}.
+
+Keunggulan utama ARIMA dan SARIMA terletak pada interpretabilitas tinggi, kebutuhan data yang relatif sedikit, dan efisiensi komputasi. Namun, model ini mengasumsikan linearitas dalam hubungan temporal dan memerlukan pemilihan parameter (\(p, d, q\)) yang cermat melalui analisis fungsi autokorelasi (ACF) dan autokorelasi parsial (PACF) \autocite{Petropoulos2022ForecastingPractice,Spiliotis2020ForecastingBenchmarks}.
+
+\subsubsection{Prophet}
+
+Prophet adalah model peramalan deret waktu yang dikembangkan oleh Meta (Facebook) dan dirancang untuk bekerja dengan baik pada data bisnis yang memiliki tren kuat, efek musiman yang jelas, dan \textit{outlier} yang umum \autocite{Tuncer2023ARIMAProphetLSTM,Masini2023MLTimeSeriesForecasting}. Prophet menggunakan pendekatan dekomposisi aditif yang memisahkan deret waktu menjadi komponen tren \(T(t)\)\label{sym:Tt}\label{sym:t}, musiman \(S(t)\)\label{sym:St}, efek hari raya \(H(t)\)\label{sym:Ht}, dan kesalahan residual \(\epsilon_t\):
+
+\begin{equation}
+y(t) = T(t) + S(t) + H(t) + \epsilon_t
+\end{equation}
+\eqcaption{Dekomposisi Aditif Deret Waktu (\textit{Prophet})}
+
+Komponen tren dimodelkan menggunakan fungsi pertumbuhan linier atau logistik yang dapat menangkap titik perubahan (\textit{changepoints}) secara otomatis. Komponen musiman dimodelkan menggunakan deret Fourier untuk menangkap pola musiman harian, mingguan, dan tahunan secara fleksibel.
+
+Keunggulan Prophet adalah kemudahan penggunaan, kemampuan menangani nilai hilang (\textit{missing values}) dan \textit{outlier} secara otomatis, serta dukungan untuk variabel regresor eksternal. Namun, Prophet cenderung kurang optimal untuk pola temporal yang sangat kompleks dan non-linear jika dibandingkan dengan model \textit{deep learning} \autocite{Tuncer2023ARIMAProphetLSTM,Masini2023MLTimeSeriesForecasting}.
+
+\subsubsection{Keterbatasan Model Statistik dan Motivasi Penggunaan \textit{Deep Learning}}
+
+Meskipun model statistik seperti ARIMA dan Prophet unggul dalam hal interpretabilitas dan efisiensi komputasi, terdapat sejumlah keterbatasan yang memotivasi penggunaan model \textit{deep learning} dalam penelitian ini. Pertama, ARIMA dan SARIMA mengasumsikan linearitas sehingga kurang mampu menangkap hubungan temporal yang kompleks dan non-linear yang umum dalam data bisnis \autocite{Petropoulos2022ForecastingPractice,Spiliotis2020ForecastingBenchmarks}. Kedua, model statistik univariat seperti ARIMA tidak secara langsung memanfaatkan informasi dari variabel-variabel lain yang berkorelasi, sehingga kurang optimal untuk data multivariat \autocite{Masini2023MLTimeSeriesForecasting}. Ketiga, studi empiris pada data \textit{e-commerce} dan telekomunikasi menunjukkan bahwa model LSTM dan GRU konsisten mengungguli ARIMA dengan pengurangan \textit{error} sekitar 12--18\% pada data dengan pola musiman dan ketergantungan temporal yang kompleks \autocite{Sunendar2025ComparisonARIMALSTMGRU,Tuncer2023ARIMAProphetLSTM}.
+
+Dengan demikian, pendekatan dalam penelitian ini adalah menggunakan ARIMA dan Prophet sebagai \textit{baseline} yang terukur, kemudian membandingkannya dengan model \textit{deep learning} (LSTM, GRU, TFT) untuk memvalidasi bahwa kompleksitas tambahan dari model \textit{deep learning} benar-benar memberikan peningkatan akurasi yang signifikan dalam konteks data indikator bisnis yang digunakan.
+
 \subsection{Model Peramalan Deret Waktu Berbasis \textit{Deep Learning}}
 
 Sistem peramalan dalam penelitian ini memanfaatkan pendekatan berbasis pembelajaran mendalam (\textit{deep learning}) yang dirancang khusus untuk menangani data deret waktu multivariat (\textit{multivariate time series}) dengan pola temporal yang kompleks. Sistem menggunakan tiga arsitektur utama, LSTM, GRU, dan Temporal Fusion Transformer (TFT), serta kombinasi hibrida dari algoritma-algoritma tersebut untuk memaksimalkan akurasi prediksi terhadap indikator kinerja bisnis seperti volume pesanan, tingkat \textit{churn} pelanggan, dan proyeksi pendapatan \autocite{Yunita2025NNComparison,Zhang2024ComprehensiveTSFSurvey}.
 
 \subsubsection{LSTM (\textit{Long Short-Term Memory}) untuk Peramalan Deret Waktu}
 
-LSTM adalah jenis jaringan saraf berulang (\textit{Recurrent Neural Network}, RNN) yang dirancang untuk mengatasi masalah gradien menghilang (\textit{vanishing gradient}) pada RNN tradisional dan mampu mempelajari dependensi jangka panjang dalam data sekuens \autocite{Yunita2025NNComparison}. Arsitektur LSTM terdiri dari sel memori dan tiga gerbang utama: gerbang lupa (\textit{forget gate}) yang menentukan informasi apa dari sel memori yang harus dibuang, gerbang masukan (\textit{input gate}) yang menentukan informasi baru apa yang akan disimpan, dan gerbang keluaran (\textit{output gate}) yang menentukan bagian mana dari sel memori yang akan menjadi keluaran.
+LSTM adalah jenis jaringan saraf berulang (\textit{Recurrent Neural Network}, RNN)\label{abbr:RNN} yang dirancang untuk mengatasi masalah gradien menghilang (\textit{vanishing gradient}) pada RNN tradisional dan mampu mempelajari dependensi jangka panjang dalam data sekuens \autocite{Yunita2025NNComparison}. Arsitektur LSTM terdiri dari sel memori dan tiga gerbang utama: gerbang lupa (\textit{forget gate}) yang menentukan informasi apa dari sel memori yang harus dibuang, gerbang masukan (\textit{input gate}) yang menentukan informasi baru apa yang akan disimpan, dan gerbang keluaran (\textit{output gate}) yang menentukan bagian mana dari sel memori yang akan menjadi keluaran.
 
 Persamaan matematis LSTM dapat ditulis sebagai berikut \autocite{Yunita2025NNComparison}:
+\phantomsection\label{sym:ft}\label{sym:sigmoid}\label{sym:it}\label{sym:tanh}\label{sym:xt}\label{sym:ct}\label{sym:ot}\label{sym:ht}
 \begin{align}
 f_t &= \sigma(W_f \cdot [h_{t-1}, x_t] + b_f) \\
 i_t &= \sigma(W_i \cdot [h_{t-1}, x_t] + b_i) \\
@@ -375,8 +412,9 @@ C_t &= f_t * C_{t-1} + i_t * \tilde{C}_t \\
 o_t &= \sigma(W_o \cdot [h_{t-1}, x_t] + b_o) \\
 h_t &= o_t * \tanh(C_t)
 \end{align}
+\eqcaption{Persamaan Gerbang LSTM}
 
-Dalam persamaan ini, \(f_t\) adalah gerbang lupa, \(i_t\) adalah gerbang masukan, \(o_t\) adalah gerbang keluaran, \(C_t\) adalah keadaan sel (\textit{cell state}), \(h_t\) adalah keadaan tersembunyi (\textit{hidden state}), \(\sigma\) adalah fungsi sigmoid, serta \(W\) dan \(b\) adalah matriks bobot dan vektor bias yang dipelajari selama pelatihan.
+Dalam persamaan ini, \(f_t\) adalah gerbang lupa, \(i_t\) adalah gerbang masukan, \(o_t\) adalah gerbang keluaran, \(C_t\) adalah keadaan sel (\textit{cell state}), \(h_t\) adalah keadaan tersembunyi (\textit{hidden state}), \(\sigma\) adalah fungsi sigmoid, serta \(W\)\label{sym:W} dan \(b\)\label{sym:b} adalah matriks bobot dan vektor bias yang dipelajari selama pelatihan.
 
 LSTM unggul dalam menangani data deret waktu yang kompleks dengan dependensi jangka panjang dan pola non-linear. Kemampuan model untuk mengingat informasi relevan dari masa lalu yang jauh menjadikannya sangat efektif untuk aplikasi seperti peramalan permintaan atau tingkat \textit{churn} pelanggan yang dipengaruhi oleh berbagai faktor temporal yang kompleks \autocite{Yunita2025NNComparison}.
 
@@ -385,12 +423,14 @@ LSTM unggul dalam menangani data deret waktu yang kompleks dengan dependensi jan
 GRU adalah varian yang lebih sederhana dari LSTM, menawarkan performa yang sebanding dengan menggunakan arsitektur yang lebih ringkas dan parameter yang lebih sedikit \autocite{Yunita2025NNComparison,Zhang2024ComprehensiveTSFSurvey}. GRU memiliki dua gerbang utama: gerbang reset (\textit{reset gate}) dan gerbang pembaruan (\textit{update gate}), menggabungkan fungsi gerbang lupa dan gerbang masukan LSTM menjadi satu gerbang pembaruan.
 
 Persamaan matematis GRU dapat ditulis sebagai \autocite{Yunita2025NNComparison}:
+\phantomsection\label{sym:rt}\label{sym:zt}
 \begin{align}
 r_t &= \sigma(W_r \cdot [h_{t-1}, x_t] + b_r) \\
 z_t &= \sigma(W_z \cdot [h_{t-1}, x_t] + b_z) \\
 \tilde{h}_t &= \tanh(W \cdot [r_t * h_{t-1}, x_t] + b) \\
 h_t &= (1 - z_t) * h_{t-1} + z_t * \tilde{h}_t
 \end{align}
+\eqcaption{Persamaan Gerbang GRU}
 
 Dalam persamaan ini, \(r_t\) adalah gerbang reset, \(z_t\) adalah gerbang pembaruan, dan \(\tilde{h}_t\) adalah calon keadaan tersembunyi. Studi empiris menunjukkan bahwa GRU sering memberikan hasil yang setara atau bahkan lebih baik daripada LSTM pada berbagai tugas peramalan deret waktu, dengan keuntungan pelatihan yang lebih cepat dan kebutuhan komputasi yang lebih rendah \autocite{Yunita2025NNComparison,Jeaab2024LSTMGRUXGBoost}.
 
@@ -424,7 +464,7 @@ Pendekatan ensemble yang menggabungkan keluaran dari multiple model (misalnya LS
 Berbagai penelitian empiris telah membandingkan kinerja LSTM, GRU, dan TFT pada berbagai skenario peramalan deret waktu. Tabel~\ref{tab:dl-forecasting-comparison} menyajikan perbandingan karakteristik utama dari ketiga arsitektur berdasarkan sintesis dari penelitian-penelitian terdahulu.
 
 \begin{longtable}{|p{1.8cm}|p{3.5cm}|p{3.8cm}|p{3cm}|}
-\caption{Perbandingan Karakteristik Model Peramalan Berbasis \textit{Deep Learning}}
+\caption{Perbandingan Karakteristik Model Peramalan Deret Waktu}
 \label{tab:dl-forecasting-comparison}\\
 \hline
 \textbf{Metode} & \textbf{Kelebihan} & \textbf{Kekurangan} & \textbf{Karakteristik} \tabularnewline
@@ -432,7 +472,7 @@ Berbagai penelitian empiris telah membandingkan kinerja LSTM, GRU, dan TFT pada 
 \endfirsthead
 
 \multicolumn{4}{c}%
-{\tablename\ \thetable\ -- {Perbandingan Model Peramalan \textit{Deep Learning} (lanjutan)}} \\
+{\tablename\ \thetable\ -- {Perbandingan Model Peramalan Deret Waktu (lanjutan)}} \\
 \hline
 \textbf{Metode} & \textbf{Kelebihan} & \textbf{Kekurangan} & \textbf{Karakteristik} \tabularnewline
 \hline
@@ -552,6 +592,54 @@ Berbagai penelitian empiris telah membandingkan kinerja LSTM, GRU, dan TFT pada 
 \tabularnewline
 \hline
 
+\textbf{ARIMA / SARIMA} (\textit{Baseline}) &
+\begin{enumerate}[leftmargin=*,itemsep=0.5pt,topsep=1pt,partopsep=0pt]
+  \item Sangat interpretatif: parameter memiliki makna statistik yang jelas
+  \item Efisiensi komputasi sangat tinggi, tidak memerlukan GPU
+  \item Cocok untuk seri univariat dengan stasioneritas yang dapat diuji
+  \item Didukung teori statistik yang matang dan terdokumentasi
+\end{enumerate}
+&
+\begin{enumerate}[leftmargin=*,itemsep=0.5pt,topsep=1pt,partopsep=0pt]
+  \item Mengasumsikan linearitas, kurang mampu menangkap pola non-linear
+  \item Tidak secara langsung menangani data multivariat tanpa ekstensi
+  \item Memerlukan pemilihan parameter (\(p, d, q\)) yang cermat via analisis ACF/PACF
+  \item Performa menurun pada data dengan tren atau musiman yang berubah
+\end{enumerate}
+&
+\begin{enumerate}[leftmargin=*,itemsep=0.5pt,topsep=1pt,partopsep=0pt]
+  \item MAPE tipikal: 15--25\%
+  \item Cocok untuk: data univariat, interpretabilitas tinggi
+  \item Kompleksitas model: rendah
+  \item Peran: \textit{baseline} statistik
+\end{enumerate}
+\tabularnewline
+\hline
+
+\textbf{Prophet} (\textit{Baseline}) &
+\begin{enumerate}[leftmargin=*,itemsep=0.5pt,topsep=1pt,partopsep=0pt]
+  \item Mudah digunakan dan tahan terhadap \textit{outlier} serta nilai hilang
+  \item Menangani tren dan musiman yang kompleks secara otomatis
+  \item Mendukung variabel regresor eksternal
+  \item Dapat mendeteksi titik perubahan tren (\textit{changepoints}) secara otomatis
+\end{enumerate}
+&
+\begin{enumerate}[leftmargin=*,itemsep=0.5pt,topsep=1pt,partopsep=0pt]
+  \item Masih berdasarkan model aditif yang mengasumsikan dekomposisi linier
+  \item Kurang optimal untuk pola temporal yang sangat kompleks dan non-linear
+  \item Proses \textit{fitting} lebih lambat dibanding ARIMA untuk data sederhana
+  \item Interpretabilitas parameter lebih terbatas dibanding ARIMA
+\end{enumerate}
+&
+\begin{enumerate}[leftmargin=*,itemsep=0.5pt,topsep=1pt,partopsep=0pt]
+  \item MAPE tipikal: 12--20\%
+  \item Cocok untuk: data bisnis dengan tren dan musiman kuat
+  \item Kompleksitas model: rendah--sedang
+  \item Peran: \textit{baseline} statistik
+\end{enumerate}
+\tabularnewline
+\hline
+
 \end{longtable}
 
 Studi empiris menunjukkan bahwa pada data yang mengandung pola musiman kuat dan dependensi temporal kompleks, seperti data penjualan atau \textit{churn} pelanggan bisnis, model LSTM dan GRU mengungguli metode statistik tradisional seperti ARIMA dengan pengurangan \textit{error} sekitar 12--18\% \autocite{Sunendar2025ComparisonARIMALSTMGRU}. Penelitian pada prediksi stok Indonesia menunjukkan GRU mengungguli LSTM dengan peningkatan R² sebesar 10{,}7\% dan pengurangan MAPE sebesar 18{,}5\%, menunjukkan bahwa pada \textit{dataset} tertentu, GRU dapat memberikan hasil lebih efisien \autocite{Sabila2025LSTMGRUStockPrediction}.
@@ -560,9 +648,15 @@ Model TFT menunjukkan performa tertinggi pada data multivariat, dengan MAPE yang
 
 \subsubsection{Pemilihan Model dalam Konteks Penelitian}
 
-Dalam penelitian ini, pemilihan algoritma peramalan disesuaikan dengan karakteristik data dan kebutuhan sistem. Sistem mengimplementasikan LSTM sebagai model dasar untuk menangkap pola temporal kompleks pada indikator kinerja bisnis seperti volume pesanan dan proyeksi pendapatan. GRU dapat digunakan sebagai alternatif untuk meningkatkan efisiensi pelatihan dan inferensi ketika sumber daya komputasi terbatas. TFT akan dipertimbangkan untuk skenario yang melibatkan banyak fitur eksogen yang saling terkait atau ketika interpretabilitas model menjadi prioritas utama \autocite{Zhang2024ComprehensiveTSFSurvey,Yunita2025NNComparison}.
+Proses pemilihan model dalam penelitian ini dimulai dari evaluasi model statistik klasik sebagai \textit{baseline}, kemudian dibandingkan dengan model \textit{deep learning} untuk menentukan pendekatan yang paling tepat berdasarkan data indikator bisnis yang digunakan.
 
-Pendekatan ensemble atau hibrida dapat diterapkan untuk meningkatkan robustness prediksi, terutama pada horizon prediksi yang panjang atau dalam kondisi data yang sangat berisik dan penuh ketidakpastian. Evaluasi empiris pada data historis internal akan dilakukan untuk menentukan model atau kombinasi model mana yang memberikan akurasi terbaik dan paling sesuai dengan kebutuhan operasional sistem BI \autocite{Yunita2025NNComparison}.
+\textbf{Tahap 1: Evaluasi \textit{Baseline} Statistik.} Model ARIMA dan Prophet digunakan sebagai \textit{baseline} awal karena keduanya merupakan standar industri yang umum digunakan dan mudah diinterpretasikan. ARIMA dipilih untuk seri waktu yang bersifat univariat dengan pola musiman yang teridentifikasi secara statistik, sedangkan Prophet dipilih untuk data bisnis yang memiliki tren kuat dan efek musiman majemuk. Evaluasi \textit{baseline} ini memberikan tolok ukur yang terukur sebelum mempertimbangkan model yang lebih kompleks.
+
+\textbf{Tahap 2: Justifikasi Penggunaan LSTM dan GRU.} Berdasarkan karakteristik data indikator bisnis dalam penelitian ini yang mencakup data multivariat dengan ketergantungan temporal yang kompleks dan pola non-linear, LSTM dan GRU dipilih sebagai model utama dengan alasan berikut. Pertama, data volume pesanan, tingkat \textit{churn}, dan pendapatan menunjukkan hubungan non-linear yang sulit ditangkap oleh model ARIMA yang bersifat linear. Kedua, tersedianya fitur-fitur multivariat dari berbagai domain data (penjualan, pendapatan, target, dan lainnya) memungkinkan model LSTM dan GRU memanfaatkan korelasi antar-variabel yang tidak dapat dilakukan oleh model univariat seperti ARIMA. Ketiga, studi empiris menunjukkan bahwa LSTM dan GRU secara konsisten mengungguli ARIMA pada data deret waktu bisnis yang kompleks dengan pengurangan kesalahan sekitar 12--18\% \autocite{Sunendar2025ComparisonARIMALSTMGRU}. Keempat, GRU dipilih sebagai alternatif LSTM karena arsitekturnya yang lebih sederhana memberikan efisiensi komputasi 15--20\% lebih baik dengan akurasi yang sebanding \autocite{Yunita2025NNComparison}.
+
+\textbf{Tahap 3: Pertimbangan TFT.} TFT dipertimbangkan untuk skenario yang melibatkan banyak fitur eksogen yang saling terkait atau ketika interpretabilitas model menjadi prioritas, mengingat mekanisme \textit{attention} TFT yang dapat menjelaskan kontribusi setiap fitur dan periode waktu. Namun, TFT memerlukan data dalam jumlah lebih besar dan biaya komputasi yang lebih tinggi.
+
+Dengan demikian, sistem mengimplementasikan LSTM dan GRU sebagai model utama dengan performa yang telah divalidasi, menggunakan ARIMA dan Prophet sebagai \textit{baseline} pembanding, dan mempertimbangkan TFT sebagai opsi lanjutan apabila data yang tersedia mencukupi. Evaluasi empiris pada data historis internal menggunakan metrik sMAPE, MASE, dan \textit{Skill Score} akan dilakukan untuk memvalidasi pilihan model ini secara kuantitatif \autocite{Yunita2025NNComparison,Petropoulos2023ForecastEval}.
 
 \subsection{Evaluasi Performa \textit{Time Series Forecasting}}
 
@@ -572,31 +666,36 @@ Evaluasi performa model peramalan deret waktu merupakan langkah kritis untuk mem
 
 Model peramalan deret waktu multivariat dievaluasi menggunakan empat metrik utama yang komprehensif: \textit{Mean Absolute Error} (MAE), \textit{Root Mean Square Error} (RMSE), \textit{Symmetric Mean Absolute Percentage Error} (sMAPE), dan \textit{Mean Absolute Scaled Error} (MASE) \autocite{Petropoulos2023ForecastEval}. Setiap metrik memberikan perspektif berbeda terhadap akurasi prediksi sehingga kombinasinya menghasilkan penilaian yang lebih robust dan komprehensif.
 
-\textit{Mean Absolute Error} (MAE) mengukur rata-rata nilai absolut kesalahan prediksi:
+\textit{Mean Absolute Error} (MAE)\label{sym:MAE} mengukur rata-rata nilai absolut kesalahan prediksi:
+\phantomsection\label{sym:yt}\label{sym:yhat}\label{sym:n}\label{sym:abs}
 \begin{equation}
 \text{MAE} = \frac{1}{n} \sum_{i=1}^n |y_i - \hat{y}_i|
 \end{equation}
+\eqcaption{\textit{Mean Absolute Error} (MAE)}
 
 MAE mudah diinterpretasikan karena berada dalam satuan yang sama dengan data asli, dan \textit{robust} terhadap \textit{outliers}. Namun, MAE tidak memberikan penalti tambahan pada kesalahan yang sangat besar \autocite{Petropoulos2023ForecastEval}.
 
-\textit{Root Mean Square Error} (RMSE) mengukur akar kuadrat dari rata-rata kesalahan kuadrat:
+\textit{Root Mean Square Error} (RMSE)\label{sym:RMSE} mengukur akar kuadrat dari rata-rata kesalahan kuadrat:
 \begin{equation}
 \text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i)^2}
 \end{equation}
+\eqcaption{\textit{Root Mean Square Error} (RMSE)}
 
 RMSE memberikan penalti yang lebih besar untuk kesalahan yang lebih besar, menjadikannya lebih sensitif terhadap \textit{outliers} dibandingkan MAE. Metrik ini berguna ketika kesalahan besar sangat tidak diinginkan dalam konteks bisnis \autocite{Petropoulos2023ForecastEval}.
 
-\textit{Symmetric Mean Absolute Percentage Error} (sMAPE) mengukur persentase kesalahan secara simetris:
+\textit{Symmetric Mean Absolute Percentage Error} (sMAPE)\label{sym:sMAPE} mengukur persentase kesalahan secara simetris:
 \begin{equation}
 \text{sMAPE} = \frac{100\%}{n} \sum_{i=1}^n \frac{2|y_i - \hat{y}_i|}{|y_i| + |\hat{y}_i|}
 \end{equation}
+\eqcaption{\textit{Symmetric Mean Absolute Percentage Error} (sMAPE)}
 
-sMAPE lebih stabil daripada MAPE (\textit{Mean Absolute Percentage Error}) ketika nilai aktual mendekati nol karena pembagi mencakup baik nilai aktual maupun nilai prediksi. Hal ini membuat sMAPE lebih cocok untuk data multivariat dengan skala dan nilai yang bervariasi \autocite{Petropoulos2023ForecastEval}.
+sMAPE lebih stabil daripada MAPE\label{sym:MAPE}\label{abbr:MAPE} (\textit{Mean Absolute Percentage Error}) ketika nilai aktual mendekati nol karena pembagi mencakup baik nilai aktual maupun nilai prediksi. Hal ini membuat sMAPE lebih cocok untuk data multivariat dengan skala dan nilai yang bervariasi \autocite{Petropoulos2023ForecastEval}.
 
-\textit{Mean Absolute Scaled Error} (MASE) menormalkan kesalahan terhadap model referensi sederhana:
+\textit{Mean Absolute Scaled Error} (MASE)\label{sym:MASE} menormalkan kesalahan terhadap model referensi sederhana:
 \begin{equation}
 \text{MASE} = \frac{\text{MAE}}{\text{MAE}_{\text{baseline}}}
 \end{equation}
+\eqcaption{\textit{Mean Absolute Scaled Error} (MASE)}
 
 MASE memudahkan perbandingan antar-deret waktu yang berbeda skala dan antar-model yang berbeda karena kesalahan dinormalkan relatif terhadap garis dasar (\textit{baseline}). MASE bernilai kurang dari 1 menunjukkan bahwa model mengungguli garis dasar, sedangkan nilai lebih dari 1 menunjukkan performa yang lebih buruk \autocite{Petropoulos2023ForecastEval}.
 
@@ -606,8 +705,10 @@ Dalam formula-formula di atas, \(y_i\) adalah nilai aktual, \(\hat{y}_i\) adalah
 
 Selain metrik kesalahan mentah, sistem juga menghitung \textit{skill score} yang membandingkan performa model terhadap garis dasar (\textit{baseline}) sederhana, seperti model \textit{naive} (prediksi nilai sebelumnya) atau \textit{random walk} \autocite{Petropoulos2023ForecastEval}. \textit{Skill score} didefinisikan sebagai:
 \begin{equation}
+\label{sym:SS}
 \text{\textit{Skill Score}} = 1 - \frac{\text{Metrik}_{\text{model}}}{\text{Metrik}_{\text{baseline}}}
 \end{equation}
+\eqcaption{\textit{Skill Score} terhadap Garis Dasar}
 
 \textit{Skill score} positif menunjukkan bahwa model yang diusulkan mengungguli garis dasar, sedangkan nilai negatif mengindikasikan performa yang lebih buruk dari model referensi. Pendekatan ini memberikan konteks relatif tentang keberhasilan model dan memudahkan pengambilan keputusan apakah model kompleks (seperti LSTM atau TFT) justru diperlukan atau model sederhana sudah cukup \autocite{Petropoulos2023ForecastEval,Spiliotis2020ForecastingBenchmarks}.
 

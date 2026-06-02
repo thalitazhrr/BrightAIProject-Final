@@ -98,7 +98,11 @@ def update_results(
         "sMAPE":          round(new_smape, 4),
         "MASE":           round(val_metrics.get("mase", 0), 4),
         "Skill_vs_Naive": round(val_metrics.get("skill_score", 0), 4),
-        "KPI_pass":       new_smape < 30.0 and val_metrics.get("skill_score", -999) > -0.1,
+        "KPI_pass":       (
+            "LULUS" if (new_smape < 30.0 and val_metrics.get("skill_score", -999) > -0.1)
+            else "LULUS DENGAN CATATAN" if (new_smape < 30.0 and val_metrics.get("skill_score", -999) > -0.5)
+            else "GAGAL"
+        ),
         "trained_at":     trained_at,
     }
 

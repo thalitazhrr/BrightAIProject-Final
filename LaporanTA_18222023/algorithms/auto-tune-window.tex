@@ -1,0 +1,28 @@
+\begin{algorithm}[H]
+\caption{Penyesuaian Otomatis Ukuran Jendela (\textit{Auto-Tune Window Size})}
+\label{alg:auto-tune-window}
+\begin{algorithmic}[1]
+\Require Deret waktu $Y = [y_1, \ldots, y_T]$, jumlah langkah pengujian $n_{\text{test}}$, kandidat $\mathcal{W} = \{3, 6, 9, 12\}$
+\Ensure Ukuran jendela optimal $w^*$
+
+\State $n_{\text{pretrain}} \gets T - n_{\text{test}}$
+\State $w_{\max} \gets \max\!\left(3,\ \left\lfloor 0{,}5 \times n_{\text{pretrain}} \right\rfloor\right)$
+\State $\mathcal{W}' \gets \left\{ w \in \mathcal{W} \mid w \leq w_{\max} \right\}$
+\If{$\mathcal{W}' = \emptyset$}
+    \State $\mathcal{W}' \gets \{3\}$ \Comment{Jendela minimum jika data terlalu sedikit}
+\EndIf
+
+\State $\ell^* \gets \infty$, $w^* \gets \min \mathcal{W}'$
+
+\For{setiap $w \in \mathcal{W}'$}
+    \State Latih model sementara pada $Y[1 \ldots n_{\text{pretrain}}]$ dengan jendela $w$ selama 150 \textit{epoch}
+    \State $\ell_w \gets$ \textit{validation loss} MSE pada 20\% data akhir \textit{pretrain}
+    \If{$\ell_w < \ell^*$}
+        \State $\ell^* \gets \ell_w$
+        \State $w^* \gets w$
+    \EndIf
+\EndFor
+
+\State \Return $w^*$
+\end{algorithmic}
+\end{algorithm}

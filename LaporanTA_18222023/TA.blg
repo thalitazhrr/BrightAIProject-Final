@@ -1,21 +1,21 @@
 [0] Config.pm:308> INFO - This is Biber 2.20
 [0] Config.pm:311> INFO - Logfile is 'TA.blg'
-[23] biber-darwin:340> INFO - === Mon Jun  1, 2026, 12:02:06
-[30] Biber.pm:420> INFO - Reading 'TA.bcf'
-[91] Biber.pm:994> INFO - Found 83 citekeys in bib section 0
-[96] Biber.pm:4463> INFO - Processing section 0
-[100] Biber.pm:4654> INFO - Looking for bibtex file 'daftar-pustaka.bib' for section 0
-[103] bibtex.pm:1713> INFO - LaTeX decoding ...
-[132] bibtex.pm:1519> INFO - Found BibTeX data source 'daftar-pustaka.bib'
-[319] UCollate.pm:68> INFO - Overriding locale 'indonesian' defaults 'variable = shifted' with 'variable = non-ignorable'
-[319] UCollate.pm:68> INFO - Overriding locale 'indonesian' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[319] UCollate.pm:68> INFO - Overriding locale 'indonesian' defaults 'level = 4' with 'level = 2'
-[319] Biber.pm:4283> INFO - Sorting list 'cms/global//global/global/global' of type 'entry' with template 'cms' and locale 'indonesian'
-[319] Biber.pm:4289> INFO - No sort tailoring available for locale 'indonesian'
-[350] bbl.pm:676> INFO - Writing 'TA.bbl' with encoding 'UTF-8'
-[362] bbl.pm:779> INFO - Output to TA.bbl
-[362] Biber.pm:131> WARN - Duplicate entry key: 'huang2021chatbot' in file 'daftar-pustaka.bib', skipping ...
-[362] Biber.pm:131> WARN - Duplicate entry key: 'bamurange2025hybrid' in file 'daftar-pustaka.bib', skipping ...
-[362] Biber.pm:131> WARN - legacy month field 'Desember' in entry 'Intimedia2024' is not an integer - this will probably not sort properly.
-[362] Biber.pm:131> WARN - legacy month field 'Juli' in entry 'EastVC2025' is not an integer - this will probably not sort properly.
-[362] Biber.pm:133> INFO - WARNINGS: 4
+[23] biber-darwin:340> INFO - === Mon Jun  1, 2026, 17:20:53
+[32] Biber.pm:420> INFO - Reading 'TA.bcf'
+[87] Biber.pm:994> INFO - Found 86 citekeys in bib section 0
+[94] Biber.pm:4463> INFO - Processing section 0
+[98] Biber.pm:4654> INFO - Looking for bibtex file 'daftar-pustaka.bib' for section 0
+[100] bibtex.pm:1713> INFO - LaTeX decoding ...
+[129] bibtex.pm:1519> INFO - Found BibTeX data source 'daftar-pustaka.bib'
+[342] UCollate.pm:68> INFO - Overriding locale 'indonesian' defaults 'level = 4' with 'level = 2'
+[342] UCollate.pm:68> INFO - Overriding locale 'indonesian' defaults 'variable = shifted' with 'variable = non-ignorable'
+[342] UCollate.pm:68> INFO - Overriding locale 'indonesian' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[342] Biber.pm:4283> INFO - Sorting list 'cms/global//global/global/global' of type 'entry' with template 'cms' and locale 'indonesian'
+[342] Biber.pm:4289> INFO - No sort tailoring available for locale 'indonesian'
+[383] bbl.pm:676> INFO - Writing 'TA.bbl' with encoding 'UTF-8'
+[410] bbl.pm:779> INFO - Output to TA.bbl
+[410] Biber.pm:131> WARN - Duplicate entry key: 'huang2021chatbot' in file 'daftar-pustaka.bib', skipping ...
+[410] Biber.pm:131> WARN - Duplicate entry key: 'bamurange2025hybrid' in file 'daftar-pustaka.bib', skipping ...
+[410] Biber.pm:131> WARN - legacy month field 'Desember' in entry 'Intimedia2024' is not an integer - this will probably not sort properly.
+[410] Biber.pm:131> WARN - legacy month field 'Juli' in entry 'EastVC2025' is not an integer - this will probably not sort properly.
+[410] Biber.pm:133> INFO - WARNINGS: 4

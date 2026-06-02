@@ -1,0 +1,33 @@
+\begin{algorithm}[H]
+\caption{Pembangkitan Respons Berbasis Templat (\textit{Template-Based NLG})}
+\label{alg:nlg-template}
+\begin{algorithmic}[1]
+\Require Kueri pengguna $q$, data hasil kueri $R$, aturan $r$, jumlah rekaman $n$, waktu eksekusi $t$
+\Ensure Respons naratif dalam bahasa Indonesia $\hat{T}$
+
+\State \textbf{// Tahap 1: Ekstraksi konteks terstruktur}
+\State $\textit{ctx} \gets \texttt{extractCtx}(R,\, r,\, n,\, t)$
+\Comment{Populasi bidang: periode, mainValue, breakdown, growth, insights, dll.}
+
+\State \textbf{// Tahap 2: Klasifikasi maksud kueri}
+\State $(\hat{i},\, c,\, \hat{f}) \gets \texttt{classify}(q)$ \Comment{Lihat Algoritma~\ref{alg:intent-classification}}
+
+\State \textbf{// Tahap 3: Pemilihan varian templat secara deterministik}
+\State $\mathcal{V} \gets \texttt{TEMPLATES}[\hat{i}]$ \Comment{Ambil daftar varian untuk intent $\hat{i}$}
+\If{$\mathcal{V} = \emptyset$}
+    \State $\mathcal{V} \gets \texttt{TEMPLATES}[\texttt{"general"}]$
+\EndIf
+\State $h \gets \displaystyle\sum_{c_j \in q} \texttt{charCode}(c_j)$
+\Comment{Hash aditif karakter kueri}
+\State $k \gets h \bmod |\mathcal{V}|$
+\State $\varphi \gets \mathcal{V}[k]$
+\Comment{Varian terpilih — deterministik untuk masukan yang sama}
+
+\State \textbf{// Tahap 4: Rendering templat}
+\State $\hat{T} \gets \varphi(\textit{ctx})$
+\Comment{Panggil fungsi templat dengan konteks terstruktur}
+
+\State \Return $\hat{T}$
+
+\end{algorithmic}
+\end{algorithm}

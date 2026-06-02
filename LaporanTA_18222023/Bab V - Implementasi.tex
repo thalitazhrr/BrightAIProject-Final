@@ -2,7 +2,7 @@
 % BAB V IMPLEMENTASI
 % ==========================================
 \cleardoublepage
-\chapter{IMPLEMENTASI}
+\chapter{IMPLEMENTASI SISTEM \textit{BUSINESS INTELLIGENCE CHATBOT}}
 \label{chap:implementasi}
 
 Bab ini menyajikan implementasi sistem \textit{Business Intelligence} berbasis \textit{rule-based chatbot} yang telah dirancang pada bab sebelumnya. Pembahasan mencakup arsitektur sistem yang diimplementasikan, implementasi setiap komponen utama, serta integrasi antar-komponen menjadi satu kesatuan sistem yang fungsional.
@@ -18,7 +18,7 @@ Sistem BrightAI diimplementasikan dengan arsitektur tiga lapis (\textit{three-ti
     \item \textbf{Layanan \textit{Machine Learning} (FastAPI/PyTorch)}: Layanan terpisah yang menangani pelatihan dan inferensi model peramalan deret waktu berbasis GRU dan LSTM. Layanan ini berjalan pada porta 8000 dan diakses oleh \textit{backend} melalui permintaan HTTP internal.
 \end{enumerate}
 
-Ketiga lapis terhubung ke Oracle Database yang berfungsi sebagai \textit{Enterprise Data Warehouse} (DWH) sekaligus penyimpan data operasional sistem (pengguna, riwayat percakapan, dan sesi).
+Ketiga lapis terhubung ke Oracle Database yang berfungsi sebagai \textit{Enterprise Data Warehouse} (DWH)\label{abbr:DWH} sekaligus penyimpan data operasional sistem (pengguna, riwayat percakapan, dan sesi).
 
 \section{Implementasi \textit{Backend} (Node.js/Express)}
 \label{sec:impl-backend}
@@ -29,39 +29,7 @@ Ketiga lapis terhubung ke Oracle Database yang berfungsi sebagai \textit{Enterpr
 
 Proyek \textit{backend} diorganisasi menggunakan pola arsitektur MVC (\textit{Model-View-Controller}) yang dimodifikasi menjadi struktur berlapis. Tabel~\ref{tab:struktur-backend} menyajikan struktur direktori utama.
 
-\begin{longtable}{|p{4.5cm}|p{8.5cm}|}
-\caption{Struktur Direktori Proyek \textit{Backend}} \label{tab:struktur-backend} \\
-\hline
-\textbf{Direktori/Berkas} & \textbf{Fungsi} \\
-\hline
-\endfirsthead
-\hline
-\textbf{Direktori/Berkas} & \textbf{Fungsi} \\
-\hline
-\endhead
-\hline
-\endfoot
-\texttt{server.js} & Titik masuk utama aplikasi: inisialisasi Express, \textit{middleware}, rute, dan koneksi basis data \\
-\hline
-\texttt{config/database.js} & Konfigurasi koneksi Oracle Database, \textit{connection pooling}, dan eksekutor kueri \\
-\hline
-\texttt{src/controllers/} & Penangan permintaan (\textit{request handler}): \texttt{authController.js} dan \texttt{chatController.js} \\
-\hline
-\texttt{src/models/} & Model data untuk pengguna, riwayat percakapan, dan sesi \\
-\hline
-\texttt{src/routes/} & Definisi rute API: autentikasi, \textit{chat}, sesi, dan peramalan \\
-\hline
-\texttt{src/rules/engine/} & Mesin aturan, klasifikasi maksud, pemroses kueri, dan pembangkit bahasa alami \\
-\hline
-\texttt{src/rules/databases/} & Definisi aturan per domain basis data \\
-\hline
-\texttt{src/rules/config/} & Registri aturan dan konfigurasi pemetaan tabel \\
-\hline
-\texttt{src/middleware/} & \textit{Middleware} autentikasi JWT dan penanganan kesalahan \\
-\hline
-\texttt{src/utils/} & Utilitas: \textit{logger}, \textit{cache}, dan fungsi pembantu \\
-\hline
-\end{longtable}
+\input{tables/tabel-struktur-backend.tex}
 
 \subsection{Konfigurasi \textit{Middleware} Keamanan}
 
@@ -69,7 +37,7 @@ Sistem mengimplementasikan beberapa lapisan \textit{middleware} keamanan pada Ex
 
 \begin{enumerate}
     \item \textbf{Helmet}: Mengatur tajuk HTTP keamanan (\textit{security headers}) untuk mencegah serangan seperti \textit{Cross-Site Scripting} (XSS) dan \textit{clickjacking}.
-    \item \textbf{CORS (\textit{Cross-Origin Resource Sharing})}: Mengizinkan permintaan lintas-asal dari \textit{frontend} yang berjalan pada domain berbeda.
+    \item \textbf{CORS\label{abbr:CORS} (\textit{Cross-Origin Resource Sharing})}: Mengizinkan permintaan lintas-asal dari \textit{frontend} yang berjalan pada domain berbeda.
     \item \textbf{\textit{Rate Limiter}}: Membatasi jumlah permintaan per alamat IP menjadi maksimal 100 permintaan per 15 menit untuk mencegah serangan \textit{brute force} dan \textit{Denial of Service} (DoS).
     \item \textbf{Pembatasan Ukuran \textit{Payload}}: Membatasi ukuran badan permintaan JSON menjadi maksimal 10 MB.
 \end{enumerate}
@@ -79,7 +47,7 @@ Sistem mengimplementasikan beberapa lapisan \textit{middleware} keamanan pada Ex
 
 Koneksi ke Oracle Database dikelola melalui modul \texttt{config/database.js} menggunakan pustaka \texttt{node-oracledb}. Sistem menggunakan \textit{connection pooling} untuk mengoptimalkan penggunaan koneksi dengan konfigurasi yang disajikan pada Tabel~\ref{tab:pool-config}.
 
-\begin{table}[H]
+\begin{table}[h]
 \centering
 \caption{Konfigurasi \textit{Connection Pool} Oracle Database}
 \label{tab:pool-config}
@@ -104,45 +72,7 @@ Modul ini juga menyediakan fungsi \texttt{executeQuery} yang menangani eksekusi 
 
 \textit{Backend} menyediakan empat kelompok rute API utama yang disajikan pada Tabel~\ref{tab:api-routes}.
 
-\begin{longtable}{|p{1.5cm}|p{4cm}|p{7cm}|}
-\caption{Rute API Sistem BrightAI} \label{tab:api-routes} \\
-\hline
-\textbf{Metode} & \textbf{\textit{Endpoint}} & \textbf{Fungsi} \\
-\hline
-\endfirsthead
-\hline
-\textbf{Metode} & \textbf{\textit{Endpoint}} & \textbf{Fungsi} \\
-\hline
-\endhead
-\hline
-\endfoot
-POST & \texttt{/api/auth/register} & Registrasi pengguna baru \\
-\hline
-POST & \texttt{/api/auth/login} & Autentikasi dan penerbitan token JWT \\
-\hline
-GET & \texttt{/api/auth/profile} & Mengambil profil pengguna (memerlukan token) \\
-\hline
-PUT & \texttt{/api/auth/profile} & Memperbarui profil pengguna \\
-\hline
-PUT & \texttt{/api/auth/password} & Mengubah kata sandi \\
-\hline
-POST & \texttt{/api/chat/message} & Mengirim pesan ke \textit{chatbot} dan menerima respons \\
-\hline
-GET & \texttt{/api/chat/history} & Mengambil riwayat percakapan pengguna \\
-\hline
-GET & \texttt{/api/chat/session/:id} & Mengambil pesan dalam satu sesi percakapan \\
-\hline
-DELETE & \texttt{/api/chat/history} & Menghapus riwayat percakapan \\
-\hline
-GET & \texttt{/api/chat/capabilities} & Mengambil daftar kemampuan dan aturan yang tersedia \\
-\hline
-GET & \texttt{/api/sessions} & Mengambil daftar sesi percakapan \\
-\hline
-POST & \texttt{/api/forecast/*} & Meneruskan permintaan peramalan ke layanan ML \\
-\hline
-GET & \texttt{/api/telkom/health} & Pemeriksaan kesehatan (\textit{health check}) sistem \\
-\hline
-\end{longtable}
+\input{tables/tabel-api-routes.tex}
 
 \section{Implementasi Mesin Aturan (\textit{Rule Engine})}
 \label{sec:impl-rule-engine}
@@ -164,7 +94,7 @@ Alur pemrosesan kueri dalam mesin aturan mengikuti tahapan sebagai berikut.
 
 Setiap aturan didefinisikan sebagai objek JavaScript yang memiliki struktur terstandar. Komponen utama setiap aturan disajikan pada Tabel~\ref{tab:struktur-rule}.
 
-\begin{table}[H]
+\begin{table}[h]
 \centering
 \caption{Komponen Struktur Definisi Aturan}
 \label{tab:struktur-rule}
@@ -198,6 +128,10 @@ Mesin aturan mengimplementasikan fitur injeksi filter geografis secara dinamis k
     \item \textbf{Mode Injeksi Otomatis}: Jika tidak ada penanda, sistem melakukan pemindaian baris demi baris untuk menemukan blok \texttt{FROM DWH\_MOIS} dan menyisipkan klausa filter pada posisi yang tepat sebelum \texttt{GROUP BY} atau penutup subkueri.
 \end{enumerate}
 
+Algoritma~\ref{alg:geo-filter} mendeskripsikan prosedur lengkap deteksi cakupan geografis dan injeksi filter ke dalam kueri SQL.
+
+\input{algorithms/geo-filter-injection.tex}
+
 \subsection{Mekanisme \textit{Caching}}
 
 Hasil eksekusi aturan disimpan dalam \textit{cache} memori menggunakan kunci yang dihasilkan dari \textit{hash} MD5 kombinasi kueri pengguna dan konteks geografis. Setiap entri \textit{cache} memiliki durasi kedaluwarsa yang ditentukan oleh konfigurasi aturan (nilai bawaan: 1800 detik atau 30 menit). Mekanisme ini mengurangi beban kueri terhadap Oracle Database untuk pertanyaan yang sering diajukan.
@@ -211,41 +145,17 @@ Modul klasifikasi maksud diimplementasikan dalam berkas \texttt{intentClassifier
 
 Sistem mengklasifikasikan setiap kueri pengguna ke dalam dua dimensi: \textit{intent} (maksud) dan \textit{focus} (fokus analisis). Tabel~\ref{tab:intent-impl} menyajikan daftar \textit{intent} yang diimplementasikan beserta contoh kata kunci.
 
-\begin{longtable}{|p{2.5cm}|c|p{7.5cm}|}
-\caption{Daftar \textit{Intent} yang Diimplementasikan} \label{tab:intent-impl} \\
-\hline
-\textbf{\textit{Intent}} & \textbf{Bobot} & \textbf{Contoh Kata Kunci} \\
-\hline
-\endfirsthead
-\hline
-\textbf{\textit{Intent}} & \textbf{Bobot} & \textbf{Contoh Kata Kunci} \\
-\hline
-\endhead
-\hline
-\endfoot
-\textit{quantity} & 3 & berapa, jumlah, total, volume, angka \\
-\hline
-\textit{trend} & 3 & tren, pertumbuhan, naik, turun, MoM, YoY \\
-\hline
-\textit{comparison} & 3 & bandingkan, vs, perbedaan, lebih tinggi \\
-\hline
-\textit{location} & 3 & di mana, regional, witel, wilayah \\
-\hline
-\textit{reason} & 4 & kenapa, mengapa, penyebab, faktor \\
-\hline
-\textit{performance} & 3 & performa, kinerja, pencapaian, target \\
-\hline
-\textit{detail} & 2 & rincian, \textit{breakdown}, distribusi, segmentasi \\
-\hline
-\textit{general} & -- & \textit{Fallback} jika tidak ada kata kunci yang cocok \\
-\hline
-\end{longtable}
+\input{tables/tabel-intent-impl.tex}
 
 \subsection{Algoritma Perhitungan Skor}
 
-Untuk setiap kueri, sistem menghitung skor kecocokan terhadap setiap \textit{intent} dengan mengiterasi daftar kata kunci. Jika sebuah kata kunci ditemukan dalam kueri (menggunakan fungsi \texttt{String.includes}), skor \textit{intent} tersebut ditambah sebesar nilai bobot. \textit{Intent} dengan skor tertinggi dipilih sebagai hasil klasifikasi, dengan nilai keyakinan (\textit{confidence}) dihitung sebagai $\min(100, \text{skor} \times 10)$. Jika seluruh skor bernilai nol, sistem mengembalikan \textit{intent} \texttt{general} sebagai \textit{fallback}.
+Untuk setiap kueri, sistem menghitung skor kecocokan terhadap setiap \textit{intent} dengan mengiterasi daftar kata kunci. Jika sebuah kata kunci ditemukan dalam kueri (menggunakan fungsi \texttt{String.includes}), skor \textit{intent} tersebut ditambah sebesar nilai bobot. \textit{Intent} dengan skor tertinggi dipilih sebagai hasil klasifikasi, dengan nilai keyakinan (\textit{confidence}) dihitung sebagai $\min(100, \text{skor} \times 10)$\label{sym:min}. Jika seluruh skor bernilai nol, sistem mengembalikan \textit{intent} \texttt{general} sebagai \textit{fallback}.
 
 Selain \textit{intent}, sistem juga mengklasifikasikan fokus analisis ke dalam delapan kategori: \textit{order}, \textit{revenue}, \textit{churn}, \textit{fulfillment}, \textit{subscriber}, \textit{bundling}, \textit{digital}, dan \textit{target}. Kombinasi \textit{intent} dan fokus digunakan oleh modul NLG untuk memilih templat respons yang paling sesuai.
+
+Algoritma~\ref{alg:intent-classification} mendeskripsikan prosedur lengkap klasifikasi maksud dan fokus secara formal.
+
+\input{algorithms/intent-classification.tex}
 
 \section{Implementasi Pembangkitan Bahasa Alami (\textit{NLG})}
 \label{sec:impl-nlg}
@@ -267,7 +177,7 @@ Proses pembangkitan respons NLG mengikuti empat tahapan berurutan:
 
 Modul NLG mendefinisikan peta subjek (\texttt{RULE\_SUBJEK}) yang memetakan setiap \texttt{RULE\_ID} ke deskripsi subjek dalam bahasa Indonesia. Tabel~\ref{tab:rule-subjek} menyajikan sebagian contoh pemetaan subjek.
 
-\begin{table}[H]
+\begin{table}[h]
 \centering
 \caption{Contoh Pemetaan Subjek Aturan}
 \label{tab:rule-subjek}
@@ -304,16 +214,20 @@ Respons NLG dihasilkan dalam format \textit{Markdown} yang mendukung:
 
 Akurasi faktual dijamin sebesar 100\% karena seluruh angka dalam respons berasal langsung dari hasil kueri Oracle Database tanpa proses generatif.
 
+Algoritma~\ref{alg:nlg-template} mendeskripsikan prosedur lengkap pembangkitan respons dari konteks terstruktur hingga narasi akhir.
+
+\input{algorithms/nlg-template-selection.tex}
+
 \section{Implementasi Layanan \textit{Machine Learning}}
 \label{sec:impl-ml}
 
 Layanan \textit{machine learning} diimplementasikan sebagai layanan mikro (\textit{microservice}) terpisah menggunakan Python dengan \textit{framework} FastAPI dan pustaka PyTorch untuk pemodelan.
 
-\subsection{Struktur Proyek Layanan ML}
+\subsection{Struktur Proyek Layanan ML\label{abbr:ML}}
 
 Tabel~\ref{tab:struktur-ml} menyajikan struktur direktori layanan \textit{machine learning}.
 
-\begin{table}[H]
+\begin{table}[h]
 \centering
 \caption{Struktur Direktori Layanan \textit{Machine Learning}}
 \label{tab:struktur-ml}
@@ -356,7 +270,11 @@ Model GRU dan LSTM diimplementasikan sebagai kelas Python yang mewarisi \texttt{
 
 Kedua model menerima masukan berukuran (\textit{batch}, \texttt{window\_size}, 1) dan menghasilkan keluaran berukuran (\textit{batch}, \textit{horizon}). Konfigurasi \textit{hyperparameter} bawaan yang digunakan disajikan pada Tabel~\ref{tab:hyperparameter-impl}.
 
-\begin{table}[H]
+Algoritma~\ref{alg:early-stopping} mendeskripsikan prosedur pelatihan GRU dan LSTM secara formal, termasuk mekanisme \textit{early stopping} dan penjadwalan laju pembelajaran.
+
+\input{algorithms/early-stopping.tex}
+
+\begin{table}[h]
 \centering
 \caption{Konfigurasi \textit{Hyperparameter} Model Terimplementasi}
 \label{tab:hyperparameter-impl}
@@ -392,11 +310,15 @@ Kedua model menerima masukan berukuran (\textit{batch}, \texttt{window\_size}, 1
 
 \subsubsection{Penyesuaian Otomatis Ukuran Jendela (\textit{Auto-Tune Window Size})}
 
-Ketika pengguna tidak menentukan ukuran jendela (\texttt{window\_size = 0}), sistem secara otomatis mencoba beberapa kandidat ukuran jendela (3, 6, 9, 12) dan memilih yang menghasilkan \textit{validation loss} terendah. Kandidat dibatasi hingga maksimal 50\% dari jumlah data pra-pengujian.
+Ketika pengguna tidak menentukan ukuran jendela (\texttt{window\_size = 0}), sistem secara otomatis mencoba beberapa kandidat ukuran jendela (3, 6, 9, 12) dan memilih yang menghasilkan \textit{validation loss} terendah. Kandidat dibatasi hingga maksimal 50\% dari jumlah data pra-pengujian. Algoritma~\ref{alg:auto-tune-window} mendeskripsikan prosedur pemilihan ukuran jendela optimal secara formal.
+
+\input{algorithms/auto-tune-window.tex}
 
 \subsubsection{Validasi \textit{Walk-Forward}}
 
-Evaluasi model menggunakan protokol \textit{walk-forward validation} yang merupakan validasi silang khusus deret waktu. Pada setiap langkah, model dilatih pada seluruh data hingga bulan ke-$t$, kemudian memprediksi bulan ke-$t+1$. Proses ini diulang untuk $n$ bulan terakhir (minimum 3, maksimum 6 bulan) untuk menghasilkan metrik evaluasi yang realistis.
+Evaluasi model menggunakan protokol \textit{walk-forward validation} yang merupakan validasi silang khusus deret waktu. Pada setiap langkah, model dilatih pada seluruh data hingga bulan ke-$t$, kemudian memprediksi bulan ke-$t+1$. Proses ini diulang untuk $n$ bulan terakhir (minimum 3, maksimum 6 bulan) untuk menghasilkan metrik evaluasi yang realistis. Algoritma~\ref{alg:walk-forward} mendeskripsikan prosedur \textit{walk-forward validation} secara formal.
+
+\input{algorithms/binary-search-alg.tex}
 
 \subsubsection{Mekanisme \textit{Benchmark} terhadap Model Sebelumnya}
 
@@ -417,11 +339,24 @@ Praolah data diimplementasikan dalam modul \texttt{utils/preprocessing.py} denga
     \item \textbf{Pembagian Data}: Data dibagi menjadi \textit{training set} (80\%) dan \textit{validation set} (20\%) secara kronologis tanpa pengacakan untuk mempertahankan urutan temporal.
 \end{enumerate}
 
+\subsection{Implementasi Model \textit{Baseline} Statistik (ARIMA dan \textit{Prophet})}
+\label{subsec:impl-baseline}
+
+Selain model \textit{deep learning} GRU dan LSTM, layanan \textit{machine learning} juga mengimplementasikan dua model statistik sebagai \textit{baseline} pembanding, yaitu ARIMA dan \textit{Prophet}. Kedua model ini digunakan untuk mengevaluasi seberapa besar keunggulan model berbasis jaringan saraf berulang dibandingkan pendekatan statistik klasik pada data deret waktu operasional perusahaan.
+
+\subsubsection{ARIMA (\textit{Auto-Regressive Integrated Moving Average})}
+
+Model ARIMA diimplementasikan menggunakan pendekatan \textit{auto-ARIMA}, yaitu pemilihan parameter $(p, d, q)$ secara otomatis berdasarkan kriteria informasi AIC (\textit{Akaike Information Criterion}). Sistem mencari kombinasi parameter terbaik pada ruang pencarian terbatas sehingga model yang dipilih merupakan model dengan tingkat kompleksitas-keseimbangan kesalahan yang optimal untuk setiap deret waktu. Pendekatan ini menghilangkan kebutuhan penalaan parameter secara manual untuk setiap kombinasi metrik dan wilayah.
+
+\subsubsection{\textit{Prophet}}
+
+Model \textit{Prophet} dari Meta diimplementasikan menggunakan konfigurasi bawaan dengan komponen musiman tahunan (\textit{annual seasonality}) yang diaktifkan. \textit{Prophet} menggunakan model aditif yang menguraikan deret waktu menjadi komponen tren, musiman, dan hari libur. Pada implementasi ini, komponen hari libur tidak diaktifkan mengingat data operasional bersifat bulanan dan tidak memiliki pola hari libur yang dominan. Hasil keluaran \textit{Prophet} dikembalikan dalam format yang seragam dengan model lain untuk memungkinkan perbandingan metrik secara langsung.
+
 \subsection{Metrik Evaluasi Terimplementasi}
 
 Modul \texttt{utils/metrics.py} mengimplementasikan seluruh metrik evaluasi yang dirancang pada Bab~\ref{chap:perancangan}. Fungsi \texttt{all\_metrics} menghitung seluruh metrik dalam satu pemanggilan dan menghasilkan status KPI (\textit{pass/fail}) untuk setiap target performa. Tabel~\ref{tab:metrik-kpi} menyajikan target KPI yang diimplementasikan.
 
-\begin{table}[H]
+\begin{table}[h]
 \centering
 \caption{Target KPI Metrik Evaluasi Terimplementasi}
 \label{tab:metrik-kpi}
@@ -433,7 +368,7 @@ MASE & $< 1{,}0$ & Model lebih baik dari \textit{seasonal naive forecast} \\
 \hline
 sMAPE (jangka pendek) & $< 30\%$ & Kesalahan persentase simetris yang dapat diterima \\
 \hline
-\textit{Skill Score} & $> -0{,}1$ & Model tidak lebih dari 10\% lebih buruk dari \textit{baseline} \\
+\textit{Skill Score} & $> -0{,}5$ (LDC) atau $> -0{,}1$ (LULUS) & Tiga kategori: LULUS ($>-0{,}1$), Lulus Dengan Catatan ($-0{,}5$ s.d. $-0{,}1$), GAGAL ($\leq -0{,}5$) \\
 \hline
 \end{tabular}
 \end{table}
@@ -443,7 +378,7 @@ sMAPE (jangka pendek) & $< 30\%$ & Kesalahan persentase simetris yang dapat dite
 
 \textit{Frontend} sistem diimplementasikan menggunakan React.js 18 dengan Tailwind CSS untuk penataan gaya (\textit{styling}). Tabel~\ref{tab:komponen-frontend} menyajikan komponen utama yang diimplementasikan.
 
-\begin{table}[H]
+\begin{table}[h]
 \centering
 \caption{Komponen Utama \textit{Frontend}}
 \label{tab:komponen-frontend}
@@ -473,7 +408,7 @@ Sistem mengimplementasikan mekanisme autentikasi dan keamanan berbasis standar i
 
 \subsection{Autentikasi Berbasis JWT}
 
-Autentikasi pengguna menggunakan \textit{JSON Web Token} (JWT) dengan konfigurasi berikut.
+Autentikasi pengguna menggunakan \textit{JSON Web Token} (JWT)\label{abbr:JWT} dengan konfigurasi berikut.
 
 \begin{enumerate}
     \item \textbf{Registrasi}: Kata sandi pengguna di-\textit{hash} menggunakan algoritma \textit{bcrypt} dengan 10 putaran \textit{salt} sebelum disimpan ke basis data.
@@ -485,3 +420,44 @@ Autentikasi pengguna menggunakan \textit{JSON Web Token} (JWT) dengan konfiguras
 
 Validasi masukan pengguna diimplementasikan menggunakan pustaka \texttt{express-validator} dengan aturan yang mencakup validasi format surel, panjang minimal kata sandi (6 karakter), keharusan kombinasi huruf besar, huruf kecil, dan angka pada kata sandi, serta sanitasi terhadap serangan injeksi.
 
+\section{Ringkasan Implementasi}
+\label{sec:ringkasan-implementasi}
+
+Implementasi sistem BrightAI telah berhasil mewujudkan seluruh komponen yang dirancang pada bab sebelumnya menjadi sistem yang terintegrasi dan fungsional. Tabel~\ref{tab:ringkasan-impl} merangkum komponen-komponen utama yang telah diimplementasikan beserta statusnya.
+
+\begin{table}[h]
+\centering
+\caption{Ringkasan Komponen Sistem yang Terimplementasi}
+\label{tab:ringkasan-impl}
+\begin{tabular}{|p{4.5cm}|p{4cm}|p{4.5cm}|}
+\hline
+\textbf{Komponen} & \textbf{Teknologi} & \textbf{Status} \\
+\hline
+\textit{Frontend} antarmuka pengguna & React.js 18, Tailwind CSS & Terimplementasi \\
+\hline
+\textit{Backend} RESTful API & Node.js, Express.js & Terimplementasi \\
+\hline
+Mesin aturan (\textit{rule engine}) & JavaScript, Oracle SQL & Terimplementasi (38 aturan, 5 domain) \\
+\hline
+Klasifikasi maksud (\textit{intent}) & Pencocokan kata kunci berbobot & Terimplementasi (7 \textit{intent}) \\
+\hline
+Pembangkitan bahasa alami (NLG) & Berbasis templat, Bahasa Indonesia & Terimplementasi ($>$30 subjek) \\
+\hline
+Model peramalan GRU & PyTorch, FastAPI & Terimplementasi \\
+\hline
+Model peramalan LSTM & PyTorch, FastAPI & Terimplementasi \\
+\hline
+Model \textit{baseline} ARIMA & \textit{Auto-ARIMA} berbasis AIC & Terimplementasi \\
+\hline
+Model \textit{baseline} \textit{Prophet} & \textit{Prophet} (Meta), musiman tahunan & Terimplementasi \\
+\hline
+Autentikasi pengguna & JWT, \textit{bcrypt} & Terimplementasi \\
+\hline
+Koneksi basis data & Oracle Database, \textit{connection pool} & Terimplementasi \\
+\hline
+\end{tabular}
+\end{table}
+
+Secara keseluruhan, sistem BrightAI telah diimplementasikan sebagai aplikasi tiga lapis yang mencakup: (1) \textit{frontend} berbasis React.js pada porta 3000 yang menyediakan antarmuka percakapan, panel peramalan interaktif, dan alur terpandu; (2) \textit{backend} berbasis Node.js/Express pada porta 3001 yang mengelola autentikasi, mesin aturan dengan 38 aturan analitik pada 5 domain, klasifikasi maksud, dan pembangkitan bahasa alami; serta (3) layanan \textit{machine learning} berbasis FastAPI/PyTorch pada porta 8000 yang menyediakan kemampuan peramalan menggunakan empat model, yaitu GRU, LSTM, ARIMA, dan \textit{Prophet}.
+
+Seluruh komponen terhubung ke Oracle Database sebagai \textit{Enterprise Data Warehouse} dan menggunakan mekanisme \textit{caching} memori untuk mengoptimalkan waktu respons. Injeksi filter geografis secara dinamis memungkinkan sistem menyajikan analisis pada tingkat nasional, regional, maupun \textit{witel} tanpa duplikasi definisi aturan.

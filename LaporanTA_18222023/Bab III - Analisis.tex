@@ -27,6 +27,7 @@
 % ===============================================================================
 
 \chapter{ANALISIS MASALAH}
+\label{chap:analisis-masalah}
 
 Bab ini menyajikan analisis mendalam terhadap kondisi sistem \textit{Business Intelligence} saat ini, identifikasi masalah pengguna, kebutuhan fungsional dan nonfungsional sistem, serta analisis pemilihan solusi teknologi yang paling tepat. Pembahasan mencakup evaluasi sistem \textit{Business Intelligence} yang ada, identifikasi tantangan dalam pengambilan keputusan berbasis data, dan justifikasi pemilihan pendekatan \textit{chatbot} berbasis aturan kueri, pemrosesan bahasa alami, dan peramalan deret waktu sebagai solusi yang paling sesuai dengan kebutuhan organisasi modern.
 
@@ -537,10 +538,10 @@ Berikut adalah analisis mendalam untuk setiap solusi berdasarkan keempat perspek
 
 \end{longtable}
 
-\subsubsection*{Solusi 4: Chatbot BI Berbasis Model Bahasa Besar (\textit{Large Language Model})}
+\subsubsection{Solusi 4: Chatbot BI Berbasis Model Bahasa Besar (\textit{Large Language Model})}
 
 \begin{longtable}{|p{3.5cm}|p{9cm}|}
-\caption{Analisis \textit{Balanced Scorecard} untuk LLM}
+\caption{Analisis \textit{Balanced Scorecard} untuk LLM\label{abbr:LLM}}
 \label{tab:bsc-solusi4} \\
 \hline
 \textbf{Perspektif} & \textbf{Penilaian} \\
@@ -687,7 +688,7 @@ Tahap pemahaman data (\textit{data understanding}) merupakan fase kedua dalam me
 
 \subsection{Sumber Data dan Arsitektur Penyimpanan}
 
-Sistem peramalan dan analisis performa berbasis \textit{chatbot} terhubung secara langsung dengan sumber data utama berupa \textit{Enterprise Data Warehouse} (EDW) yang menggunakan basis data Oracle pada server dengan skema \texttt{USER}. Koneksi yang diatur menggunakan metode \textit{connection pooling} serta \textit{parameter binding} untuk menjamin efisiensi dan keamanan saat eksekusi kueri. Skema \texttt{USER} berisi lima domain utama yang masing-masing memiliki fokus bisnis dan struktur data berbeda.
+Sistem peramalan dan analisis performa berbasis \textit{chatbot} terhubung secara langsung dengan sumber data utama berupa \textit{Enterprise Data Warehouse} (EDW)\label{abbr:EDW} yang menggunakan basis data Oracle pada server dengan skema \texttt{USER}. Koneksi yang diatur menggunakan metode \textit{connection pooling} serta \textit{parameter binding} untuk menjamin efisiensi dan keamanan saat eksekusi kueri. Skema \texttt{USER} berisi lima domain utama yang masing-masing memiliki fokus bisnis dan struktur data berbeda.
 
 \begin{table}[h]
 \centering
@@ -1170,7 +1171,17 @@ Tahap pemodelan data (\textit{modeling}) merupakan fase keempat dalam metodologi
 \subsection{Arsitektur Model Peramalan Deret Waktu}
 \label{subsec:arsitektur-forecasting}
 
-Sistem peramalan dalam penelitian ini memanfaatkan pendekatan berbasis pembelajaran mendalam (\textit{deep learning}) yang dirancang khusus untuk menangani data deret waktu multivariat (\textit{multivariate time series}) dengan pola temporal yang kompleks. Sistem menggunakan tiga arsitektur utama, yaitu LSTM (\textit{Long Short-Term Memory}), GRU (\textit{Gated Recurrent Unit}), dan TFT (\textit{Temporal Fusion Transformer}), serta kombinasi hibrida dari algoritma-algoritma tersebut untuk memaksimalkan akurasi prediksi terhadap indikator kinerja bisnis.
+Sistem peramalan dalam penelitian ini mengadopsi pendekatan bertahap yang dimulai dari model statistik sebagai \textit{baseline}, kemudian dibandingkan dengan model berbasis pembelajaran mendalam (\textit{deep learning}). Evaluasi perbandingan ini bertujuan untuk memastikan bahwa kompleksitas tambahan model \textit{deep learning} memberikan peningkatan akurasi yang signifikan dan terukur. Sistem menggunakan empat pendekatan model yang dikategorikan sebagai berikut: (1) model statistik \textit{baseline} berupa ARIMA dan Prophet, dan (2) model \textit{deep learning} utama berupa LSTM (\textit{Long Short-Term Memory}), GRU (\textit{Gated Recurrent Unit}), dan TFT (\textit{Temporal Fusion Transformer}).
+
+\subsubsection{Model \textit{Baseline} Statistik: ARIMA dan Prophet}
+
+Model ARIMA (\textit{Autoregressive Integrated Moving Average}) dan Prophet digunakan sebagai \textit{baseline} pembanding dalam evaluasi sistem peramalan. Penggunaan \textit{baseline} statistik ini penting untuk memberikan konteks kuantitatif bagi penilaian performa model \textit{deep learning}: apabila model \textit{deep learning} tidak secara konsisten mengungguli \textit{baseline} statistik, maka penggunaan model yang lebih kompleks tidak dapat dibenarkan secara teknis dan praktis.
+
+ARIMA diimplementasikan untuk setiap seri waktu secara individual menggunakan seleksi parameter otomatis berdasarkan kriteria informasi AIC (\textit{Akaike Information Criterion}). Untuk data yang menunjukkan pola musiman yang signifikan secara statistik (berdasarkan uji Augmented Dickey-Fuller), digunakan varian SARIMA dengan parameter musiman (\(P, D, Q, m\)).
+
+Prophet diimplementasikan dengan konfigurasi standar yang mencakup deteksi titik perubahan tren secara otomatis dan komponen musiman tahunan. Prophet dipilih sebagai \textit{baseline} kedua karena kemampuannya menangani data bisnis dengan tren dan musiman yang kompleks tanpa memerlukan pra-pemrosesan manual yang ekstensif.
+
+Hasil evaluasi \textit{baseline} statistik ini kemudian dibandingkan dengan model \textit{deep learning} menggunakan metrik sMAPE, MASE, dan \textit{Skill Score} pada protokol \textit{walk-forward validation} yang sama, untuk memastikan perbandingan yang adil dan representatif.
 
 \subsubsection{Model LSTM (\textit{Long Short-Term Memory})}
 
@@ -1245,29 +1256,33 @@ Keunggulan utama TFT adalah kemampuannya untuk memproses tiga jenis masukan seca
 
 \subsubsection{Perbandingan Karakteristik Model}
 
-Tabel~\ref{tab:perbandingan-model} menyajikan perbandingan karakteristik ketiga arsitektur model peramalan yang digunakan dalam penelitian ini.
+Tabel~\ref{tab:perbandingan-model} menyajikan perbandingan karakteristik seluruh model peramalan yang digunakan dalam penelitian ini, mencakup model statistik \textit{baseline} (ARIMA/SARIMA dan Prophet) serta model \textit{deep learning} utama (LSTM, GRU, TFT).
 
 \begin{table}[h]
 \centering
 \caption{Perbandingan Karakteristik Model Peramalan}
 \label{tab:perbandingan-model}
-\begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|p{3cm}|}
+\begin{tabular}{|p{3cm}|p{2.2cm}|p{2.2cm}|p{2.2cm}|p{2.2cm}|p{2.2cm}|}
 \hline
-\textbf{Aspek Perbandingan} & \textbf{LSTM} & \textbf{GRU} & \textbf{TFT} \\
+\textbf{Aspek Perbandingan} & \textbf{ARIMA} & \textbf{Prophet} & \textbf{LSTM} & \textbf{GRU} & \textbf{TFT} \\
 \hline
-Kompleksitas Arsitektur & Tinggi & Sedang & Sangat Tinggi \\
+Kompleksitas Arsitektur & Rendah & Rendah & Tinggi & Sedang & Sangat Tinggi \\
 \hline
-Jumlah Parameter & Banyak & Lebih sedikit & Paling banyak \\
+Jumlah Parameter & Sedikit (\(p,d,q\)) & Sedikit & Banyak & Lebih sedikit & Paling banyak \\
 \hline
-Kecepatan Pelatihan & Lambat & Cepat & Paling lambat \\
+Kecepatan Pelatihan & Sangat Cepat & Cepat & Lambat & Cepat & Paling lambat \\
 \hline
-Pembelajaran Dependensi Jangka Panjang & Baik & Baik & Sangat Baik \\
+Dependensi Jangka Panjang & Terbatas & Sedang & Baik & Baik & Sangat Baik \\
 \hline
-Interpretabilitas Model & Rendah & Rendah & Tinggi (\textit{attention weights}) \\
+Kemampuan Non-linear & Tidak & Sebagian & Baik & Baik & Sangat Baik \\
 \hline
-Kemampuan Multi-Horizon & Terbatas & Terbatas & Sangat Baik \\
+Interpretabilitas & Sangat Tinggi & Tinggi & Rendah & Rendah & Tinggi (\textit{attention}) \\
 \hline
-Kebutuhan Volume Data & Sedang & Sedang & Tinggi \\
+Kemampuan Multivariat & Terbatas & Terbatas & Baik & Baik & Sangat Baik \\
+\hline
+Kebutuhan Volume Data & Rendah & Rendah & Sedang & Sedang & Tinggi \\
+\hline
+Peran dalam Penelitian & \textit{Baseline} & \textit{Baseline} & Model Utama & Model Utama & Opsi Lanjutan \\
 \hline
 \end{tabular}
 \end{table}

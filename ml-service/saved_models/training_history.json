@@ -50827,5 +50827,44 @@
     },
     "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/arima_realisasi_hsi_reg5_sumalut.pkl",
     "trained_at": "2026-05-21 12:57:03"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "order_hsi",
+    "regional": "REG-2",
+    "witel": "BANDUNG",
+    "data_points": 44,
+    "window_size": 3,
+    "n_test": 6,
+    "auto_tuned": true,
+    "epochs_run": 34,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 645.0,
+    "forecast_period": "2026-06",
+    "prediction": 602.66,
+    "change_pct": -6.56,
+    "val_metrics": {
+      "mae": 93.367,
+      "rmse": 109.4898,
+      "mape": 15.8191,
+      "smape": 15.3612,
+      "mase": 0.4124,
+      "skill_score": -0.1226,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": true,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 8.7823,
+      "prev_skill_score": 0.5751,
+      "prev_trained_at": "2026-05-01 21:45:17"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_order_hsi_reg2_bandung.pth",
+    "trained_at": "2026-06-01 16:57:24"
   }
 ]

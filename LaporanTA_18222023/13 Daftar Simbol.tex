@@ -19,50 +19,50 @@
 
 % \multicolumn{2}{l}{\textbf{Huruf Yunani (Parameter Model dan Metrik)}} \\
 
-$\alpha$ & Tingkat signifikansi statistik (\textit{significance level}) & 45 \\
-$\theta$ & Parameter bobot dalam model \textit{neural network} & 34 \\
-$\sigma$ & Deviasi standar (\textit{standard deviation}) & 38 \\
-$\mu$ & Rata-rata (\textit{mean}) & 38 \\
-$\epsilon$ & Konstanta kecil untuk mencegah pembagian dengan nol pada sMAPE & 42 \\[1ex]
+$\epsilon$ & Konstanta kecil untuk mencegah pembagian dengan nol pada sMAPE & \pageref{sym:epsilon} \\[1ex]
 
 % \multicolumn{2}{l}{\textbf{Operator Matematis}} \\
 
-$\sum$ & Operator penjumlahan & 40 \\
-$\prod$ & Operator perkalian & 41 \\
-$\min$ & Nilai minimum dari suatu himpunan & 43 \\
-$\max$ & Nilai maksimum dari suatu himpunan & 43 \\
-$|x|$ & Nilai absolut dari $x$ & 40 \\[1ex]
+$\sum$ & Operator penjumlahan & \pageref{sym:sum} \\
+$\min$ & Nilai minimum dari suatu himpunan & \pageref{sym:min} \\
+$|x|$ & Nilai absolut dari $x$ & \pageref{sym:abs} \\[1ex]
 
 % \multicolumn{2}{l}{\textbf{Variabel Deret Waktu dan Jaringan Saraf Tiruan}} \\
 
-$t$ & Indeks waktu (\textit{timestep}) pada data deret waktu & 30 \\
-$y_t$ & Nilai aktual observasi pada waktu ke-$t$ & 30 \\
-$\hat{y}_t$ & Nilai prediksi/ramalan (\textit{forecast}) pada waktu ke-$t$ & 30 \\
-$x_t$ & Vektor masukan (\textit{input}) pada waktu ke-$t$ & 32 \\
-$h_t$ & \textit{Hidden state} pada sel berulang (GRU/LSTM) waktu ke-$t$ & 35 \\
-$c_t$ & \textit{Cell state} pada sel LSTM waktu ke-$t$ & 36 \\
-$m$ & Periode musiman (\textit{seasonality period}, e.g. 12 untuk data bulanan) & 43 \\
-$n$ & Jumlah sampel atau \textit{horizon} prediksi & 40 \\
-$W$ & Matriks bobot (\textit{weight matrix}) pada lapisan \textit{neural network} & 34 \\
-$b$ & Vektor bias (\textit{bias vector}) pada lapisan \textit{neural network} & 34 \\[1ex]
+$t$ & Indeks waktu (\textit{timestep}) pada data deret waktu & \pageref{sym:t} \\
+$y_t$ & Nilai aktual observasi pada waktu ke-$t$ & \pageref{sym:yt} \\
+$\hat{y}_t$ & Nilai prediksi/ramalan (\textit{forecast}) pada waktu ke-$t$ & \pageref{sym:yhat} \\
+$x_t$ & Vektor masukan (\textit{input}) pada waktu ke-$t$ & \pageref{sym:xt} \\
+$h_t$ & \textit{Hidden state} pada sel berulang (GRU/LSTM) waktu ke-$t$ & \pageref{sym:ht} \\
+$c_t$ & \textit{Cell state} pada sel LSTM waktu ke-$t$ & \pageref{sym:ct} \\
+$m$ & Periode musiman (\textit{seasonality period}, e.g. 12 untuk data bulanan) & \pageref{sym:m} \\
+$n$ & Jumlah sampel atau \textit{horizon} prediksi & \pageref{sym:n} \\
+$K$ & Jumlah kelas \textit{intent} dalam sistem klasifikasi & \pageref{sym:K} \\
+$W$ & Matriks bobot (\textit{weight matrix}) pada lapisan \textit{neural network} & \pageref{sym:W} \\
+$b$ & Vektor bias (\textit{bias vector}) pada lapisan \textit{neural network} & \pageref{sym:b} \\
+$p, d, q$ & Parameter orde model ARIMA (autoregresif, diferensiasi, rata-rata bergerak) & \pageref{sym:pdq} \\
+$P, D, Q$ & Parameter orde musiman model SARIMA & \pageref{sym:PDQ} \\
+$T(t)$ & Komponen tren pada model Prophet & \pageref{sym:Tt} \\
+$S(t)$ & Komponen musiman pada model Prophet & \pageref{sym:St} \\
+$H(t)$ & Komponen efek hari raya (\textit{holiday}) pada model Prophet & \pageref{sym:Ht} \\[1ex]
 
 % \multicolumn{2}{l}{\textbf{Fungsi Aktivasi dan Gerbang (Gates)}} \\
 
-$\sigma(x)$ & Fungsi aktivasi \textit{sigmoid} & 34 \\
-$\tanh(x)$ & Fungsi aktivasi \textit{hyperbolic tangent} & 34 \\
-$i_t$ & \textit{Input gate} pada sel LSTM & 36 \\
-$f_t$ & \textit{Forget gate} pada sel LSTM & 36 \\
-$o_t$ & \textit{Output gate} pada sel LSTM & 36 \\
-$r_t$ & \textit{Reset gate} pada sel GRU & 35 \\
-$z_t$ & \textit{Update gate} pada sel GRU & 35 \\[1ex]
+$\sigma(x)$ & Fungsi aktivasi \textit{sigmoid} & \pageref{sym:sigmoid} \\
+$\tanh(x)$ & Fungsi aktivasi \textit{hyperbolic tangent} & \pageref{sym:tanh} \\
+$i_t$ & \textit{Input gate} pada sel LSTM & \pageref{sym:it} \\
+$f_t$ & \textit{Forget gate} pada sel LSTM & \pageref{sym:ft} \\
+$o_t$ & \textit{Output gate} pada sel LSTM & \pageref{sym:ot} \\
+$r_t$ & \textit{Reset gate} pada sel GRU & \pageref{sym:rt} \\
+$z_t$ & \textit{Update gate} pada sel GRU & \pageref{sym:zt} \\[1ex]
 
 % \multicolumn{2}{l}{\textbf{Metrik Evaluasi dan Analisis}} \\
 
-$MAE$ & \textit{Mean Absolute Error} & 40 \\
-$RMSE$ & \textit{Root Mean Squared Error} & 41 \\
-$MAPE$ & \textit{Mean Absolute Percentage Error} & 41 \\
-$sMAPE$ & \textit{symmetric Mean Absolute Percentage Error} & 42 \\
-$MASE$ & \textit{Mean Absolute Scaled Error} & 43 \\
-$SS$ & \textit{Skill Score} & 44 \\[1ex]
+$MAE$ & \textit{Mean Absolute Error} & \pageref{sym:MAE} \\
+$RMSE$ & \textit{Root Mean Squared Error} & \pageref{sym:RMSE} \\
+$MAPE$ & \textit{Mean Absolute Percentage Error} & \pageref{sym:MAPE} \\
+$sMAPE$ & \textit{symmetric Mean Absolute Percentage Error} & \pageref{sym:sMAPE} \\
+$MASE$ & \textit{Mean Absolute Scaled Error} & \pageref{sym:MASE} \\
+$SS$ & \textit{Skill Score} & \pageref{sym:SS} \\[1ex]
 
 \end{longtable}

@@ -1,26 +1,23 @@
-
-
-% \begin{algorithm}[t]
-% \caption{Binary Search}
-% \label{alg:binary-search}
-% \begin{algorithmic}[1] % [1] = line numbers
-% \Require Sorted array $A[1..n]$, target value $x$
-% \Ensure Index of $x$ in $A$ or $-1$ if not found
-
-% \State $low \gets 1$
-% \State $high \gets n$
-
-% \While{$low \le high$}
-%     \State $mid \gets \lfloor (low + high)/2 \rfloor$
-%     \If{$A[mid] = x$}
-%         \State \Return $mid$
-%     \ElsIf{$A[mid] < x$}
-%         \State $low \gets mid + 1$
-%     \Else
-%         \State $high \gets mid - 1$
-%     \EndIf
-% \EndWhile
-
-% \State \Return $-1$
-% \end{algorithmic}
-% \end{algorithm}
+\begin{algorithm}[H]
+\caption{\textit{Walk-Forward Validation} untuk Evaluasi Model Peramalan}
+\label{alg:walk-forward}
+\begin{algorithmic}[1]
+\Require Deret waktu $Y = [y_1, y_2, \ldots, y_T]$, model $\mathcal{M}$, jumlah langkah uji $n$
+\Ensure Metrik evaluasi: MAE, RMSE, sMAPE, MASE, \textit{Skill Score}
+\State $T_{\text{train}} \gets T - n$
+\State Inisialisasi daftar prediksi $\hat{Y} \gets [\ ]$, nilai aktual $Y_{\text{test}} \gets [\ ]$
+\For{$t = T_{\text{train}}$ \textbf{hingga} $T - 1$}
+    \State Latih $\mathcal{M}$ menggunakan data $Y[1 \ldots t]$
+    \State $\hat{y}_{t+1} \gets \mathcal{M}.\texttt{predict}(Y[t - w + 1 \ldots t])$
+    \State Tambahkan $\hat{y}_{t+1}$ ke $\hat{Y}$
+    \State Tambahkan $y_{t+1}$ ke $Y_{\text{test}}$
+\EndFor
+\State $\text{MAE} \gets \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|$
+\State $\text{RMSE} \gets \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}$
+\State $\text{sMAPE} \gets \frac{100\%}{n} \sum_{i=1}^{n} \frac{|y_i - \hat{y}_i|}{(|y_i| + |\hat{y}_i|)/2 + \epsilon}$
+\State $\text{MASE} \gets \frac{\text{MAE}}{\frac{1}{T-1}\sum_{t=2}^{T}|y_t - y_{t-1}|}$
+\State $\text{MAE}_{\text{naive}} \gets \frac{1}{n} \sum_{i=1}^{n} |y_i - y_{i-1}|$
+\State $\text{\textit{Skill Score}} \gets 1 - \frac{\text{MAE}}{\text{MAE}_{\text{naive}}}$
+\State \Return MAE, RMSE, sMAPE, MASE, \textit{Skill Score}
+\end{algorithmic}
+\end{algorithm}

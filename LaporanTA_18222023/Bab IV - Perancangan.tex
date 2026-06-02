@@ -2,112 +2,38 @@
 % BAB IV PERANCANGAN
 % ==========================================
 \cleardoublepage
-\chapter{PERANCANGAN}
+\chapter{PERANCANGAN SISTEM \textit{BUSINESS INTELLIGENCE CHATBOT}}
 \label{chap:perancangan}
 
-Bab ini menyajikan rencana implementasi sistem \textit{Business Intelligence} berbasis \textit{rule-based chatbot} yang mengintegrasikan klasifikasi maksud berbasis pola, pembangkitan bahasa alami berbasis templat, dan peramalan deret waktu. Pembahasan mencakup daftar perangkat dan teknologi yang digunakan, estimasi kebutuhan sumber daya, linimasa pelaksanaan tugas akhir, serta desain pengujian dan evaluasi yang akan dilakukan terhadap setiap komponen sistem. Selain itu, bab ini juga membahas analisis risiko dan strategi mitigasi untuk mengantisipasi kendala yang mungkin terjadi selama proses pengembangan.
+Bab ini menyajikan perancangan sistem \textit{Business Intelligence} berbasis \textit{chatbot} yang mengintegrasikan klasifikasi maksud berbasis pola, pembangkitan bahasa alami berbasis templat, dan peramalan deret waktu. Pembahasan mencakup daftar perangkat dan teknologi yang digunakan, estimasi kebutuhan sumber daya, linimasa pelaksanaan tugas akhir, serta desain pengujian dan evaluasi yang akan dilakukan terhadap setiap komponen sistem. Selain itu, bab ini juga membahas analisis risiko dan strategi mitigasi untuk mengantisipasi kendala yang mungkin terjadi selama proses pengembangan.
 
-\subsection{Rencana Implementasi}
-\label{subsec:rencana-implementasi}
+\section{Rencana Implementasi}
+\label{sec:rencana-implementasi}
 
 Dalam perencanaan implementasi sistem \textit{Business Intelligence Chatbot} yang mengintegrasikan komponen \textit{rule-based query}, \textit{template-based Natural Language Generation}, dan \textit{time series forecasting}, telah disusun daftar perangkat lunak, \textit{framework}, dan pustaka yang diperlukan untuk mendukung proses pengembangan. Selain itu, dirancang pula linimasa pelaksanaan tugas akhir yang menggambarkan rencana pengerjaan tiap tahap berdasarkan metodologi CRISP-DM (\textit{Cross-Industry Standard Process for Data Mining}).
 
-\subsubsection{Perangkat Lunak dan Teknologi}
-\label{subsubsec:tools}
+\subsection{Perangkat Lunak dan Teknologi}
+\label{subsec:tools}
 
 Dalam melakukan implementasi sistem, dibutuhkan beberapa perangkat lunak dan teknologi yang mendukung proses pengembangan. Perangkat pada Tabel~\ref{tab:tools} memiliki fungsi dan peran yang berbeda dalam mengimplementasikan sistem \textit{Business Intelligence Chatbot}.
 
-\begin{longtable}{|c|p{2.5cm}|p{9cm}|}
-\caption{Perangkat Lunak dan Teknologi Implementasi Sistem} \label{tab:tools} \\
-\hline
-\textbf{No} & \textbf{Perangkat} & \textbf{Deskripsi} \\
-\hline
-\endfirsthead
-\multicolumn{3}{c}%
-{\tablename\ \thetable\ -- \textit{Lanjutan dari halaman sebelumnya}} \\
-\hline
-\textbf{No} & \textbf{Perangkat} & \textbf{Deskripsi} \\
-\hline
-\endhead
-\hline \multicolumn{3}{r}{\textit{Bersambung ke halaman berikutnya}} \\
-\endfoot
-\hline
-\endlastfoot
+\input{tables/tabel-tools.tex}
 
-1 & Node.js & \textit{Runtime} JavaScript sisi pelayan yang digunakan sebagai \textit{backend} utama sistem. Node.js menjalankan Express.js untuk menyediakan \textit{RESTful API}, mengelola autentikasi pengguna, mengeksekusi mesin aturan (\textit{rule engine}), serta menghasilkan respons naratif melalui modul NLG berbasis templat JavaScript. \\
-\hline
+\subsection{Kebutuhan Sumber Daya Komputasi}
+\label{subsec:resources}
 
-2 & Python & Bahasa pemrograman yang digunakan khusus untuk layanan \textit{machine learning} (\textit{ML Service}). Python menangani pelatihan dan inferensi model peramalan deret waktu berbasis GRU dan LSTM melalui \textit{framework} FastAPI. \\
-\hline
-
-3 & FastAPI & \textit{Framework} Python untuk membangun \textit{RESTful API} dengan performa tinggi dan dokumentasi otomatis (Swagger/OpenAPI). FastAPI digunakan khusus untuk layanan \textit{machine learning} yang menangani permintaan pelatihan dan prediksi model peramalan deret waktu. \\
-\hline
-
-4 & React.js & Pustaka JavaScript untuk membangun antarmuka pengguna yang interaktif dan responsif. React.js digunakan untuk mengembangkan \textit{frontend chatbot} berbasis web dengan fitur percakapan, panel peramalan, dan alur terpandu (\textit{guided flow}). \\
-\hline
-
-5 & Oracle Database & \textit{Enterprise Data Warehouse} (DWH) yang menjadi sumber data utama sistem. Oracle Database digunakan untuk dua tujuan: (1) menyimpan data pengguna, riwayat percakapan, dan sesi melalui \textit{connection pooling} dengan pustaka \texttt{node-oracledb}; dan (2) menyediakan data analitik bisnis dari skema \texttt{DWH\_MOIS} yang mencakup lima domain data (penjualan, pendapatan, target, proses data pelanggan, dan \textit{churn}). \\
-\hline
-
-6 & PyTorch & \textit{Framework deep learning} utama yang digunakan untuk membangun dan melatih model peramalan deret waktu berbasis GRU dan LSTM. PyTorch dipilih karena fleksibilitas dalam pendefinisian arsitektur model kustom dan kemudahan \textit{debugging}. \\
-\hline
-
-7 & Express.js & \textit{Framework} web minimalis untuk Node.js yang digunakan sebagai fondasi \textit{backend} utama. Express.js menangani \textit{routing}, \textit{middleware} keamanan (Helmet, CORS, \textit{rate limiter}), serta integrasi dengan mesin aturan dan modul NLG. \\
-\hline
-
-8 & Pandas & Pustaka Python untuk manipulasi dan analisis data tabular. Pandas digunakan pada tahap \textit{data preparation}, transformasi fitur, dan agregasi data sebelum proses pelatihan model maupun eksekusi kueri. \\
-\hline
-
-9 & NumPy & Pustaka Python untuk komputasi numerik yang menjadi fondasi operasi matematika pada pemrosesan data dan perhitungan metrik evaluasi model. \\
-\hline
-
-10 & Scikit-learn & Pustaka \textit{machine learning} Python yang digunakan untuk praolah data, ekstraksi fitur, perhitungan metrik evaluasi, dan implementasi model \textit{baseline} untuk perbandingan performa. \\
-\hline
-
-11 & \texttt{node-oracledb} & Pustaka Node.js resmi dari Oracle untuk koneksi ke Oracle Database. Pustaka ini mengelola \textit{connection pooling}, eksekusi kueri SQL, dan penanganan tipe data khusus Oracle seperti CLOB. \\
-\hline
-
-12 & Regex (JavaScript) & Modul ekspresi reguler bawaan JavaScript yang digunakan untuk implementasi pencocokan pola (\textit{pattern matching}) dalam klasifikasi maksud berbasis aturan dan ekstraksi konteks geografis dari kueri pengguna. \\
-\hline
-
-13 & Pustaka Templat JavaScript & Modul templat kustom yang dibangun dalam JavaScript untuk implementasi \textit{template-based Natural Language Generation}. Modul ini mendukung lebih dari 30 subjek aturan dengan variasi templat per \textit{intent} yang diisi secara dinamis berdasarkan data hasil kueri Oracle. \\
-\hline
-
-14 & JWT / bcrypt & Pustaka keamanan yang digunakan untuk autentikasi berbasis \textit{JSON Web Token} (JWT) dan enkripsi kata sandi menggunakan algoritma \textit{bcrypt} dengan \textit{salt rounds}. \\
-\hline
-
-15 & Git / GitHub & Sistem kontrol versi dan platform kolaborasi yang digunakan untuk manajemen kode sumber, pelacakan perubahan, dan dokumentasi proyek tugas akhir. \\
-\hline
-
-16 & Jupyter Notebook & Aplikasi \textit{open-source} yang digunakan untuk eksplorasi data, eksperimen model, dan dokumentasi proses analisis dalam format dokumen interaktif yang menggabungkan kode, visualisasi, dan narasi. \\
-\hline
-
-17 & Google Colaboratory & Platform \textit{cloud} dari Google yang menyediakan akses gratis ke GPU untuk pelatihan model \textit{deep learning}. Google Colab digunakan untuk melatih model peramalan deret waktu yang memerlukan komputasi intensif. \\
-\hline
-
-18 & Postman & Aplikasi untuk pengujian dan dokumentasi API. Postman digunakan untuk menguji \textit{endpoint} API \textit{backend} sistem dan memvalidasi respons sebelum integrasi dengan \textit{frontend}. \\
-\hline
-
-19 & Visual Studio Code & \textit{Integrated Development Environment} (IDE) yang digunakan untuk penulisan kode, \textit{debugging}, dan manajemen proyek pengembangan sistem. \\
-\hline
-
-\end{longtable}
-
-\subsubsection{Kebutuhan Sumber Daya Komputasi}
-\label{subsubsec:resources}
-
-Dalam mendukung proses pelatihan model \textit{deep learning} dan pengembangan sistem, diperlukan sumber daya komputasi yang memadai. Pelatihan model peramalan deret waktu berbasis LSTM dan GRU memerlukan akselerasi GPU untuk mempercepat proses komputasi. Google Colaboratory menyediakan akses gratis ke GPU T4 NVIDIA dengan batasan akses per sesi sebesar 15GB memori GPU dan durasi eksekusi maksimal 12 jam per sesi.
+Dalam mendukung proses pelatihan model \textit{deep learning} dan pengembangan sistem, diperlukan sumber daya komputasi yang memadai. Pelatihan model peramalan deret waktu berbasis LSTM dan GRU memerlukan akselerasi GPU\label{abbr:GPU} untuk mempercepat proses komputasi. Google Colaboratory menyediakan akses gratis ke GPU T4 NVIDIA dengan batasan akses per sesi sebesar 15GB memori GPU dan durasi eksekusi maksimal 12 jam per sesi.
 
 Dalam kebutuhan pelatihan model yang lebih intensif atau eksperimen dengan \textit{hyperparameter tuning} yang ekstensif, dapat dipertimbangkan pembelian unit komputasi tambahan pada Google Colab Pro dengan estimasi biaya sekitar \$10 untuk 100 \textit{computing units}. Alternatif lain adalah penggunaan layanan \textit{cloud computing} seperti Google Cloud Platform, Amazon Web Services, atau Microsoft Azure dengan konfigurasi instans GPU sesuai kebutuhan.
 
 Dalam \textit{deployment} sistem produksi, diperlukan infrastruktur server dengan spesifikasi prosesor dengan minimal 4 \textit{cores}, memori RAM minimal 16GB, penyimpanan SSD minimal 100GB, dan koneksi jaringan yang stabil. Sistem dapat di-\textit{deploy} pada infrastruktur \textit{on-premise} perusahaan atau menggunakan layanan \textit{cloud} dengan pertimbangan keamanan dan privasi data internal.
 
-\subsubsection{Linimasa Pelaksanaan Tugas Akhir}
-\label{subsubsec:timeline}
+\subsection{Linimasa Pelaksanaan Tugas Akhir}
+\label{subsec:timeline}
 
 Dalam mencapai target penyelesaian tugas akhir, maka diperlukan suatu linimasa untuk memastikan seluruh bagian dari penelitian dilakukan. Terdapat dua tahap pengerjaan tugas akhir, yaitu tahap 1 pada Tabel~\ref{tab:timeline1} serta linimasa tahap 2 pada Tabel~\ref{tab:timeline2}.
 
-\begin{table}[H]
+\begin{table}[h]
 \centering
 \caption{Linimasa Pelaksanaan Tugas Akhir Tahap 1 (September 2025 -- Januari 2026)}
 \label{tab:timeline1}
@@ -143,7 +69,7 @@ Seminar Laporan TA I & & & & & & & & & & & & & & & & & \cellcolor{blue!30} & \ce
 \end{tabular}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[h]
 \centering
 \caption{Linimasa Pelaksanaan Tugas Akhir Tahap 2 (Februari -- Juli 2026)}
 \label{tab:timeline2}
@@ -182,13 +108,13 @@ Sidang Akhir & & & & & & & & & & & & & & & & & & & & & & \cellcolor{blue!30} & \
 \end{table}
 
 
-\subsection{Desain Pengujian dan Evaluasi}
-\label{subsec:evaluasi}
+\section{Desain Pengujian dan Evaluasi}
+\label{sec:evaluasi}
 
 Dalam memastikan bahwa sistem yang dikembangkan memenuhi kebutuhan fungsional dan nonfungsional yang telah ditetapkan, dirancang strategi pengujian dan evaluasi yang komprehensif. Evaluasi dilakukan terhadap setiap komponen utama sistem, yaitu modul klasifikasi maksud berbasis pola, modul pembangkitan bahasa alami berbasis templat, dan modul peramalan deret waktu. Selain itu, dilakukan pula evaluasi sistem secara keseluruhan melalui pengujian integrasi dan pengukuran kepuasan pengguna.
 
-\subsubsection{Evaluasi Klasifikasi Maksud Berbasis Pola}
-\label{subsubsec:eval-intent}
+\subsection{Evaluasi Klasifikasi Maksud Berbasis Pola}
+\label{subsec:eval-intent}
 
 Modul klasifikasi maksud (\textit{intent classification}) dievaluasi menggunakan metrik standar klasifikasi multi-kelas dengan mempertimbangkan bahwa sistem dirancang untuk mengenali 20--30 \textit{intent} utama yang berkaitan dengan analisis dan prediksi indikator bisnis pelanggan. Evaluasi dilakukan dengan pendekatan \textit{one-vs-all} dan agregasi metrik menggunakan strategi \textit{macro-averaging}, \textit{micro-averaging}, dan \textit{weighted-averaging}.
 
@@ -206,16 +132,20 @@ Metrik evaluasi yang digunakan untuk mengukur performa klasifikasi maksud mencak
 Formula perhitungan metrik agregasi adalah sebagai berikut.
 
 \begin{equation}
+\label{sym:K}
 \text{Presisi}_{\text{makro}} = \frac{1}{K} \sum_{i=1}^{K} \text{Presisi}_i
 \end{equation}
+\eqcaption{Presisi Makro}
 
 \begin{equation}
 \text{Daya Ingat}_{\text{makro}} = \frac{1}{K} \sum_{i=1}^{K} \text{Daya Ingat}_i
 \end{equation}
+\eqcaption{Daya Ingat Makro}
 
 \begin{equation}
 \text{Skor-F1}_{\text{makro}} = \frac{1}{K} \sum_{i=1}^{K} \text{Skor-F1}_i
 \end{equation}
+\eqcaption{Skor-F1 Makro}
 
 dengan $K$ adalah jumlah kelas \textit{intent} dalam sistem.
 
@@ -241,8 +171,8 @@ Berdasarkan studi literatur dan praktik terbaik industri untuk sistem klasifikas
     \item Waktu Respons $<$ 100 milidetik: Dalam 95\% kueri agar memberikan pengalaman pengguna yang responsif.
 \end{enumerate}
 
-\subsubsection{Evaluasi Pembangkitan Bahasa Alami Berbasis Templat}
-\label{subsubsec:eval-nlg}
+\subsection{Evaluasi Pembangkitan Bahasa Alami Berbasis Templat}
+\label{subsec:eval-nlg}
 
 Modul \textit{Natural Language Generation} (NLG) berbasis templat dievaluasi dari dua aspek utama: akurasi faktual (\textit{factual accuracy}) dan kualitas bahasa (\textit{linguistic quality}). Evaluasi dilakukan dengan kombinasi metrik otomatis dan penilaian manusia untuk mendapatkan gambaran komprehensif mengenai kualitas keluaran sistem.
 
@@ -255,6 +185,7 @@ Metrik otomatis yang digunakan untuk mengevaluasi kualitas respons NLG mencakup:
     \begin{equation}
     \text{BLEU} = BP \cdot \exp\left(\sum_{n=1}^{N} w_n \log p_n\right)
     \end{equation}
+    \eqcaption{BLEU \textit{Score}}
     dengan $p_n$ adalah presisi n-gram, $w_n$ adalah bobot untuk setiap tingkat n-gram, dan $BP$ adalah faktor penalti panjang (\textit{brevity penalty}).
     
     \item \textbf{ROUGE Score}: Mengukur \textit{recall} kecocokan n-gram, khususnya ROUGE-L yang mengukur \textit{longest common subsequence} antara keluaran dan rujukan.
@@ -286,10 +217,10 @@ Target performa untuk modul NLG berbasis templat adalah:
     \item Variasi respons: Minimal 3 variasi templat untuk setiap jenis \textit{intent} untuk menghindari respons yang monoton.
 \end{enumerate}
 
-\subsubsection{Evaluasi Peramalan Deret Waktu}
-\label{subsubsec:eval-forecasting}
+\subsection{Evaluasi Peramalan Deret Waktu}
+\label{subsec:eval-forecasting}
 
-Modul peramalan deret waktu dievaluasi menggunakan protokol \textit{rolling-origin backtesting} pada beberapa horizon prediksi dengan \textit{seasonal naive} sebagai garis dasar (\textit{baseline}). Model yang dievaluasi mencakup LSTM, GRU, dan \textit{Temporal Fusion Transformer} (TFT), serta kombinasi hibrida dari algoritma-algoritma tersebut.
+Modul peramalan deret waktu dievaluasi menggunakan protokol \textit{rolling-origin backtesting} pada beberapa horizon prediksi. Evaluasi mencakup empat kelompok model: (1) \textit{baseline} statistik berupa ARIMA/SARIMA dan Prophet, (2) model \textit{deep learning} utama berupa LSTM dan GRU, serta (3) model arsitektur lanjutan berupa TFT (\textit{Temporal Fusion Transformer}) dan kombinasi hibrida. Perbandingan antara \textit{baseline} statistik dan model \textit{deep learning} merupakan komponen evaluasi yang kritis untuk memvalidasi justifikasi pemilihan model dalam penelitian ini.
 
 \paragraph{Metrik Evaluasi \textit{Forecasting}}
 
@@ -300,21 +231,25 @@ Metrik evaluasi yang digunakan untuk mengukur performa model peramalan deret wak
     \begin{equation}
     \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|
     \end{equation}
-    
+    \eqcaption{MAE (\textit{Mean Absolute Error})}
+
     \item \textbf{RMSE (\textit{Root Mean Squared Error})}: Akar kuadrat dari rata-rata kuadrat selisih, lebih sensitif terhadap kesalahan besar.
     \begin{equation}
     \text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
     \end{equation}
-    
+    \eqcaption{RMSE (\textit{Root Mean Squared Error})}
+
     \item \textbf{sMAPE (\textit{Symmetric Mean Absolute Percentage Error})}: Persentase kesalahan simetris yang mengatasi masalah pembagian nol.
     \begin{equation}
     \text{sMAPE} = \frac{100\%}{n} \sum_{i=1}^{n} \frac{|y_i - \hat{y}_i|}{(|y_i| + |\hat{y}_i|)/2}
     \end{equation}
-    
+    \eqcaption{sMAPE (\textit{Symmetric Mean Absolute Percentage Error})}
+
     \item \textbf{MASE (\textit{Mean Absolute Scaled Error})}: Kesalahan yang diskalakan terhadap kesalahan \textit{naive forecast}, memungkinkan perbandingan antar-seri waktu.
     \begin{equation}
     \text{MASE} = \frac{\text{MAE}}{\frac{1}{n-1} \sum_{i=2}^{n} |y_i - y_{i-1}|}
     \end{equation}
+    \eqcaption{MASE (\textit{Mean Absolute Scaled Error})}
 \end{enumerate}
 
 \paragraph{\textit{Skill Score} terhadap Garis Dasar}
@@ -324,6 +259,7 @@ Dalam mengukur peningkatan performa model terhadap garis dasar (\textit{seasonal
 \begin{equation}
 \text{\textit{Skill Score}} = 1 - \frac{\text{MAE}_{\text{model}}}{\text{MAE}_{\text{baseline}}}
 \end{equation}
+\eqcaption{\textit{Skill Score}}
 
 Nilai \textit{skill score} positif menunjukkan bahwa model mengungguli garis dasar, dengan nilai mendekati 1 menunjukkan peningkatan yang signifikan.
 
@@ -349,8 +285,8 @@ Target performa untuk model peramalan deret waktu adalah:
     \item Waktu inferensi $<$ 500 milidetik per permintaan prediksi.
 \end{enumerate}
 
-\subsubsection{Evaluasi Sistem Terintegrasi}
-\label{subsubsec:eval-system}
+\subsection{Evaluasi Sistem Terintegrasi}
+\label{subsec:eval-system}
 
 Selain evaluasi per komponen, dilakukan pula evaluasi sistem secara keseluruhan melalui pengujian integrasi dan pengukuran performa \textit{end-to-end}.
 
@@ -377,7 +313,7 @@ Pengujian performa sistem mencakup:
 
 \paragraph{Evaluasi Kebergunaan (\textit{Usability})}
 
-Evaluasi kebergunaan dilakukan melalui \textit{User Acceptance Testing} (UAT) yang melibatkan 20--30 pengguna internal perusahaan (manajer, analis bisnis, dan staf operasional). Evaluasi mencakup:
+Evaluasi kebergunaan dilakukan melalui validasi oleh pengguna internal perusahaan, dengan melibatkan tim \textit{Data Management} sebagai kelompok pengguna kunci yang memiliki pemahaman mendalam terhadap data operasional bisnis. Evaluasi mencakup:
 
 \begin{enumerate}
     \item \textbf{System Usability Scale (SUS)}: Kuesioner standar 10 pertanyaan untuk mengukur persepsi kebergunaan sistem. Target skor SUS $\geq$ 70 (kategori ``baik'').
@@ -385,53 +321,12 @@ Evaluasi kebergunaan dilakukan melalui \textit{User Acceptance Testing} (UAT) ya
     \item \textbf{Umpan Balik Kualitatif}: Pengumpulan masukan terkait kemudahan penggunaan, kejelasan respons, dan saran perbaikan.
 \end{enumerate}
 
-\subsection{Analisis Risiko dan Mitigasi}
-\label{subsec:risiko}
+\section{Analisis Risiko dan Mitigasi}
+\label{sec:risiko}
 
 Dalam memitigasi skenario dengan terdapat kondisi yang di luar ekspektasi awal, maka perlu dilakukan analisis risiko. Tabel~\ref{tab:risiko} menyajikan identifikasi risiko potensial beserta strategi mitigasi yang direncanakan.
 
-\begin{longtable}{|c|p{3cm}|p{4cm}|p{4.5cm}|}
-\caption{Analisis Risiko dan Strategi Mitigasi} \label{tab:risiko} \\
-\hline
-\textbf{No} & \textbf{Risiko} & \textbf{Dampak} & \textbf{Strategi Mitigasi} \\
-\hline
-\endfirsthead
-\multicolumn{4}{c}%
-{\tablename\ \thetable\ -- \textit{Lanjutan dari halaman sebelumnya}} \\
-\hline
-\textbf{No} & \textbf{Risiko} & \textbf{Dampak} & \textbf{Strategi Mitigasi} \\
-\hline
-\endhead
-\hline \multicolumn{4}{r}{\textit{Bersambung ke halaman berikutnya}} \\
-\endfoot
-\hline
-\endlastfoot
-
-1 & Keterbatasan data historis untuk pelatihan model peramalan & Akurasi model peramalan tidak mencapai target yang ditetapkan & Menggunakan teknik augmentasi data, transfer learning dari model pre-trained, atau menyesuaikan horizon prediksi sesuai ketersediaan data \\
-\hline
-
-2 & Ketidakseimbang an distribusi kelas intent & Performa klasifikasi buruk pada kelas minoritas & Menerapkan teknik oversampling (SMOTE), undersampling, atau class weighting pada proses pelatihan \\
-\hline
-
-3 & Variasi bahasa alami pengguna di luar cakupan pola yang didefinisikan & Tingkat \textit{fallback} tinggi dan pengalaman pengguna menurun & Memperluas cakupan pola secara iteratif berdasarkan log percakapan dan umpan balik pengguna \\
-\hline
-
-4 & Keterbatasan sumber daya komputasi untuk pelatihan model & Waktu pelatihan model melebihi jadwal yang direncanakan & Menggunakan layanan cloud computing dengan GPU, mengoptimalkan arsitektur model, atau menggunakan teknik transfer learning \\
-\hline
-
-5 & Kendala akses ke \textit{Enterprise Data Warehouse} perusahaan & Data pengujian tidak representatif dengan kondisi produksi & Menggunakan data sintetis atau data anonim yang mewakili karakteristik data nyata untuk pengembangan dan pengujian \\
-\hline
-
-6 & Perubahan kebutuhan pengguna selama pengembangan & Fitur yang dikembangkan tidak sesuai ekspektasi pengguna akhir & Menerapkan pendekatan iteratif dengan evaluasi berkala bersama pemangku kepentingan dan penyesuaian prioritas \\
-\hline
-
-7 & Ketergantungan pada pustaka atau framework pihak ketiga & Ketidakcocokan versi atau \textit{deprecated features} menghambat pengembangan & Mendokumentasikan versi dependensi, menggunakan virtual environment, dan menyiapkan alternatif pustaka \\
-\hline
-
-8 & Responden UAT tidak mencukupi jumlah target & Evaluasi kebergunaan tidak valid secara statistik & Memperluas jangkauan rekrutmen responden, menawarkan insentif partisipasi, atau menyesuaikan target minimal responden \\
-\hline
-
-\end{longtable}
+\input{tables/tabel-risiko.tex}
 
 
 

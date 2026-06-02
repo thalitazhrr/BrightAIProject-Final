@@ -1573,6 +1573,52 @@
       \verb 2410.08553
       \endverb
     \endentry
+    \entry{Masini2023MLTimeSeriesForecasting}{article}{}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=af1b6b8d8f9615e7812c09f1539e069f}{%
+           family={Masini},
+           familyi={M\bibinitperiod},
+           given={Ricardo\bibnamedelima P.},
+           giveni={R\bibinitperiod\bibinitdelim P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=01783f2f51593682234db659efc5338f}{%
+           family={Medeiros},
+           familyi={M\bibinitperiod},
+           given={Marcelo\bibnamedelima C.},
+           giveni={M\bibinitperiod\bibinitdelim C\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=1199b71571338d4e7eb21ed8c93482c1}{%
+           family={Mendes},
+           familyi={M\bibinitperiod},
+           given={Eduardo\bibnamedelima F.},
+           giveni={E\bibinitperiod\bibinitdelim F\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{c08b1ada7b4254fc7561b182a51e53e6}
+      \strng{fullhash}{c08b1ada7b4254fc7561b182a51e53e6}
+      \strng{fullhashraw}{c08b1ada7b4254fc7561b182a51e53e6}
+      \strng{bibnamehash}{c08b1ada7b4254fc7561b182a51e53e6}
+      \strng{authorbibnamehash}{c08b1ada7b4254fc7561b182a51e53e6}
+      \strng{authornamehash}{c08b1ada7b4254fc7561b182a51e53e6}
+      \strng{authorfullhash}{c08b1ada7b4254fc7561b182a51e53e6}
+      \strng{authorfullhashraw}{c08b1ada7b4254fc7561b182a51e53e6}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{author}
+      \field{journaltitle}{Journal of Economic Surveys}
+      \field{number}{1}
+      \field{title}{Machine learning advances for time series forecasting}
+      \field{volume}{37}
+      \field{year}{2023}
+      \field{pages}{76\bibrangedash 111}
+      \range{pages}{36}
+      \verb{doi}
+      \verb 10.1111/joes.12429
+      \endverb
+    \endentry
     \entry{Mena2023}{article}{}{}
       \name{author}{5}{}{%
         {{un=0,uniquepart=base,hash=af7584ec2acf70e4eeacdcc6d7f0f48e}{%
@@ -1960,6 +2006,7 @@
       \strng{authornamehash}{20ac7f018d68562ead57de4ddc175579}
       \strng{authorfullhash}{20ac7f018d68562ead57de4ddc175579}
       \strng{authorfullhashraw}{20ac7f018d68562ead57de4ddc175579}
+      \field{extraname}{1}
       \field{sortinit}{P}
       \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
       \field{extradatescope}{labelyear}
@@ -1973,6 +2020,73 @@
       \field{year}{2023}
       \field{pages}{1500\bibrangedash 1518}
       \range{pages}{19}
+    \endentry
+    \entry{Petropoulos2022ForecastingPractice}{article}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{6}{}{%
+        {{un=0,uniquepart=base,hash=8a8906bc431b0399f6be129d2e1271a1}{%
+           family={Petropoulos},
+           familyi={P\bibinitperiod},
+           given={Fotios},
+           giveni={F\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=979345ddc3871991d2711740a90c5144}{%
+           family={Apiletti},
+           familyi={A\bibinitperiod},
+           given={Daniele},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=c84a88720d8401a0259918f2eb3bec78}{%
+           family={Assimakopoulos},
+           familyi={A\bibinitperiod},
+           given={Vassilios},
+           giveni={V\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=5bf76a5efd4966caeab3ebf8cefbb23a}{%
+           family={Babai},
+           familyi={B\bibinitperiod},
+           given={Mohamed\bibnamedelima Zied},
+           giveni={M\bibinitperiod\bibinitdelim Z\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=6bb9de163b385d8f5372add5910625bc}{%
+           family={Barrow},
+           familyi={B\bibinitperiod},
+           given={Devon\bibnamedelima K.},
+           giveni={D\bibinitperiod\bibinitdelim K\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=43eddde3c0f7ec0931021909de0cfd24}{%
+           family={Ben\bibnamedelima Taieb},
+           familyi={B\bibinitperiod\bibinitdelim T\bibinitperiod},
+           given={Souhaib},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{20ac7f018d68562ead57de4ddc175579}
+      \strng{fullhash}{af2224bb5aa710da661b23ac97f52f00}
+      \strng{fullhashraw}{af2224bb5aa710da661b23ac97f52f00}
+      \strng{bibnamehash}{af2224bb5aa710da661b23ac97f52f00}
+      \strng{authorbibnamehash}{af2224bb5aa710da661b23ac97f52f00}
+      \strng{authornamehash}{20ac7f018d68562ead57de4ddc175579}
+      \strng{authorfullhash}{af2224bb5aa710da661b23ac97f52f00}
+      \strng{authorfullhashraw}{af2224bb5aa710da661b23ac97f52f00}
+      \field{extraname}{2}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{author}
+      \field{journaltitle}{International Journal of Forecasting}
+      \field{number}{3}
+      \field{title}{Forecasting: theory and practice}
+      \field{volume}{38}
+      \field{year}{2022}
+      \field{pages}{705\bibrangedash 871}
+      \range{pages}{167}
+      \verb{doi}
+      \verb 10.1016/j.ijforecast.2021.11.001
+      \endverb
     \endentry
     \entry{ui2024churnhat}{article}{}{}
       \name{author}{2}{}{%
@@ -2768,6 +2882,45 @@
       \field{year}{2025}
       \field{pages}{1\bibrangedash 10}
       \range{pages}{10}
+    \endentry
+    \entry{Tuncer2023ARIMAProphetLSTM}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=3fa2ac66a2bf353bc9e888fedd2cb4de}{%
+           family={Tuncer},
+           familyi={T\bibinitperiod},
+           given={İlker},
+           giveni={İ\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=2191f5025f1692ece6240e07d5617004}{%
+           family={Peker},
+           familyi={P\bibinitperiod},
+           given={Musa},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{833fe95e9b6a91296feddf09ff4c3fae}
+      \strng{fullhash}{833fe95e9b6a91296feddf09ff4c3fae}
+      \strng{fullhashraw}{833fe95e9b6a91296feddf09ff4c3fae}
+      \strng{bibnamehash}{833fe95e9b6a91296feddf09ff4c3fae}
+      \strng{authorbibnamehash}{833fe95e9b6a91296feddf09ff4c3fae}
+      \strng{authornamehash}{833fe95e9b6a91296feddf09ff4c3fae}
+      \strng{authorfullhash}{833fe95e9b6a91296feddf09ff4c3fae}
+      \strng{authorfullhashraw}{833fe95e9b6a91296feddf09ff4c3fae}
+      \field{sortinit}{T}
+      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{author}
+      \field{journaltitle}{Engineering Science and Technology, an International Journal}
+      \field{title}{Comparison of {ARIMA}, Prophet and {LSTM} Models for Time Series Forecasting in Business Intelligence Applications}
+      \field{volume}{46}
+      \field{year}{2023}
+      \field{pages}{101513}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1016/j.jestch.2023.101513
+      \endverb
     \endentry
     \entry{velotix2025security}{online}{}{}
       \name{author}{1}{}{%

@@ -1,0 +1,37 @@
+\begin{algorithm}[H]
+\caption{Klasifikasi Maksud Berbasis Pencocokan Pola Kata Kunci Berbobot}
+\label{alg:intent-classification}
+\begin{algorithmic}[1]
+\Require Kueri pengguna $q$, himpunan intent $\mathcal{I}$ dengan kata kunci dan bobot $w_i$, himpunan fokus $\mathcal{F}$
+\Ensure Intent terpilih $\hat{i}$, nilai keyakinan $c$, fokus analisis $\hat{f}$
+
+\State $q_{\text{lower}} \gets \texttt{toLowerCase}(q)$
+\State Inisialisasi skor $s_i \gets 0$ untuk setiap $i \in \mathcal{I}$
+
+\For{setiap intent $i \in \mathcal{I}$}
+    \For{setiap kata kunci $kw \in \text{keywords}(i)$}
+        \If{$kw \subseteq q_{\text{lower}}$}
+            \State $s_i \gets s_i + w_i$
+        \EndIf
+    \EndFor
+\EndFor
+
+\State $\hat{i} \gets \arg\max_{i \in \mathcal{I}}\ s_i$
+\If{$\max_{i} s_i = 0$}
+    \State $\hat{i} \gets \texttt{general}$ \Comment{\textit{Fallback} jika tidak ada kata kunci yang cocok}
+\EndIf
+\State $c \gets \min\!\left(100,\ \max_{i} s_i \times 10\right)$
+
+\State Inisialisasi skor fokus $f_j \gets 0$ untuk setiap $j \in \mathcal{F}$
+\For{setiap fokus $j \in \mathcal{F}$}
+    \For{setiap kata kunci $kw \in \text{keywords}(j)$}
+        \If{$kw \subseteq q_{\text{lower}}$}
+            \State $f_j \gets f_j + 1$
+        \EndIf
+    \EndFor
+\EndFor
+\State $\hat{f} \gets \arg\max_{j \in \mathcal{F}}\ f_j$
+
+\State \Return $\hat{i},\ c,\ \hat{f}$
+\end{algorithmic}
+\end{algorithm}

@@ -299,7 +299,35 @@
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
-\contentsline {table}{\numberline {II.1}{\ignorespaces Perbandingan Karakteristik Model Peramalan Berbasis \textit {Deep Learning}}}{35}{table.2.1}%
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\contentsline {table}{\numberline {II.1}{\ignorespaces Perbandingan Karakteristik Model Peramalan Deret Waktu}}{37}{table.2.1}%
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
@@ -378,58 +406,70 @@
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
-\contentsline {table}{\numberline {II.2}{\ignorespaces Tinjauan Penelitian Terdahulu}}{46}{table.2.2}%
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\contentsline {table}{\numberline {II.2}{\ignorespaces Tinjauan Penelitian Terdahulu}}{50}{table.2.2}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {III.1}{\ignorespaces Kebutuhan Fungsional Sistem \textit {Chatbot} BI}}{54}{table.3.1}%
-\contentsline {table}{\numberline {III.2}{\ignorespaces Kebutuhan Nonfungsional Sistem \textit {Chatbot} BI}}{58}{table.3.2}%
-\contentsline {table}{\numberline {III.3}{\ignorespaces Perbandingan Alternatif Solusi Teknologi}}{63}{table.3.3}%
-\contentsline {table}{\numberline {III.4}{\ignorespaces Analisis \textit {Balanced Scorecard} untuk Aturan Sederhana}}{69}{table.3.4}%
-\contentsline {table}{\numberline {III.5}{\ignorespaces Analisis \textit {Balanced Scorecard} untuk BI Komprehensif}}{71}{table.3.5}%
-\contentsline {table}{\numberline {III.6}{\ignorespaces Analisis \textit {Balanced Scorecard} untuk BI Tradisional}}{75}{table.3.6}%
-\contentsline {table}{\numberline {III.7}{\ignorespaces Analisis \textit {Balanced Scorecard} untuk LLM}}{77}{table.3.7}%
-\contentsline {table}{\numberline {III.8}{\ignorespaces Perbandingan \textit {Balanced Scorecard} Alternatif Solusi}}{81}{table.3.8}%
-\contentsline {table}{\numberline {III.9}{\ignorespaces Ringkasan Domain Data pada Skema USER}}{85}{table.caption.19}%
-\contentsline {table}{\numberline {III.10}{\ignorespaces Spesifikasi Domain Data Sales}}{87}{table.caption.21}%
-\contentsline {table}{\numberline {III.11}{\ignorespaces Spesifikasi Domain Data Revenue}}{87}{table.caption.22}%
-\contentsline {table}{\numberline {III.12}{\ignorespaces Spesifikasi Domain Data Proses}}{88}{table.caption.23}%
-\contentsline {table}{\numberline {III.13}{\ignorespaces Spesifikasi Domain Data Target}}{88}{table.caption.24}%
-\contentsline {table}{\numberline {III.14}{\ignorespaces Spesifikasi Domain Data Churn}}{89}{table.caption.25}%
-\contentsline {table}{\numberline {III.15}{\ignorespaces Hasil Pemeriksaan Kualitas Data per Domain}}{89}{table.caption.26}%
-\contentsline {table}{\numberline {III.16}{\ignorespaces Atribut Utama Relasional Antar-Domain}}{90}{table.caption.27}%
-\contentsline {table}{\numberline {III.17}{\ignorespaces Teknik Penanganan Nilai Hilang per Jenis Atribut}}{92}{table.caption.28}%
-\contentsline {table}{\numberline {III.18}{\ignorespaces Teknik Penskalaan per Kategori Fitur}}{93}{table.caption.29}%
-\contentsline {table}{\numberline {III.19}{\ignorespaces Teknik Pengkodean Fitur Kategorikal}}{93}{table.caption.30}%
-\contentsline {table}{\numberline {III.20}{\ignorespaces Fitur Temporal yang Dihasilkan}}{94}{table.caption.31}%
-\contentsline {table}{\numberline {III.21}{\ignorespaces Fitur Lag dan Statistik Bergulir}}{94}{table.caption.32}%
-\contentsline {table}{\numberline {III.22}{\ignorespaces Fitur Agregat per Entitas}}{95}{table.caption.33}%
-\contentsline {table}{\numberline {III.23}{\ignorespaces Pembagian Data untuk Pelatihan dan Evaluasi}}{95}{table.caption.34}%
-\contentsline {table}{\numberline {III.24}{\ignorespaces Komponen Gerbang pada Arsitektur LSTM}}{96}{table.caption.35}%
-\contentsline {table}{\numberline {III.25}{\ignorespaces Komponen Gerbang pada Arsitektur GRU}}{97}{table.caption.36}%
-\contentsline {table}{\numberline {III.26}{\ignorespaces Komponen Utama Arsitektur TFT}}{97}{table.caption.37}%
-\contentsline {table}{\numberline {III.27}{\ignorespaces Perbandingan Karakteristik Model Peramalan}}{98}{table.caption.38}%
-\contentsline {table}{\numberline {III.28}{\ignorespaces Konfigurasi \textit {Hyperparameter} Model}}{99}{table.caption.39}%
-\contentsline {table}{\numberline {III.29}{\ignorespaces Fungsi Kerugian untuk Setiap Jenis Prediksi}}{99}{table.caption.40}%
-\contentsline {table}{\numberline {III.30}{\ignorespaces Integrasi Model dalam Arsitektur Sistem}}{101}{table.caption.41}%
+\contentsline {table}{\numberline {III.1}{\ignorespaces Kebutuhan Fungsional Sistem \textit {Chatbot} BI}}{60}{table.3.1}%
+\contentsline {table}{\numberline {III.2}{\ignorespaces Kebutuhan Nonfungsional Sistem \textit {Chatbot} BI}}{64}{table.3.2}%
+\contentsline {table}{\numberline {III.3}{\ignorespaces Perbandingan Alternatif Solusi Teknologi}}{69}{table.3.3}%
+\contentsline {table}{\numberline {III.4}{\ignorespaces Analisis \textit {Balanced Scorecard} untuk Aturan Sederhana}}{75}{table.3.4}%
+\contentsline {table}{\numberline {III.5}{\ignorespaces Analisis \textit {Balanced Scorecard} untuk BI Komprehensif}}{77}{table.3.5}%
+\contentsline {table}{\numberline {III.6}{\ignorespaces Analisis \textit {Balanced Scorecard} untuk BI Tradisional}}{81}{table.3.6}%
+\contentsline {table}{\numberline {III.7}{\ignorespaces Analisis \textit {Balanced Scorecard} untuk LLM}}{83}{table.3.7}%
+\contentsline {table}{\numberline {III.8}{\ignorespaces Perbandingan \textit {Balanced Scorecard} Alternatif Solusi}}{87}{table.3.8}%
+\contentsline {table}{\numberline {III.9}{\ignorespaces Ringkasan Domain Data pada Skema USER}}{91}{table.caption.23}%
+\contentsline {table}{\numberline {III.10}{\ignorespaces Spesifikasi Domain Data Sales}}{93}{table.caption.25}%
+\contentsline {table}{\numberline {III.11}{\ignorespaces Spesifikasi Domain Data Revenue}}{93}{table.caption.26}%
+\contentsline {table}{\numberline {III.12}{\ignorespaces Spesifikasi Domain Data Proses}}{94}{table.caption.27}%
+\contentsline {table}{\numberline {III.13}{\ignorespaces Spesifikasi Domain Data Target}}{94}{table.caption.28}%
+\contentsline {table}{\numberline {III.14}{\ignorespaces Spesifikasi Domain Data Churn}}{95}{table.caption.29}%
+\contentsline {table}{\numberline {III.15}{\ignorespaces Hasil Pemeriksaan Kualitas Data per Domain}}{95}{table.caption.30}%
+\contentsline {table}{\numberline {III.16}{\ignorespaces Atribut Utama Relasional Antar-Domain}}{96}{table.caption.31}%
+\contentsline {table}{\numberline {III.17}{\ignorespaces Teknik Penanganan Nilai Hilang per Jenis Atribut}}{98}{table.caption.32}%
+\contentsline {table}{\numberline {III.18}{\ignorespaces Teknik Penskalaan per Kategori Fitur}}{99}{table.caption.33}%
+\contentsline {table}{\numberline {III.19}{\ignorespaces Teknik Pengkodean Fitur Kategorikal}}{99}{table.caption.34}%
+\contentsline {table}{\numberline {III.20}{\ignorespaces Fitur Temporal yang Dihasilkan}}{100}{table.caption.35}%
+\contentsline {table}{\numberline {III.21}{\ignorespaces Fitur Lag dan Statistik Bergulir}}{100}{table.caption.36}%
+\contentsline {table}{\numberline {III.22}{\ignorespaces Fitur Agregat per Entitas}}{101}{table.caption.37}%
+\contentsline {table}{\numberline {III.23}{\ignorespaces Pembagian Data untuk Pelatihan dan Evaluasi}}{101}{table.caption.38}%
+\contentsline {table}{\numberline {III.24}{\ignorespaces Komponen Gerbang pada Arsitektur LSTM}}{103}{table.caption.39}%
+\contentsline {table}{\numberline {III.25}{\ignorespaces Komponen Gerbang pada Arsitektur GRU}}{103}{table.caption.40}%
+\contentsline {table}{\numberline {III.26}{\ignorespaces Komponen Utama Arsitektur TFT}}{104}{table.caption.41}%
+\contentsline {table}{\numberline {III.27}{\ignorespaces Perbandingan Karakteristik Model Peramalan}}{105}{table.caption.42}%
+\contentsline {table}{\numberline {III.28}{\ignorespaces Konfigurasi \textit {Hyperparameter} Model}}{106}{table.caption.43}%
+\contentsline {table}{\numberline {III.29}{\ignorespaces Fungsi Kerugian untuk Setiap Jenis Prediksi}}{106}{table.caption.44}%
+\contentsline {table}{\numberline {III.30}{\ignorespaces Integrasi Model dalam Arsitektur Sistem}}{108}{table.caption.45}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {IV.1}{\ignorespaces Perangkat Lunak dan Teknologi Implementasi Sistem}}{104}{table.4.1}%
-\contentsline {table}{\numberline {IV.2}{\ignorespaces Linimasa Pelaksanaan Tugas Akhir Tahap 1 (September 2025 -- Januari 2026)}}{107}{table.caption.42}%
-\contentsline {table}{\numberline {IV.3}{\ignorespaces Linimasa Pelaksanaan Tugas Akhir Tahap 2 (Februari -- Juli 2026)}}{108}{table.caption.43}%
-\contentsline {table}{\numberline {IV.4}{\ignorespaces Analisis Risiko dan Strategi Mitigasi}}{114}{table.4.4}%
+\contentsline {table}{\numberline {IV.1}{\ignorespaces Perangkat Lunak dan Teknologi Implementasi Sistem}}{110}{table.4.1}%
+\contentsline {table}{\numberline {IV.2}{\ignorespaces Linimasa Pelaksanaan Tugas Akhir Tahap 1 (September 2025 -- Januari 2026)}}{113}{table.caption.46}%
+\contentsline {table}{\numberline {IV.3}{\ignorespaces Linimasa Pelaksanaan Tugas Akhir Tahap 2 (Februari -- Juli 2026)}}{114}{table.caption.47}%
+\contentsline {table}{\numberline {IV.4}{\ignorespaces Analisis Risiko dan Strategi Mitigasi}}{120}{table.4.4}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {V.1}{\ignorespaces Struktur Direktori Proyek \textit {Backend}}}{118}{table.5.1}%
-\contentsline {table}{\numberline {V.2}{\ignorespaces Konfigurasi \textit {Connection Pool} Oracle Database}}{119}{table.caption.44}%
-\contentsline {table}{\numberline {V.3}{\ignorespaces Rute API Sistem BrightAI}}{119}{table.5.3}%
-\contentsline {table}{\numberline {V.4}{\ignorespaces Komponen Struktur Definisi Aturan}}{121}{table.caption.45}%
-\contentsline {table}{\numberline {V.5}{\ignorespaces Daftar \textit {Intent} yang Diimplementasikan}}{122}{table.5.5}%
-\contentsline {table}{\numberline {V.6}{\ignorespaces Contoh Pemetaan Subjek Aturan}}{123}{table.caption.46}%
-\contentsline {table}{\numberline {V.7}{\ignorespaces Struktur Direktori Layanan \textit {Machine Learning}}}{124}{table.caption.47}%
-\contentsline {table}{\numberline {V.8}{\ignorespaces Konfigurasi \textit {Hyperparameter} Model Terimplementasi}}{125}{table.caption.48}%
-\contentsline {table}{\numberline {V.9}{\ignorespaces Target KPI Metrik Evaluasi Terimplementasi}}{127}{table.caption.49}%
-\contentsline {table}{\numberline {V.10}{\ignorespaces Komponen Utama \textit {Frontend}}}{127}{table.caption.50}%
+\contentsline {table}{\numberline {V.1}{\ignorespaces Struktur Direktori Proyek \textit {Backend}}}{124}{table.5.1}%
+\contentsline {table}{\numberline {V.2}{\ignorespaces Konfigurasi \textit {Connection Pool} Oracle Database}}{125}{table.caption.48}%
+\contentsline {table}{\numberline {V.3}{\ignorespaces Rute API Sistem BrightAI}}{125}{table.5.3}%
+\contentsline {table}{\numberline {V.4}{\ignorespaces Komponen Struktur Definisi Aturan}}{127}{table.caption.49}%
+\contentsline {table}{\numberline {V.5}{\ignorespaces Daftar \textit {Intent} yang Diimplementasikan}}{128}{table.5.5}%
+\contentsline {table}{\numberline {V.6}{\ignorespaces Contoh Pemetaan Subjek Aturan}}{130}{table.caption.50}%
+\contentsline {table}{\numberline {V.7}{\ignorespaces Struktur Direktori Layanan \textit {Machine Learning}}}{131}{table.caption.51}%
+\contentsline {table}{\numberline {V.8}{\ignorespaces Konfigurasi \textit {Hyperparameter} Model Terimplementasi}}{132}{table.caption.52}%
+\contentsline {table}{\numberline {V.9}{\ignorespaces Target KPI Metrik Evaluasi Terimplementasi}}{134}{table.caption.53}%
+\contentsline {table}{\numberline {V.10}{\ignorespaces Komponen Utama \textit {Frontend}}}{135}{table.caption.54}%
+\contentsline {table}{\numberline {V.11}{\ignorespaces Ringkasan Komponen Sistem yang Terimplementasi}}{136}{table.caption.55}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {VI.1}{\ignorespaces Cakupan Kata Kunci per \textit {Intent}}}{130}{table.caption.51}%
-\contentsline {table}{\numberline {VI.2}{\ignorespaces Metrik Evaluasi yang Diimplementasikan}}{132}{table.caption.52}%
+\contentsline {table}{\numberline {VI.1}{\ignorespaces Cakupan Kata Kunci per \textit {Intent}}}{140}{table.caption.56}%
+\contentsline {table}{\numberline {VI.2}{\ignorespaces Metrik Evaluasi yang Digunakan}}{143}{table.caption.57}%
+\contentsline {table}{\numberline {VI.3}{\ignorespaces Perbandingan Hasil Evaluasi Model Peramalan pada Metrik \textit {Avg Install Days}}}{144}{table.caption.58}%
+\contentsline {table}{\numberline {VI.4}{\ignorespaces Rekap Umpan Balik Pengguna Internal Tim \textit {Data Management}}}{149}{table.caption.59}%
+\contentsline {table}{\numberline {VI.5}{\ignorespaces Contoh Kueri Uji dan Evaluasi Respons Sistem}}{150}{table.caption.60}%
 \addvspace {10\p@ }
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 

@@ -1,0 +1,68 @@
+\begin{algorithm}[H]
+\caption{Injeksi Filter Geografis ke dalam Kueri SQL}
+\label{alg:geo-filter}
+\begin{algorithmic}[1]
+\Require Masukan pengguna $q$, kueri SQL $S$, basis data $D$, pemetaan kolom $\mathcal{C}$
+\Ensure Kueri SQL dengan filter geografis $S'$
+
+\State $q_{\text{lower}} \gets \texttt{toLowerCase}(q)$
+
+\State \textbf{// Tahap 1: Deteksi cakupan geografis}
+\If{$q_{\text{lower}}$ mengandung kata kunci nasional}
+    \State \Return $S$ \Comment{Tidak diperlukan filter — cakupan nasional}
+\EndIf
+
+\State $\textit{scope} \gets \texttt{null}$, $\textit{dbValue} \gets \texttt{null}$
+
+\For{setiap pola $p$ dalam $\texttt{REGIONAL\_PATTERNS}$}
+    \If{$q_{\text{lower}}$ mengandung $p.\textit{pattern}$}
+        \State $\textit{scope} \gets \texttt{"regional"}$,\quad $\textit{dbValue} \gets p.\textit{dbValue}$
+        \State \textbf{break}
+    \EndIf
+\EndFor
+
+\If{$\textit{scope} = \texttt{null}$}
+    \For{setiap pola $p$ dalam $\texttt{WITEL\_PATTERNS}$}
+        \If{$q_{\text{lower}}$ mengandung $p.\textit{pattern}$}
+            \State $\textit{scope} \gets \texttt{"witel"}$,\quad $\textit{dbValue} \gets p.\textit{dbValue}$
+            \State \textbf{break}
+        \EndIf
+    \EndFor
+\EndIf
+
+\If{$\textit{scope} = \texttt{null}$ \textbf{atau} $\textit{dbValue} = \texttt{null}$}
+    \State \Return $S$ \Comment{Tidak ada entitas geografis yang terdeteksi}
+\EndIf
+
+\State \textbf{// Tahap 2: Tentukan nama kolom sesuai basis data}
+\State $\textit{cols} \gets \mathcal{C}[D]$ \Comment{Ambil pasangan \{regional, witel\} untuk $D$}
+\State $\textit{colName} \gets \textit{cols}[\textit{scope}]$
+\State $\textit{filterClause} \gets \texttt{"AND "} \| \textit{colName} \| \texttt{" = '"} \| \textit{dbValue} \| \texttt{"'"}$
+
+\State \textbf{// Tahap 3: Injeksikan filter ke dalam SQL}
+\If{$S$ mengandung \texttt{/* :GEO\_FILTER: */}}
+    \State $S' \gets S.\texttt{replace}(\texttt{"/* :GEO\_FILTER: */"}, \textit{filterClause})$
+    \State \Return $S'$
+\EndIf
+
+\State \textbf{// Tahap 3b: Injeksi otomatis jika tidak ada \textit{placeholder}}
+\State Cari indeks baris \texttt{FROM DWH\_MOIS} pertama dalam $S$ $\to i_{\text{from}}$
+\If{$i_{\text{from}} = -1$}
+    \State \Return $S$
+\EndIf
+\State Cari indeks klausa \texttt{WHERE} setelah $i_{\text{from}}$ $\to i_{\text{where}}$
+\If{$i_{\text{where}} = -1$}
+    \State \Return $S$
+\EndIf
+\State Pindai baris dari $i_{\text{where}}$, lacak kedalaman tanda kurung $d \gets 0$
+\For{setiap baris $\ell$ dari $i_{\text{where}}$ hingga akhir $S$}
+    \State Perbarui $d$ berdasarkan karakter \texttt{(} dan \texttt{)} dalam $\ell$
+    \If{$d < 0$ \textbf{atau} ($d = 0$ \textbf{dan} $\ell$ dimulai dengan \texttt{GROUP BY}/\texttt{ORDER BY}/\texttt{HAVING})}
+        \State Sisipkan \textit{filterClause} sebelum baris $\ell$ dengan indentasi yang sama
+        \State \Return $S'$
+    \EndIf
+\EndFor
+\State \Return $S$
+
+\end{algorithmic}
+\end{algorithm}

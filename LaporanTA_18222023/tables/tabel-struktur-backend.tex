@@ -1,0 +1,33 @@
+\begin{longtable}{|p{4.5cm}|p{8.5cm}|}
+\caption{Struktur Direktori Proyek \textit{Backend}} \label{tab:struktur-backend} \\
+\hline
+\textbf{Direktori/Berkas} & \textbf{Fungsi} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Direktori/Berkas} & \textbf{Fungsi} \\
+\hline
+\endhead
+\hline
+\endfoot
+\texttt{server.js} & Titik masuk utama aplikasi: inisialisasi Express, \textit{middleware}, rute, dan koneksi basis data \\
+\hline
+\texttt{config/database.js} & Konfigurasi koneksi Oracle Database, \textit{connection pooling}, dan eksekutor kueri \\
+\hline
+\texttt{src/controllers/} & Penangan permintaan (\textit{request handler}): \texttt{authController.js} dan \texttt{chatController.js} \\
+\hline
+\texttt{src/models/} & Model data untuk pengguna, riwayat percakapan, dan sesi \\
+\hline
+\texttt{src/routes/} & Definisi rute API: autentikasi, \textit{chat}, sesi, dan peramalan \\
+\hline
+\texttt{src/rules/engine/} & Mesin aturan, klasifikasi maksud, pemroses kueri, dan pembangkit bahasa alami \\
+\hline
+\texttt{src/rules/databases/} & Definisi aturan per domain basis data \\
+\hline
+\texttt{src/rules/config/} & Registri aturan dan konfigurasi pemetaan tabel \\
+\hline
+\texttt{src/middleware/} & \textit{Middleware} autentikasi JWT dan penanganan kesalahan \\
+\hline
+\texttt{src/utils/} & Utilitas: \textit{logger}, \textit{cache}, dan fungsi pembantu \\
+\hline
+\end{longtable}

@@ -1,0 +1,39 @@
+\begin{longtable}{|p{1.5cm}|p{4cm}|p{7cm}|}
+\caption{Rute API Sistem BrightAI} \label{tab:api-routes} \\
+\hline
+\textbf{Metode} & \textbf{\textit{Endpoint}} & \textbf{Fungsi} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Metode} & \textbf{\textit{Endpoint}} & \textbf{Fungsi} \\
+\hline
+\endhead
+\hline
+\endfoot
+POST & \texttt{/api/auth/register} & Registrasi pengguna baru \\
+\hline
+POST & \texttt{/api/auth/login} & Autentikasi dan penerbitan token JWT \\
+\hline
+GET & \texttt{/api/auth/profile} & Mengambil profil pengguna (memerlukan token) \\
+\hline
+PUT & \texttt{/api/auth/profile} & Memperbarui profil pengguna \\
+\hline
+PUT & \texttt{/api/auth/password} & Mengubah kata sandi \\
+\hline
+POST & \texttt{/api/chat/message} & Mengirim pesan ke \textit{chatbot} dan menerima respons \\
+\hline
+GET & \texttt{/api/chat/history} & Mengambil riwayat percakapan pengguna \\
+\hline
+GET & \texttt{/api/chat/session/:id} & Mengambil pesan dalam satu sesi percakapan \\
+\hline
+DELETE & \texttt{/api/chat/history} & Menghapus riwayat percakapan \\
+\hline
+GET & \texttt{/api/chat/capabilities} & Mengambil daftar kemampuan dan aturan yang tersedia \\
+\hline
+GET & \texttt{/api/sessions} & Mengambil daftar sesi percakapan \\
+\hline
+POST & \texttt{/api/forecast/*} & Meneruskan permintaan peramalan ke layanan ML \\
+\hline
+GET & \texttt{/api/telkom/health} & Pemeriksaan kesehatan (\textit{health check}) sistem \\
+\hline
+\end{longtable}

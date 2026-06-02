@@ -1,0 +1,42 @@
+\begin{longtable}{|c|p{3cm}|p{4cm}|p{4.5cm}|}
+\caption{Analisis Risiko dan Strategi Mitigasi} \label{tab:risiko} \\
+\hline
+\textbf{No} & \textbf{Risiko} & \textbf{Dampak} & \textbf{Strategi Mitigasi} \\
+\hline
+\endfirsthead
+\multicolumn{4}{c}%
+{\tablename\ \thetable\ -- \textit{Lanjutan dari halaman sebelumnya}} \\
+\hline
+\textbf{No} & \textbf{Risiko} & \textbf{Dampak} & \textbf{Strategi Mitigasi} \\
+\hline
+\endhead
+\hline \multicolumn{4}{r}{\textit{Bersambung ke halaman berikutnya}} \\
+\endfoot
+\hline
+\endlastfoot
+
+1 & Keterbatasan data historis untuk pelatihan model peramalan & Akurasi model peramalan tidak mencapai target yang ditetapkan & Menggunakan teknik augmentasi data, transfer learning dari model pre-trained, atau menyesuaikan horizon prediksi sesuai ketersediaan data \\
+\hline
+
+2 & Ketidakseimbangan distribusi kelas \textit{intent} & Performa klasifikasi buruk pada kelas minoritas & Menerapkan teknik \textit{oversampling} (SMOTE), \textit{undersampling}, atau \textit{class weighting} pada proses pelatihan \\
+\hline
+
+3 & Variasi bahasa alami pengguna di luar cakupan pola yang didefinisikan & Tingkat \textit{fallback} tinggi dan pengalaman pengguna menurun & Memperluas cakupan pola secara iteratif berdasarkan log percakapan dan umpan balik pengguna \\
+\hline
+
+4 & Keterbatasan sumber daya komputasi untuk pelatihan model & Waktu pelatihan model melebihi jadwal yang direncanakan & Menggunakan layanan \textit{cloud computing} dengan GPU, mengoptimalkan arsitektur model, atau menggunakan teknik \textit{transfer learning} \\
+\hline
+
+5 & Kendala akses ke \textit{Enterprise Data Warehouse} perusahaan & Data pengujian tidak representatif dengan kondisi produksi & Menggunakan data sintetis atau data anonim yang mewakili karakteristik data nyata untuk pengembangan dan pengujian \\
+\hline
+
+6 & Perubahan kebutuhan pengguna selama pengembangan & Fitur yang dikembangkan tidak sesuai ekspektasi pengguna akhir & Menerapkan pendekatan iteratif dengan evaluasi berkala bersama pemangku kepentingan dan penyesuaian prioritas \\
+\hline
+
+7 & Ketergantungan pada pustaka atau \textit{framework} pihak ketiga & Ketidakcocokan versi atau fitur yang sudah tidak didukung menghambat pengembangan & Mendokumentasikan versi dependensi, menggunakan \textit{virtual environment}, dan menyiapkan alternatif pustaka \\
+\hline
+
+8 & Keterbatasan akses responden validasi internal & Evaluasi kebergunaan hanya dapat dilakukan oleh kelompok pengguna terbatas & Mengutamakan validasi mendalam dari tim \textit{Data Management} sebagai pengguna kunci, dan memperluas cakupan validasi secara bertahap \\
+\hline
+
+\end{longtable}
