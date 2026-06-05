@@ -1,0 +1,19 @@
+\contentsline {myequations}{\numberline {II.3}Makro-Rata Presisi, Daya Ingat, dan Skor-F1}{21}{equation.2.3}%
+\contentsline {myequations}{\numberline {II.5}Mikro-Rata Presisi dan Daya Ingat}{21}{equation.2.5}%
+\contentsline {myequations}{\numberline {II.6}Dekomposisi Aditif Deret Waktu (\textit {Prophet})}{33}{equation.2.6}%
+\contentsline {myequations}{\numberline {II.12}Persamaan Gerbang LSTM}{34}{equation.2.12}%
+\contentsline {myequations}{\numberline {II.16}Persamaan Gerbang GRU}{35}{equation.2.16}%
+\contentsline {myequations}{\numberline {II.17}\textit {Mean Absolute Error} (MAE)}{44}{equation.2.17}%
+\contentsline {myequations}{\numberline {II.18}\textit {Root Mean Square Error} (RMSE)}{44}{equation.2.18}%
+\contentsline {myequations}{\numberline {II.19}\textit {Symmetric Mean Absolute Percentage Error} (sMAPE)}{45}{equation.2.19}%
+\contentsline {myequations}{\numberline {II.20}\textit {Mean Absolute Scaled Error} (MASE)}{45}{equation.2.20}%
+\contentsline {myequations}{\numberline {II.21}\textit {Skill Score} terhadap Garis Dasar}{45}{equation.2.21}%
+\contentsline {myequations}{\numberline {IV.1}Presisi Makro}{115}{equation.4.1}%
+\contentsline {myequations}{\numberline {IV.2}Daya Ingat Makro}{115}{equation.4.2}%
+\contentsline {myequations}{\numberline {IV.3}Skor-F1 Makro}{115}{equation.4.3}%
+\contentsline {myequations}{\numberline {IV.4}BLEU \textit {Score}}{116}{equation.4.4}%
+\contentsline {myequations}{\numberline {IV.5}MAE (\textit {Mean Absolute Error})}{117}{equation.4.5}%
+\contentsline {myequations}{\numberline {IV.6}RMSE (\textit {Root Mean Squared Error})}{117}{equation.4.6}%
+\contentsline {myequations}{\numberline {IV.7}sMAPE (\textit {Symmetric Mean Absolute Percentage Error})}{117}{equation.4.7}%
+\contentsline {myequations}{\numberline {IV.8}MASE (\textit {Mean Absolute Scaled Error})}{118}{equation.4.8}%
+\contentsline {myequations}{\numberline {IV.9}\textit {Skill Score}}{118}{equation.4.9}%

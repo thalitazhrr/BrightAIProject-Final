@@ -450,19 +450,19 @@
 \contentsline {table}{\numberline {V.2}{\ignorespaces Konfigurasi \textit {Connection Pool} Oracle Database}}{125}{table.caption.48}%
 \contentsline {table}{\numberline {V.3}{\ignorespaces Rute API Sistem BrightAI}}{125}{table.5.3}%
 \contentsline {table}{\numberline {V.4}{\ignorespaces Komponen Struktur Definisi Aturan}}{127}{table.caption.49}%
-\contentsline {table}{\numberline {V.5}{\ignorespaces Daftar \textit {Intent} yang Diimplementasikan}}{128}{table.5.5}%
-\contentsline {table}{\numberline {V.6}{\ignorespaces Contoh Pemetaan Subjek Aturan}}{130}{table.caption.50}%
-\contentsline {table}{\numberline {V.7}{\ignorespaces Struktur Direktori Layanan \textit {Machine Learning}}}{131}{table.caption.51}%
-\contentsline {table}{\numberline {V.8}{\ignorespaces Konfigurasi \textit {Hyperparameter} Model Terimplementasi}}{132}{table.caption.52}%
-\contentsline {table}{\numberline {V.9}{\ignorespaces Target KPI Metrik Evaluasi Terimplementasi}}{134}{table.caption.53}%
-\contentsline {table}{\numberline {V.10}{\ignorespaces Komponen Utama \textit {Frontend}}}{135}{table.caption.54}%
-\contentsline {table}{\numberline {V.11}{\ignorespaces Ringkasan Komponen Sistem yang Terimplementasi}}{136}{table.caption.55}%
+\contentsline {table}{\numberline {V.5}{\ignorespaces Daftar \textit {Intent} yang Diimplementasikan}}{129}{table.5.5}%
+\contentsline {table}{\numberline {V.6}{\ignorespaces Contoh Pemetaan Subjek Aturan}}{131}{table.caption.52}%
+\contentsline {table}{\numberline {V.7}{\ignorespaces Struktur Direktori Layanan \textit {Machine Learning}}}{133}{table.caption.54}%
+\contentsline {table}{\numberline {V.8}{\ignorespaces Konfigurasi \textit {Hyperparameter} Model Terimplementasi}}{135}{table.caption.56}%
+\contentsline {table}{\numberline {V.9}{\ignorespaces Target KPI Metrik Evaluasi Terimplementasi}}{139}{table.caption.59}%
+\contentsline {table}{\numberline {V.10}{\ignorespaces Komponen Utama \textit {Frontend}}}{139}{table.caption.60}%
+\contentsline {table}{\numberline {V.11}{\ignorespaces Ringkasan Komponen Sistem yang Terimplementasi}}{140}{table.caption.61}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {VI.1}{\ignorespaces Cakupan Kata Kunci per \textit {Intent}}}{140}{table.caption.56}%
-\contentsline {table}{\numberline {VI.2}{\ignorespaces Metrik Evaluasi yang Digunakan}}{143}{table.caption.57}%
-\contentsline {table}{\numberline {VI.3}{\ignorespaces Perbandingan Hasil Evaluasi Model Peramalan pada Metrik \textit {Avg Install Days}}}{144}{table.caption.58}%
-\contentsline {table}{\numberline {VI.4}{\ignorespaces Rekap Umpan Balik Pengguna Internal Tim \textit {Data Management}}}{149}{table.caption.59}%
-\contentsline {table}{\numberline {VI.5}{\ignorespaces Contoh Kueri Uji dan Evaluasi Respons Sistem}}{150}{table.caption.60}%
+\contentsline {table}{\numberline {VI.1}{\ignorespaces Cakupan Kata Kunci per \textit {Intent}}}{144}{table.caption.62}%
+\contentsline {table}{\numberline {VI.2}{\ignorespaces Metrik Evaluasi yang Digunakan}}{146}{table.caption.63}%
+\contentsline {table}{\numberline {VI.3}{\ignorespaces Perbandingan Hasil Evaluasi Model Peramalan pada Metrik \textit {Avg Install Days}}}{147}{table.caption.64}%
+\contentsline {table}{\numberline {VI.4}{\ignorespaces Rekap Umpan Balik Pengguna Internal Tim \textit {Data Management}}}{152}{table.caption.65}%
+\contentsline {table}{\numberline {VI.5}{\ignorespaces Contoh Kueri Uji dan Evaluasi Respons Sistem}}{152}{table.caption.66}%
 \addvspace {10\p@ }
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
