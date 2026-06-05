@@ -65,14 +65,21 @@ class SessionModel {
         const query = `
         SELECT *
         FROM (
-            SELECT SESSION_ID, USER_ID, SESSION_NAME, STARTED_AT, MESSAGE_COUNT
-            FROM ${this.schema}.${this.tableName}
-            WHERE USER_ID = :user_id AND IS_ACTIVE = 1
-            ORDER BY STARTED_AT DESC
+            SELECT s.SESSION_ID, s.USER_ID, s.SESSION_NAME, s.STARTED_AT, s.MESSAGE_COUNT,
+                   c.MESSAGE as LAST_MESSAGE
+            FROM ${this.schema}.${this.tableName} s
+            LEFT JOIN (
+                SELECT SESSION_ID, MESSAGE,
+                       ROW_NUMBER() OVER (PARTITION BY SESSION_ID ORDER BY CREATED_AT DESC) as rn
+                FROM ${this.schema}.BRIGHTAI_CHAT
+                WHERE MESSAGE_TYPE = 'assistant'
+            ) c ON s.SESSION_ID = c.SESSION_ID AND c.rn = 1
+            WHERE s.USER_ID = :user_id AND s.IS_ACTIVE = 1
+            ORDER BY s.STARTED_AT DESC
         )
         WHERE ROWNUM <= ${limit}
         `;
-        
+
         const result = await executeQuery(query, { user_id }, this.database);
         return result;
     } catch (error) {

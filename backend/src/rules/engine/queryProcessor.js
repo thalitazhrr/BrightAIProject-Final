@@ -12,7 +12,7 @@ class QueryProcessor {
           if (rule.PATTERN_MATCHING && rule.PATTERN_MATCHING.checkMatch) {
             const matchResult = rule.PATTERN_MATCHING.checkMatch(userInput);
             
-            if (matchResult.matches && matchResult.confidence >= 70) {
+            if (matchResult.matches && matchResult.confidence >= 40) {
               matches.push({
                 rule: rule,
                 confidence: matchResult.confidence,
@@ -26,10 +26,28 @@ class QueryProcessor {
       }
       
       if (matches.length === 0) {
+        // Second pass: collect partial matches below threshold for suggestions
+        const partialMatches = [];
+        for (const rule of rules) {
+          try {
+            if (rule.PATTERN_MATCHING && rule.PATTERN_MATCHING.checkMatch) {
+              const matchResult = rule.PATTERN_MATCHING.checkMatch(userInput);
+              if (matchResult.confidence > 0 && matchResult.confidence < 70) {
+                partialMatches.push({
+                  description: rule.RULE_META.DESCRIPTION,
+                  category:    rule.RULE_META.CATEGORY,
+                  confidence:  matchResult.confidence
+                });
+              }
+            }
+          } catch (e) { /* skip */ }
+        }
+        partialMatches.sort((a, b) => b.confidence - a.confidence);
+
         return {
           success: false,
           reason: 'no_matching_rule',
-          message: 'Tidak ditemukan rule yang sesuai dengan pertanyaan Anda'
+          partialMatches: partialMatches.slice(0, 3)
         };
       }
       
@@ -57,16 +75,16 @@ class QueryProcessor {
   }
 
   isWelcomeQuery(userInput) {
+    // Only pure greetings — not help requests or short analytical queries
     const welcomeKeywords = [
-      'hai', 'hello', 'hi', 'selamat', 'halo', 'apa kabar',
-      'welcome', 'bantuan', 'help', 'mulai', 'start'
+      'hai', 'hello', 'hi', 'selamat', 'halo', 'apa kabar', 'welcome'
     ];
 
     const lowerInput = userInput.toLowerCase().trim();
     return welcomeKeywords.some(keyword => {
       const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       return new RegExp(`(?<![a-z])${escaped}(?![a-z])`, 'i').test(lowerInput);
-    }) || lowerInput.length < 10;
+    }) || lowerInput.length <= 4;
   }
 
   isHelpQuery(userInput) {

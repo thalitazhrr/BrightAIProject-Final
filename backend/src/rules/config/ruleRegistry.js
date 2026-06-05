@@ -5,8 +5,8 @@ class RuleRegistry {
       BRIGHTAI_SALES: {
         connection: 'DADBS',
         schema: 'DWH_MOIS.BRIGHTAI_SALES',
-        table: 'BRIGHTAI_',
-        rules_count: 11,
+        table: 'BRIGHTAI_SALES',
+        rules_count: 12,
         rule_prefix: 'sales'
       },
       BRIGHTAI_DAPROS: {

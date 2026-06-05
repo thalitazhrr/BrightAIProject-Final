@@ -121,6 +121,135 @@ export const CATEGORIES = [
   },
 ];
 
+// ─── Geographic scope options ──────────────────────────────────────────────────
+export const GEO_OPTIONS = {
+  regional: [
+    { label: 'Regional 1', dbValue: 'REGIONAL 1', tregValue: 'TREG 1' },
+    { label: 'Regional 2', dbValue: 'REGIONAL 2', tregValue: 'TREG 2' },
+    { label: 'Regional 3', dbValue: 'REGIONAL 3', tregValue: 'TREG 3' },
+    { label: 'Regional 4', dbValue: 'REGIONAL 4', tregValue: 'TREG 4' },
+    { label: 'Regional 5', dbValue: 'REGIONAL 5', tregValue: 'TREG 5' },
+  ],
+  witel: [
+    { label: 'Aceh',               dbValue: 'ACEH',                  regional: 'REGIONAL 1' },
+    { label: 'Sumut',              dbValue: 'SUMUT',                 regional: 'REGIONAL 1' },
+    { label: 'Sumbar Jambi',       dbValue: 'SUMBAR JAMBI',          regional: 'REGIONAL 1' },
+    { label: 'Riau',               dbValue: 'RIAU',                  regional: 'REGIONAL 1' },
+    { label: 'Sumbagsel',          dbValue: 'SUMBAGSEL',             regional: 'REGIONAL 1' },
+    { label: 'Lampung Bengkulu',   dbValue: 'LAMPUNG BENGKULU',      regional: 'REGIONAL 1' },
+    { label: 'Banten',             dbValue: 'BANTEN',                regional: 'REGIONAL 2' },
+    { label: 'Bekasi Karawang',    dbValue: 'BEKASI KARAWANG',       regional: 'REGIONAL 2' },
+    { label: 'Bandung',            dbValue: 'BANDUNG',               regional: 'REGIONAL 2' },
+    { label: 'Jakarta Centrum',    dbValue: 'JAKARTA CENTRUM',       regional: 'REGIONAL 2' },
+    { label: 'Jakarta Inner',      dbValue: 'JAKARTA INNER',         regional: 'REGIONAL 2' },
+    { label: 'Jakarta Outer',      dbValue: 'JAKARTA OUTER',         regional: 'REGIONAL 2' },
+    { label: 'Priangan Barat',     dbValue: 'PRIANGAN BARAT',        regional: 'REGIONAL 2' },
+    { label: 'Priangan Timur',     dbValue: 'PRIANGAN TIMUR',        regional: 'REGIONAL 2' },
+    { label: 'Bali',               dbValue: 'BALI',                  regional: 'REGIONAL 3' },
+    { label: 'Jatim Barat',        dbValue: 'JATIM BARAT',           regional: 'REGIONAL 3' },
+    { label: 'Jatim Timur',        dbValue: 'JATIM TIMUR',           regional: 'REGIONAL 3' },
+    { label: 'Nusa Tenggara',      dbValue: 'NUSA TENGGARA',         regional: 'REGIONAL 3' },
+    { label: 'Semarang Jateng Utara', dbValue: 'SEMARANG JATENG UTARA', regional: 'REGIONAL 3' },
+    { label: 'Solo Jateng Timur',  dbValue: 'SOLO JATENG TIMUR',     regional: 'REGIONAL 3' },
+    { label: 'Suramadu',           dbValue: 'SURAMADU',              regional: 'REGIONAL 3' },
+    { label: 'Yogya Jateng Selatan', dbValue: 'YOGYA JATENG SELATAN', regional: 'REGIONAL 3' },
+    { label: 'Balikpapan',         dbValue: 'BALIKPAPAN',            regional: 'REGIONAL 4' },
+    { label: 'Kalbar',             dbValue: 'KALBAR',                regional: 'REGIONAL 4' },
+    { label: 'Kalselteng',         dbValue: 'KALSELTENG',            regional: 'REGIONAL 4' },
+    { label: 'Kaltimtara',         dbValue: 'KALTIMTARA',            regional: 'REGIONAL 4' },
+    { label: 'Papua Barat',        dbValue: 'PAPUA BARAT',           regional: 'REGIONAL 5' },
+    { label: 'Papua',              dbValue: 'PAPUA',                 regional: 'REGIONAL 5' },
+    { label: 'Sulbagsel',          dbValue: 'SULBAGSEL',             regional: 'REGIONAL 5' },
+    { label: 'Sulbagteng',         dbValue: 'SULBAGTENG',            regional: 'REGIONAL 5' },
+    { label: 'Sumalut',            dbValue: 'SUMALUT',               regional: 'REGIONAL 5' },
+  ],
+};
+
+// ─── Geo Selector Component ────────────────────────────────────────────────────
+const GeoSelector = ({ theme, geoContext, onGeoChange }) => {
+  const t = theme === 'dark';
+  const scope = geoContext?.scope || 'nasional';
+
+  const scopeBtn = (label, value) => (
+    <button
+      key={value}
+      onClick={() => onGeoChange({ scope: value, dbValue: null, tregValue: null, label: label })}
+      className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors border ${
+        scope === value
+          ? t
+            ? 'bg-blue-600 border-blue-500 text-white'
+            : 'bg-blue-500 border-blue-400 text-white'
+          : t
+            ? 'bg-slate-700/50 border-slate-600/50 text-slate-400 hover:text-white hover:bg-slate-600/60'
+            : 'bg-white border-gray-200 text-gray-500 hover:text-gray-800 hover:bg-gray-50'
+      }`}
+    >
+      {label}
+    </button>
+  );
+
+  return (
+    <div className={`flex flex-wrap items-center gap-2 mb-2.5 px-1`}>
+      <span className={`text-xs font-semibold ${t ? 'text-slate-500' : 'text-gray-400'}`}>Cakupan:</span>
+      {scopeBtn('Nasional', 'nasional')}
+      {scopeBtn('Regional', 'regional')}
+      {scopeBtn('Witel', 'witel')}
+
+      {scope === 'regional' && (
+        <select
+          value={geoContext?.dbValue || ''}
+          onChange={e => {
+            const opt = GEO_OPTIONS.regional.find(r => r.dbValue === e.target.value);
+            if (opt) onGeoChange({ scope: 'regional', dbValue: opt.dbValue, tregValue: opt.tregValue, label: opt.label });
+          }}
+          className={`text-xs rounded-lg px-2 py-1 border focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+            t
+              ? 'bg-slate-700 border-slate-600 text-white'
+              : 'bg-white border-gray-200 text-gray-800'
+          }`}
+        >
+          <option value="">Pilih Regional…</option>
+          {GEO_OPTIONS.regional.map(r => (
+            <option key={r.dbValue} value={r.dbValue}>{r.label}</option>
+          ))}
+        </select>
+      )}
+
+      {scope === 'witel' && (
+        <select
+          value={geoContext?.dbValue || ''}
+          onChange={e => {
+            const opt = GEO_OPTIONS.witel.find(w => w.dbValue === e.target.value);
+            if (opt) onGeoChange({ scope: 'witel', dbValue: opt.dbValue, label: opt.label });
+          }}
+          className={`text-xs rounded-lg px-2 py-1 border focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+            t
+              ? 'bg-slate-700 border-slate-600 text-white'
+              : 'bg-white border-gray-200 text-gray-800'
+          }`}
+        >
+          <option value="">Pilih Witel…</option>
+          {['REGIONAL 1','REGIONAL 2','REGIONAL 3','REGIONAL 4','REGIONAL 5'].map(reg => (
+            <optgroup key={reg} label={reg.replace('REGIONAL', 'Regional')}>
+              {GEO_OPTIONS.witel.filter(w => w.regional === reg).map(w => (
+                <option key={w.dbValue} value={w.dbValue}>{w.label}</option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      )}
+
+      {scope !== 'nasional' && geoContext?.label && geoContext?.dbValue && (
+        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+          t ? 'bg-blue-600/20 text-blue-300' : 'bg-blue-50 text-blue-600'
+        }`}>
+          {geoContext.label}
+        </span>
+      )}
+    </div>
+  );
+};
+
 // ─── Color map ─────────────────────────────────────────────────────────────────
 const COLOR = {
   blue: {
@@ -299,7 +428,7 @@ const CategorySelect = ({ theme, onSelect, onBack }) => {
 };
 
 // ─── Step: Question List + Editable Input ─────────────────────────────────────
-const QuestionSelect = ({ theme, category, inputValue, onInputChange, onSend, onBack }) => {
+const QuestionSelect = ({ theme, category, inputValue, onInputChange, onSend, onBack, geoContext, onGeoChange }) => {
   const t = theme === 'dark';
   const cat = CATEGORIES.find(c => c.id === category);
   const questions = GUIDED_QUESTIONS[category] || [];
@@ -333,6 +462,9 @@ const QuestionSelect = ({ theme, category, inputValue, onInputChange, onSend, on
         </div>
         <BackBtn theme={theme} onClick={onBack}>Ganti Kategori</BackBtn>
       </div>
+
+      {/* Geographic scope selector */}
+      <GeoSelector theme={theme} geoContext={geoContext} onGeoChange={onGeoChange} />
 
       {/* Question suggestion chips */}
       <div className="flex flex-col gap-1.5 max-h-36 overflow-y-auto pr-1 mb-3">
@@ -468,6 +600,8 @@ const GuidedFlow = ({
   onGantiKategori,
   onReset,
   onSendToChat,
+  geoContext,
+  onGeoChange,
 }) => {
   switch (guidedStep) {
     case 'mode_select':
@@ -500,6 +634,8 @@ const GuidedFlow = ({
           onInputChange={onInputChange}
           onSend={onSend}
           onBack={() => onBack('category_select')}
+          geoContext={geoContext}
+          onGeoChange={onGeoChange}
         />
       );
 

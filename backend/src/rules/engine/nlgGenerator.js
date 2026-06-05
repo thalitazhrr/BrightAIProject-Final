@@ -107,9 +107,13 @@ function ambil(obj, ...keys) {
   return null;
 }
 
-function extractCtx(data, rule, recordCount, execTime) {
+function extractCtx(data, rule, recordCount, execTime, geoLabel = '') {
   const meta   = rule.RULE_META;
   const subjek = getSubjek(rule);
+  // geoLabelPhrase: inserted after periode, e.g. " di **Witel Aceh**"
+  const geoLabelPhrase = geoLabel ? ` di **${geoLabel}**` : '';
+  // geoScopeWord: replaces "secara nasional" / "seluruh wilayah" when filtered
+  const geoScopeWord   = geoLabel ? `di ${geoLabel}` : 'secara nasional';
   const ctx    = {
     periode: '', mainValue: '-', mainUnit: '', mainLabel: meta.DESCRIPTION,
     subjek, kategori: '',
@@ -120,6 +124,7 @@ function extractCtx(data, rule, recordCount, execTime) {
     insightsBullets: '', hasInsights: false,
     trendProse: '', hasTrend: false,
     database: meta.DATABASE, recordCount, execTime,
+    geoLabel, geoLabelPhrase, geoScopeWord,
   };
 
   if (!data || typeof data !== 'object' || Array.isArray(data)) return ctx;
@@ -297,7 +302,7 @@ function extractCtx(data, rule, recordCount, execTime) {
         ctx.breakdownTable = arrayToTable(
           entri.map(([k, v]) => ({ Segmen: k, ...(typeof v === 'object' ? v : { Nilai: v }) }))
         );
-        ctx.breakdownProse = 'berbagai segmen (lihat tabel)';
+        ctx.breakdownProse = 'berbagai segmen';
       }
     }
   }
@@ -406,23 +411,42 @@ function extractCtx(data, rule, recordCount, execTime) {
  * @param {string} userInput       - pertanyaan asli pengguna (untuk intent detection)
  * @returns {string}               - Markdown siap tampil di chat
  */
-function generate(rule, executionResult, userInput) {
+function generate(rule, executionResult, userInput, geoContext) {
   const meta        = rule.RULE_META;
   const recordCount = executionResult.record_count || 0;
   const execTime    = executionResult.execution_time || 0;
   const data        = executionResult.processed_data || executionResult.data;
 
-  const judul = `## ${meta.DESCRIPTION}`;
+  // Build a formatted geo label, e.g. "Witel Aceh" or "Regional 1"
+  let geoLabel = '';
+  if (geoContext && geoContext.scope !== 'nasional' && geoContext.dbValue) {
+    const raw = geoContext.label || geoContext.dbValue;
+    if (geoContext.scope === 'witel' && !/^witel\b/i.test(raw)) {
+      geoLabel = `Witel ${raw}`;
+    } else {
+      geoLabel = raw;
+    }
+  }
+
+  const judulGeo = geoLabel ? ` — ${geoLabel}` : '';
+  const judul    = `## ${meta.DESCRIPTION}${judulGeo}`;
 
   if (recordCount === 0) {
-    return `${judul}\n\nTidak ditemukan data yang sesuai dengan kriteria pencarian. ` +
+    const scopeHint = geoLabel ? ` untuk ${geoLabel}` : '';
+    return `${judul}\n\nTidak ditemukan data yang sesuai dengan kriteria pencarian${scopeHint}. ` +
       'Pastikan parameter periode dan wilayah yang digunakan sudah benar.';
   }
 
   // Data mentah (array of rows) — tidak ada formatIndonesianResponse
   if (Array.isArray(data)) {
     const tabel = arrayToTable(data);
-    const intro = `Hasil analisis ${getSubjek(rule)} menampilkan **${recordCount} rekaman data** berikut.`;
+    const scopeNote = geoLabel ? ` di **${geoLabel}**` : '';
+    if (!tabel) {
+      const scopeHint = geoLabel ? ` untuk ${geoLabel}` : '';
+      return `${judul}\n\nData ditemukan${scopeHint} namun tidak dapat ditampilkan karena format tidak dikenali. ` +
+        'Silakan hubungi administrator atau coba pertanyaan lain.';
+    }
+    const intro = `Hasil analisis ${getSubjek(rule)}${scopeNote} menampilkan **${recordCount} rekaman data** berikut.`;
     return [judul, intro, tabel].filter(Boolean).join('\n\n') +
       `\n\n---\n_Sumber: ${meta.DATABASE} · ${recordCount} rekaman · ${execTime}\u00A0ms_`;
   }
@@ -434,7 +458,7 @@ function generate(rule, executionResult, userInput) {
   }
 
   // Data terstruktur → extract ctx → select template → generate
-  const ctx      = extractCtx(data, rule, recordCount, execTime);
+  const ctx      = extractCtx(data, rule, recordCount, execTime, geoLabel);
   const { intent } = classify(userInput || '');
   const template = getTemplate(intent, userInput || '');
   const body     = template(ctx);

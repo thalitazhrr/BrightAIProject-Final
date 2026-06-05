@@ -7,13 +7,13 @@ class ResponseBuilder {
    * Build a Markdown string response from a rule execution result.
    * Returns a plain string so the chat frontend can render it directly.
    */
-  async buildResponse(executionResult, rule, userInput = '') {
+  async buildResponse(executionResult, rule, userInput = '', geoContext = null) {
     try {
       if (!executionResult.success) {
         throw new Error('Execution result was not successful');
       }
 
-      const markdown = nlgGenerator.generate(rule, executionResult, userInput);
+      const markdown = nlgGenerator.generate(rule, executionResult, userInput, geoContext);
       return markdown;
 
     } catch (error) {

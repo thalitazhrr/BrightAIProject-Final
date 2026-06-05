@@ -1,104 +1,139 @@
 // src/rules/templates/welcomeTemplates.js
-const welcomeTemplates = {
-  welcome: {
-    initial: "Selamat datang di BrightAI. Saya adalah asisten analisis data Telkom yang dapat membantu Anda menganalisis data dari berbagai database perusahaan.",
-    
-    capabilities: "Saya dapat membantu analisis data dari:",
-    
-    databases: [
-      " BRIGHTAI_SALES: Analisis order dan sales HSI\n",
-      " BRIGHTAI_DAPROS: Profil dan segmentasi customer HSI\n", 
-      " BRIGHTAI_TARGET: Analisis target dan performance\n",
-      " BRIGHTAI_REVENUE: Analisis revenue dan billing\n",
-      " BRIGHTAI_CT0_NAL: Analisis churn dan customer lifecycle\n"
-    ],
-    
+
+// ── Katalog topik lengkap ──────────────────────────────────────────────────────
+const TOPIC_CATALOG = [
+  {
+    label: '[1] Order & Sales HSI',
+    keywords: ['order', 'total order', 'order HSI', 'bisnis', 'basic', 'fulfillment',
+               'channel', 'channel performance', 'instalasi', 'install', 'penetrasi',
+               'bandwidth', 'tren order', 'growth', 'seasonal', 'pertumbuhan order'],
     examples: [
-      "Contoh pertanyaan yang bisa Anda ajukan:",
-      "- Berapa total order HSI bisnis dan basic bulan ini?\n",
-      "- Segmentasi pelanggan HSI berdasarkan speed dan revenue\n",
-      "- Achievement rate target realisasi HSI per regional?\n",
-      "- Tren revenue HSI bulanan dan pertumbuhannya\n",
-      "- Analisis tingkat churn pelanggan internet per regional\n"
-    ],
-    
-    instruction: "Silakan ajukan pertanyaan analisis data yang Anda butuhkan."
+      'Berapa total order HSI bisnis dan basic bulan ini?',
+      'Bagaimana tren order HSI per bandwidth dalam 6 bulan terakhir?',
+      'Analisis channel performance untuk HSI',
+      'Berapa rata-rata waktu instalasi HSI per regional?',
+      'Penetrasi HSI per wilayah bulan ini',
+    ]
   },
-  
-  fallback: {
-    no_rule_match: "Maaf, pertanyaan Anda belum sesuai dengan rule analisis yang tersedia. Silakan coba dengan kata kunci yang lebih spesifik seperti 'analisis order HSI', 'churn analysis', 'revenue trend', dll.",
-    
-    general_help: "Untuk bantuan yang lebih spesifik, Anda dapat menggunakan kata kunci berikut berdasarkan jenis analisis:",
-    
-    help_categories: {
-      sales_analysis: "Gunakan kata kunci: 'order', 'sales', 'penetrasi', 'fulfillment', 'channel performance'",
-      customer_analysis: "Gunakan kata kunci: 'customer segmentation', 'profil customer', 'loyalty', 'retention'",
-      performance_analysis: "Gunakan kata kunci: 'target', 'realisasi', 'performance', 'achievement'",
-      revenue_analysis: "Gunakan kata kunci: 'revenue', 'billing', 'gl account', 'lifecycle'",
-      churn_analysis: "Gunakan kata kunci: 'churn', 'ct0', 'divisi', 'regional churn'"
-    },
-    
-    clarification: "Jika masih membutuhkan bantuan, coba jelaskan lebih detail data apa yang ingin Anda analisis."
+  {
+    label: '[2] Revenue HSI',
+    keywords: ['revenue', 'pendapatan', 'billing', 'recurring', 'gl account',
+               'one-time', 'tren revenue', 'revenue per regional', 'revenue lifecycle',
+               'cross regional revenue'],
+    examples: [
+      'Tren revenue HSI bulanan dan pertumbuhannya',
+      'Breakdown revenue berdasarkan GL account HSI',
+      'Perbandingan recurring vs one-time revenue HSI',
+      'Revenue HSI per regional bulan ini',
+    ]
   },
-  
-  error: {
-    database_error: "Terjadi kesalahan dalam mengakses database. Silakan coba lagi dalam beberapa saat.",
-    processing_error: "Terjadi kesalahan dalam memproses permintaan Anda. Silakan coba dengan pertanyaan yang lebih sederhana.",
-    timeout_error: "Permintaan memakan waktu terlalu lama. Silakan coba lagi atau gunakan filter yang lebih spesifik."
+  {
+    label: '[3] Profil & Segmentasi Pelanggan',
+    keywords: ['pelanggan', 'customer', 'segmentasi', 'segmen', 'profil pelanggan',
+               'loyalitas', 'loyalty', 'distribusi bandwidth', 'klaster', 'cluster',
+               'retensi', 'retention', 'nilai pelanggan'],
+    examples: [
+      'Segmentasi pelanggan HSI berdasarkan speed dan revenue',
+      'Profil customer HSI per wilayah',
+      'Distribusi bandwidth pelanggan HSI aktif',
+      'Analisis loyalitas pelanggan HSI',
+    ]
+  },
+  {
+    label: '[4] Target & Realisasi HSI',
+    keywords: ['target', 'realisasi', 'achievement', 'pencapaian', 'KPI',
+               'target vs actual', 'gap target', 'achievement rate'],
+    examples: [
+      'Achievement rate target realisasi HSI per regional?',
+      'Perbandingan target vs realisasi HSI bulan ini',
+      'Gap antara target dan realisasi HSI per witel',
+    ]
+  },
+  {
+    label: '[5] Analisis Churn',
+    keywords: ['churn', 'cabut', 'berhenti berlangganan', 'kehilangan pelanggan',
+               'CT0', 'churn rate', 'churn regional', 'tren churn', 'risiko churn'],
+    examples: [
+      'Analisis tingkat churn pelanggan internet per regional',
+      'Tren churn HSI 6 bulan terakhir',
+      'Wilayah mana yang memiliki churn rate tertinggi?',
+    ]
   }
-};
+];
 
-function generateWelcomeMessage() {
-  const welcome = welcomeTemplates.welcome;
+// ── Fungsi helper ──────────────────────────────────────────────────────────────
 
-  // Use "- " prefix so each item is detected as a list entry by the markdown parser
-  const dbList = welcome.databases.map(db => `- ${db}`).join('\n');
-  const exampleList = welcome.examples.slice(1).join('\n');
-
-  const formattedMessage = `**${welcome.initial}**
-
-**${welcome.capabilities}**
-
-${dbList}
-
-**${welcome.examples[0]}**
-${exampleList}
-
-${welcome.instruction}`;
-
-  return formattedMessage;
+function _formatTopicCatalog() {
+  return TOPIC_CATALOG.map(topic => {
+    const keywordStr = topic.keywords.slice(0, 6).map(k => `\`${k}\``).join(', ');
+    const exampleStr = topic.examples.map(e => `  - ${e}`).join('\n');
+    return `**${topic.label}**\nKata kunci: ${keywordStr}\nContoh pertanyaan:\n${exampleStr}`;
+  }).join('\n\n');
 }
 
-function generateFallbackResponse(reason = 'no_rule_match') {
-  const fallback = welcomeTemplates.fallback;
-  
-  // Format as a complete message string for better display
-  const baseMessage = fallback[reason] || fallback.no_rule_match;
-  
-  const helpCategories = Object.entries(fallback.help_categories)
-    .map(([key, value]) => `**${key.replace('_', ' ').toUpperCase()}**: ${value}`)
-    .join('\n\n');
-  
-  const formattedMessage = `${baseMessage}
+function _formatPartialSuggestions(partialMatches) {
+  if (!partialMatches || partialMatches.length === 0) return null;
+  const lines = partialMatches.map(m => `  - ${m.description}`);
+  return `Mungkin kamu bermaksud menanyakan:\n${lines.join('\n')}`;
+}
 
-**${fallback.general_help}**
+// ── Public functions ───────────────────────────────────────────────────────────
 
-${helpCategories}
+function generateWelcomeMessage() {
+  const topicList = TOPIC_CATALOG.map(t => `- **${t.label}**`).join('\n');
+  const exampleList = TOPIC_CATALOG.flatMap(t => t.examples.slice(0, 1))
+    .map(e => `- ${e}`).join('\n');
 
-${fallback.clarification}`;
-  
-  return formattedMessage;
+  return `**Selamat datang di BrightAI!** Saya adalah asisten analisis data Telkom yang siap membantu menganalisis performa HSI dari berbagai dimensi.
+
+**Topik yang bisa saya bantu:**
+
+${topicList}
+
+**Contoh pertanyaan:**
+${exampleList}
+
+Silakan ajukan pertanyaan, atau gunakan **Guided Flow** untuk memilih topik dan wilayah secara langsung.`;
+}
+
+function generateFallbackResponse(reason = 'no_matching_rule', partialMatches = []) {
+  if (reason === 'processing_error') {
+    return generateErrorResponse('processing_error');
+  }
+
+  const suggestionBlock = _formatPartialSuggestions(partialMatches);
+  const catalogBlock    = _formatTopicCatalog();
+
+  let opening;
+  if (suggestionBlock) {
+    opening = `Pertanyaan kamu belum cukup spesifik untuk diproses. ${suggestionBlock}
+
+Jika itu bukan yang kamu maksud, berikut panduan lengkap topik yang tersedia:`;
+  } else {
+    opening = `Maaf, pertanyaan kamu belum cocok dengan topik yang tersedia di BrightAI. Pastikan menggunakan kata kunci yang sesuai.\n\nBerikut panduan lengkap topik yang bisa ditanyakan:`;
+  }
+
+  return `${opening}
+
+---
+
+${catalogBlock}
+
+---
+
+**Tips:** Gunakan **Guided Flow** (tombol di kiri) untuk memilih topik, pertanyaan, dan wilayah secara langsung tanpa perlu mengetik manual.`;
 }
 
 function generateErrorResponse(errorType = 'processing_error') {
-  const error = welcomeTemplates.error;
-  
-  // Return formatted error message as string
-  return error[errorType] || error.processing_error;
+  const errors = {
+    database_error:    'Terjadi kesalahan saat mengakses database. Silakan coba lagi dalam beberapa saat.',
+    processing_error:  'Terjadi kesalahan dalam memproses permintaan. Silakan coba lagi atau sederhanakan pertanyaan kamu.',
+    timeout_error:     'Permintaan memakan waktu terlalu lama. Coba lagi atau gunakan filter yang lebih spesifik.'
+  };
+  return errors[errorType] || errors.processing_error;
 }
 
 module.exports = {
-  welcomeTemplates,
   generateWelcomeMessage,
   generateFallbackResponse,
   generateErrorResponse

@@ -204,21 +204,34 @@ def fetch_revenue_hsi(
 ) -> pd.DataFrame:
     """
     Monthly total revenue HSI.
-    Sumber: BRIGHTAI_REVENUE. View tidak memiliki REGIONAL_BILL/WITEL_BILL,
-    sehingga hanya support level NASIONAL (agregat semua).
+    Sumber: BRIGHTAI_REVENUE — REGIONAL_BILL 'REG-1'..'REG-5', WITEL_BILL = nama witel.
     Kolom output: periode, regional, witel, value
     """
+    w_regional = _where_reg_format("REGIONAL_BILL", regional)
+    w_witel    = _where_witel("WITEL_BILL", witel)
+
+    if witel:
+        group_cols   = "YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL"
+        select_extra = "REGIONAL_BILL AS regional, WITEL_BILL AS witel"
+    elif regional:
+        group_cols   = "YEAR_ID, MONTH_ID, REGIONAL_BILL"
+        select_extra = "REGIONAL_BILL AS regional, NULL AS witel"
+    else:
+        group_cols   = "YEAR_ID, MONTH_ID"
+        select_extra = "'NASIONAL' AS regional, NULL AS witel"
+
     sql = f"""
         SELECT
             YEAR_ID                               AS year_id,
             MONTH_ID                              AS month_id,
-            'NASIONAL'                            AS regional,
-            NULL                                  AS witel,
+            {select_extra},
             SUM(REVENUE)                          AS value
         FROM {config.SCHEMA_REVENUE}
         WHERE GROUP4 = 'High Speed Internet'
           AND REVENUE > 0
-        GROUP BY YEAR_ID, MONTH_ID
+          {w_regional}
+          {w_witel}
+        GROUP BY {group_cols}
         ORDER BY year_id, month_id
     """
     df = _query(sql)
@@ -418,22 +431,35 @@ def fetch_recurring_revenue(
     """
     Monthly recurring revenue HSI (mart_004).
     = SUM(REVENUE) WHERE FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING RECURRING'.
-    Sumber: BRIGHTAI_REVENUE. View tidak memiliki REGIONAL_BILL/WITEL_BILL,
-    sehingga hanya support level NASIONAL (agregat semua).
+    Sumber: BRIGHTAI_REVENUE — REGIONAL_BILL 'REG-1'..'REG-5', WITEL_BILL = nama witel.
     Kolom output: periode, regional, witel, value
     """
+    w_regional = _where_reg_format("REGIONAL_BILL", regional)
+    w_witel    = _where_witel("WITEL_BILL", witel)
+
+    if witel:
+        group_cols   = "YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL"
+        select_extra = "REGIONAL_BILL AS regional, WITEL_BILL AS witel"
+    elif regional:
+        group_cols   = "YEAR_ID, MONTH_ID, REGIONAL_BILL"
+        select_extra = "REGIONAL_BILL AS regional, NULL AS witel"
+    else:
+        group_cols   = "YEAR_ID, MONTH_ID"
+        select_extra = "'NASIONAL' AS regional, NULL AS witel"
+
     sql = f"""
         SELECT
             YEAR_ID                               AS year_id,
             MONTH_ID                              AS month_id,
-            'NASIONAL'                            AS regional,
-            NULL                                  AS witel,
+            {select_extra},
             SUM(REVENUE)                          AS value
         FROM {config.SCHEMA_REVENUE}
         WHERE FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING RECURRING'
           AND GROUP4 = 'High Speed Internet'
           AND REVENUE > 0
-        GROUP BY YEAR_ID, MONTH_ID
+          {w_regional}
+          {w_witel}
+        GROUP BY {group_cols}
         ORDER BY year_id, month_id
     """
     df = _query(sql)

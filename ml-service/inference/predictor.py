@@ -84,6 +84,11 @@ def predict_gru_lstm(
             f"Model belum ditraining: {model_path.name}. "
             "Jalankan POST /forecast/train terlebih dahulu."
         )
+    if not scaler_path.exists():
+        raise FileNotFoundError(
+            f"Scaler belum tersedia: {scaler_path.name}. "
+            "Jalankan POST /forecast/train terlebih dahulu."
+        )
 
     model, ckpt = _load_gru_lstm(model_path)
     scaler      = load_scaler(scaler_path)

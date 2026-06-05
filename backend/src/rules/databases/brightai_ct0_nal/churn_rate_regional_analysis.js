@@ -6,7 +6,7 @@ module.exports = {
     RULE_ID: 'ct0_ebis_001',
     RULE_NAME: 'churn_rate_regional_analysis',
     DESCRIPTION: 'Analisis tingkat churn internet per regional untuk identifikasi area dengan risiko kehilangan pelanggan tertinggi',
-    DATABASE: 'DADBS',
+    DATABASE: 'BRIGHTAI_CT0_NAL',
     CATEGORY: 'churn_analysis',
     COMPLEXITY: 'MEDIUM',
     EXECUTION_PRIORITY: 'HIGH',

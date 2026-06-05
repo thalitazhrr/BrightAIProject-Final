@@ -10,7 +10,7 @@ const forecastNLG = require('../rules/engine/forecastNLG');
 class ChatController {
   async processMessage(req, res) {
     try {
-      const { message, sessionId } = req.body;
+      const { message, sessionId, geoContext } = req.body;
       const userId = req.user.id;
       
       if (!message || !message.trim()) {
@@ -112,7 +112,7 @@ class ChatController {
       }
 
       // Process through rule engine
-      const ruleResult = await ruleEngine.processQuery(trimmedMessage, { userId });
+      const ruleResult = await ruleEngine.processQuery(trimmedMessage, { userId, geoContext });
       
       if (ruleResult.success) {
         responseData.message = ruleResult.response;
@@ -137,7 +137,7 @@ class ChatController {
         });
       } else {
         // No matching rule found
-        response = generateFallbackResponse(ruleResult.reason);
+        response = generateFallbackResponse(ruleResult.reason, ruleResult.partialMatches);
         responseData.message = response;
         responseData.source = 'fallback';
         responseData.processing_time = Date.now() - startTime;

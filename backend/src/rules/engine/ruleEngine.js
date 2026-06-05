@@ -40,7 +40,9 @@ class RuleEngine {
 
       const startTime = Date.now();
       
-      const geoContext = extractGeoContext(userInput);
+      const geoContext = context.geoContext
+        ? context.geoContext
+        : extractGeoContext(userInput);
       const cacheKey = this.generateCacheKey(userInput, geoContext);
       const cachedResult = cache.get(cacheKey);
       if (cachedResult) {
@@ -65,7 +67,7 @@ class RuleEngine {
 
       const executionResult = await this.executeRule(matchResult.rule, userInput, context, geoContext);
       
-      const response = await responseBuilder.buildResponse(executionResult, matchResult.rule, userInput);
+      const response = await responseBuilder.buildResponse(executionResult, matchResult.rule, userInput, geoContext);
       
       const result = {
         success: true,
@@ -89,7 +91,7 @@ class RuleEngine {
         success: false,
         source: 'error',
         error: error.message,
-        processing_time: Date.now() - Date.now()
+        processing_time: Date.now() - startTime
       };
     }
   }
@@ -225,72 +227,82 @@ class RuleEngine {
   /**
    * Line-by-line SQL injection.
    *
-   * Finds the first  FROM DWH_MOIS.xxx  block, locates its WHERE clause, then
-   * tracks parenthesis depth to find the exact end of that WHERE block (right before
-   * GROUP BY / ORDER BY / HAVING  or the CTE-closing  ')' ).
-   * Inserts the filter line at that position.
+   * Finds EVERY  FROM DWH_MOIS.xxx  block in the SQL (handles multi-CTE queries),
+   * locates each block's WHERE clause, then tracks parenthesis depth to find the
+   * insertion point right before  GROUP BY / ORDER BY / HAVING  or the CTE-closing ')'.
+   * Processes injections in reverse line-order so prior splices don't shift later indices.
    */
   _injectFilterIntoSQL(sql, filterClause) {
     const lines = sql.split('\n');
 
-    // Step 1 – find first FROM DWH_MOIS line
-    let fromIdx = -1;
+    // Step 1 – collect ALL FROM DWH_MOIS positions
+    const fromPositions = [];
     for (let i = 0; i < lines.length; i++) {
       if (/\bFROM\s+DWH_MOIS\./i.test(lines[i])) {
-        fromIdx = i;
-        break;
+        fromPositions.push(i);
       }
     }
-    if (fromIdx === -1) return sql;
+    if (fromPositions.length === 0) return sql;
 
-    // Step 2 – find WHERE clause that follows
-    let whereIdx = -1;
-    for (let i = fromIdx + 1; i < lines.length; i++) {
-      if (/^\s*WHERE\b/i.test(lines[i])) {
-        whereIdx = i;
-        break;
+    const injections = []; // { insertIdx, indent }
+
+    for (let fi = 0; fi < fromPositions.length; fi++) {
+      const fromIdx   = fromPositions[fi];
+      // Upper bound for WHERE search: the next FROM DWH_MOIS line (or end of file)
+      const nextFrom  = fromPositions[fi + 1] !== undefined ? fromPositions[fi + 1] : lines.length;
+
+      // Step 2 – find WHERE clause that belongs to THIS FROM block
+      let whereIdx = -1;
+      for (let i = fromIdx + 1; i < nextFrom; i++) {
+        if (/^\s*WHERE\b/i.test(lines[i])) { whereIdx = i; break; }
+        // Stop early if GROUP BY / ORDER BY appears before WHERE (no WHERE in this block)
+        if (/^\s*(GROUP\s+BY|ORDER\s+BY|HAVING)\b/i.test(lines[i])) break;
+      }
+      if (whereIdx === -1) continue; // no WHERE for this FROM → skip
+
+      // Step 3 – scan forward from WHERE to find insertion point
+      let parenDepth = 0;
+      let insertIdx  = -1;
+      for (let i = whereIdx; i < lines.length; i++) {
+        for (const ch of lines[i]) {
+          if (ch === '(') parenDepth++;
+          if (ch === ')') parenDepth--;
+        }
+        // Closing ) of the CTE / subquery
+        if (parenDepth < 0) { insertIdx = i; break; }
+        // End-of-WHERE keywords at depth 0, past the WHERE line itself
+        if (parenDepth === 0 && i > whereIdx &&
+            /^\s*(GROUP\s+BY|ORDER\s+BY|HAVING)\b/i.test(lines[i])) {
+          insertIdx = i; break;
+        }
+      }
+      if (insertIdx === -1) continue;
+
+      // Step 4 – mirror indentation from the nearest preceding AND/WHERE line
+      let indent = '          '; // fallback: 10 spaces
+      for (let i = insertIdx - 1; i >= whereIdx; i--) {
+        const trimmed = lines[i].trimStart();
+        if (trimmed.startsWith('AND ') || /^\s*WHERE\b/i.test(lines[i])) {
+          const m = lines[i].match(/^(\s+)/);
+          if (m) { indent = m[1]; break; }
+        }
+      }
+
+      injections.push({ insertIdx, indent });
+    }
+
+    if (injections.length === 0) return sql;
+
+    // Process in REVERSE order so each splice doesn't shift subsequent indices
+    injections.sort((a, b) => b.insertIdx - a.insertIdx);
+    const seen = new Set();
+    for (const { insertIdx, indent } of injections) {
+      if (!seen.has(insertIdx)) {
+        seen.add(insertIdx);
+        lines.splice(insertIdx, 0, `${indent}${filterClause}`);
       }
     }
-    if (whereIdx === -1) return sql;
 
-    // Step 3 – scan forward from WHERE to find the insertion point
-    // Track paren depth so OVER(…) and IN(…) don't confuse the search.
-    let parenDepth = 0;
-    let insertIdx = -1;
-
-    for (let i = whereIdx; i < lines.length; i++) {
-      for (const ch of lines[i]) {
-        if (ch === '(') parenDepth++;
-        if (ch === ')') parenDepth--;
-      }
-
-      // Closing ) of the CTE / subquery
-      if (parenDepth < 0) {
-        insertIdx = i;
-        break;
-      }
-
-      // End-of-WHERE keywords (only at depth 0 and past the WHERE line itself)
-      if (parenDepth === 0 && i > whereIdx &&
-          /^\s*(GROUP\s+BY|ORDER\s+BY|HAVING)\b/i.test(lines[i])) {
-        insertIdx = i;
-        break;
-      }
-    }
-
-    if (insertIdx === -1) return sql;
-
-    // Step 4 – mirror indentation from the nearest preceding AND/WHERE line
-    let indent = '          '; // fallback: 10 spaces
-    for (let i = insertIdx - 1; i >= whereIdx; i--) {
-      const trimmed = lines[i].trimStart();
-      if (trimmed.startsWith('AND ') || /^\s*WHERE\b/i.test(lines[i])) {
-        const m = lines[i].match(/^(\s+)/);
-        if (m) { indent = m[1]; break; }
-      }
-    }
-
-    lines.splice(insertIdx, 0, `${indent}${filterClause}`);
     return lines.join('\n');
   }
 

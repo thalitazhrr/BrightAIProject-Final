@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
+import {
   Bot, Send, Settings, Sun, Moon, Loader,
   User, X, Trash2, LogOut, RefreshCw,
   Plus, Search, Zap, Clock, Wifi, WifiOff, ChevronDown, ChevronUp, Menu,
-  Eye, EyeOff
+  Eye, EyeOff, MoreVertical, Pin, PinOff, Pencil, Check
 } from 'lucide-react';
 
 // Import services and components
@@ -129,9 +129,7 @@ const loadChatsFromDatabase = async () => {
       id: session.SESSION_ID,
       title: session.SESSION_NAME || 'Percakapan Baru',
       messages: [],
-      lastMessage: session.MESSAGE_COUNT > 0
-        ? `${session.MESSAGE_COUNT} pesan`
-        : 'Percakapan baru',
+      lastMessage: previewText(session.LAST_MESSAGE || '') || 'Percakapan baru',
       createdAt: session.STARTED_AT,
       updatedAt: session.STARTED_AT,
       userId: session.USER_ID,
@@ -558,35 +556,88 @@ const ChatMessage = ({ message, isBot, theme }) => {
 };
 
 // Chat Sidebar Component
-const ChatSidebar = ({ chats, activeChat, setActiveChat, onNewChat, onDeleteChat, theme, isOpen }) => {
-  const [searchQuery, setSearchQuery] = React.useState('');
+const ChatSidebar = ({ chats, activeChat, setActiveChat, onNewChat, onDeleteChat, onRenameChat, theme, isOpen }) => {
+  const [searchQuery, setSearchQuery]   = React.useState('');
+  const [openMenuId, setOpenMenuId]     = React.useState(null);
+  const [renamingId, setRenamingId]     = React.useState(null);
+  const [renameValue, setRenameValue]   = React.useState('');
+  const [pinnedIds, setPinnedIds]       = React.useState(() => {
+    try { return new Set(JSON.parse(localStorage.getItem('pinnedChats') || '[]')); }
+    catch { return new Set(); }
+  });
+  const renameInputRef = React.useRef(null);
+  const menuRef        = React.useRef(null);
 
-  const filteredChats = chats.filter(chat =>
+  // Close context menu on outside click
+  React.useEffect(() => {
+    if (!openMenuId) return;
+    const handler = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setOpenMenuId(null);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [openMenuId]);
+
+  // Auto-focus rename input
+  React.useEffect(() => {
+    if (renamingId && renameInputRef.current) {
+      renameInputRef.current.focus();
+      renameInputRef.current.select();
+    }
+  }, [renamingId]);
+
+  const togglePin = (chatId) => {
+    setPinnedIds(prev => {
+      const next = new Set(prev);
+      next.has(chatId) ? next.delete(chatId) : next.add(chatId);
+      localStorage.setItem('pinnedChats', JSON.stringify([...next]));
+      return next;
+    });
+    setOpenMenuId(null);
+  };
+
+  const startRename = (chat) => {
+    setRenamingId(chat.id);
+    setRenameValue(chat.title);
+    setOpenMenuId(null);
+  };
+
+  const commitRename = (chatId) => {
+    const trimmed = renameValue.trim();
+    const original = chats.find(c => c.id === chatId)?.title || '';
+    if (trimmed && trimmed !== original) onRenameChat(chatId, trimmed);
+    setRenamingId(null);
+  };
+
+  // Pinned first, then by updatedAt desc
+  const sorted = [...chats].sort((a, b) => {
+    const pa = pinnedIds.has(a.id) ? 1 : 0;
+    const pb = pinnedIds.has(b.id) ? 1 : 0;
+    if (pb !== pa) return pb - pa;
+    return new Date(b.updatedAt) - new Date(a.updatedAt);
+  });
+
+  const filtered = sorted.filter(chat =>
     chat.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    chat.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
+    (chat.lastMessage || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const dk = theme === 'dark';
 
   return (
     <div className={`w-72 fixed left-16 top-14 bottom-0 z-30 transition-transform duration-300 ease-in-out ${
       isOpen ? 'translate-x-0' : '-translate-x-full'
-    } ${
-      theme === 'dark' ? 'bg-slate-900/90' : 'bg-white/90'
-    } backdrop-blur-xl border-r ${
-      theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/70'
+    } ${dk ? 'bg-slate-900/90' : 'bg-white/90'} backdrop-blur-xl border-r ${
+      dk ? 'border-slate-700/50' : 'border-gray-200/70'
     } flex flex-col`}>
+
       {/* Header */}
-      <div className={`px-4 pt-4 pb-3 border-b ${
-        theme === 'dark' ? 'border-slate-700/50' : 'border-gray-200/70'
-      }`}>
+      <div className={`px-4 pt-4 pb-3 border-b ${dk ? 'border-slate-700/50' : 'border-gray-200/70'}`}>
         <div className="flex items-center justify-between mb-3">
-          <span className={`text-sm font-semibold ${
-            theme === 'dark' ? 'text-slate-300' : 'text-gray-700'
-          }`}>
+          <span className={`text-sm font-semibold ${dk ? 'text-slate-300' : 'text-gray-700'}`}>
             Percakapan
           </span>
-          <span className={`text-xs px-2 py-0.5 rounded-full ${
-            theme === 'dark' ? 'bg-slate-700 text-slate-400' : 'bg-gray-100 text-gray-500'
-          }`}>
+          <span className={`text-xs px-2 py-0.5 rounded-full ${dk ? 'bg-slate-700 text-slate-400' : 'bg-gray-100 text-gray-500'}`}>
             {chats.length}
           </span>
         </div>
@@ -594,9 +645,7 @@ const ChatSidebar = ({ chats, activeChat, setActiveChat, onNewChat, onDeleteChat
         <button
           onClick={onNewChat}
           className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-            theme === 'dark'
-              ? 'bg-blue-600 hover:bg-blue-700 text-white'
-              : 'bg-blue-500 hover:bg-blue-600 text-white'
+            dk ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-blue-500 hover:bg-blue-600 text-white'
           } shadow-sm`}
         >
           <Plus className="w-4 h-4" />
@@ -605,27 +654,20 @@ const ChatSidebar = ({ chats, activeChat, setActiveChat, onNewChat, onDeleteChat
 
         {/* Search */}
         <div className="relative mt-2">
-          <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 ${
-            theme === 'dark' ? 'text-slate-500' : 'text-gray-400'
-          }`} />
+          <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 ${dk ? 'text-slate-500' : 'text-gray-400'}`} />
           <input
             type="text"
             placeholder="Cari..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className={`w-full pl-8 pr-8 py-1.5 text-sm rounded-lg border transition-colors ${
-              theme === 'dark'
+              dk
                 ? 'bg-slate-800/60 border-slate-700 text-white placeholder-slate-500 focus:border-blue-500'
                 : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400 focus:border-blue-400'
             } focus:outline-none`}
           />
           {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className={`absolute right-2.5 top-1/2 -translate-y-1/2 ${
-                theme === 'dark' ? 'text-slate-500 hover:text-slate-300' : 'text-gray-400 hover:text-gray-600'
-              }`}
-            >
+            <button onClick={() => setSearchQuery('')} className={`absolute right-2.5 top-1/2 -translate-y-1/2 ${dk ? 'text-slate-500 hover:text-slate-300' : 'text-gray-400 hover:text-gray-600'}`}>
               <X className="w-3.5 h-3.5" />
             </button>
           )}
@@ -634,64 +676,185 @@ const ChatSidebar = ({ chats, activeChat, setActiveChat, onNewChat, onDeleteChat
 
       {/* Chat List */}
       <div className="flex-1 overflow-y-auto">
-        {filteredChats.length === 0 ? (
+        {filtered.length === 0 ? (
           <div className="p-6 text-center">
-            <p className={`text-sm ${theme === 'dark' ? 'text-slate-500' : 'text-gray-400'}`}>
+            <p className={`text-sm ${dk ? 'text-slate-500' : 'text-gray-400'}`}>
               {searchQuery ? 'Tidak ditemukan' : 'Belum ada percakapan'}
             </p>
           </div>
         ) : (
-          filteredChats.map((chat) => (
-            <div
-              key={chat.id}
-              onClick={() => setActiveChat(chat.id)}
-              className={`group px-3 py-3 mx-2 my-0.5 rounded-xl cursor-pointer transition-all duration-150 ${
-                activeChat === chat.id
-                  ? theme === 'dark'
-                    ? 'bg-blue-600/20 border border-blue-500/30'
-                    : 'bg-blue-50 border border-blue-200'
-                  : theme === 'dark'
-                    ? 'hover:bg-slate-800/60 border border-transparent'
-                    : 'hover:bg-gray-50 border border-transparent'
-              }`}
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex-1 min-w-0">
-                  <h4 className={`text-sm font-medium truncate ${
-                    activeChat === chat.id
-                      ? theme === 'dark' ? 'text-blue-300' : 'text-blue-700'
-                      : theme === 'dark' ? 'text-slate-200' : 'text-gray-800'
-                  }`}>
-                    {chat.title}
-                  </h4>
-                  <p className={`text-xs mt-0.5 truncate ${
-                    theme === 'dark' ? 'text-slate-500' : 'text-gray-400'
-                  }`}>
-                    {chat.lastMessage}
-                  </p>
-                  <p className={`text-xs mt-1 ${
-                    theme === 'dark' ? 'text-slate-600' : 'text-gray-400'
-                  }`}>
-                    {new Date(chat.updatedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
-                  </p>
+          filtered.map((chat) => {
+            const isPinned  = pinnedIds.has(chat.id);
+            const isActive  = activeChat === chat.id;
+            const isRenaming = renamingId === chat.id;
+            const menuOpen  = openMenuId === chat.id;
+
+            return (
+              <div
+                key={chat.id}
+                onClick={() => { if (!isRenaming) setActiveChat(chat.id); }}
+                className={`group relative px-3 py-3 mx-2 my-0.5 rounded-xl cursor-pointer transition-all duration-150 ${
+                  isActive
+                    ? dk ? 'bg-blue-600/20 border border-blue-500/30' : 'bg-blue-50 border border-blue-200'
+                    : dk ? 'hover:bg-slate-800/60 border border-transparent' : 'hover:bg-gray-50 border border-transparent'
+                }`}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1 min-w-0">
+                    {/* Pin indicator */}
+                    {isPinned && (
+                      <span className={`inline-flex items-center gap-1 text-xs mb-0.5 ${dk ? 'text-blue-400' : 'text-blue-500'}`}>
+                        <Pin className="w-2.5 h-2.5" /> Disematkan
+                      </span>
+                    )}
+
+                    {/* Title — editable or static */}
+                    {isRenaming ? (
+                      <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                        <input
+                          ref={renameInputRef}
+                          value={renameValue}
+                          onChange={(e) => setRenameValue(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') commitRename(chat.id);
+                            if (e.key === 'Escape') setRenamingId(null);
+                          }}
+                          onBlur={() => commitRename(chat.id)}
+                          className={`flex-1 text-sm font-medium rounded px-1 py-0.5 border focus:outline-none ${
+                            dk
+                              ? 'bg-slate-700 border-blue-500 text-white'
+                              : 'bg-white border-blue-400 text-gray-800'
+                          }`}
+                        />
+                        <button
+                          onMouseDown={(e) => { e.preventDefault(); commitRename(chat.id); }}
+                          className={`shrink-0 p-0.5 rounded ${dk ? 'text-blue-400 hover:text-blue-300' : 'text-blue-500 hover:text-blue-700'}`}
+                        >
+                          <Check className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ) : (
+                      <h4 className={`text-sm font-medium truncate ${
+                        isActive
+                          ? dk ? 'text-blue-300' : 'text-blue-700'
+                          : dk ? 'text-slate-200' : 'text-gray-800'
+                      }`}>
+                        {chat.title}
+                      </h4>
+                    )}
+
+                    <p className={`text-xs mt-0.5 truncate ${dk ? 'text-slate-500' : 'text-gray-400'}`}>
+                      {chat.lastMessage}
+                    </p>
+                    <p className={`text-xs mt-1 ${dk ? 'text-slate-600' : 'text-gray-400'}`}>
+                      {new Date(chat.updatedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                    </p>
+                  </div>
+
+                  {/* Three-dot menu button */}
+                  <div className="relative shrink-0" ref={menuOpen ? menuRef : null}>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setOpenMenuId(menuOpen ? null : chat.id); }}
+                      className={`p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-all ${
+                        menuOpen ? 'opacity-100' : ''
+                      } ${dk ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-700' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'}`}
+                    >
+                      <MoreVertical className="w-3.5 h-3.5" />
+                    </button>
+
+                    {/* Dropdown menu */}
+                    {menuOpen && (
+                      <div
+                        ref={menuRef}
+                        onClick={(e) => e.stopPropagation()}
+                        className={`absolute right-0 top-7 z-50 w-44 rounded-xl shadow-xl border overflow-hidden ${
+                          dk ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'
+                        }`}
+                      >
+                        {/* Rename */}
+                        <button
+                          onClick={() => startRename(chat)}
+                          className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors ${
+                            dk ? 'text-slate-200 hover:bg-slate-700' : 'text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          <Pencil className="w-3.5 h-3.5 shrink-0" />
+                          Ubah Judul
+                        </button>
+
+                        {/* Pin / Unpin */}
+                        <button
+                          onClick={() => togglePin(chat.id)}
+                          className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors ${
+                            dk ? 'text-slate-200 hover:bg-slate-700' : 'text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          {isPinned
+                            ? <><PinOff className="w-3.5 h-3.5 shrink-0" /> Lepas Sematkan</>
+                            : <><Pin    className="w-3.5 h-3.5 shrink-0" /> Sematkan</>
+                          }
+                        </button>
+
+                        <div className={`border-t ${dk ? 'border-slate-700' : 'border-gray-100'}`} />
+
+                        {/* Delete */}
+                        <button
+                          onClick={() => { setOpenMenuId(null); onDeleteChat(chat.id); }}
+                          className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors ${
+                            dk ? 'text-red-400 hover:bg-slate-700' : 'text-red-500 hover:bg-red-50'
+                          }`}
+                        >
+                          <Trash2 className="w-3.5 h-3.5 shrink-0" />
+                          Hapus
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <button
-                  onClick={(e) => { e.stopPropagation(); onDeleteChat(chat.id); }}
-                  className={`shrink-0 p-1 rounded-lg opacity-0 group-hover:opacity-100 transition-all ${
-                    theme === 'dark'
-                      ? 'text-slate-500 hover:text-red-400 hover:bg-slate-700'
-                      : 'text-gray-400 hover:text-red-500 hover:bg-gray-100'
-                  }`}
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>
   );
+}
+
+// ── Preview text helper (untuk lastMessage di sidebar) ────────────────────────
+// Ambil kalimat pertama yang bermakna dari markdown response AI.
+function previewText(text) {
+  if (!text) return '';
+  const firstLine = text.split('\n')
+    .map(l => l.trim())
+    .find(l => l && !/^#{1,3}\s|^---+$|^_.*_$/.test(l));
+  if (!firstLine) return '';
+  const plain = firstLine
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/\*(.*?)\*/g, '$1')
+    .replace(/`(.*?)`/g, '$1')
+    .replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}]/gu, '')
+    .trim();
+  return plain.length <= 60 ? plain : plain.slice(0, 60).replace(/\s+\S*$/, '').trim() + '...';
+}
+
+// ── Session title helper ───────────────────────────────────────────────────────
+// Strips emojis, trailing punctuation, and truncates at a clean word boundary.
+function cleanSessionTitle(text) {
+  const clean = text
+    // Remove emoji and other non-BMP unicode (surrogate-pair range)
+    .replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]/gu, '')
+    .replace(/[^\u0000-\u007F\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]/g, '')
+    .trim()
+    // Strip trailing question marks, exclamations, ellipsis, dots
+    .replace(/[\s?!.,…]+$/, '')
+    .trim();
+
+  if (!clean) return 'Percakapan Baru';
+  if (clean.length <= 45) return clean;
+
+  // Truncate at last word boundary before 45 chars
+  const truncated = clean.slice(0, 45).replace(/\s+\S*$/, '').trim();
+  return truncated || clean.slice(0, 45).trim();
 }
 
 // Main App Component
@@ -716,6 +879,7 @@ function App() {
   // Guided flow state
   const [guidedStep, setGuidedStep] = useState('mode_select'); // 'mode_select' | 'forecast_select' | 'category_select' | 'question_select' | 'awaiting' | 'post_answer'
   const [guidedCategory, setGuidedCategory] = useState(null);
+  const [geoContext, setGeoContext] = useState({ scope: 'nasional', dbValue: null, tregValue: null, label: 'Nasional' });
   const [panelHeight, setPanelHeight] = useState(300);
   const isDraggingRef = useRef(false);
   const prevIsTypingRef = useRef(false);
@@ -1025,6 +1189,17 @@ function App() {
     }
   };
 
+  // Rename chat
+  const handleRenameChat = (chatId, newTitle) => {
+    setChats(prev => prev.map(chat =>
+      chat.id === chatId ? { ...chat, title: newTitle } : chat
+    ));
+    apiCall(`/sessions/${chatId}/name`, {
+      method: 'PUT',
+      body: JSON.stringify({ session_name: newTitle })
+    }).catch(err => console.warn('Failed to rename session:', err));
+  };
+
   // Delete chat
   const handleDeleteChat = async (chatId) => {
     setChats(prev => prev.filter(chat => chat.id !== chatId));
@@ -1060,7 +1235,18 @@ function App() {
   const handleGuidedSend = () => {
     if (!currentMessage.trim()) return;
     setGuidedStep('awaiting');
-    handleSendMessage(currentMessage.trim());
+    // Append geographic scope to the message when a witel/regional is selected
+    let messageToSend = currentMessage.trim();
+    if (geoContext && geoContext.scope !== 'nasional' && geoContext.dbValue && geoContext.label) {
+      const scopeLabel = geoContext.scope === 'witel'
+        ? `di Witel ${geoContext.label}`
+        : `di ${geoContext.label}`;
+      // Only append if the message doesn't already mention the location
+      if (!messageToSend.toLowerCase().includes(geoContext.label.toLowerCase())) {
+        messageToSend = `${messageToSend} ${scopeLabel}`;
+      }
+    }
+    handleSendMessage(messageToSend);
     setCurrentMessage('');
   };
 
@@ -1102,7 +1288,7 @@ function App() {
       try {
         const d = JSON.parse(userMessage.slice('__FORECAST__:'.length));
         const scope = d.witel ? `${d.regional} / ${d.witel}` : d.regional;
-        displayText = `📊 Prediksi ${d.metricLabel} — ${scope} untuk ${d.forecastPeriod}`;
+        displayText = `Prediksi ${d.metricLabel} — ${scope} untuk ${d.forecastPeriod}`;
       } catch (e) { displayText = 'Prediksi Forecasting'; }
     }
 
@@ -1119,7 +1305,7 @@ function App() {
       // First real user message → update title locally and in Oracle
       const isFirstUserMessage = !currentChatObj.messages.some(m => !m.isBot);
       const newTitle = isFirstUserMessage
-        ? (displayText.slice(0, 50) + (displayText.length > 50 ? '...' : ''))
+        ? cleanSessionTitle(displayText)
         : currentChatObj.title;
 
       if (isFirstUserMessage) {
@@ -1154,7 +1340,7 @@ function App() {
       } else {
         response = await apiCall('/chat/message', {
           method: 'POST',
-          body: JSON.stringify({ message: userMessage, sessionId: activeChat })
+          body: JSON.stringify({ message: userMessage, sessionId: activeChat, geoContext })
         });
       }
 
@@ -1193,7 +1379,7 @@ function App() {
             ? {
                 ...chat,
                 messages: [...chat.messages, aiMessageObj],
-                lastMessage: aiMessage.slice(0, 50) + (aiMessage.length > 50 ? '...' : ''),
+                lastMessage: previewText(aiMessage),
                 updatedAt: new Date().toISOString()
               }
             : chat
@@ -1290,6 +1476,7 @@ function App() {
               setActiveChat={setActiveChat}
               onNewChat={handleNewChat}
               onDeleteChat={handleDeleteChat}
+              onRenameChat={handleRenameChat}
               theme={theme}
               isOpen={sidebarOpen}
             />
@@ -1374,6 +1561,8 @@ function App() {
                     onGantiKategori={() => handleGuidedBack('category_select')}
                     onReset={handleGuidedReset}
                     onSendToChat={handleSendMessage}
+                    geoContext={geoContext}
+                    onGeoChange={setGeoContext}
                   />
                   </div>
                 </>
