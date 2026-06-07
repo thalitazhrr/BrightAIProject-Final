@@ -21,7 +21,9 @@ module.exports = {
     primary: [
       'performa regional hsi', 'revenue regional internet', 'analisis regional hsi',
       'kinerja regional hsi', 'pendapatan regional internet', 'performance regional hsi',
-      'komparasi regional hsi', 'ranking regional internet', 'evaluasi regional hsi'
+      'komparasi regional hsi', 'ranking regional internet', 'evaluasi regional hsi',
+      'performa revenue hsi per regional', 'performa revenue regional', 'revenue hsi per regional',
+      'revenue per regional', 'kontribusi terbesar', 'kontribusi regional'
     ],
     supporting: [
       'regional', 'witel', 'datel', 'sto', 'wilayah', 'area', 'performa', 
@@ -32,21 +34,26 @@ module.exports = {
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      // Negative: defer to domain-specific rules
+      if (lowerInput.includes('churn') || lowerInput.includes('ct0') || lowerInput.includes('cabut')) return 0;
+      if (lowerInput.includes('channel') || lowerInput.includes('kanal')) return 0;
+      if (lowerInput.includes('jangkauan') || lowerInput.includes('coverage sto')) return 0;
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 85 + (primaryMatches * 8) + (supportingMatches * 2);
       } else if (supportingMatches >= 3) {
         score = 70 + (supportingMatches * 3);
       }
-      
+
       return Math.min(score, 100);
     }
   },
@@ -64,8 +71,7 @@ module.exports = {
             WITEL_BILL,
             DATEL,
             CSTO,
-            LSTO,
-            
+
             -- Customer and Service Metrics
             COUNT(DISTINCT NIP_NAS) as TOTAL_PELANGGAN,
             COUNT(DISTINCT NCLI) as TOTAL_NCLI,
@@ -98,11 +104,10 @@ module.exports = {
           AND WITEL_BILL IS NOT NULL
           AND DATEL IS NOT NULL
           AND CSTO IS NOT NULL
-          AND LSTO IS NOT NULL
           AND NIP_NAS IS NOT NULL
           AND NCLI IS NOT NULL
           AND ND IS NOT NULL
-        GROUP BY REGIONAL_BILL, WITEL_BILL, DATEL, CSTO, LSTO
+        GROUP BY REGIONAL_BILL, WITEL_BILL, DATEL, CSTO
     )
     
     SELECT 
@@ -110,7 +115,6 @@ module.exports = {
         WITEL_BILL,
         DATEL,
         CSTO,
-        LSTO,
         TOTAL_PELANGGAN,
         TOTAL_NCLI,
         TOTAL_LAYANAN,
@@ -259,7 +263,6 @@ module.exports = {
           regional: regional,
           leader_sto: {
             kode: topSTO.CSTO,
-            nama: topSTO.LSTO,
             witel: topSTO.WITEL_BILL,
             datel: topSTO.DATEL,
             revenue: topSTO.TOTAL_REVENUE,
@@ -308,6 +311,9 @@ module.exports = {
     },
 
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const totalNationalRevenue = data.reduce((sum, d) => sum + d.TOTAL_REVENUE, 0);
       const totalNationalCustomers = data.reduce((sum, d) => sum + d.TOTAL_PELANGGAN, 0);
       const totalNationalNCLI = data.reduce((sum, d) => sum + d.TOTAL_NCLI, 0);
@@ -418,7 +424,7 @@ module.exports = {
         regional_leaders: regionalLeaders.slice(0, 7).map(regional => ({
           regional: regional.regional,
           leader_sto: {
-            kode_nama: `${regional.leader_sto.kode} - ${regional.leader_sto.nama}`,
+            kode_nama: regional.leader_sto.kode,
             witel: regional.leader_sto.witel,
             datel: regional.leader_sto.datel,
             revenue: `Rp ${regional.leader_sto.revenue.toLocaleString('id-ID')}`,
@@ -435,7 +441,6 @@ module.exports = {
           witel: sto.WITEL_BILL,
           datel: sto.DATEL,
           kode_sto: sto.CSTO,
-          nama_sto: sto.LSTO,
           total_revenue: `Rp ${sto.TOTAL_REVENUE.toLocaleString('id-ID')}`,
           kontribusi_nasional: `${sto.NATIONAL_REVENUE_CONTRIBUTION}%`,
           total_pelanggan: sto.TOTAL_PELANGGAN.toLocaleString('id-ID'),

@@ -45,9 +45,15 @@ module.exports = {
       
       if (primaryMatches > 0) {
         score = 80 + (primaryMatches * 8) + (supportingMatches * 3);
-      } else if (lowerInput.includes('divisi') && 
+      } else if (lowerInput.includes('divisi') &&
                 (lowerInput.includes('churn') || lowerInput.includes('perbandingan'))) {
         score = 75;
+      } else if ((lowerInput.includes('bandingkan') || lowerInput.includes('perbandingan')) &&
+                 lowerInput.includes('churn') &&
+                (lowerInput.includes('bisnis') || lowerInput.includes('consumer') || lowerInput.includes('divisi'))) {
+        score = 80;
+      } else if (lowerInput.includes('churn') && lowerInput.includes('antar divisi')) {
+        score = 78;
       }
       
       return Math.min(score, 100);
@@ -409,6 +415,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const hasil_analisis = data.map(record => {
         const divisi_assessment = this.assessDivisiPerformance(
           record.DIVISI,

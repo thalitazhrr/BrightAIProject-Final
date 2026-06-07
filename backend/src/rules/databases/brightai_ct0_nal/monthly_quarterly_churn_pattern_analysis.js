@@ -21,7 +21,10 @@ module.exports = {
     primary: [
       'pola bulanan', 'monthly pattern', 'churn bulanan', 'monthly churn',
       'pola kuartalan', 'trend bulanan', 'pattern bulanan',
-      'analisis bulanan', 'kuartalan churn', 'pattern kuartalan'
+      'analisis bulanan', 'kuartalan churn', 'pattern kuartalan',
+      'churn pattern', 'pattern monthly', 'pattern quarterly', 'quarterly hsi',
+      'monthly quarterly', 'churn monthly', 'churn quarterly',
+      'per bulan dan kuartal', 'churn per bulan'
     ],
     
     supporting: [
@@ -45,9 +48,12 @@ module.exports = {
       
       if (primaryMatches > 0) {
         score = 80 + (primaryMatches * 8) + (supportingMatches * 3);
-      } else if ((lowerInput.includes('pola') || lowerInput.includes('bulanan')) && 
-                (lowerInput.includes('churn') || lowerInput.includes('kuartalan'))) {
-        score = 75;
+      } else if ((lowerInput.includes('pola') || lowerInput.includes('bulanan') || lowerInput.includes('kuartal')) &&
+                (lowerInput.includes('churn') || lowerInput.includes('ct0'))) {
+        score = 78;
+      } else if (lowerInput.includes('churn') &&
+                (lowerInput.includes('per bulan') || lowerInput.includes('kuartalan') || lowerInput.includes('kuartal'))) {
+        score = 78;
       }
       
       return Math.min(score, 100);
@@ -395,6 +401,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const hasil_analisis = data.map(record => {
         const temporal_patterns = this.identifyTemporalPatterns(
           record.BULAN,

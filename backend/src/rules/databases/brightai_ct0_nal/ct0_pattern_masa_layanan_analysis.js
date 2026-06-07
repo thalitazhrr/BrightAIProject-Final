@@ -21,6 +21,7 @@ module.exports = {
     primary: [
       'ct0', 'dinolkan', 'pola ct0', 'analisis ct0',
       'masa layanan', 'lama layanan', 'durasi layanan',
+      'durasi berlangganan', 'lama berlangganan',
       'periode kritis', 'pattern ct0', 'ct0 analysis'
     ],
     
@@ -34,22 +35,27 @@ module.exports = {
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      // Defer to ct0_005 for monthly/quarterly temporal patterns
+      const hasMonthlyCtx = lowerInput.includes('bulanan') || lowerInput.includes('kuartal') ||
+        lowerInput.includes('per bulan') || lowerInput.includes('monthly') || lowerInput.includes('quarterly');
+      if (hasMonthlyCtx) return 0;
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 80 + (primaryMatches * 8) + (supportingMatches * 3);
-      } else if (lowerInput.includes('ct0') || 
+      } else if (lowerInput.includes('ct0') ||
                 (lowerInput.includes('dinol') && lowerInput.includes('layanan'))) {
         score = 75;
       }
-      
+
       return Math.min(score, 100);
     }
   },
@@ -302,6 +308,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const hasil_analisis = data.map(record => {
         const risk_assessment = this.assessCT0Risk(
           record.KATEGORI_MASA_LAYANAN,

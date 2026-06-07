@@ -34,21 +34,25 @@ module.exports = {
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      // Hard gate: must have cross/lintas/multi context for geographic revenue
+      const hasCrossCtx = lowerInput.includes('lintas') || lowerInput.includes('cross') || lowerInput.includes('multi');
+      if (!hasCrossCtx) return 0;
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 85 + (primaryMatches * 8) + (supportingMatches * 2);
       } else if (supportingMatches >= 4) {
         score = 70 + (supportingMatches * 4);
       }
-      
+
       return Math.min(score, 100);
     }
   },
@@ -87,7 +91,6 @@ module.exports = {
           AND WITEL_BILL IS NOT NULL
           AND DATEL IS NOT NULL
           AND CSTO IS NOT NULL
-          AND LSTO IS NOT NULL
           AND NIP_NAS IS NOT NULL
           AND NCLI IS NOT NULL
           AND ND IS NOT NULL
@@ -100,7 +103,6 @@ module.exports = {
             p.WITEL_BILL,
             p.DATEL,
             p.CSTO,
-            p.LSTO,
             cgf.GEOGRAPHIC_PRESENCE_TYPE,
             
             -- Customer and service metrics
@@ -147,7 +149,7 @@ module.exports = {
         JOIN CUSTOMER_GEOGRAPHIC_FOOTPRINT cgf ON p.NIP_NAS = cgf.NIP_NAS AND p.NCLI = cgf.NCLI
         WHERE p.GROUP4 = 'High Speed Internet'
           AND p.REVENUE > 0
-        GROUP BY p.REGIONAL_BILL, p.WITEL_BILL, p.DATEL, p.CSTO, p.LSTO, cgf.GEOGRAPHIC_PRESENCE_TYPE
+        GROUP BY p.REGIONAL_BILL, p.WITEL_BILL, p.DATEL, p.CSTO, cgf.GEOGRAPHIC_PRESENCE_TYPE
     )
     
     SELECT 
@@ -155,7 +157,6 @@ module.exports = {
         WITEL_BILL,
         DATEL,
         CSTO,
-        LSTO,
         GEOGRAPHIC_PRESENCE_TYPE,
         TOTAL_CUSTOMERS,
         TOTAL_NCLI,
@@ -201,6 +202,9 @@ module.exports = {
 
   BUSINESS_LOGIC: {
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const totalRevenue = data.reduce((sum, d) => sum + d.TOTAL_REVENUE, 0);
       const totalCustomers = data.reduce((sum, d) => sum + d.TOTAL_CUSTOMERS, 0);
       const totalNCLI = data.reduce((sum, d) => sum + d.TOTAL_NCLI, 0);
@@ -305,7 +309,6 @@ module.exports = {
             witel: item.WITEL_BILL,
             datel: item.DATEL,
             kode_sto: item.CSTO,
-            nama_sto: item.LSTO,
             opportunity_level: item.EXPANSION_OPPORTUNITY_LEVEL,
             total_revenue: `Rp ${item.TOTAL_REVENUE.toLocaleString('id-ID')}`,
             total_pelanggan: item.TOTAL_CUSTOMERS.toLocaleString('id-ID'),
@@ -330,7 +333,6 @@ module.exports = {
           witel: item.WITEL_BILL,
           datel: item.DATEL,
           kode_sto: item.CSTO,
-          nama_sto: item.LSTO,
           geographic_presence_type: item.GEOGRAPHIC_PRESENCE_TYPE,
           expansion_opportunity: item.EXPANSION_OPPORTUNITY_LEVEL,
           total_revenue: `Rp ${item.TOTAL_REVENUE.toLocaleString('id-ID')}`,

@@ -45,9 +45,14 @@ module.exports = {
       
       if (primaryMatches > 0) {
         score = 80 + (primaryMatches * 8) + (supportingMatches * 3);
-      } else if (lowerInput.includes('witel') && 
-                (lowerInput.includes('churn') || lowerInput.includes('performa'))) {
-        score = 75;
+      } else if (lowerInput.includes('witel') && lowerInput.includes('churn') &&
+                (lowerInput.includes('performa') || lowerInput.includes('kinerja'))) {
+        score = 85;
+      } else if (lowerInput.includes('churn') && lowerInput.includes('per witel')) {
+        score = 82;
+      } else if (lowerInput.includes('witel') &&
+                (lowerInput.includes('churn') || lowerInput.includes('performa') || lowerInput.includes('kinerja'))) {
+        score = 78;
       }
       
       return Math.min(score, 100);
@@ -385,6 +390,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const hasil_analisis = data.map(record => {
         const performance_assessment = this.assessWitelPerformance(
           record.KATEGORI_PERFORMA,

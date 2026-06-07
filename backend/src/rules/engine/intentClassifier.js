@@ -34,6 +34,8 @@ const INTENT_PATTERNS = {
       'naik', 'turun', 'meningkat', 'menurun', 'growth',
       'kenaikan', 'penurunan', 'mom', 'yoy',
       'bulanan', 'tahunan', 'berkembang', 'perubahan',
+      'musiman', 'seasonal', 'pola musiman', 'kuartalan',
+      'bulan', 'kuartal',
     ],
   },
   comparison: {
@@ -63,19 +65,28 @@ const INTENT_PATTERNS = {
     ],
   },
   performance: {
-    weight: 3,
+    weight: 4,
     keywords: [
       'performa', 'kinerja', 'pencapaian', 'target',
       'achievement', 'capai', 'realisasi', 'efektivitas',
       'efisiensi', 'sla', 'tingkat keberhasilan',
+      'fulfillment', 'success rate', 'tingkat sukses',
     ],
   },
   detail: {
-    weight: 2,
+    weight: 3,
     keywords: [
       'detail', 'rincian', 'breakdown', 'kategori',
       'segmentasi', 'distribusi', 'klasifikasi',
       'analisis', 'lengkap', 'secara detail',
+      'profil', 'profile', 'berdasarkan',
+      'siklus', 'lifecycle', 'portofolio', 'portfolio',
+      'strategi', 'strategy', 'hierarki', 'hierarchy',
+      'bundling', 'loyalitas', 'loyalty',
+      'speed', 'kecepatan', 'bandwidth',
+      'coverage', 'cakupan', 'jangkauan',
+      'adopsi', 'transformasi', 'gl account',
+      'penetrasi', 'perilaku', 'behavior', 'pattern',
     ],
   },
 };

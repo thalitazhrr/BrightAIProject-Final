@@ -22,7 +22,8 @@ module.exports = {
       // Channel performance - yang biasa digunakan
       'performa channel', 'channel performance', 'efektivitas channel',
       'kinerja channel', 'channel hsi', 'saluran penjualan',
-      
+      'kinerja kanal', 'performa kanal', 'kanal penjualan',
+
       // Channel analysis familiar terms
       'analisis channel', 'channel analysis', 'evaluasi channel',
       'produktivitas channel', 'conversion channel', 'akuisisi channel'
@@ -58,9 +59,12 @@ module.exports = {
       
       if (primaryMatches > 0) {
         score = 75 + (primaryMatches * 12) + (supportingMatches * 3);
-      } else if (lowerInput.includes('channel') && 
-                (lowerInput.includes('hsi') || lowerInput.includes('internet'))) {
-        score = 65;
+      } else if (lowerInput.includes('channel') &&
+                (lowerInput.includes('hsi') || lowerInput.includes('internet') || lowerInput.includes('order'))) {
+        score = 75;
+      } else if (lowerInput.includes('kanal') &&
+                (lowerInput.includes('hsi') || lowerInput.includes('internet') || lowerInput.includes('order') || lowerInput.includes('penjualan'))) {
+        score = 75;
       }
       
       return Math.min(score, 100);
@@ -586,6 +590,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const landscape = this.analyzeChannelLandscape(data);
       
       const hasil_analisis = data.map(channel => {

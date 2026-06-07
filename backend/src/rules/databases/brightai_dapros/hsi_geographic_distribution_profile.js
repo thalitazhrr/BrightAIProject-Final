@@ -19,34 +19,47 @@ module.exports = {
 
   KEYWORD_PATTERNS: {
     primary: [
-      'distribusi geografis hsi', 'geographic distribution', 'profil wilayah',
+      'distribusi geografis hsi', 'distribusi geografis pelanggan', 'distribusi geografis',
+      'geographic distribution', 'profil wilayah', 'profil wilayah hsi',
       'regional analysis', 'distribusi regional', 'geographic profile',
-      'analisis geografis', 'peta sebaran customer', 'regional coverage hsi', 'sebaran pelanggan'
+      'analisis geografis', 'peta sebaran customer', 'regional coverage hsi',
+      'sebaran pelanggan', 'sebaran pelanggan hsi', 'geografis pelanggan hsi',
+      'pelanggan hsi per wilayah', 'pelanggan hsi per regional',
+      'distribusi pelanggan per wilayah', 'distribusi pelanggan per regional'
     ],
     
     supporting: [
       'geografis', 'regional', 'wilayah', 'distribusi', 'sebaran', 'coverage',
-      'witel', 'telda', 'datel', 'area', 'lokasi', 'geographic', 'territory'
+      'witel', 'telda', 'datel', 'area', 'lokasi', 'geographic', 'territory',
+      'pelanggan', 'customer', 'hsi', 'per wilayah', 'per regional'
     ],
     
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      // Hard gate: this rule is about CUSTOMER distribution profile (DAPROS), not order/sales distribution
+      const hasOrderCtx = lowerInput.includes('order') || lowerInput.includes('penjualan') || lowerInput.includes('sales');
+      const hasCustomerCtx = lowerInput.includes('pelanggan') || lowerInput.includes('customer') || lowerInput.includes('profil') || lowerInput.includes('distribusi pelanggan') || lowerInput.includes('sebaran pelanggan');
+      if (hasOrderCtx && !hasCustomerCtx) return 0;
+
+      // Avoid stealing penetration queries (ps_004 territory)
+      if (lowerInput.includes('penetrasi') && !hasCustomerCtx) return 0;
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 80 + (primaryMatches * 10) + (supportingMatches * 2);
-      } else if (supportingMatches >= 3) {
-        score = 65 + (supportingMatches * 4);
+      } else if (supportingMatches >= 2) {
+        score = 60 + (supportingMatches * 5);
       }
-      
+
       return Math.min(score, 100);
     }
   },
@@ -126,7 +139,6 @@ module.exports = {
             WHERE PLBLCL IN ('BL', 'CL')
               AND CITEM NOT LIKE '%W/%'
               AND CITEM NOT LIKE '%WM%'
-              AND ASSET_STATUS IN ('ACTIVE', 'NORMAL')
         )
     )
     
@@ -353,6 +365,9 @@ module.exports = {
     },
 
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const totalCustomers = data.reduce((sum, d) => sum + d.CUSTOMER_COUNT, 0);
       const totalHSIRevenue = data.reduce((sum, d) => sum + d.TOTAL_HSI_CONTRIBUTION, 0);
       const geographicPerformance = this.analyzeGeographicPerformance(data);

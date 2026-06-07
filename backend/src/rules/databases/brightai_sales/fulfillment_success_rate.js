@@ -22,10 +22,11 @@ module.exports = {
       // Fulfillment success - yang biasa digunakan
       'tingkat keberhasilan', 'success rate', 'keberhasilan fulfillment',
       'tingkat sukses', 'persentase keberhasilan', 'completion rate',
-      
+
       // Performance terms familiar
       'performa fulfillment', 'kinerja fulfillment', 'efisiensi fulfillment',
-      'penyelesaian order', 'sukses order', 'keberhasilan instalasi'
+      'penyelesaian order', 'sukses order', 'keberhasilan instalasi',
+      'sukses instalasi', 'instalasi hsi', 'persen sukses'
     ],
     
     supporting: [
@@ -752,6 +753,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const trends = this.analyzeFulfillmentTrends(data);
       
       const hasil_analisis = data.map(unit => {

@@ -19,6 +19,52 @@
 
 \refsection{0}
   \datalist[entry]{cms/global//global/global/global}
+    \entry{Adam2021Chatbots}{article}{}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=b265b479143a59e69c818d7b6c1c5117}{%
+           family={Adam},
+           familyi={A\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=9a75165b0b602690fdb23a9e1ea7e073}{%
+           family={Wessel},
+           familyi={W\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=99e1eb6fe36071c3376c98e384d9be99}{%
+           family={Benlian},
+           familyi={B\bibinitperiod},
+           given={Alexander},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{cf0f4bdc495e886ae3a53d1d57b3a3af}
+      \strng{fullhash}{cf0f4bdc495e886ae3a53d1d57b3a3af}
+      \strng{fullhashraw}{cf0f4bdc495e886ae3a53d1d57b3a3af}
+      \strng{bibnamehash}{cf0f4bdc495e886ae3a53d1d57b3a3af}
+      \strng{authorbibnamehash}{cf0f4bdc495e886ae3a53d1d57b3a3af}
+      \strng{authornamehash}{cf0f4bdc495e886ae3a53d1d57b3a3af}
+      \strng{authorfullhash}{cf0f4bdc495e886ae3a53d1d57b3a3af}
+      \strng{authorfullhashraw}{cf0f4bdc495e886ae3a53d1d57b3a3af}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{author}
+      \field{journaltitle}{Electronic Markets}
+      \field{number}{2}
+      \field{title}{{AI}-based Chatbots in Customer Service and Their Effects on User Compliance}
+      \field{volume}{31}
+      \field{year}{2021}
+      \field{pages}{427\bibrangedash 445}
+      \range{pages}{19}
+      \verb{doi}
+      \verb 10.1007/s12525-020-00414-7
+      \endverb
+    \endentry
     \entry{aws2024securing}{online}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=3eb2c1a57a8160029f036e3dcbf84bf1}{%
@@ -150,6 +196,46 @@
       \range{pages}{12}
       \verb{doi}
       \verb 10.70619/vol5iss4pp41-52
+      \endverb
+    \endentry
+    \entry{Brynjolfsson2016DDD}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=7bd9f54569cb8c0301da00ed49b5a752}{%
+           family={Brynjolfsson},
+           familyi={B\bibinitperiod},
+           given={Erik},
+           giveni={E\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=383e0e0bf3503c1c74d4f609a2518439}{%
+           family={McElheran},
+           familyi={M\bibinitperiod},
+           given={Kristina},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{160621d1f9a94f2afcb5e8673ea635b1}
+      \strng{fullhash}{160621d1f9a94f2afcb5e8673ea635b1}
+      \strng{fullhashraw}{160621d1f9a94f2afcb5e8673ea635b1}
+      \strng{bibnamehash}{160621d1f9a94f2afcb5e8673ea635b1}
+      \strng{authorbibnamehash}{160621d1f9a94f2afcb5e8673ea635b1}
+      \strng{authornamehash}{160621d1f9a94f2afcb5e8673ea635b1}
+      \strng{authorfullhash}{160621d1f9a94f2afcb5e8673ea635b1}
+      \strng{authorfullhashraw}{160621d1f9a94f2afcb5e8673ea635b1}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{author}
+      \field{journaltitle}{American Economic Review}
+      \field{number}{5}
+      \field{title}{The Rapid Adoption of Data-Driven Decision-Making}
+      \field{volume}{106}
+      \field{year}{2016}
+      \field{pages}{133\bibrangedash 139}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1257/aer.p20161016
       \endverb
     \endentry
     \entry{Celikyilmaz2020EvalTextGen}{article}{}{}
@@ -608,39 +694,6 @@
       \verb https://www.postgresql.fastware.com/blog/generative-ai-and-data
       \endverb
     \endentry
-    \entry{Fullview2025}{online}{}{}
-      \name{author}{1}{}{%
-        {{un=0,uniquepart=base,hash=1cfae5511f3de2705ca477ac06df9900}{%
-           family={{Fullview}},
-           familyi={F\bibinitperiod}}}%
-      }
-      \strng{namehash}{1cfae5511f3de2705ca477ac06df9900}
-      \strng{fullhash}{1cfae5511f3de2705ca477ac06df9900}
-      \strng{fullhashraw}{1cfae5511f3de2705ca477ac06df9900}
-      \strng{bibnamehash}{1cfae5511f3de2705ca477ac06df9900}
-      \strng{authorbibnamehash}{1cfae5511f3de2705ca477ac06df9900}
-      \strng{authornamehash}{1cfae5511f3de2705ca477ac06df9900}
-      \strng{authorfullhash}{1cfae5511f3de2705ca477ac06df9900}
-      \strng{authorfullhashraw}{1cfae5511f3de2705ca477ac06df9900}
-      \field{sortinit}{F}
-      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{80+ AI Customer Service Statistics \& Trends in 2025}
-      \field{urlday}{4}
-      \field{urlmonth}{11}
-      \field{urlyear}{2025}
-      \field{year}{2025}
-      \field{urldateera}{ce}
-      \verb{urlraw}
-      \verb https://www.fullview.io/blog/ai-customer-service-stats
-      \endverb
-      \verb{url}
-      \verb https://www.fullview.io/blog/ai-customer-service-stats
-      \endverb
-    \endentry
     \entry{Gao2024LLMNLG}{article}{}{}
       \name{author}{5}{}{%
         {{un=0,uniquepart=base,hash=8f9bf6afb78b60a91741832f2d6bd689}{%
@@ -1005,38 +1058,6 @@
       \endverb
       \verb{url}
       \verb https://www.ibm.com/think/topics/chatbot-types
-      \endverb
-    \endentry
-    \entry{Intimedia2024}{article}{}{}
-      \name{author}{1}{}{%
-        {{un=0,uniquepart=base,hash=97e03bf6cf33cc01997cf539b0aa09a7}{%
-           family={{Intimedia}},
-           familyi={I\bibinitperiod}}}%
-      }
-      \strng{namehash}{97e03bf6cf33cc01997cf539b0aa09a7}
-      \strng{fullhash}{97e03bf6cf33cc01997cf539b0aa09a7}
-      \strng{fullhashraw}{97e03bf6cf33cc01997cf539b0aa09a7}
-      \strng{bibnamehash}{97e03bf6cf33cc01997cf539b0aa09a7}
-      \strng{authorbibnamehash}{97e03bf6cf33cc01997cf539b0aa09a7}
-      \strng{authornamehash}{97e03bf6cf33cc01997cf539b0aa09a7}
-      \strng{authorfullhash}{97e03bf6cf33cc01997cf539b0aa09a7}
-      \strng{authorfullhashraw}{97e03bf6cf33cc01997cf539b0aa09a7}
-      \field{sortinit}{I}
-      \field{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{author}
-      \field{journaltitle}{Intimedia News}
-      \field{month}{Desember}
-      \field{note}{Diakses: 4 November 2025}
-      \field{title}{Indonesia's Digital Transformation in 2024: How {AI} is Turning Dreams into Reality}
-      \field{year}{2024}
-      \verb{urlraw}
-      \verb https://intimedia.id/read/indonesias-digital-transformation-in-2024-how-ai-is-turning-dreams-into-reality
-      \endverb
-      \verb{url}
-      \verb https://intimedia.id/read/indonesias-digital-transformation-in-2024-how-ai-is-turning-dreams-into-reality
       \endverb
     \endentry
     \entry{Iqbal2021}{article}{}{}
@@ -2512,10 +2533,8 @@
       \strng{authornamehash}{89c887fd6cd263b082aa519a5a7b8538}
       \strng{authorfullhash}{89c887fd6cd263b082aa519a5a7b8538}
       \strng{authorfullhashraw}{89c887fd6cd263b082aa519a5a7b8538}
-      \field{extraname}{1}
       \field{sortinit}{S}
       \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
-      \field{extradate}{1}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
@@ -2527,48 +2546,6 @@
       \field{year}{2025}
       \field{pages}{1519\bibrangedash 1533}
       \range{pages}{15}
-    \endentry
-    \entry{shah2025hybrid}{article}{}{}
-      \name{author}{1}{}{%
-        {{un=0,uniquepart=base,hash=89c887fd6cd263b082aa519a5a7b8538}{%
-           family={Shah},
-           familyi={S\bibinitperiod},
-           given={Nisarg},
-           giveni={N\bibinitperiod},
-           givenun=0}}%
-      }
-      \strng{namehash}{89c887fd6cd263b082aa519a5a7b8538}
-      \strng{fullhash}{89c887fd6cd263b082aa519a5a7b8538}
-      \strng{fullhashraw}{89c887fd6cd263b082aa519a5a7b8538}
-      \strng{bibnamehash}{89c887fd6cd263b082aa519a5a7b8538}
-      \strng{authorbibnamehash}{89c887fd6cd263b082aa519a5a7b8538}
-      \strng{authornamehash}{89c887fd6cd263b082aa519a5a7b8538}
-      \strng{authorfullhash}{89c887fd6cd263b082aa519a5a7b8538}
-      \strng{authorfullhashraw}{89c887fd6cd263b082aa519a5a7b8538}
-      \field{extraname}{2}
-      \field{sortinit}{S}
-      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
-      \field{extradate}{2}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{author}
-      \field{journaltitle}{World Journal of Advanced Engineering Technology and Sciences}
-      \field{number}{02}
-      \field{title}{Hybrid Analytics Architecture: Integrating Traditional {BI} with {AI-Powered} Insights}
-      \field{volume}{14}
-      \field{year}{2025}
-      \field{pages}{256\bibrangedash 271}
-      \range{pages}{16}
-      \verb{doi}
-      \verb 10.30574/wjaets.2025.15.1.0351
-      \endverb
-      \verb{urlraw}
-      \verb https://journalwjaets.com/content/hybrid-analytics-architecture-integrating-traditional-bi-ai-powered-insights
-      \endverb
-      \verb{url}
-      \verb https://journalwjaets.com/content/hybrid-analytics-architecture-integrating-traditional-bi-ai-powered-insights
-      \endverb
     \endentry
     \entry{ijirt2024rulebased}{article}{}{}
       \name{author}{2}{}{%
@@ -2882,6 +2859,52 @@
       \field{year}{2025}
       \field{pages}{1\bibrangedash 10}
       \range{pages}{10}
+    \endentry
+    \entry{Torres2018BIPerformance}{article}{}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=0fb912662d3d1353b614ae43ad14ee03}{%
+           family={Torres},
+           familyi={T\bibinitperiod},
+           given={Rozan},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=985fc2a77a97dcee7b582e139ad7f768}{%
+           family={Sidorova},
+           familyi={S\bibinitperiod},
+           given={Anna},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=09408f386bfad74a9a49fef78e18d1c4}{%
+           family={Jones},
+           familyi={J\bibinitperiod},
+           given={Mary\bibnamedelima C.},
+           giveni={M\bibinitperiod\bibinitdelim C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{ddc51ccef62f55ce7c6f89efe6bc054d}
+      \strng{fullhash}{ddc51ccef62f55ce7c6f89efe6bc054d}
+      \strng{fullhashraw}{ddc51ccef62f55ce7c6f89efe6bc054d}
+      \strng{bibnamehash}{ddc51ccef62f55ce7c6f89efe6bc054d}
+      \strng{authorbibnamehash}{ddc51ccef62f55ce7c6f89efe6bc054d}
+      \strng{authornamehash}{ddc51ccef62f55ce7c6f89efe6bc054d}
+      \strng{authorfullhash}{ddc51ccef62f55ce7c6f89efe6bc054d}
+      \strng{authorfullhashraw}{ddc51ccef62f55ce7c6f89efe6bc054d}
+      \field{sortinit}{T}
+      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{author}
+      \field{journaltitle}{Information \& Management}
+      \field{number}{7}
+      \field{title}{Enabling Firm Performance through Business Intelligence and Analytics: A Dynamic Capabilities Perspective}
+      \field{volume}{55}
+      \field{year}{2018}
+      \field{pages}{822\bibrangedash 839}
+      \range{pages}{18}
+      \verb{doi}
+      \verb 10.1016/j.im.2018.03.010
+      \endverb
     \endentry
     \entry{Tuncer2023ARIMAProphetLSTM}{article}{}{}
       \name{author}{2}{}{%

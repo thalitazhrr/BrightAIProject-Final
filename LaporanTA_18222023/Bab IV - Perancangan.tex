@@ -116,7 +116,7 @@ Dalam memastikan bahwa sistem yang dikembangkan memenuhi kebutuhan fungsional da
 \subsection{Evaluasi Klasifikasi Maksud Berbasis Pola}
 \label{subsec:eval-intent}
 
-Modul klasifikasi maksud (\textit{intent classification}) dievaluasi menggunakan metrik standar klasifikasi multi-kelas dengan mempertimbangkan bahwa sistem dirancang untuk mengenali 20--30 \textit{intent} utama yang berkaitan dengan analisis dan prediksi indikator bisnis pelanggan. Evaluasi dilakukan dengan pendekatan \textit{one-vs-all} dan agregasi metrik menggunakan strategi \textit{macro-averaging}, \textit{micro-averaging}, dan \textit{weighted-averaging}.
+Modul pencocokan kueri ke aturan bisnis dievaluasi menggunakan metrik standar klasifikasi multi-kelas. Sistem mengimplementasikan tujuh kategori \textit{intent} yang dipetakan ke 38 aturan bisnis; evaluasi dilakukan pada level pencocokan aturan (38 kelas) dengan pendekatan \textit{one-vs-all} dan agregasi metrik menggunakan strategi \textit{macro-averaging}, \textit{micro-averaging}, dan \textit{weighted-averaging}.
 
 \paragraph{Metrik Evaluasi Klasifikasi \textit{Intent}}
 
@@ -151,11 +151,11 @@ dengan $K$ adalah jumlah kelas \textit{intent} dalam sistem.
 
 \paragraph{Analisis Nilai Keyakinan (\textit{Confidence Score})}
 
-Sistem menggunakan mekanisme pemberian nilai keyakinan dalam rentang 0 hingga 1 untuk setiap prediksi klasifikasi maksud. Ambang batas (\textit{threshold}) ditetapkan pada nilai 0,70 dengan ketentuan sebagai berikut.
+Sistem menggunakan mekanisme pemberian nilai keyakinan dalam rentang 0 hingga 100 untuk setiap prediksi klasifikasi maksud. Nilai dihitung melalui fungsi \texttt{calculateConfidence} yang menjumlahkan bobot kata kunci primer dan pendukung yang cocok ($c = \min(100,\;\text{skor} \times 10)$). Ambang batas (\textit{threshold}) ditetapkan pada nilai 40 (setara 0{,}40 pada skala 0--1) dengan ketentuan sebagai berikut.
 
 \begin{enumerate}
-    \item Jika nilai keyakinan $\geq$ 0,70: Prediksi dianggap valid dan sistem memberikan respons berdasarkan \textit{intent} yang teridentifikasi.
-    \item Jika nilai keyakinan $<$ 0,70: Prediksi dianggap tidak cukup yakin dan sistem meminta klarifikasi kepada pengguna atau menawarkan alternatif \textit{intent} yang mungkin (\textit{fallback mechanism}).
+    \item Jika nilai keyakinan $\geq$ 40: Prediksi dianggap valid dan sistem memberikan respons berdasarkan \textit{intent} yang teridentifikasi.
+    \item Jika nilai keyakinan $<$ 40: Prediksi dianggap tidak cukup yakin dan sistem meminta klarifikasi kepada pengguna atau menawarkan alternatif \textit{intent} yang mungkin (\textit{fallback mechanism}).
 \end{enumerate}
 
 \paragraph{Target Performa Klasifikasi \textit{Intent}}
@@ -167,7 +167,7 @@ Berdasarkan studi literatur dan praktik terbaik industri untuk sistem klasifikas
     \item Skor-F1 Makro $\geq$ 0,85: Menjamin performa yang baik dan seimbang di seluruh kelas, termasuk kelas-kelas dengan sampel pelatihan yang lebih sedikit.
     \item Skor-F1 Tertimbang $\geq$ 0,90: Menjamin performa yang baik pada kelas-kelas mayoritas yang mewakili mayoritas pertanyaan pengguna dalam praktik.
     \item Akurasi Keseluruhan $\geq$ 0,88: Target akurasi minimal untuk sistem dapat diterima dalam produksi.
-    \item \textit{Coverage Rate} $\geq$ 80\%: Persentase kueri yang mencapai \textit{threshold} keyakinan 0,70.
+    \item \textit{Coverage Rate} $\geq$ 80\%: Persentase kueri yang mencapai \textit{threshold} keyakinan 40.
     \item Waktu Respons $<$ 100 milidetik: Dalam 95\% kueri agar memberikan pengalaman pengguna yang responsif.
 \end{enumerate}
 
@@ -220,7 +220,7 @@ Target performa untuk modul NLG berbasis templat adalah:
 \subsection{Evaluasi Peramalan Deret Waktu}
 \label{subsec:eval-forecasting}
 
-Modul peramalan deret waktu dievaluasi menggunakan protokol \textit{rolling-origin backtesting} pada beberapa horizon prediksi. Evaluasi mencakup empat kelompok model: (1) \textit{baseline} statistik berupa ARIMA/SARIMA dan Prophet, (2) model \textit{deep learning} utama berupa LSTM dan GRU, serta (3) model arsitektur lanjutan berupa TFT (\textit{Temporal Fusion Transformer}) dan kombinasi hibrida. Perbandingan antara \textit{baseline} statistik dan model \textit{deep learning} merupakan komponen evaluasi yang kritis untuk memvalidasi justifikasi pemilihan model dalam penelitian ini.
+Modul peramalan deret waktu dievaluasi menggunakan protokol \textit{rolling-origin backtesting} pada beberapa horizon prediksi. Evaluasi mencakup dua kelompok model: (1) \textit{baseline} statistik berupa ARIMA/SARIMA dan Prophet, serta (2) model \textit{deep learning} utama berupa LSTM dan GRU. Perbandingan antara \textit{baseline} statistik dan model \textit{deep learning} merupakan komponen evaluasi yang kritis untuk memvalidasi justifikasi pemilihan model dalam penelitian ini.
 
 \paragraph{Metrik Evaluasi \textit{Forecasting}}
 

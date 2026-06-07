@@ -529,7 +529,7 @@ const ChatMessage = ({ message, isBot, theme }) => {
         </div>
       )}
 
-      <div className={`max-w-[75%] xl:max-w-[70%] ${
+      <div className={`max-w-[75%] xl:max-w-[70%] min-w-0 overflow-hidden ${
         isBot
           ? theme === 'dark'
             ? 'bg-slate-800/80 text-slate-100 border border-slate-700/50'

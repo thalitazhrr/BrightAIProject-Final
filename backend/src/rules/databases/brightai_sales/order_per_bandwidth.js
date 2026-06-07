@@ -73,8 +73,13 @@ module.exports = {
       if (matchCount < 2) {
         return 0;
       }
-      
-      let confidence = matchCount === 3 ? 70 : 50;
+
+      let confidence = matchCount === 3 ? 75 : 55;
+
+      // Strong bonus for bandwidth + order context (this rule's core domain)
+      if (hasBandwidth && hasOrderProduct) {
+        confidence += 10;
+      }
       
       // Strong indicators
       if (hasBandwidth && (input.includes('distribusi') || input.includes('kategori'))) {
@@ -424,6 +429,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const trend_analysis = this.analyzeBandwidthTrend(data);
       const total_orders = data.reduce((sum, d) => sum + d.total_orders_hsi, 0);
       const total_services = data.reduce((sum, d) => sum + d.unique_hsi_services, 0);  // ADDED

@@ -20,36 +20,42 @@ module.exports = {
   KEYWORD_PATTERNS: {
     primary: [
       "bandwidth churn", "churn bandwidth", "bandwidth cabut",
-      "analisis bandwidth", "bandwidth analysis", "churn per bandwidth",
-      "paket internet", "kecepatan internet", "speed internet"
+      "churn per bandwidth", "churn berdasarkan bandwidth",
+      "churn per kecepatan", "churn kecepatan bandwidth",
+      "churn pelanggan hsi per kecepatan"
     ],
-    
+
     supporting: [
       "internet", "broadband", "hsi", "koneksi",
-      "mbps", "kbps", "speed", "kecepatan",
+      "mbps", "kbps", "speed", "kecepatan", "bandwidth",
       "paket", "package", "produk", "layanan",
-      "churn", "cabut", "ct0", "dinolkan"
+      "churn", "cabut", "ct0", "dinolkan", "pelanggan"
     ],
-    
+
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      // Hard gate: must have churn/cabut/ct0/dinolkan context (this is a CHURN analysis rule)
+      const hasChurnCtx = lowerInput.includes('churn') || lowerInput.includes('cabut') ||
+        lowerInput.includes('ct0') || lowerInput.includes('dinolkan');
+      if (!hasChurnCtx) return 0;
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 80 + (primaryMatches * 8) + (supportingMatches * 3);
-      } else if ((lowerInput.includes("bandwidth") || lowerInput.includes("speed")) && 
+      } else if ((lowerInput.includes("bandwidth") || lowerInput.includes("speed") || lowerInput.includes("kecepatan")) &&
                 (lowerInput.includes("churn") || lowerInput.includes("cabut"))) {
-        score = 75;
+        score = 82;
       }
-      
+
       return Math.min(score, 100);
     }
   },
@@ -320,6 +326,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const hasil_analisis = data.map(record => {
         const risk_assessment = this.assessBandwidthChurnRisk(
           record.KATEGORI_BANDWIDTH,

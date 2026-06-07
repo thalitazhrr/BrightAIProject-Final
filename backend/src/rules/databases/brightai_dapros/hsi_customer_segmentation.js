@@ -21,7 +21,8 @@ module.exports = {
     primary: [
       'segmentasi pelanggan hsi', 'customer segmentation', 'profil pelanggan',
       'kategori customer', 'tipe pelanggan', 'klasifikasi pelanggan hsi',
-      'segmen bisnis', 'customer profile', 'segmentasi hsi', 'distribusi pelanggan'
+      'segmen bisnis', 'customer profile', 'segmentasi hsi', 'distribusi pelanggan',
+      'kategori pelanggan', 'kategori pelanggan internet'
     ],
     
     supporting: [
@@ -239,6 +240,9 @@ module.exports = {
     },
 
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const totalCustomers = data.reduce((sum, d) => sum + d.CUSTOMER_COUNT, 0);
       const segmentTrends = this.analyzeSegmentTrends(data);
       const growthOpportunities = this.identifyGrowthOpportunities(data);

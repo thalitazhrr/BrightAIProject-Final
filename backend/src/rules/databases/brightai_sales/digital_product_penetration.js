@@ -771,6 +771,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const ecosystem = this.analyzeDigitalEcosystem(data);
       
       const hasil_analisis = data.map(product => {

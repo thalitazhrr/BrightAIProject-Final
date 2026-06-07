@@ -163,7 +163,7 @@ FR-2 & Klasifikasi Maksud dan Pemberian Nilai Keyakinan &
 FR-3 & Pengalihan Kueri Berdasarkan Tingkat Keyakinan & 
 \textbf{Tujuan}: Mengarahkan kueri ke modul pemrosesan yang sesuai berdasarkan nilai keyakinan klasifikasi maksud. \\
 & & \textbf{Masukan}: Maksud dan nilai keyakinan. \\
-& & \textbf{Keluaran}: Jika nilai keyakinan $\geq$ 0,70: kueri diteruskan ke mesin kueri berbasis aturan. Jika nilai keyakinan $<$ 0,50: kueri diteruskan ke modul pemrosesan bahasa alami lanjutan atau permintaan klarifikasi ke pengguna. \\
+& & \textbf{Keluaran}: Jika nilai keyakinan $\geq$ 40 (skala 0--100): kueri diteruskan ke mesin kueri berbasis aturan. Jika nilai keyakinan $<$ 40: sistem memicu permintaan klarifikasi ke pengguna atau menawarkan alternatif \textit{intent}. \\
 \hline
 
 FR-4 & Eksekusi Kueri ke Gudang Data & 
@@ -667,7 +667,7 @@ Berikut alasan utama pemilihan Solusi 2 adalah sebagai berikut.
     
     \item \textbf{Adopsi Pengguna dan Kepuasan}
     
-    Antarmuka percakapan berbasis bahasa wajar memiliki tingkat adopsi yang jauh lebih tinggi dibandingkan dasbor tradisional karena lebih intuitif dan tidak memerlukan pelatihan ekstensif. Statistik industri menunjukkan bahwa \textit{chatbot} dapat menangani hingga 80\% pertanyaan standar secara otomatis (Fullview, 2025), yang secara signifikan mengurangi beban kerja tim dan meningkatkan kepuasan pengguna.
+    Antarmuka percakapan berbasis bahasa wajar memiliki tingkat adopsi yang jauh lebih tinggi dibandingkan dasbor tradisional karena lebih intuitif dan tidak memerlukan pelatihan ekstensif. Penelitian menunjukkan bahwa \textit{chatbot} berbasis AI mampu menangani sebagian besar pertanyaan rutin secara otomatis, yang secara signifikan mengurangi beban kerja tim dan meningkatkan kepuasan pengguna \autocite{Adam2021Chatbots}.
     
     \item \textbf{Keamanan dan Kontrol Data}
     
@@ -684,15 +684,21 @@ Solusi yang dipilih juga sejalan dengan tren global dengan pasar kecerdasan buat
 
 \section{Pemahaman dan Analisis Data (\textit{Data Understanding})}
 
-Tahap pemahaman data (\textit{data understanding}) merupakan fase kedua dalam metodologi CRISP-DM yang bertujuan untuk mengumpulkan data awal, mengidentifikasi karakteristik data, mendeteksi permasalahan kualitas data, serta menemukan wawasan awal yang dapat membentuk hipotesis terhadap informasi tersembunyi dalam data. Pada konteks pengembangan sistem \textit{Business Intelligence} berbasis \textit{chatbot}, tahap ini berfokus pada eksplorasi komprehensif terhadap lima domain data utama yang tersimpan dalam skema \texttt{USER} pada \textit{Enterprise Data Warehouse}.
+Tahap pemahaman data (\textit{data understanding}) merupakan fase kedua dalam metodologi CRISP-DM yang bertujuan untuk mengumpulkan data awal, mengidentifikasi karakteristik data, mendeteksi permasalahan kualitas data, serta menemukan wawasan awal yang dapat membentuk hipotesis terhadap informasi tersembunyi dalam data. Pada konteks pengembangan sistem \textit{Business Intelligence} berbasis \textit{chatbot}, tahap ini berfokus pada eksplorasi komprehensif terhadap lima domain data utama yang tersimpan dalam skema \texttt{DWH\_MOIS} pada \textit{Enterprise Data Warehouse}.
 
 \subsection{Sumber Data dan Arsitektur Penyimpanan}
 
-Sistem peramalan dan analisis performa berbasis \textit{chatbot} terhubung secara langsung dengan sumber data utama berupa \textit{Enterprise Data Warehouse} (EDW)\label{abbr:EDW} yang menggunakan basis data Oracle pada server dengan skema \texttt{USER}. Koneksi yang diatur menggunakan metode \textit{connection pooling} serta \textit{parameter binding} untuk menjamin efisiensi dan keamanan saat eksekusi kueri. Skema \texttt{USER} berisi lima domain utama yang masing-masing memiliki fokus bisnis dan struktur data berbeda.
+Sistem peramalan dan analisis performa berbasis \textit{chatbot} terhubung secara langsung dengan sumber data utama berupa \textit{Enterprise Data Warehouse} (EDW)\label{abbr:EDW} yang menggunakan basis data Oracle pada server dengan skema \texttt{DWH\_MOIS}. Koneksi yang diatur menggunakan metode \textit{connection pooling} serta \textit{parameter binding} untuk menjamin efisiensi dan keamanan saat eksekusi kueri. Skema \texttt{DWH\_MOIS} berisi lima tabel domain utama dengan prefiks \texttt{BRIGHTAI\_} yang masing-masing memiliki fokus bisnis dan struktur data berbeda.
+
+\subsubsection{Asal-Usul Data dan Izin Pemakaian}
+
+Seluruh data yang digunakan dalam penelitian ini merupakan data operasional internal perusahaan yang tersimpan pada \textit{Enterprise Data Warehouse} milik PT Telkom Indonesia (Persero) Tbk, khususnya pada skema \texttt{DWH\_MOIS}. Akses terhadap data diperoleh melalui mekanisme resmi kerja praktik yang diselenggarakan di Divisi \textit{Digital Business} and Technology pada periode kerja praktik penulis. Penggunaan data untuk keperluan penelitian dan pengembangan prototipe sistem telah mendapat persetujuan dari pembimbing lapangan selaku perwakilan pihak perusahaan.
+
+Data yang diproses oleh sistem bersifat agregat dan tidak mengandung informasi identitas pribadi pelanggan secara langsung. Atribut pelanggan seperti \texttt{NCLI}, \texttt{ND}, dan \texttt{NOTEL} yang terdapat dalam tabel sumber digunakan semata-mata sebagai kunci penghitungan agregasi (misalnya \texttt{COUNT(DISTINCT NCLI)} untuk menghitung jumlah pelanggan unik) dan tidak ditampilkan maupun disimpan dalam keluaran sistem. Seluruh respons \textit{chatbot} dan hasil peramalan disajikan dalam bentuk metrik agregat pada level wilayah (regional, witel) dan periode waktu (bulanan), sehingga tidak memungkinkan identifikasi pelanggan individual. Sistem juga dirancang dengan akses baca saja (\textit{read-only}) terhadap basis data, tanpa kemampuan untuk mengubah, menghapus, atau mengekspor data mentah dari \textit{data warehouse}.
 
 \begin{table}[h]
 \centering
-\caption{Ringkasan Domain Data pada Skema USER}
+\caption{Ringkasan Domain Data pada Skema \texttt{DWH\_MOIS}}
 \label{tab:ringkasan-domain}
 \begin{tabular}{|p{3.5cm}|p{3.5cm}|p{5cm}|}
 \hline
@@ -734,7 +740,7 @@ Domain \texttt{SALES} merupakan domain utama yang merepresentasikan informasi te
 \hline
 \textbf{Komponen} & \textbf{Deskripsi dan Atribut} \\
 \hline
-Tabel & \texttt{USER.SALES} \\
+Tabel & \texttt{DWH\_MOIS.BRIGHTAI\_SALES} \\
 \hline
 Fokus Bisnis & Analisis volume pesanan, kinerja kanal penjualan, serta penetrasi layanan pada tiap wilayah operasional \\
 \hline
@@ -763,7 +769,7 @@ Domain \texttt{\texttt{REVENUE}} dirancang untuk mendukung analisis pendapatan, 
 \hline
 \textbf{Komponen} & \textbf{Deskripsi dan Atribut} \\
 \hline
-Tabel & \texttt{USER.REVENUE} \\
+Tabel & \texttt{DWH\_MOIS.BRIGHTAI\_REVENUE} \\
 \hline
 Fokus Bisnis & Evaluasi pendapatan, profitabilitas pelanggan, dan distribusi pendapatan per wilayah dan segmen bisnis \\
 \hline
@@ -794,7 +800,7 @@ Domain \texttt{DATA\_PROSES} secara khusus dikembangkan untuk mendukung proses p
 \hline
 \textbf{Komponen} & \textbf{Deskripsi dan Atribut} \\
 \hline
-Tabel & \texttt{USER.DATA\_PROSES} \\
+Tabel & \texttt{DWH\_MOIS.BRIGHTAI\_DAPROS} \\
 \hline
 Fokus Bisnis & Segmentasi dan profiling pelanggan berbasis data pemasangan, keaktifan digital, dan status loyalitas \\
 \hline
@@ -825,7 +831,7 @@ Domain \texttt{TARGET} difokuskan pada evaluasi target kinerja, analisis kesenja
 \hline
 \textbf{Komponen} & \textbf{Deskripsi dan Atribut} \\
 \hline
-Tabel & \texttt{USER.TARGET} \\
+Tabel & \texttt{DWH\_MOIS.BRIGHTAI\_TARGET} \\
 \hline
 Fokus Bisnis & Pemantauan pencapaian target unit dan analisis kesenjangan terhadap target periode bulanan dan tahunan \\
 \hline
@@ -854,7 +860,7 @@ Domain \texttt{CT0} dirancang untuk menganalisis perilaku \textit{churn} pelangg
 \hline
 \textbf{Komponen} & \textbf{Deskripsi dan Atribut} \\
 \hline
-Tabel & \texttt{USER.CT0} \\
+Tabel & \texttt{DWH\_MOIS.BRIGHTAI\_CT0\_NAL} \\
 \hline
 Fokus Bisnis & Identifikasi pelanggan dengan potensi \textit{churn} dan perumusan strategi retensi berbasis analisis siklus hidup \\
 \hline
@@ -878,28 +884,32 @@ Evaluasi kualitas data untuk peramalan deret waktu (\textit{time series forecast
 
 \subsubsection{Kelengkapan dan Konsistensi Data}
 
-Pemeriksaan kelengkapan data dilakukan untuk mengidentifikasi nilai yang hilang (\textit{missing values}) atau ketidakkonsistenan dalam interval pengambilan sampel. Data deret waktu sangat bergantung pada observasi sekuensial sehingga \textit{timestamp} yang hilang atau interval pengambilan sampel yang tidak konsisten dapat menyebabkan asumsi model menjadi tidak valid. Tabel~\ref{tab:kualitas-data} menyajikan hasil pemeriksaan kualitas data untuk setiap domain berdasarkan kriteria kelengkapan.
+Pemeriksaan kelengkapan data dilakukan untuk mengidentifikasi nilai yang hilang (\textit{missing values}) atau ketidakkonsistenan dalam interval pengambilan sampel. Data deret waktu sangat bergantung pada observasi sekuensial sehingga \textit{timestamp} yang hilang atau interval pengambilan sampel yang tidak konsisten dapat menyebabkan asumsi model menjadi tidak valid.
+
+Profiling dilakukan melalui kueri \texttt{SELECT} langsung ke skema \texttt{DWH\_MOIS} pada \textit{Enterprise Data Warehouse} selama periode pelatihan model (Mei--Juni 2026). Setiap metrik diagregasi pada level bulanan sehingga satu baris mewakili satu bulan observasi. Proses penarikan data menerapkan filter \texttt{IS NOT NULL} pada kolom kunci masing-masing tabel guna memastikan hanya baris yang memiliki nilai valid yang diproses. Tabel~\ref{tab:kualitas-data} menyajikan hasil profiling nyata berdasarkan jumlah titik data (\textit{data points}) bulanan yang berhasil ditarik untuk setiap metrik pada level nasional.
 
 \begin{table}[h]
 \centering
-\caption{Hasil Pemeriksaan Kualitas Data per Domain}
+\caption{Hasil Profiling Data Deret Waktu per Metrik (Level Nasional)}
 \label{tab:kualitas-data}
-\begin{tabular}{|p{3.9cm}|p{2.3cm}|p{1.5cm}|p{2cm}|p{2.6cm}|}
+\begin{tabular}{|p{3.4cm}|p{3.2cm}|p{2.4cm}|p{2cm}|p{2.4cm}|}
 \hline
-\textbf{Domain} & \textbf{Kelengkapan (\%)} & \textbf{\textit{Missing}} (\%) & \textbf{Duplikat} & \textbf{Anomali} \\
+\textbf{Metrik} & \textbf{Tabel Sumber} & \textbf{Titik Data (Bulan)} & \textbf{Rentang} & \textbf{Filter \texttt{NULL}} \\
 \hline
-SALES & 98.5 & 1.5 & Minimal & Teridentifikasi \\
+\texttt{order\_hsi} & \texttt{BRIGHTAI\_SALES} & 55 & 41--55 & \texttt{ORDER\_DATE IS NOT NULL} \\
 \hline
-\texttt{REVENUE} & 99.2 & 0.8 & Minimal & Teridentifikasi \\
+\texttt{fulfillment\_rate} & \texttt{BRIGHTAI\_SALES} & 55 & 41--55 & \texttt{ORDER\_DATE IS NOT NULL} \\
 \hline
-DATA\_PROSES & 97.8 & 2.2 & Sedang & Teridentifikasi \\
+\texttt{avg\_install\_days} & \texttt{BRIGHTAI\_SALES} & 50 & 41--50 & \texttt{ORDER\_DATE}, \texttt{TGL\_PS IS NOT NULL} \\
 \hline
-TARGET & 99.0 & 1.0 & Minimal & Teridentifikasi \\
+\texttt{churn\_hsi} & \texttt{BRIGHTAI\_CT0\_NAL} & 40 & 20--40 & \texttt{PERIODE IS NOT NULL} \\
 \hline
-CT0 & 96.5 & 3.5 & Sedang & Teridentifikasi \\
+\texttt{realisasi\_hsi} & \texttt{BRIGHTAI\_TARGET} & 25 & 24--25 & \texttt{REALISASI}, \texttt{TREG IS NOT NULL} \\
 \hline
 \end{tabular}
 \end{table}
+
+Kolom \textit{Rentang} menunjukkan variasi jumlah titik data pada level regional dan witel, karena beberapa wilayah memiliki data historis yang lebih pendek. Secara keseluruhan, 185 seri waktu dilatih per model (5 metrik $\times$ 37 entitas: 1 nasional + 5 regional + 31 witel), dengan 169 seri (91{,}4\%) memenuhi ambang batas kelulusan KPI\@. Metrik \texttt{churn\_hsi} dan \texttt{realisasi\_hsi} memiliki titik data yang lebih sedikit karena tabel sumber mulai dipopulasi pada periode yang lebih akhir dibandingkan tabel \texttt{BRIGHTAI\_SALES}.
 
 \subsubsection{Analisis Struktur Temporal}
 
@@ -931,7 +941,7 @@ Dalam menjamin interoperabilitas antar-domain, sistem memanfaatkan sejumlah atri
 \hline
 Dimensi Waktu & \texttt{YEAR\_ID}, \texttt{MONTH\_ID}, \texttt{PERIODE}, \texttt{BULAN}, \texttt{TAHUN} \\
 \hline
-Hierarki Wilayah & \texttt{REGIONAL}, \texttt{WITEL}, \texttt{DATEL}, \texttt{STO}, \texttt{CSTO}, \texttt{LSTO} \\
+Hierarki Wilayah & \texttt{REGIONAL}, \texttt{WITEL}, \texttt{DATEL}, \texttt{STO}, \texttt{CSTO} \\
 \hline
 Identitas Pelanggan & \texttt{CUSTOMER\_ID}, \texttt{NCLI}, \texttt{ND}, \texttt{NOTEL}, \texttt{NIP\_NAS} \\
 \hline
@@ -1171,7 +1181,7 @@ Tahap pemodelan data (\textit{modeling}) merupakan fase keempat dalam metodologi
 \subsection{Arsitektur Model Peramalan Deret Waktu}
 \label{subsec:arsitektur-forecasting}
 
-Sistem peramalan dalam penelitian ini mengadopsi pendekatan bertahap yang dimulai dari model statistik sebagai \textit{baseline}, kemudian dibandingkan dengan model berbasis pembelajaran mendalam (\textit{deep learning}). Evaluasi perbandingan ini bertujuan untuk memastikan bahwa kompleksitas tambahan model \textit{deep learning} memberikan peningkatan akurasi yang signifikan dan terukur. Sistem menggunakan empat pendekatan model yang dikategorikan sebagai berikut: (1) model statistik \textit{baseline} berupa ARIMA dan Prophet, dan (2) model \textit{deep learning} utama berupa LSTM (\textit{Long Short-Term Memory}), GRU (\textit{Gated Recurrent Unit}), dan TFT (\textit{Temporal Fusion Transformer}).
+Sistem peramalan dalam penelitian ini mengadopsi pendekatan bertahap yang dimulai dari model statistik sebagai \textit{baseline}, kemudian dibandingkan dengan model berbasis pembelajaran mendalam (\textit{deep learning}). Evaluasi perbandingan ini bertujuan untuk memastikan bahwa kompleksitas tambahan model \textit{deep learning} memberikan peningkatan akurasi yang signifikan dan terukur. Sistem menggunakan empat model yang dikategorikan sebagai berikut: (1) model statistik \textit{baseline} berupa ARIMA dan Prophet, serta (2) model \textit{deep learning} utama berupa LSTM (\textit{Long Short-Term Memory}) dan GRU (\textit{Gated Recurrent Unit}).
 
 \subsubsection{Model \textit{Baseline} Statistik: ARIMA dan Prophet}
 
@@ -1227,62 +1237,35 @@ GRU merupakan varian yang lebih sederhana dari LSTM dengan jumlah parameter yang
 
 Dibandingkan dengan LSTM, GRU memiliki struktur yang lebih sederhana dengan lebih sedikit parameter sehingga dapat meningkatkan kecepatan pelatihan sebesar 20--30\% tanpa mengorbankan akurasi secara signifikan pada banyak kasus penggunaan.
 
-\subsubsection{Model TFT (\textit{Temporal Fusion Transformer})}
-
-\textit{Temporal Fusion Transformer} (TFT) merupakan arsitektur berbasis mekanisme perhatian (\textit{attention}) yang dirancang untuk menangani peramalan deret waktu \textit{multi-horizon} dan multivariat secara efektif. TFT menggabungkan kekuatan LSTM untuk pemrosesan pola jangka pendek dan menengah dengan mekanisme \textit{self-attention} untuk menangkap dependensi jangka panjang. Tabel~\ref{tab:tft-components} menyajikan komponen utama arsitektur TFT.
-
-\begin{table}[h]
-\centering
-\caption{Komponen Utama Arsitektur TFT}
-\label{tab:tft-components}
-\begin{tabular}{|p{3.5cm}|p{3.5cm}|p{5.5cm}|}
-\hline
-\textbf{Lapisan Komponen} & \textbf{Fungsi Utama} & \textbf{Inovasi Teknis} \\
-\hline
-\textit{Variable Selection Network} (VSN) & Seleksi dinamis fitur penting & Pembobotan fitur yang dipelajari model untuk setiap langkah waktu \\
-\hline
-\textit{Gated Residual Network} (GRN) & Pemrosesan nonlinear data & Koneksi \textit{skip} dengan gerbang berbasis GRU untuk kontrol kedalaman \\
-\hline
-\textit{LSTM Encoder-Decoder} & Pemrosesan pola temporal & Integrasi informasi statis ke \textit{hidden state} inisial \\
-\hline
-\textit{Multi-Head Attention} & Pembelajaran dependensi jangka panjang & Berbagi \textit{values} antar kepala perhatian untuk fleksibilitas \\
-\hline
-\textit{Quantile Output} & Peramalan probabilistik & Interval kepercayaan untuk pengambilan keputusan berbasis risiko \\
-\hline
-\end{tabular}
-\end{table}
-
-Keunggulan utama TFT adalah kemampuannya untuk memproses tiga jenis masukan secara terpisah, yaitu masukan statis seperti identitas pelanggan dan lokasi geografis, masukan variabel masa lalu yang hanya tersedia di masa lalu, dan masukan variabel masa depan yang diketahui seperti promosi yang direncanakan. TFT juga menghasilkan prediksi kuantil yang memungkinkan pengambilan keputusan berbasis interval kepercayaan.
-
 \subsubsection{Perbandingan Karakteristik Model}
 
-Tabel~\ref{tab:perbandingan-model} menyajikan perbandingan karakteristik seluruh model peramalan yang digunakan dalam penelitian ini, mencakup model statistik \textit{baseline} (ARIMA/SARIMA dan Prophet) serta model \textit{deep learning} utama (LSTM, GRU, TFT).
+Tabel~\ref{tab:perbandingan-model} menyajikan perbandingan karakteristik seluruh model peramalan yang diimplementasikan dalam penelitian ini, mencakup model statistik \textit{baseline} (ARIMA/SARIMA dan Prophet) serta model \textit{deep learning} utama (LSTM dan GRU).
 
 \begin{table}[h]
 \centering
 \caption{Perbandingan Karakteristik Model Peramalan}
 \label{tab:perbandingan-model}
-\begin{tabular}{|p{3cm}|p{2.2cm}|p{2.2cm}|p{2.2cm}|p{2.2cm}|p{2.2cm}|}
+\begin{tabular}{|p{3.5cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|}
 \hline
-\textbf{Aspek Perbandingan} & \textbf{ARIMA} & \textbf{Prophet} & \textbf{LSTM} & \textbf{GRU} & \textbf{TFT} \\
+\textbf{Aspek Perbandingan} & \textbf{ARIMA} & \textbf{Prophet} & \textbf{LSTM} & \textbf{GRU} \\
 \hline
-Kompleksitas Arsitektur & Rendah & Rendah & Tinggi & Sedang & Sangat Tinggi \\
+Kompleksitas Arsitektur & Rendah & Rendah & Tinggi & Sedang \\
 \hline
-Jumlah Parameter & Sedikit (\(p,d,q\)) & Sedikit & Banyak & Lebih sedikit & Paling banyak \\
+Jumlah Parameter & Sedikit (\(p,d,q\)) & Sedikit & Banyak & Lebih sedikit \\
 \hline
-Kecepatan Pelatihan & Sangat Cepat & Cepat & Lambat & Cepat & Paling lambat \\
+Kecepatan Pelatihan & Sangat Cepat & Cepat & Lambat & Cepat \\
 \hline
-Dependensi Jangka Panjang & Terbatas & Sedang & Baik & Baik & Sangat Baik \\
+Dependensi Jangka Panjang & Terbatas & Sedang & Baik & Baik \\
 \hline
-Kemampuan Non-linear & Tidak & Sebagian & Baik & Baik & Sangat Baik \\
+Kemampuan Nonlinear & Tidak & Sebagian & Baik & Baik \\
 \hline
-Interpretabilitas & Sangat Tinggi & Tinggi & Rendah & Rendah & Tinggi (\textit{attention}) \\
+Interpretabilitas & Sangat Tinggi & Tinggi & Rendah & Rendah \\
 \hline
-Kemampuan Multivariat & Terbatas & Terbatas & Baik & Baik & Sangat Baik \\
+Kemampuan Multivariat & Terbatas & Terbatas & Baik & Baik \\
 \hline
-Kebutuhan Volume Data & Rendah & Rendah & Sedang & Sedang & Tinggi \\
+Kebutuhan Volume Data & Rendah & Rendah & Sedang & Sedang \\
 \hline
-Peran dalam Penelitian & \textit{Baseline} & \textit{Baseline} & Model Utama & Model Utama & Opsi Lanjutan \\
+Peran dalam Penelitian & \textit{Baseline} & \textit{Baseline} & Model Utama & Model Utama \\
 \hline
 \end{tabular}
 \end{table}
@@ -1290,32 +1273,33 @@ Peran dalam Penelitian & \textit{Baseline} & \textit{Baseline} & Model Utama & M
 \subsection{Konfigurasi \textit{Hyperparameter}}
 \label{subsec:hyperparameter}
 
-Konfigurasi \textit{hyperparameter} untuk setiap arsitektur model ditetapkan berdasarkan praktik terbaik dari literatur dan disesuaikan melalui proses \textit{hyperparameter tuning} menggunakan validasi silang berbasis waktu (\textit{time-based cross-validation}). Tabel~\ref{tab:hyperparameter} menyajikan konfigurasi \textit{hyperparameter} untuk setiap model.
+Konfigurasi \textit{hyperparameter} untuk model LSTM dan GRU ditetapkan sebagai nilai tetap pada berkas \texttt{config.py} berdasarkan praktik terbaik dari literatur. Tabel~\ref{tab:hyperparameter} menyajikan konfigurasi \textit{hyperparameter} yang digunakan dalam pelatihan.
 
 \begin{table}[h]
-\caption{Konfigurasi \textit{Hyperparameter} Model}
+\centering
+\caption{Konfigurasi \textit{Hyperparameter} Model (Berkas \texttt{config.py})}
 \label{tab:hyperparameter}
-\begin{tabular}{|p{3.5cm}|c|c|c|}
+\begin{tabular}{|p{4.5cm}|c|c|p{4.5cm}|}
 \hline
-\textbf{\textit{Hyperparameter}} & \textbf{LSTM} & \textbf{GRU} & \textbf{TFT} \\
+\textbf{\textit{Hyperparameter}} & \textbf{LSTM} & \textbf{GRU} & \textbf{Keterangan} \\
 \hline
-Jumlah Lapisan Berulang & 2--3 & 2--3 & 2 \\
+Jumlah Lapisan Berulang (\texttt{NUM\_LAYERS}) & 2 & 2 & Kedalaman arsitektur \textit{recurrent} \\
 \hline
-Ukuran \textit{Hidden State} & 64--256 & 64--256 & 160 \\
+Ukuran \textit{Hidden State} (\texttt{HIDDEN\_SIZE}) & 64 & 64 & Dimensi representasi internal \\
 \hline
-Tingkat \textit{Dropout} & 0.1--0.3 & 0.1--0.3 & 0.1 \\
+Tingkat \textit{Dropout} (\texttt{DROPOUT}) & 0{,}2 & 0{,}2 & Regularisasi antar-lapisan \\
 \hline
-\textit{Learning Rate} & $10^{-3}$--$10^{-4}$ & $10^{-3}$--$10^{-4}$ & $10^{-3}$ \\
+\textit{Learning Rate} (\texttt{LEARNING\_RATE}) & $10^{-3}$ & $10^{-3}$ & Laju pembelajaran Adam \\
 \hline
-Ukuran \textit{Batch} & 32--256 & 32--256 & 64 \\
+Ukuran \textit{Batch} (\texttt{BATCH\_SIZE}) & 32 & 32 & Jumlah sampel per iterasi \\
 \hline
-Jumlah \textit{Epoch} Maksimum & 100 & 100 & 100 \\
+Jumlah \textit{Epoch} Maksimum (\texttt{EPOCHS}) & 100 & 100 & Batas iterasi pelatihan \\
 \hline
-\textit{Early Stopping Patience} & 10 & 10 & 10 \\
+\textit{Early Stopping Patience} & 20 & 20 & \textit{Epoch} tanpa perbaikan sebelum berhenti \\
 \hline
-Panjang Sekuens Masukan & 12 & 12 & 12 \\
+Panjang Sekuens Masukan (\texttt{WINDOW\_SIZE}) & 12 & 12 & Jumlah bulan historis sebagai input \\
 \hline
-Horizon Prediksi & 1--6 & 1--6 & 3--6 \\
+Horizon Prediksi (\texttt{HORIZON}) & 1 & 1 & Jumlah bulan yang diprediksi \\
 \hline
 \end{tabular}
 \end{table}
@@ -1357,9 +1341,9 @@ Prediksi \textit{Churn} Biner & \textit{Binary Cross-Entropy} & Mengklasifikasi 
 \subsection{Model Klasifikasi \textit{Intent} Berbasis Pola}
 \label{subsec:model-intent}
 
-Model klasifikasi \textit{intent} menggunakan pendekatan pencocokan pola (\textit{pattern matching}) yang dikombinasikan dengan mekanisme \textit{confidence scoring} untuk mengidentifikasi maksud pengguna dari kueri bahasa alami. Sistem dirancang untuk mengenali 20--30 \textit{intent} utama yang berkaitan dengan analisis dan prediksi indikator bisnis pelanggan.
+Pencocokan kueri pengguna ke aturan bisnis menggunakan pendekatan pencocokan pola (\textit{pattern matching}) yang dikombinasikan dengan mekanisme \textit{confidence scoring}. Sistem mengimplementasikan tujuh kategori \textit{intent} (\textit{quantity}, \textit{trend}, \textit{comparison}, \textit{location}, \textit{performance}, \textit{detail}, \textit{reason}) beserta satu \textit{fallback} (\textit{general}), yang dikombinasikan dengan delapan kategori fokus analisis untuk dipetakan ke 38 aturan bisnis pada lima domain data.
 
-Dalam setiap \textit{intent}, didefinisikan sekumpulan pola (\textit{pattern}) yang mencakup variasi pertanyaan yang mungkin diajukan pengguna. Sistem menghitung skor kecocokan (\textit{matching score}) antara kueri pengguna dengan setiap pola dan menghasilkan \textit{confidence score} dalam rentang 0--1. Ambang batas (\textit{threshold}) ditetapkan pada nilai 0,70; kueri dengan \textit{confidence score} di atas ambang batas diteruskan ke modul pemrosesan kueri, sedangkan kueri di bawah ambang batas memicu permintaan klarifikasi kepada pengguna.
+Dalam setiap \textit{intent}, didefinisikan sekumpulan pola (\textit{pattern}) yang mencakup variasi pertanyaan yang mungkin diajukan pengguna. Sistem menghitung skor kecocokan (\textit{matching score}) antara kueri pengguna dengan setiap pola dan menghasilkan \textit{confidence score} dalam rentang 0--100 melalui formula $c = \min(100,\;\text{skor} \times 10)$. Ambang batas (\textit{threshold}) ditetapkan pada nilai 40 (setara 0{,}40 pada skala 0--1); kueri dengan \textit{confidence score} di atas ambang batas diteruskan ke modul pemrosesan kueri, sedangkan kueri di bawah ambang batas memicu permintaan klarifikasi kepada pengguna.
 
 \subsection{Model Pembangkitan Bahasa Alami Berbasis Templat}
 \label{subsec:model-nlg}
@@ -1397,9 +1381,9 @@ Tabel~\ref{tab:integrasi-model} menyajikan ringkasan integrasi model dalam siste
 \hline
 Klasifikasi \textit{Intent} & \textit{Pattern Matching} + \textit{Confidence Scoring} & Kueri teks pengguna & \textit{Intent}, entitas, confidence score \\
 \hline
-Peramalan Deret Waktu & LSTM / GRU / TFT & Data historis + fitur rekayasa & Prediksi + interval kepercayaan \\
+Peramalan Deret Waktu & LSTM / GRU (ARIMA \& Prophet sebagai \textit{baseline}) & Data historis bulanan & Prediksi nilai metrik \\
 \hline
-Pembangkitan Respons & \textit{Template-based} NLG + T5 Rewriting & Data hasil kueri / prediksi & Teks naratif yang responsif \\
+Pembangkitan Respons & \textit{Template-based} NLG & Data hasil kueri / prediksi & Teks naratif bahasa Indonesia \\
 \hline
 \end{tabular}
 \end{table}

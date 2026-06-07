@@ -695,10 +695,13 @@ module.exports = {
         };
       }).sort((a, b) => b.rata_rata_penetrasi - a.rata_rata_penetrasi);
 
-      analisis.top_performers_nasional.top_5_regional = regionalSummary.slice(0, 5);
+      analisis.top_performers_nasional.top_5_regional = regionalSummary
+        .filter(r => r.rata_rata_penetrasi > 0)
+        .slice(0, 5);
 
       // Analisis efisiensi berdasarkan metrik baru
       analisis.analisis_efisiensi.top_efisiensi_order_per_pelanggan = data
+        .filter(d => d.rata_rata_order_per_pelanggan > 0)
         .sort((a, b) => b.rata_rata_order_per_pelanggan - a.rata_rata_order_per_pelanggan)
         .slice(0, 10)
         .map(d => ({
@@ -711,6 +714,7 @@ module.exports = {
         }));
 
       analisis.analisis_efisiensi.top_efisiensi_layanan_per_pelanggan = data
+        .filter(d => d.rr_layanan_per_pelanggan > 0)
         .sort((a, b) => b.rr_layanan_per_pelanggan - a.rr_layanan_per_pelanggan)
         .slice(0, 10)
         .map(d => ({
@@ -723,6 +727,7 @@ module.exports = {
         }));
 
       analisis.analisis_efisiensi.top_efisiensi_order_per_layanan = data
+        .filter(d => d.rata_rata_order_per_layanan > 0)
         .sort((a, b) => b.rata_rata_order_per_layanan - a.rata_rata_order_per_layanan)
         .slice(0, 10)
         .map(d => ({

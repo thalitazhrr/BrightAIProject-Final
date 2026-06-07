@@ -22,45 +22,60 @@ module.exports = {
       // Trend analysis - yang biasa digunakan
       'trend hsi', 'tren hsi', 'pola pertumbuhan', 'growth pattern',
       'analisis trend', 'trend analysis', 'momentum hsi',
-      
+
       // Time series familiar terms
       'perkembangan', 'development', 'evolusi', 'evolution',
-      'pergerakan', 'movement', 'dinamika', 'dynamics'
+      'pergerakan', 'movement', 'dinamika', 'dynamics',
+
+      // Target vs realisasi trend
+      'tren pertumbuhan hsi', 'pertumbuhan hsi target', 'target vs realisasi',
+      'realisasi bulanan', 'target realisasi bulanan', 'pertumbuhan target hsi'
     ],
-    
+
     supporting: [
       // Trend indicators
       'naik', 'turun', 'stabil', 'fluktuasi', 'volatilitas',
       'increasing', 'decreasing', 'stable', 'fluctuation',
-      
+
       // Growth terms
       'pertumbuhan', 'growth', 'ekspansi', 'expansion', 'decline',
       'penurunan', 'peningkatan', 'improvement', 'deterioration',
-      
+
       // Pattern analysis
       'pola', 'pattern', 'siklus', 'cycle', 'seasonality',
-      'musiman', 'bulanan', 'quarterly', 'tahunan'
+      'musiman', 'bulanan', 'quarterly', 'tahunan',
+
+      // Target & realisasi
+      'target', 'realisasi', 'hsi', 'internet', 'tren', 'trend'
     ],
-    
+
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      // MUST have target/realisasi context to distinguish from ps_012/mart_001
+      const hasTargetCtx =
+        lowerInput.includes('target') || lowerInput.includes('realisasi') ||
+        lowerInput.includes('pencapaian') || lowerInput.includes('achievement');
+      if (!hasTargetCtx) return 0;
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 75 + (primaryMatches * 15) + (supportingMatches * 2);
-      } else if (lowerInput.includes('trend') && 
-                (lowerInput.includes('hsi') || lowerInput.includes('pertumbuhan'))) {
-        score = 65;
+      } else if (
+        (lowerInput.includes('tren') || lowerInput.includes('trend') || lowerInput.includes('pertumbuhan')) &&
+        (lowerInput.includes('target') || lowerInput.includes('realisasi'))
+      ) {
+        score = 70;
       }
-      
+
       return Math.min(score, 100);
     }
   },
@@ -573,6 +588,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const hasil_analisis = data.map(record => {
         const trend_strength = this.assessTrendStrength(
           record.MOMENTUM_CATEGORY,

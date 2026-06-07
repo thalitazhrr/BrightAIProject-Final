@@ -27,7 +27,7 @@
 4 & React.js & Pustaka JavaScript untuk membangun antarmuka pengguna yang interaktif dan responsif. React.js digunakan untuk mengembangkan \textit{frontend chatbot} berbasis web dengan fitur percakapan, panel peramalan, dan alur terpandu (\textit{guided flow}). \\
 \hline
 
-5 & Oracle Database & \textit{Enterprise Data Warehouse} (DWH) yang menjadi sumber data utama sistem. Oracle Database digunakan untuk dua tujuan: (1) menyimpan data pengguna, riwayat percakapan, dan sesi melalui \textit{connection pooling} dengan pustaka \texttt{node-oracledb}; dan (2) menyediakan data analitik bisnis dari skema \texttt{DWH\_MOIS} yang mencakup lima domain data (penjualan, pendapatan, target, proses data pelanggan, dan \textit{churn}). \\
+5 & Oracle Database & Basis data relasional yang melayani dua skema terpisah: (1) skema \texttt{DWH\_MOIS} sebagai \textit{Enterprise Data Warehouse} (DWH) yang menyimpan lima tabel domain analitik dengan prefiks \texttt{BRIGHTAI\_} (penjualan, pendapatan, target, proses data pelanggan, dan \textit{churn}); dan (2) skema \texttt{USR\_RPT} yang menyimpan data operasional sistem (tabel pengguna, riwayat percakapan, dan sesi). Koneksi dikelola melalui \textit{connection pooling} dengan pustaka \texttt{node-oracledb}. \\
 \hline
 
 6 & PyTorch & \textit{Framework deep learning} utama yang digunakan untuk membangun dan melatih model peramalan deret waktu berbasis GRU dan LSTM. PyTorch dipilih karena fleksibilitas dalam pendefinisian arsitektur model kustom dan kemudahan \textit{debugging}. \\

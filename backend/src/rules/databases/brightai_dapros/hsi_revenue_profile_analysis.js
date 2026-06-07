@@ -21,13 +21,15 @@ module.exports = {
     primary: [
       'revenue profile hsi', 'analisis revenue', 'profil pendapatan',
       'revenue analysis', 'customer revenue', 'arpu analysis',
-      'kontribusi revenue', 'revenue contribution', 'revenue pattern hsi', 'analisis pendapatan'
+      'kontribusi revenue', 'revenue contribution', 'revenue pattern hsi', 'analisis pendapatan',
+      'profil revenue', 'revenue pelanggan', 'revenue per segmen', 'pendapatan per segmen'
     ],
-    
+
     supporting: [
       'revenue', 'pendapatan', 'arpu', 'kontribusi', 'billing', 'payment',
       'income', 'financial', 'monetisasi', 'value', 'contribution',
-      'telda', 'datel', 'regional', 'witel', 'wilayah', 'distribusi'
+      'telda', 'datel', 'regional', 'witel', 'wilayah', 'distribusi',
+      'profil', 'segmen', 'pelanggan', 'customer', 'hsi', 'internet'
     ],
     
     calculateConfidence: function(input) {
@@ -127,7 +129,6 @@ module.exports = {
             WHERE PLBLCL IN ('BL', 'CL')
               AND CITEM NOT LIKE '%W/%'
               AND CITEM NOT LIKE '%WM%'
-              AND ASSET_STATUS IN ('ACTIVE', 'NORMAL')
         )
     )
     
@@ -369,6 +370,9 @@ module.exports = {
     },
 
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const totalCustomers = data.reduce((sum, d) => sum + d.CUSTOMER_COUNT, 0);
       const totalHSIRevenue = data.reduce((sum, d) => sum + d.TOTAL_HSI_CONTRIBUTION, 0);
       const revenueDistribution = this.analyzeRevenueDistribution(data);
@@ -460,18 +464,18 @@ module.exports = {
           regional: revenue.REGIONAL,
           witel: revenue.WITEL,
           telda: revenue.TELDA,
-          jumlah_customer: revenue.CUSTOMER_COUNT.toLocaleString('id-ID'),
-          persentase: `${revenue.PERCENTAGE}%`,
-          rata_rata_hsi_revenue: `Rp ${revenue.AVG_HSI_REVENUE.toLocaleString('id-ID')}`,
-          rata_rata_total_revenue: `Rp ${revenue.AVG_TOTAL_REVENUE.toLocaleString('id-ID')}`,
-          rata_rata_addon_revenue: `Rp ${revenue.AVG_ADDON_REVENUE.toLocaleString('id-ID')}`,
-          total_kontribusi_hsi: `Rp ${revenue.TOTAL_HSI_CONTRIBUTION.toLocaleString('id-ID')}`,
-          total_kontribusi_revenue: `Rp ${revenue.TOTAL_REVENUE_CONTRIBUTION.toLocaleString('id-ID')}`,
-          rata_rata_speed: `${revenue.AVG_SPEED_MBPS} Mbps`,
-          rata_rata_tenure: `${revenue.AVG_TENURE_MONTHS} bulan`,
-          rata_rata_addon_count: revenue.AVG_ADDON_COUNT,
-          revenue_per_mbps: `Rp ${revenue.AVG_REVENUE_PER_MBPS.toLocaleString('id-ID')}`,
-          monthly_revenue_rate: `Rp ${revenue.AVG_MONTHLY_REVENUE_RATE.toLocaleString('id-ID')}`,
+          jumlah_customer: (revenue.CUSTOMER_COUNT ?? 0).toLocaleString('id-ID'),
+          persentase: `${revenue.PERCENTAGE ?? 0}%`,
+          rata_rata_hsi_revenue: `Rp ${(revenue.AVG_HSI_REVENUE ?? 0).toLocaleString('id-ID')}`,
+          rata_rata_total_revenue: `Rp ${(revenue.AVG_TOTAL_REVENUE ?? 0).toLocaleString('id-ID')}`,
+          rata_rata_addon_revenue: `Rp ${(revenue.AVG_ADDON_REVENUE ?? 0).toLocaleString('id-ID')}`,
+          total_kontribusi_hsi: `Rp ${(revenue.TOTAL_HSI_CONTRIBUTION ?? 0).toLocaleString('id-ID')}`,
+          total_kontribusi_revenue: `Rp ${(revenue.TOTAL_REVENUE_CONTRIBUTION ?? 0).toLocaleString('id-ID')}`,
+          rata_rata_speed: `${revenue.AVG_SPEED_MBPS ?? 0} Mbps`,
+          rata_rata_tenure: `${revenue.AVG_TENURE_MONTHS ?? 0} bulan`,
+          rata_rata_addon_count: revenue.AVG_ADDON_COUNT ?? 0,
+          revenue_per_mbps: `Rp ${(revenue.AVG_REVENUE_PER_MBPS ?? 0).toLocaleString('id-ID')}`,
+          monthly_revenue_rate: `Rp ${(revenue.AVG_MONTHLY_REVENUE_RATE ?? 0).toLocaleString('id-ID')}`,
           cakupan_telda: revenue.TELDA_COVERAGE,
           cakupan_sto: revenue.STO_COVERAGE,
           ltv_score: this.calculateLTVScore(revenue),

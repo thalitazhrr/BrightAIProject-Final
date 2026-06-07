@@ -22,7 +22,7 @@ module.exports = {
       geographic_entity: [
         'regional', 'witel', 'datel', 'sto', 'wilayah', 'area', 'region',
         'cabang', 'kantor', 'unit', 'divisi', 'tempat', 'lokasi', 'daerah',
-        'location', 'branch', 'office', 'geographic', 'territorial'
+        'location', 'branch', 'office', 'geographic', 'territorial', 'geografis'
       ],
       
       analysis_keywords: [
@@ -78,12 +78,17 @@ module.exports = {
         return 0;
       }
       
-      let confidence = matchCount === 3 ? 70 : 50;
-      
+      let confidence = matchCount === 3 ? 75 : 55;
+
       // Bonus for specific geographic terms
       const geoTerms = ['regional', 'witel', 'datel', 'sto'];
       const geoMatches = geoTerms.filter(term => input.includes(term)).length;
       confidence += geoMatches * 8;
+
+      // Bonus for order + geographic combination (strong signal for this rule)
+      if (input.includes('order') && (input.includes('per wilayah') || input.includes('per regional') || input.includes('per witel'))) {
+        confidence += 12;
+      }
       
       // Bonus for optional keywords
       this.optional.hierarchy_keywords.forEach(keyword => {
@@ -418,6 +423,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       // Group data by current month for main analysis
       // Find the latest (year, month) PAIR — not independent maxes
       const latestPeriod = data.reduce((best, d) => {
@@ -728,6 +736,7 @@ module.exports = {
       });
       
       return Object.values(witel_agg)
+        .filter(w => w.total_hsi > 0)
         .sort((a, b) => b.total_hsi - a.total_hsi)
         .slice(0, limit)
         .map((w, idx) => ({

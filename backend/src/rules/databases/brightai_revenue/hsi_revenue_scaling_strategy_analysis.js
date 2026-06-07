@@ -21,32 +21,34 @@ module.exports = {
     primary: [
       'scaling revenue hsi', 'strategi scaling hsi', 'revenue scaling internet',
       'new recurring sustain hsi', 'kategori revenue hsi', 'tipe revenue scaling',
-      'analisis scaling strategy hsi', 'revenue categorization hsi', 'scaling portfolio hsi'
+      'analisis scaling strategy hsi', 'revenue categorization hsi', 'scaling portfolio hsi',
+      'strategi peningkatan revenue', 'peningkatan revenue hsi', 'strategi revenue hsi',
+      'revenue scaling strategy'
     ],
     supporting: [
       'scaling', 'strategi', 'strategy', 'new', 'recurring', 'sustain', 'kategori',
       'tipe', 'revenue', 'pendapatan', 'hsi', 'internet', 'analisis', 'portfolio',
-      'flag', 'monthly', 'classification', 'distribution'
+      'flag', 'monthly', 'classification', 'distribution', 'peningkatan'
     ],
-    
+
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 80 + (primaryMatches * 10) + (supportingMatches * 2);
-      } else if (supportingMatches >= 4) {
+      } else if (supportingMatches >= 3) {
         score = 65 + (supportingMatches * 4);
       }
-      
+
       return Math.min(score, 100);
     }
   },
@@ -59,7 +61,6 @@ module.exports = {
         WITEL_BILL,
         DATEL,
         CSTO,
-        LSTO,
         FLAG_SCALING_SUSTAIN_REVENUE,
         FLAG_SCALING_MONTHLY_REVENUE,
         
@@ -118,12 +119,11 @@ module.exports = {
       AND WITEL_BILL IS NOT NULL
       AND DATEL IS NOT NULL
       AND CSTO IS NOT NULL
-      AND LSTO IS NOT NULL
       AND NIP_NAS IS NOT NULL
       AND NCLI IS NOT NULL
       AND ND IS NOT NULL
       AND FLAG_SCALING_MONTHLY_REVENUE IS NOT NULL
-    GROUP BY YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO, LSTO, 
+    GROUP BY YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO,
              FLAG_SCALING_SUSTAIN_REVENUE, FLAG_SCALING_MONTHLY_REVENUE
     ORDER BY YEAR_ID DESC, MONTH_ID DESC, TOTAL_REVENUE DESC
   `,
@@ -340,6 +340,9 @@ module.exports = {
     },
 
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const totalRevenue = data.reduce((sum, d) => sum + d.TOTAL_REVENUE, 0);
       const totalCustomers = data.reduce((sum, d) => sum + d.TOTAL_PELANGGAN, 0);
       const totalNCLI = data.reduce((sum, d) => sum + d.TOTAL_NCLI, 0);
@@ -461,7 +464,6 @@ module.exports = {
           witel: item.WITEL_BILL,
           datel: item.DATEL,
           kode_sto: item.CSTO,
-          nama_sto: item.LSTO,
           scaling_sustain_flag: item.FLAG_SCALING_SUSTAIN_REVENUE,
           scaling_monthly_flag: item.FLAG_SCALING_MONTHLY_REVENUE,
           growth_category: item.GROWTH_POTENTIAL_CATEGORY,

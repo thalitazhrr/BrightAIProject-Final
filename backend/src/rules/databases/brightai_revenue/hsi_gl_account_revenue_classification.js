@@ -96,7 +96,6 @@ module.exports = {
         p.WITEL_BILL,
         p.DATEL,
         p.CSTO,
-        p.LSTO,
         p.GL_ACC,
         g.GL_CATEGORY,
         g.REVENUE_TYPE,
@@ -142,11 +141,10 @@ module.exports = {
       AND p.WITEL_BILL IS NOT NULL
       AND p.DATEL IS NOT NULL
       AND p.CSTO IS NOT NULL
-      AND p.LSTO IS NOT NULL
       AND p.NIP_NAS IS NOT NULL
       AND p.NCLI IS NOT NULL
       AND p.ND IS NOT NULL
-    GROUP BY p.YEAR_ID, p.MONTH_ID, p.REGIONAL_BILL, p.WITEL_BILL, p.DATEL, p.CSTO, p.LSTO,
+    GROUP BY p.YEAR_ID, p.MONTH_ID, p.REGIONAL_BILL, p.WITEL_BILL, p.DATEL, p.CSTO,
              p.GL_ACC, g.GL_CATEGORY, g.REVENUE_TYPE, g.SERVICE_TIER
     ORDER BY p.YEAR_ID DESC, p.MONTH_ID DESC, TOTAL_REVENUE DESC
   `,
@@ -380,6 +378,9 @@ module.exports = {
     },
 
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const totalRevenue = data.reduce((sum, d) => sum + d.TOTAL_REVENUE, 0);
       const totalCustomers = data.reduce((sum, d) => sum + d.TOTAL_PELANGGAN, 0);
       const totalNCLI = data.reduce((sum, d) => sum + d.TOTAL_NCLI, 0);
@@ -404,7 +405,7 @@ module.exports = {
         acc[category].ncli += item.TOTAL_NCLI;
         acc[category].services += item.TOTAL_LAYANAN;
         acc[category].gl_accounts.add(item.GL_ACC);
-        acc[category].sto_count.add(`${item.CSTO}-${item.LSTO}`);
+        acc[category].sto_count.add(item.CSTO);
         return acc;
       }, {});
       
@@ -505,7 +506,6 @@ module.exports = {
           witel: item.WITEL_BILL,
           datel: item.DATEL,
           kode_sto: item.CSTO,
-          nama_sto: item.LSTO,
           gl_account: item.GL_ACC,
           kategori_gl: item.GL_CATEGORY,
           revenue_type: item.REVENUE_TYPE,

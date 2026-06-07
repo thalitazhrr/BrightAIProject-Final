@@ -1,6 +1,6 @@
-\contentsline {algorithm}{\numberline {V.1}{\ignorespaces Injeksi Filter Geografis ke dalam Kueri SQL}}{128}{algorithm.caption.50}%
-\contentsline {algorithm}{\numberline {V.2}{\ignorespaces Klasifikasi Maksud Berbasis Pencocokan Pola Kata Kunci Berbobot}}{130}{algorithm.caption.51}%
-\contentsline {algorithm}{\numberline {V.3}{\ignorespaces Pembangkitan Respons Berbasis Templat (\textit {Template-Based NLG})}}{132}{algorithm.caption.53}%
-\contentsline {algorithm}{\numberline {V.4}{\ignorespaces Pelatihan GRU/LSTM dengan \textit {Early Stopping} dan \textit {Learning Rate Scheduling}}}{134}{algorithm.caption.55}%
-\contentsline {algorithm}{\numberline {V.5}{\ignorespaces Penyesuaian Otomatis Ukuran Jendela (\textit {Auto-Tune Window Size})}}{136}{algorithm.caption.57}%
-\contentsline {algorithm}{\numberline {V.6}{\ignorespaces \textit {Walk-Forward Validation} untuk Evaluasi Model Peramalan}}{137}{algorithm.caption.58}%
+\contentsline {algorithm}{\numberline {V.1}{\ignorespaces Injeksi Filter Geografis ke dalam Kueri SQL}}{130}{algorithm.caption.49}%
+\contentsline {algorithm}{\numberline {V.2}{\ignorespaces Klasifikasi Maksud Berbasis Pencocokan Pola Kata Kunci Berbobot}}{134}{algorithm.caption.50}%
+\contentsline {algorithm}{\numberline {V.3}{\ignorespaces Pembangkitan Respons Berbasis Templat (\textit {Template-Based NLG})}}{137}{algorithm.caption.52}%
+\contentsline {algorithm}{\numberline {V.4}{\ignorespaces Pelatihan GRU/LSTM dengan \textit {Early Stopping} dan \textit {Learning Rate Scheduling}}}{141}{algorithm.caption.54}%
+\contentsline {algorithm}{\numberline {V.5}{\ignorespaces Penyesuaian Otomatis Ukuran Jendela (\textit {Auto-Tune Window Size})}}{143}{algorithm.caption.56}%
+\contentsline {algorithm}{\numberline {V.6}{\ignorespaces \textit {Walk-Forward Validation} untuk Evaluasi Model Peramalan}}{144}{algorithm.caption.57}%

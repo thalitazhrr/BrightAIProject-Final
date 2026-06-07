@@ -33,12 +33,11 @@ class RuleEngine {
   }
 
   async processQuery(userInput, context = {}) {
+    const startTime = Date.now();
     try {
       if (!this.isInitialized) {
         await this.initialize();
       }
-
-      const startTime = Date.now();
       
       const geoContext = context.geoContext
         ? context.geoContext
@@ -208,7 +207,14 @@ class RuleEngine {
 
     let filterClause;
     if (geoContext.scope === 'regional') {
-      filterClause = `AND ${cols.regional} = '${dbValue}'`;
+      // BRIGHTAI_DAPROS stores REGIONAL as 'REG-X' or plain '1','2','3'...
+      // Other databases (SALES, CT0, etc.) use 'REGIONAL X' format.
+      if (database === 'BRIGHTAI_DAPROS') {
+        const num = dbValue.replace('REGIONAL ', ''); // '1', '2', ...
+        filterClause = `AND (${cols.regional} = 'REG-${num}' OR ${cols.regional} = '${num}')`;
+      } else {
+        filterClause = `AND ${cols.regional} = '${dbValue}'`;
+      }
     } else if (geoContext.scope === 'witel') {
       filterClause = `AND ${cols.witel} = '${dbValue}'`;
     } else {

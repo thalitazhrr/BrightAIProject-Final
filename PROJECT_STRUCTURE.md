@@ -143,12 +143,6 @@ data/
 - Responsive design
 - PWA capabilities
 
-**Development Tools:**
-- ESLint for code linting
-- Prettier for code formatting
-- Nodemon for development
-- Claude Code for AI assistance
-
 ## Environment Configuration
 
 ### Backend Environment Variables (`.env`)

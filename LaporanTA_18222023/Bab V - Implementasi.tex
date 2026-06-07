@@ -18,7 +18,7 @@ Sistem BrightAI diimplementasikan dengan arsitektur tiga lapis (\textit{three-ti
     \item \textbf{Layanan \textit{Machine Learning} (FastAPI/PyTorch)}: Layanan terpisah yang menangani pelatihan dan inferensi model peramalan deret waktu berbasis GRU dan LSTM. Layanan ini berjalan pada porta 8000 dan diakses oleh \textit{backend} melalui permintaan HTTP internal.
 \end{enumerate}
 
-Ketiga lapis terhubung ke Oracle Database yang berfungsi sebagai \textit{Enterprise Data Warehouse} (DWH)\label{abbr:DWH} sekaligus penyimpan data operasional sistem (pengguna, riwayat percakapan, dan sesi).
+Ketiga lapis terhubung ke Oracle Database yang berfungsi ganda melalui dua skema terpisah: (1) skema \texttt{DWH\_MOIS} sebagai \textit{Enterprise Data Warehouse} (DWH)\label{abbr:DWH} yang menyimpan lima tabel domain analitik dengan prefiks \texttt{BRIGHTAI\_} (\texttt{BRIGHTAI\_SALES}, \texttt{BRIGHTAI\_REVENUE}, \texttt{BRIGHTAI\_TARGET}, \texttt{BRIGHTAI\_DAPROS}, \texttt{BRIGHTAI\_CT0\_NAL}); dan (2) skema \texttt{USR\_RPT} yang menyimpan data operasional sistem, meliputi tabel pengguna (\texttt{BRIGHTAI\_USER}), riwayat percakapan (\texttt{BRIGHTAI\_CHAT}), dan sesi (\texttt{BRIGHTAI\_SESSION}).
 
 \section{Implementasi \textit{Backend} (Node.js/Express)}
 \label{sec:impl-backend}
@@ -45,7 +45,7 @@ Sistem mengimplementasikan beberapa lapisan \textit{middleware} keamanan pada Ex
 \subsection{Koneksi Oracle Database}
 \label{subsec:koneksi-oracle}
 
-Koneksi ke Oracle Database dikelola melalui modul \texttt{config/database.js} menggunakan pustaka \texttt{node-oracledb}. Sistem menggunakan \textit{connection pooling} untuk mengoptimalkan penggunaan koneksi dengan konfigurasi yang disajikan pada Tabel~\ref{tab:pool-config}.
+Koneksi ke Oracle Database dikelola melalui modul \texttt{config/database.js} menggunakan pustaka \texttt{node-oracledb}. Satu \textit{connection pool} melayani akses ke kedua skema: \texttt{DWH\_MOIS} untuk kueri analitik dan \texttt{USR\_RPT} untuk operasi autentikasi serta manajemen sesi. Konfigurasi \textit{pool} disajikan pada Tabel~\ref{tab:pool-config}.
 
 \begin{table}[h]
 \centering
@@ -117,7 +117,9 @@ Setiap aturan didefinisikan sebagai objek JavaScript yang memiliki struktur ters
 \end{tabular}
 \end{table}
 
-Sistem mendukung lebih dari 30 aturan analitik yang tersebar di lima domain basis data, yaitu \texttt{BRIGHTAI\_SALES}, \texttt{BRIGHTAI\_REVENUE}, \texttt{BRIGHTAI\_TARGET}, \texttt{BRIGHTAI\_DAPROS}, dan \texttt{BRIGHTAI\_CT0\_NAL}.
+Sistem mendukung lebih dari 30 aturan analitik yang tersebar di lima tabel domain pada skema \texttt{DWH\_MOIS}, yaitu \texttt{BRIGHTAI\_SALES}, \texttt{BRIGHTAI\_REVENUE}, \texttt{BRIGHTAI\_TARGET}, \texttt{BRIGHTAI\_DAPROS}, dan \texttt{BRIGHTAI\_CT0\_NAL}. \textit{Listing}~\ref{lst:rule-definition} menyajikan contoh implementasi struktur definisi aturan secara lengkap.
+
+\input{listings/rule-definition.tex}
 
 \subsection{Injeksi Filter Geografis}
 
@@ -151,7 +153,9 @@ Sistem mengklasifikasikan setiap kueri pengguna ke dalam dua dimensi: \textit{in
 
 Untuk setiap kueri, sistem menghitung skor kecocokan terhadap setiap \textit{intent} dengan mengiterasi daftar kata kunci. Jika sebuah kata kunci ditemukan dalam kueri (menggunakan fungsi \texttt{String.includes}), skor \textit{intent} tersebut ditambah sebesar nilai bobot. \textit{Intent} dengan skor tertinggi dipilih sebagai hasil klasifikasi, dengan nilai keyakinan (\textit{confidence}) dihitung sebagai $\min(100, \text{skor} \times 10)$\label{sym:min}. Jika seluruh skor bernilai nol, sistem mengembalikan \textit{intent} \texttt{general} sebagai \textit{fallback}.
 
-Selain \textit{intent}, sistem juga mengklasifikasikan fokus analisis ke dalam delapan kategori: \textit{order}, \textit{revenue}, \textit{churn}, \textit{fulfillment}, \textit{subscriber}, \textit{bundling}, \textit{digital}, dan \textit{target}. Kombinasi \textit{intent} dan fokus digunakan oleh modul NLG untuk memilih templat respons yang paling sesuai.
+Selain \textit{intent}, sistem juga mengklasifikasikan fokus analisis ke dalam delapan kategori: \textit{order}, \textit{revenue}, \textit{churn}, \textit{fulfillment}, \textit{subscriber}, \textit{bundling}, \textit{digital}, dan \textit{target}. Kombinasi \textit{intent} dan fokus digunakan oleh modul NLG untuk memilih templat respons yang paling sesuai. \textit{Listing}~\ref{lst:query-processor} menunjukkan implementasi inti proses pencocokan aturan pada \textit{query processor}.
+
+\input{listings/query-processor.tex}
 
 Algoritma~\ref{alg:intent-classification} mendeskripsikan prosedur lengkap klasifikasi maksud dan fokus secara formal.
 
@@ -212,7 +216,9 @@ Respons NLG dihasilkan dalam format \textit{Markdown} yang mendukung:
     \item Penanda sumber data, jumlah rekaman, dan waktu pemrosesan pada bagian akhir respons
 \end{enumerate}
 
-Akurasi faktual dijamin sebesar 100\% karena seluruh angka dalam respons berasal langsung dari hasil kueri Oracle Database tanpa proses generatif.
+Akurasi faktual dijamin sebesar 100\% karena seluruh angka dalam respons berasal langsung dari hasil kueri Oracle Database tanpa proses generatif. \textit{Listing}~\ref{lst:nlg-generator} menyajikan implementasi fungsi utama pembangkitan respons NLG.
+
+\input{listings/nlg-generator.tex}
 
 Algoritma~\ref{alg:nlg-template} mendeskripsikan prosedur lengkap pembangkitan respons dari konteks terstruktur hingga narasi akhir.
 
@@ -268,7 +274,13 @@ Model GRU dan LSTM diimplementasikan sebagai kelas Python yang mewarisi \texttt{
     \item \textbf{Lapisan Linear Keluaran}: Lapisan \texttt{nn.Linear} yang memetakan \textit{hidden state} terakhir ke dimensi horizon prediksi.
 \end{enumerate}
 
-Kedua model menerima masukan berukuran (\textit{batch}, \texttt{window\_size}, 1) dan menghasilkan keluaran berukuran (\textit{batch}, \textit{horizon}). Konfigurasi \textit{hyperparameter} bawaan yang digunakan disajikan pada Tabel~\ref{tab:hyperparameter-impl}.
+Kedua model menerima masukan berukuran (\textit{batch}, \texttt{window\_size}, 1) dan menghasilkan keluaran berukuran (\textit{batch}, \textit{horizon}). \textit{Listing}~\ref{lst:gru-model} dan \textit{Listing}~\ref{lst:lstm-model} menyajikan implementasi lengkap kedua arsitektur model tersebut.
+
+\input{listings/gru-model.tex}
+
+\input{listings/lstm-model.tex}
+
+Konfigurasi \textit{hyperparameter} bawaan yang digunakan disajikan pada Tabel~\ref{tab:hyperparameter-impl}.
 
 Algoritma~\ref{alg:early-stopping} mendeskripsikan prosedur pelatihan GRU dan LSTM secara formal, termasuk mekanisme \textit{early stopping} dan penjadwalan laju pembelajaran.
 
@@ -327,6 +339,23 @@ Setelah pelatihan selesai, sistem membandingkan metrik model baru dengan model t
 \subsubsection{Deteksi Data Parsial}
 
 Sistem mendeteksi apakah bulan terakhir dalam data berisi data parsial (belum lengkap) dengan membandingkan nilainya terhadap median bulan-bulan sebelumnya. Jika nilai bulan terakhir kurang dari 30\% median, bulan tersebut dikecualikan dari evaluasi \textit{walk-forward} untuk mencegah metrik yang menyesatkan.
+
+\subsubsection{Tata Kelola Reprodusibilitas}
+\label{subsubsec:reprodusibilitas}
+
+Untuk mendukung reprodusibilitas hasil eksperimen, sistem mengimplementasikan beberapa mekanisme berikut.
+
+\begin{enumerate}
+    \item \textbf{Penyimpanan artefak model}: Setiap model terbaik disimpan sebagai berkas \texttt{.pth} (PyTorch) atau \texttt{.pkl} (ARIMA/\textit{Prophet}) di direktori \texttt{saved\_models/}. Berkas \textit{checkpoint} menyimpan tidak hanya \texttt{state\_dict} model, tetapi juga seluruh \textit{hyperparameter} yang digunakan (\texttt{window\_size}, \texttt{hidden\_size}, \texttt{num\_layers}, \texttt{dropout}), jenis model, metrik, regional, dan \textit{witel}. Parameter normalisasi (\texttt{MinMaxScaler}) disimpan terpisah dalam berkas \texttt{.pkl} sehingga inferensi dapat menggunakan \textit{scaler} yang identik dengan saat pelatihan.
+
+    \item \textbf{Pelacakan riwayat pelatihan}: Seluruh hasil pelatihan dicatat dalam berkas \texttt{training\_history.json} yang menyimpan metadata lengkap setiap eksperimen, meliputi tipe model, metrik target, cakupan geografis, jumlah titik data, ukuran jendela, metode evaluasi (\textit{walk-forward}), seluruh metrik evaluasi (MAE, RMSE, sMAPE, MASE, \textit{Skill Score}), hasil \textit{benchmark} terhadap model sebelumnya, serta stempel waktu pelatihan.
+
+    \item \textbf{Versi pustaka terkunci}: Berkas \texttt{requirements.txt} menetapkan versi eksak untuk setiap dependensi (misalnya \texttt{torch==2.1.1}, \texttt{fastapi==0.104.1}, \texttt{scikit-learn==1.3.2}) sehingga lingkungan pelatihan dapat direkonstruksi secara konsisten.
+
+    \item \textbf{Pencegahan regresi}: Mekanisme \textit{benchmark} (Subbab~\ref{subsec:pipeline-pelatihan}) memastikan bahwa model baru hanya menggantikan model lama jika memiliki sMAPE lebih rendah atau \textit{Skill Score} lebih tinggi, sehingga setiap artefak yang tersimpan merupakan model terbaik yang pernah dilatih untuk kombinasi metrik dan wilayah tertentu.
+\end{enumerate}
+
+\paragraph{Keterbatasan.} Implementasi saat ini belum menetapkan \textit{random seed} secara eksplisit (misalnya \texttt{torch.manual\_seed}) sehingga hasil pelatihan tidak dapat direproduksi secara numerik identik di antara dua sesi pelatihan berbeda. Namun, reprodusibilitas fungsional tetap terjaga melalui penyimpanan artefak model terbaik dan riwayat pelatihan yang lengkap, sehingga model terlatih dapat dimuat ulang dan menghasilkan inferensi yang deterministik.
 
 \subsection{Praolah Data}
 \label{subsec:praolah-data}
@@ -453,11 +482,35 @@ Model \textit{baseline} \textit{Prophet} & \textit{Prophet} (Meta), musiman tahu
 \hline
 Autentikasi pengguna & JWT, \textit{bcrypt} & Terimplementasi \\
 \hline
-Koneksi basis data & Oracle Database, \textit{connection pool} & Terimplementasi \\
+Koneksi basis data & Oracle Database, \textit{connection pool} & Terimplementasi (skema \texttt{DWH\_MOIS} dan \texttt{USR\_RPT}) \\
 \hline
 \end{tabular}
 \end{table}
 
 Secara keseluruhan, sistem BrightAI telah diimplementasikan sebagai aplikasi tiga lapis yang mencakup: (1) \textit{frontend} berbasis React.js pada porta 3000 yang menyediakan antarmuka percakapan, panel peramalan interaktif, dan alur terpandu; (2) \textit{backend} berbasis Node.js/Express pada porta 3001 yang mengelola autentikasi, mesin aturan dengan 38 aturan analitik pada 5 domain, klasifikasi maksud, dan pembangkitan bahasa alami; serta (3) layanan \textit{machine learning} berbasis FastAPI/PyTorch pada porta 8000 yang menyediakan kemampuan peramalan menggunakan empat model, yaitu GRU, LSTM, ARIMA, dan \textit{Prophet}.
 
-Seluruh komponen terhubung ke Oracle Database sebagai \textit{Enterprise Data Warehouse} dan menggunakan mekanisme \textit{caching} memori untuk mengoptimalkan waktu respons. Injeksi filter geografis secara dinamis memungkinkan sistem menyajikan analisis pada tingkat nasional, regional, maupun \textit{witel} tanpa duplikasi definisi aturan.
+Seluruh komponen terhubung ke Oracle Database melalui dua skema: \texttt{DWH\_MOIS} untuk data analitik dan \texttt{USR\_RPT} untuk data operasional. Sistem menggunakan mekanisme \textit{caching} memori untuk mengoptimalkan waktu respons. Injeksi filter geografis secara dinamis memungkinkan sistem menyajikan analisis pada tingkat nasional, regional, maupun \textit{witel} tanpa duplikasi definisi aturan.
+
+\subsection{Selisih antara Rancangan dan Implementasi}
+\label{subsec:selisih-rancangan-implementasi}
+
+Demi transparansi, bagian ini menyatakan secara eksplisit selisih antara komponen yang dirancang pada Bab~\ref{chap:perancangan} dan komponen yang berhasil diimplementasikan. Tabel~\ref{tab:selisih-impl} merangkum selisih tersebut.
+
+\begin{table}[h]
+\centering
+\caption{Selisih antara Rancangan dan Implementasi}
+\label{tab:selisih-impl}
+\begin{tabular}{|p{3.5cm}|p{3cm}|p{6cm}|}
+\hline
+\textbf{Komponen} & \textbf{Status} & \textbf{Keterangan} \\
+\hline
+\textit{Temporal Fusion Transformer} (TFT) & Tidak diimplementasikan & Dikaji dalam studi literatur (Subbab~\ref{subsec:tft-literatur}) sebagai arsitektur lanjutan, namun tidak termasuk dalam lingkup implementasi penelitian ini karena keterbatasan volume data dan biaya komputasi. TFT tetap menjadi kandidat pengembangan di masa depan. \\
+\hline
+Model \textit{ensemble} (gabungan keluaran beberapa model) & Tidak diimplementasikan & Dibahas secara teoretis pada kajian literatur, namun implementasi saat ini menjalankan setiap model secara independen tanpa mekanisme penggabungan prediksi. \\
+\hline
+Komponen hari libur pada \textit{Prophet} & Diimplementasikan sebagian & Daftar hari libur Indonesia telah didefinisikan dalam kode, namun dampaknya terbatas karena data bersifat bulanan sehingga efek hari libur tidak dominan. \\
+\hline
+\end{tabular}
+\end{table}
+
+Selain ketiga komponen di atas, seluruh rancangan yang ditetapkan pada Bab~\ref{chap:perancangan} telah berhasil diwujudkan dalam implementasi, meliputi mesin aturan (38 aturan, 5 domain), klasifikasi maksud (7 kategori \textit{intent} dan 1 \textit{fallback}), pembangkitan bahasa alami berbasis templat, model peramalan GRU dan LSTM beserta \textit{baseline} ARIMA dan \textit{Prophet}, autentikasi berbasis JWT, serta antarmuka percakapan interaktif.

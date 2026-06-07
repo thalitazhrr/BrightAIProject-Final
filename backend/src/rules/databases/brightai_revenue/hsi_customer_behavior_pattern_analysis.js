@@ -62,8 +62,7 @@ module.exports = {
             WITEL_BILL,
             DATEL,
             CSTO,
-            LSTO,
-            
+
             -- Service adoption metrics
             COUNT(DISTINCT ND) as TOTAL_SERVICES_PER_CUSTOMER,
             COUNT(DISTINCT YEAR_ID || MONTH_ID) as ACTIVE_MONTHS,
@@ -131,11 +130,10 @@ module.exports = {
           AND WITEL_BILL IS NOT NULL
           AND DATEL IS NOT NULL
           AND CSTO IS NOT NULL
-          AND LSTO IS NOT NULL
           AND NIP_NAS IS NOT NULL
           AND NCLI IS NOT NULL
           AND ND IS NOT NULL
-        GROUP BY NIP_NAS, NCLI, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO, LSTO
+        GROUP BY NIP_NAS, NCLI, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO
     ),
     
     CUSTOMER_BEHAVIOR_AGGREGATED AS (
@@ -146,7 +144,6 @@ module.exports = {
             WITEL_BILL,
             DATEL,
             CSTO,
-            LSTO,
             CUSTOMER_VALUE_SEGMENT,
             SERVICE_USAGE_PATTERN,
             GEOGRAPHIC_MOBILITY_PATTERN,
@@ -204,7 +201,7 @@ module.exports = {
             END as REVENUE_STABILITY_INDICATOR
             
         FROM CUSTOMER_BEHAVIOR_BASE
-        GROUP BY REGIONAL_BILL, WITEL_BILL, DATEL, CSTO, LSTO, 
+        GROUP BY REGIONAL_BILL, WITEL_BILL, DATEL, CSTO,
                  CUSTOMER_VALUE_SEGMENT, SERVICE_USAGE_PATTERN, GEOGRAPHIC_MOBILITY_PATTERN
         ORDER BY SEGMENT_TOTAL_REVENUE DESC
     )
@@ -214,6 +211,9 @@ module.exports = {
 
   BUSINESS_LOGIC: {
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const totalRevenue = data.reduce((sum, d) => sum + d.SEGMENT_TOTAL_REVENUE, 0);
       const totalCustomers = data.reduce((sum, d) => sum + d.TOTAL_CUSTOMERS, 0);
       const totalNCLI = data.reduce((sum, d) => sum + d.TOTAL_NCLI, 0);
@@ -232,7 +232,7 @@ module.exports = {
         acc[segment].customers += item.TOTAL_CUSTOMERS;
         acc[segment].ncli += item.TOTAL_NCLI;
         acc[segment].revenue += item.SEGMENT_TOTAL_REVENUE;
-        acc[segment].locations.add(`${item.CSTO}-${item.LSTO}`);
+        acc[segment].locations.add(item.CSTO);
         return acc;
       }, {});
       
@@ -337,7 +337,6 @@ module.exports = {
           witel: item.WITEL_BILL,
           datel: item.DATEL,
           kode_sto: item.CSTO,
-          nama_sto: item.LSTO,
           customer_value_segment: item.CUSTOMER_VALUE_SEGMENT,
           service_usage_pattern: item.SERVICE_USAGE_PATTERN,
           geographic_mobility_pattern: item.GEOGRAPHIC_MOBILITY_PATTERN,

@@ -21,7 +21,9 @@ module.exports = {
     primary: [
       'bundle layanan hsi', 'service bundle analysis', 'analisis bundle',
       'kombinasi layanan', 'triple play', 'dual play', 'hsi plus',
-      'add on analysis', 'layanan tambahan', 'bundle service hsi', 'paket layanan'
+      'add on analysis', 'layanan tambahan', 'bundle service hsi', 'paket layanan',
+      'analisis bundling', 'bundling layanan', 'paket bundling', 'bundling hsi',
+      'bundling pelanggan', 'bundle pelanggan'
     ],
     
     supporting: [
@@ -44,6 +46,9 @@ module.exports = {
       
       if (primaryMatches > 0) {
         score = 78 + (primaryMatches * 11) + (supportingMatches * 3);
+      } else if (lowerInput.includes('bundling') &&
+                (lowerInput.includes('hsi') || lowerInput.includes('internet') || lowerInput.includes('pelanggan') || lowerInput.includes('layanan'))) {
+        score = 75;
       } else if (supportingMatches >= 3) {
         score = 62 + (supportingMatches * 4);
       }
@@ -104,7 +109,6 @@ module.exports = {
         WHERE PLBLCL IN ('BL', 'CL')
           AND CITEM NOT LIKE '%W/%'
           AND CITEM NOT LIKE '%WM%'
-          AND ASSET_STATUS IN ('ACTIVE', 'NORMAL')
     )
     
     SELECT 
@@ -300,6 +304,9 @@ module.exports = {
     },
 
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const totalCustomers = data.reduce((sum, d) => sum + d.CUSTOMER_COUNT, 0);
       const bundlePenetration = this.analyzeBundlePenetration(data);
       const upsellOpportunities = this.identifyUpsellOpportunities(data);

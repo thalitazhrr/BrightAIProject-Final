@@ -31,21 +31,28 @@ module.exports = {
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      // Defer to CT0 rules for specific churn analysis patterns
+      const hasChurnSpecific = lowerInput.includes('churn') || lowerInput.includes('cabut') || lowerInput.includes('ct0');
+      const hasBandwidthCtx = lowerInput.includes('bandwidth') || lowerInput.includes('kecepatan') || lowerInput.includes('speed');
+      const hasRegionalCtx = lowerInput.includes('regional') || lowerInput.includes('witel');
+      const hasDivisiCtx = lowerInput.includes('divisi') || lowerInput.includes('bisnis dan consumer');
+      if (hasChurnSpecific && (hasBandwidthCtx || hasRegionalCtx || hasDivisiCtx)) return 0;
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 85 + (primaryMatches * 8) + (supportingMatches * 2);
       } else if (supportingMatches >= 3) {
         score = 70 + (supportingMatches * 4);
       }
-      
+
       return Math.min(score, 100);
     }
   },
@@ -59,7 +66,6 @@ module.exports = {
             WITEL_BILL,
             DATEL,
             CSTO,
-            LSTO,
             NIP_NAS,
             NCLI,
             ND,
@@ -104,7 +110,6 @@ module.exports = {
           AND WITEL_BILL IS NOT NULL
           AND DATEL IS NOT NULL
           AND CSTO IS NOT NULL
-          AND LSTO IS NOT NULL
           AND NIP_NAS IS NOT NULL
           AND NCLI IS NOT NULL
           AND ND IS NOT NULL
@@ -117,8 +122,7 @@ module.exports = {
         WITEL_BILL,
         DATEL,
         CSTO,
-        LSTO,
-        
+
         -- Customer metrics
         COUNT(DISTINCT NIP_NAS) as TOTAL_PELANGGAN,
         COUNT(DISTINCT NCLI) as TOTAL_NCLI,
@@ -173,7 +177,7 @@ module.exports = {
         ) as RETENTION_RATE_PERCENT
         
     FROM CUSTOMER_LIFECYCLE
-    GROUP BY YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO, LSTO
+    GROUP BY YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO
     ORDER BY YEAR_ID DESC, MONTH_ID DESC, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO
   `,
 
@@ -392,6 +396,9 @@ module.exports = {
     },
 
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const totalNewInstalls = data.reduce((sum, d) => sum + d.NEW_INSTALLATIONS, 0);
       const totalDisconnections = data.reduce((sum, d) => sum + d.DISCONNECTIONS, 0);
       const totalNetServiceChange = data.reduce((sum, d) => sum + d.NET_SERVICE_CHANGE, 0);
@@ -506,7 +513,6 @@ module.exports = {
             witel: item.WITEL_BILL,
             datel: item.DATEL,
             kode_sto: item.CSTO,
-            nama_sto: item.LSTO,
             total_pelanggan: item.TOTAL_PELANGGAN.toLocaleString('id-ID'),
             total_ncli: item.TOTAL_NCLI.toLocaleString('id-ID'),
             total_layanan: item.TOTAL_LAYANAN.toLocaleString('id-ID'),

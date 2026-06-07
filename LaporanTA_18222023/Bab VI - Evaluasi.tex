@@ -43,17 +43,145 @@ Sistem mengimplementasikan tujuh \textit{intent} utama dan satu \textit{intent} 
 \end{tabular}
 \end{table}
 
-\subsection{Hasil Evaluasi Klasifikasi}
+\subsection{Metodologi Evaluasi Klasifikasi}
 
-Evaluasi klasifikasi maksud menunjukkan bahwa pendekatan pencocokan pola kata kunci berbobot mampu mengenali \textit{intent} pengguna dengan baik pada domain yang terbatas. Beberapa temuan utama dari evaluasi ini adalah sebagai berikut.
+Evaluasi kuantitatif dilakukan menggunakan 100 kueri uji berlabel yang mencakup seluruh tujuh \textit{intent} utama, satu kelas cadangan (\textit{general}), serta 38 aturan bisnis. Setiap kueri diberi label kebenaran dasar (\textit{ground truth}) berupa \textit{intent} yang diharapkan dan aturan yang diharapkan. Evaluasi dilakukan pada dua level:
 
 \begin{enumerate}
-    \item \textbf{Waktu Respons Klasifikasi}: Proses klasifikasi \textit{intent} berjalan dalam waktu kurang dari 1 milidetik per kueri, jauh di bawah target 100 milidetik yang ditetapkan pada desain evaluasi. Latensi rendah ini dimungkinkan oleh pendekatan berbasis pencocokan \textit{string} yang tidak memerlukan model statistik atau jaringan saraf.
-
-    \item \textbf{Keunggulan Pendekatan}: Pendekatan \textit{rule-based} memberikan interpretabilitas tinggi karena setiap keputusan klasifikasi dapat dilacak ke kata kunci spesifik yang cocok. Selain itu, penambahan \textit{intent} atau kata kunci baru dapat dilakukan tanpa proses pelatihan ulang.
-
-    \item \textbf{Keterbatasan}: Pendekatan ini memiliki keterbatasan dalam menangani kueri yang ambigu atau menggunakan sinonim yang belum terdaftar dalam daftar kata kunci. Kueri semacam ini akan diklasifikasikan sebagai \textit{general} dan memicu mekanisme \textit{fallback}.
+    \item \textbf{Level \textit{Intent}}: Klasifikasi kueri ke dalam 8 kelas \textit{intent} (7 utama + 1 \textit{fallback}).
+    \item \textbf{Level Aturan}: Pencocokan kueri ke 38 aturan bisnis + 1 kelas \textit{no\_match}.
 \end{enumerate}
+
+Metrik yang dihitung meliputi presisi, daya ingat, dan skor-F1 per kelas, serta agregasi makro (\textit{macro}), mikro (\textit{micro}), dan tertimbang (\textit{weighted}).
+
+\subsection{Hasil Evaluasi Klasifikasi \textit{Intent}}
+
+Tabel~\ref{tab:eval-intent-results} menyajikan hasil evaluasi klasifikasi pada level \textit{intent} untuk 100 kueri uji.
+
+\begin{table}[h]
+\centering
+\caption{Hasil Evaluasi Klasifikasi \textit{Intent} per Kelas}
+\label{tab:eval-intent-results}
+\begin{tabular}{|p{3cm}|c|c|c|c|}
+\hline
+\textbf{\textit{Intent}} & \textbf{Presisi} & \textbf{\textit{Recall}} & \textbf{Skor-F1} & \textbf{Jumlah Sampel} \\
+\hline
+\textit{quantity} & 0{,}87 & 0{,}93 & 0{,}90 & 14 \\
+\hline
+\textit{trend} & 1{,}00 & 0{,}77 & 0{,}87 & 13 \\
+\hline
+\textit{comparison} & 1{,}00 & 1{,}00 & 1{,}00 & 3 \\
+\hline
+\textit{location} & 0{,}59 & 0{,}91 & 0{,}71 & 11 \\
+\hline
+\textit{reason} & 1{,}00 & 1{,}00 & 1{,}00 & 1 \\
+\hline
+\textit{performance} & 0{,}83 & 0{,}59 & 0{,}69 & 17 \\
+\hline
+\textit{detail} & 1{,}00 & 0{,}29 & 0{,}45 & 34 \\
+\hline
+\textit{general} & 0{,}22 & 1{,}00 & 0{,}36 & 7 \\
+\hline
+\hline
+Rata-rata makro & 0{,}81 & 0{,}81 & 0{,}75 & 100 \\
+\hline
+Rata-rata tertimbang & 0{,}85 & 0{,}64 & 0{,}65 & 100 \\
+\hline
+\end{tabular}
+\end{table}
+
+Akurasi keseluruhan klasifikasi \textit{intent} adalah \textbf{64{,}00\%} (64 dari 100 kueri). Presisi makro bernilai 0{,}81, menunjukkan bahwa ketika sistem memprediksi suatu \textit{intent}, prediksi tersebut cenderung tepat. Namun, daya ingat tertimbang hanya 0{,}64 karena sebagian besar kueri bertipe \textit{detail} (34 sampel) salah diklasifikasikan sebagai \textit{general}. Hal ini disebabkan oleh bobot kata kunci \textit{detail} yang lebih rendah (bobot 2) dibandingkan \textit{intent} lain (bobot 3--4), sehingga kueri yang mengandung kata kunci dari beberapa \textit{intent} cenderung tidak diklasifikasikan ke \textit{detail}.
+
+\subsection{Hasil Evaluasi Pencocokan Aturan}
+
+Evaluasi pada level pencocokan aturan (38 kelas + \textit{no\_match}) menghasilkan akurasi \textbf{56{,}00\%} (56 dari 100 kueri) dengan metrik agregasi yang disajikan pada Tabel~\ref{tab:eval-rule-summary}.
+
+\begin{table}[h]
+\centering
+\caption{Ringkasan Metrik Evaluasi Pencocokan Aturan}
+\label{tab:eval-rule-summary}
+\begin{tabular}{|p{4.5cm}|c|c|c|}
+\hline
+\textbf{Strategi Agregasi} & \textbf{Presisi} & \textbf{\textit{Recall}} & \textbf{Skor-F1} \\
+\hline
+Makro (\textit{macro}) & 0{,}57 & 0{,}51 & 0{,}50 \\
+\hline
+Tertimbang (\textit{weighted}) & 0{,}60 & 0{,}56 & 0{,}54 \\
+\hline
+Mikro (\textit{micro}) & 0{,}56 & 0{,}56 & 0{,}56 \\
+\hline
+\end{tabular}
+\end{table}
+
+Dari 38 aturan yang dievaluasi, 10 aturan mencapai skor-F1 sempurna atau di atas 0{,}80 (\texttt{mart\_003}, \texttt{mart\_005}, \texttt{mart\_007}, \texttt{dapros\_006}: F1 = 1{,}00; \texttt{ct0\_ebis\_001}, \texttt{ps\_005}, \texttt{ps\_006}, \texttt{mart\_001}: F1 $\geq$ 0{,}80). Aturan-aturan ini memiliki kata kunci yang sangat spesifik dan tidak tumpang tindih dengan aturan lain. Sebaliknya, 8 aturan memiliki skor-F1 sebesar 0 karena seluruh kueri yang ditujukan untuknya diserap oleh aturan lain yang memiliki kata kunci yang lebih luas, terutama aturan dalam domain target (\texttt{target\_001}, \texttt{target\_003}) yang memiliki cakupan kata kunci regional yang sangat dominan.
+
+\subsection{Analisis Keyakinan dan Cakupan}
+
+Analisis terhadap nilai keyakinan (\textit{confidence score}) dan tingkat cakupan memberikan perspektif tambahan terhadap kualitas klasifikasi. Tabel~\ref{tab:eval-confidence} menyajikan statistik keyakinan dan cakupan.
+
+\begin{table}[h]
+\centering
+\caption{Statistik Keyakinan dan Cakupan Klasifikasi}
+\label{tab:eval-confidence}
+\begin{tabular}{|p{7cm}|c|}
+\hline
+\textbf{Metrik} & \textbf{Nilai} \\
+\hline
+\textit{Coverage Rate} (keyakinan $\geq$ 40) & 88{,}0\% \\
+\hline
+Rata-rata keyakinan (seluruh kueri) & 76{,}3 \\
+\hline
+Rata-rata keyakinan (prediksi benar) & 77{,}3 \\
+\hline
+Rata-rata keyakinan (prediksi salah) & 75{,}1 \\
+\hline
+Median keyakinan (prediksi benar) & 90{,}0 \\
+\hline
+Waktu rata-rata per kueri & 0{,}14 ms \\
+\hline
+\end{tabular}
+\end{table}
+
+\textit{Coverage rate} sebesar 88\% menunjukkan bahwa mayoritas kueri uji berhasil melewati ambang batas keyakinan 40 dan memperoleh respons analitik. Namun, perbedaan rata-rata keyakinan antara prediksi benar (77{,}3) dan salah (75{,}1) sangat kecil (selisih 2{,}2 poin), mengindikasikan bahwa nilai keyakinan belum menjadi diskriminator yang efektif antara prediksi benar dan salah. Waktu klasifikasi rata-rata 0{,}14 milidetik jauh melampaui target 100 milidetik yang ditetapkan pada desain evaluasi.
+
+\subsection{Analisis Pola Kesalahan}
+
+Analisis terhadap 44 kesalahan pencocokan aturan mengidentifikasi tiga pola utama berikut.
+
+\begin{enumerate}
+    \item \textbf{Tumpang tindih kata kunci regional} (18 kesalahan): Aturan \texttt{target\_003} (\textit{hsi\_regional\_performance}) memiliki kata kunci regional yang sangat luas sehingga menyerap kueri yang ditujukan untuk aturan lain yang juga mengandung konteks wilayah, seperti \texttt{ps\_002} (\textit{order\_per\_struktur\_geografis}) dan \texttt{mart\_008} (\textit{cross\_geographic\_revenue}).
+
+    \item \textbf{Ketimpangan bobot \textit{intent detail}} (12 kesalahan): Bobot \textit{intent} \textit{detail} (bobot 2) lebih rendah daripada \textit{intent} lain (bobot 3--4), menyebabkan kueri deskriptif seperti ``Pola churn berdasarkan bandwidth'' tidak mengaktifkan kata kunci berbobot tinggi dan jatuh ke \textit{general}.
+
+    \item \textbf{Kueri multi-domain} (14 kesalahan): Kueri yang mencakup kata kunci dari beberapa domain (misalnya ``Revenue HSI lintas wilayah geografis'' yang mengandung kata kunci \textit{revenue} dan \textit{regional}) mengalami konflik pencocokan dan cenderung diserap oleh aturan dengan cakupan kata kunci terluas.
+\end{enumerate}
+
+\subsection{Evaluasi terhadap Target Performa}
+
+Tabel~\ref{tab:eval-intent-vs-target} membandingkan hasil evaluasi dengan target yang ditetapkan pada Bab~\ref{chap:perancangan}.
+
+\begin{table}[h]
+\centering
+\caption{Perbandingan Hasil Evaluasi dengan Target Performa Klasifikasi}
+\label{tab:eval-intent-vs-target}
+\begin{tabular}{|p{5cm}|c|c|c|}
+\hline
+\textbf{Metrik} & \textbf{Target} & \textbf{Hasil} & \textbf{Status} \\
+\hline
+Skor-F1 Makro & $\geq$ 0{,}85 & 0{,}75 & Belum tercapai \\
+\hline
+Skor-F1 Tertimbang & $\geq$ 0{,}90 & 0{,}65 & Belum tercapai \\
+\hline
+Akurasi Keseluruhan & $\geq$ 0{,}88 & 0{,}64 & Belum tercapai \\
+\hline
+\textit{Coverage Rate} & $\geq$ 80\% & 88\% & Tercapai \\
+\hline
+Waktu Respons (p95) & $<$ 100 ms & 0{,}14 ms & Tercapai \\
+\hline
+\end{tabular}
+\end{table}
+
+Dari lima target performa, dua target tercapai (\textit{coverage rate} dan waktu respons), sedangkan tiga target metrik klasifikasi belum tercapai. Kesenjangan terbesar terdapat pada skor-F1 tertimbang (target 0{,}90, hasil 0{,}65) yang disebabkan oleh rendahnya daya ingat pada kelas \textit{detail} yang merupakan kelas mayoritas dalam dataset uji (34 dari 100 sampel). Perbaikan yang direkomendasikan mencakup: (1) peningkatan bobot kata kunci \textit{detail} dari 2 menjadi 3 agar setara dengan \textit{intent} lain; (2) penambahan kata kunci pembeda (\textit{discriminative keywords}) pada aturan yang tumpang tindih; serta (3) implementasi mekanisme pembobotan negatif (\textit{negative keywords}) untuk mengurangi skor aturan yang tidak relevan.
 
 \subsection{Mekanisme \textit{Fallback}}
 
@@ -313,7 +441,7 @@ Tabel~\ref{tab:contoh-kueri} menyajikan contoh kueri analitik yang diajukan sela
 Berdasarkan hasil evaluasi terhadap seluruh komponen sistem, beberapa temuan dan pembahasan utama adalah sebagai berikut.
 
 \begin{enumerate}
-    \item \textbf{Klasifikasi Maksud}: Pendekatan pencocokan pola kata kunci berbobot efektif untuk domain yang terbatas dan terdefinisi dengan baik. Keunggulan utama adalah latensi rendah dan interpretabilitas tinggi. Keterbatasannya terletak pada ketidakmampuan menangani variasi bahasa alami yang tidak tercakup dalam daftar kata kunci, yang dapat diatasi dengan perluasan daftar kata kunci secara iteratif berdasarkan log percakapan.
+    \item \textbf{Klasifikasi Maksud}: Evaluasi kuantitatif terhadap 100 kueri uji menunjukkan akurasi \textit{intent} sebesar 64\% dan akurasi pencocokan aturan sebesar 56\%. Dua dari lima target performa tercapai (\textit{coverage rate} 88\% dan waktu respons 0{,}14 ms), sedangkan tiga target metrik klasifikasi belum tercapai. Kesenjangan terbesar disebabkan oleh tumpang tindih kata kunci antar-aturan dan ketimpangan bobot \textit{intent detail}. Meskipun demikian, pendekatan \textit{rule-based} memberikan keunggulan latensi sangat rendah ($<$1 ms) dan interpretabilitas penuh. Perbaikan yang direkomendasikan mencakup penyeimbangan bobot kata kunci dan penambahan kata kunci pembeda pada aturan yang tumpang tindih.
 
     \item \textbf{Pembangkitan Bahasa Alami}: Pendekatan berbasis templat menjamin akurasi faktual 100\% yang merupakan persyaratan kritis untuk sistem \textit{Business Intelligence}. Kekurangan pendekatan ini adalah variasi bahasa yang terbatas dibandingkan model generatif, meskipun hal ini dimitigasi dengan penyediaan minimal tiga variasi templat per \textit{intent}.
 

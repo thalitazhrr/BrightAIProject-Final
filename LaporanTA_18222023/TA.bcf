@@ -4979,10 +4979,10 @@
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey order="1" intorder="1">Straits2024</bcf:citekey>
-    <bcf:citekey order="2" intorder="1">Intimedia2024</bcf:citekey>
-    <bcf:citekey order="3" intorder="1">EastVC2025</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">EastVC2025</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">Brynjolfsson2016DDD</bcf:citekey>
     <bcf:citekey order="4" intorder="1">Qaltivate2025</bcf:citekey>
-    <bcf:citekey order="5" intorder="1">Fullview2025</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">Adam2021Chatbots</bcf:citekey>
     <bcf:citekey order="6" intorder="1">Iqbal2021</bcf:citekey>
     <bcf:citekey order="7" intorder="1">Precedence2025</bcf:citekey>
     <bcf:citekey order="8" intorder="1">WiseGuyReports2024</bcf:citekey>
@@ -4990,12 +4990,12 @@
     <bcf:citekey order="10" intorder="1">sorour2020business</bcf:citekey>
     <bcf:citekey order="11" intorder="1">khaddam2025ai</bcf:citekey>
     <bcf:citekey order="12" intorder="1">sorour2020business</bcf:citekey>
-    <bcf:citekey order="13" intorder="1">shah2025hybrid</bcf:citekey>
-    <bcf:citekey order="14" intorder="1">shah2025hybrid</bcf:citekey>
-    <bcf:citekey order="15" intorder="1">Straits2024</bcf:citekey>
-    <bcf:citekey order="16" intorder="1">shah2025hybrid</bcf:citekey>
-    <bcf:citekey order="17" intorder="1">shah2025hybrid</bcf:citekey>
-    <bcf:citekey order="18" intorder="1">shah2025hybrid</bcf:citekey>
+    <bcf:citekey order="13" intorder="1">Brynjolfsson2016DDD</bcf:citekey>
+    <bcf:citekey order="14" intorder="1">Straits2024</bcf:citekey>
+    <bcf:citekey order="15" intorder="1">Torres2018BIPerformance</bcf:citekey>
+    <bcf:citekey order="16" intorder="1">Torres2018BIPerformance</bcf:citekey>
+    <bcf:citekey order="17" intorder="1">Brynjolfsson2016DDD</bcf:citekey>
+    <bcf:citekey order="18" intorder="1">Torres2018BIPerformance</bcf:citekey>
     <bcf:citekey order="19" intorder="1">databricks2025semantic</bcf:citekey>
     <bcf:citekey order="20" intorder="1">atscale2025semantic</bcf:citekey>
     <bcf:citekey order="21" intorder="1">dbt2024semantic</bcf:citekey>
@@ -5014,173 +5014,171 @@
     <bcf:citekey order="31" intorder="1">Singh2025ChatbotsSurvey</bcf:citekey>
     <bcf:citekey order="32" intorder="1">ouaddi2025comparative</bcf:citekey>
     <bcf:citekey order="33" intorder="1">Qaltivate2025</bcf:citekey>
-    <bcf:citekey order="34" intorder="1">Fullview2025</bcf:citekey>
+    <bcf:citekey order="34" intorder="1">Adam2021Chatbots</bcf:citekey>
     <bcf:citekey order="35" intorder="1">Merugu2024IntentLLM</bcf:citekey>
-    <bcf:citekey order="36" intorder="1">Ozerova2022IntentModule</bcf:citekey>
-    <bcf:citekey order="36" intorder="2">Gehweiler2024IntentModeration</bcf:citekey>
-    <bcf:citekey order="37" intorder="1">Gehweiler2024IntentModeration</bcf:citekey>
-    <bcf:citekey order="38" intorder="1">Ozerova2022IntentModule</bcf:citekey>
-    <bcf:citekey order="39" intorder="1">Merugu2024IntentLLM</bcf:citekey>
-    <bcf:citekey order="39" intorder="2">Gehweiler2025IntentSurvey</bcf:citekey>
-    <bcf:citekey order="40" intorder="1">Merugu2024IntentLLM</bcf:citekey>
-    <bcf:citekey order="41" intorder="1">Ozerova2022IntentModule</bcf:citekey>
-    <bcf:citekey order="41" intorder="2">Gehweiler2024IntentModeration</bcf:citekey>
-    <bcf:citekey order="42" intorder="1">mulyatun2021chatbot</bcf:citekey>
-    <bcf:citekey order="43" intorder="1">khosla2022evaluating</bcf:citekey>
-    <bcf:citekey order="44" intorder="1">kuligowska2024enhancing</bcf:citekey>
-    <bcf:citekey order="45" intorder="1">hengst2024conformal</bcf:citekey>
-    <bcf:citekey order="46" intorder="1">cyara2024optimum</bcf:citekey>
-    <bcf:citekey order="47" intorder="1">cyara2024optimum</bcf:citekey>
-    <bcf:citekey order="47" intorder="2">genesys2023threshold</bcf:citekey>
+    <bcf:citekey order="35" intorder="2">Ozerova2022IntentModule</bcf:citekey>
+    <bcf:citekey order="35" intorder="3">Gehweiler2024IntentModeration</bcf:citekey>
+    <bcf:citekey order="36" intorder="1">Merugu2024IntentLLM</bcf:citekey>
+    <bcf:citekey order="36" intorder="2">Gehweiler2025IntentSurvey</bcf:citekey>
+    <bcf:citekey order="37" intorder="1">Ozerova2022IntentModule</bcf:citekey>
+    <bcf:citekey order="38" intorder="1">mulyatun2021chatbot</bcf:citekey>
+    <bcf:citekey order="39" intorder="1">khosla2022evaluating</bcf:citekey>
+    <bcf:citekey order="40" intorder="1">kuligowska2024enhancing</bcf:citekey>
+    <bcf:citekey order="41" intorder="1">hengst2024conformal</bcf:citekey>
+    <bcf:citekey order="42" intorder="1">cyara2024optimum</bcf:citekey>
+    <bcf:citekey order="43" intorder="1">cyara2024optimum</bcf:citekey>
+    <bcf:citekey order="43" intorder="2">genesys2023threshold</bcf:citekey>
+    <bcf:citekey order="44" intorder="1">Grandini2020MultiClassMetrics</bcf:citekey>
+    <bcf:citekey order="44" intorder="2">EvidentlyMultiClass</bcf:citekey>
+    <bcf:citekey order="45" intorder="1">EvidentlyMultiClass</bcf:citekey>
+    <bcf:citekey order="46" intorder="1">Grandini2020MultiClassMetrics</bcf:citekey>
+    <bcf:citekey order="47" intorder="1">EvidentlyMultiClass</bcf:citekey>
     <bcf:citekey order="48" intorder="1">Grandini2020MultiClassMetrics</bcf:citekey>
-    <bcf:citekey order="48" intorder="2">EvidentlyMultiClass</bcf:citekey>
     <bcf:citekey order="49" intorder="1">EvidentlyMultiClass</bcf:citekey>
     <bcf:citekey order="50" intorder="1">Grandini2020MultiClassMetrics</bcf:citekey>
-    <bcf:citekey order="51" intorder="1">EvidentlyMultiClass</bcf:citekey>
-    <bcf:citekey order="52" intorder="1">Grandini2020MultiClassMetrics</bcf:citekey>
+    <bcf:citekey order="51" intorder="1">Santosa2025IndoBERTIntent</bcf:citekey>
+    <bcf:citekey order="52" intorder="1">hengst2024conformal</bcf:citekey>
     <bcf:citekey order="53" intorder="1">EvidentlyMultiClass</bcf:citekey>
     <bcf:citekey order="54" intorder="1">Grandini2020MultiClassMetrics</bcf:citekey>
     <bcf:citekey order="55" intorder="1">Santosa2025IndoBERTIntent</bcf:citekey>
-    <bcf:citekey order="56" intorder="1">EvidentlyMultiClass</bcf:citekey>
-    <bcf:citekey order="57" intorder="1">Grandini2020MultiClassMetrics</bcf:citekey>
-    <bcf:citekey order="58" intorder="1">Santosa2025IndoBERTIntent</bcf:citekey>
-    <bcf:citekey order="58" intorder="2">Ozerova2022IntentModule</bcf:citekey>
-    <bcf:citekey order="59" intorder="1">khosla2022evaluating</bcf:citekey>
-    <bcf:citekey order="59" intorder="2">zhang2022disentangling</bcf:citekey>
-    <bcf:citekey order="60" intorder="1">spotintelligence2023intent</bcf:citekey>
-    <bcf:citekey order="60" intorder="2">svm2025comparative</bcf:citekey>
-    <bcf:citekey order="61" intorder="1">kale2020template</bcf:citekey>
-    <bcf:citekey order="62" intorder="1">Precedence2025</bcf:citekey>
+    <bcf:citekey order="55" intorder="2">Ozerova2022IntentModule</bcf:citekey>
+    <bcf:citekey order="56" intorder="1">khosla2022evaluating</bcf:citekey>
+    <bcf:citekey order="56" intorder="2">zhang2022disentangling</bcf:citekey>
+    <bcf:citekey order="57" intorder="1">spotintelligence2023intent</bcf:citekey>
+    <bcf:citekey order="57" intorder="2">svm2025comparative</bcf:citekey>
+    <bcf:citekey order="58" intorder="1">kale2020template</bcf:citekey>
+    <bcf:citekey order="59" intorder="1">Precedence2025</bcf:citekey>
+    <bcf:citekey order="60" intorder="1">kale2020template</bcf:citekey>
+    <bcf:citekey order="61" intorder="1">kapoor2023implementing</bcf:citekey>
+    <bcf:citekey order="62" intorder="1">kale2020template</bcf:citekey>
+    <bcf:citekey order="62" intorder="2">rebuffel2020fewshot</bcf:citekey>
     <bcf:citekey order="63" intorder="1">kale2020template</bcf:citekey>
-    <bcf:citekey order="64" intorder="1">kapoor2023implementing</bcf:citekey>
-    <bcf:citekey order="65" intorder="1">kale2020template</bcf:citekey>
-    <bcf:citekey order="65" intorder="2">rebuffel2020fewshot</bcf:citekey>
-    <bcf:citekey order="66" intorder="1">kale2020template</bcf:citekey>
-    <bcf:citekey order="67" intorder="1">rebuffel2020fewshot</bcf:citekey>
-    <bcf:citekey order="68" intorder="1">feyisetan2022differential</bcf:citekey>
-    <bcf:citekey order="68" intorder="2">mireshghallah2022differentially</bcf:citekey>
-    <bcf:citekey order="69" intorder="1">luo2024data</bcf:citekey>
-    <bcf:citekey order="70" intorder="1">itconvergence2024generative</bcf:citekey>
-    <bcf:citekey order="71" intorder="1">itconvergence2024generative</bcf:citekey>
-    <bcf:citekey order="71" intorder="2">aws2024securing</bcf:citekey>
-    <bcf:citekey order="72" intorder="1">postgresql2024generative</bcf:citekey>
-    <bcf:citekey order="73" intorder="1">edpb2025privacy</bcf:citekey>
-    <bcf:citekey order="73" intorder="2">velotix2025security</bcf:citekey>
+    <bcf:citekey order="64" intorder="1">rebuffel2020fewshot</bcf:citekey>
+    <bcf:citekey order="65" intorder="1">feyisetan2022differential</bcf:citekey>
+    <bcf:citekey order="65" intorder="2">mireshghallah2022differentially</bcf:citekey>
+    <bcf:citekey order="66" intorder="1">luo2024data</bcf:citekey>
+    <bcf:citekey order="67" intorder="1">itconvergence2024generative</bcf:citekey>
+    <bcf:citekey order="68" intorder="1">itconvergence2024generative</bcf:citekey>
+    <bcf:citekey order="68" intorder="2">aws2024securing</bcf:citekey>
+    <bcf:citekey order="69" intorder="1">postgresql2024generative</bcf:citekey>
+    <bcf:citekey order="70" intorder="1">edpb2025privacy</bcf:citekey>
+    <bcf:citekey order="70" intorder="2">velotix2025security</bcf:citekey>
+    <bcf:citekey order="71" intorder="1">Celikyilmaz2020EvalTextGen</bcf:citekey>
+    <bcf:citekey order="71" intorder="2">Sai2020NLGSurvey</bcf:citekey>
+    <bcf:citekey order="71" intorder="3">vanDerLee2021HumanEval</bcf:citekey>
+    <bcf:citekey order="72" intorder="1">Celikyilmaz2020EvalTextGen</bcf:citekey>
+    <bcf:citekey order="72" intorder="2">Sai2020NLGSurvey</bcf:citekey>
+    <bcf:citekey order="72" intorder="3">Gao2024LLMNLG</bcf:citekey>
+    <bcf:citekey order="73" intorder="1">Sai2020NLGSurvey</bcf:citekey>
     <bcf:citekey order="74" intorder="1">Celikyilmaz2020EvalTextGen</bcf:citekey>
     <bcf:citekey order="74" intorder="2">Sai2020NLGSurvey</bcf:citekey>
-    <bcf:citekey order="74" intorder="3">vanDerLee2021HumanEval</bcf:citekey>
     <bcf:citekey order="75" intorder="1">Celikyilmaz2020EvalTextGen</bcf:citekey>
-    <bcf:citekey order="75" intorder="2">Sai2020NLGSurvey</bcf:citekey>
-    <bcf:citekey order="75" intorder="3">Gao2024LLMNLG</bcf:citekey>
-    <bcf:citekey order="76" intorder="1">Sai2020NLGSurvey</bcf:citekey>
-    <bcf:citekey order="77" intorder="1">Celikyilmaz2020EvalTextGen</bcf:citekey>
-    <bcf:citekey order="77" intorder="2">Sai2020NLGSurvey</bcf:citekey>
-    <bcf:citekey order="78" intorder="1">Celikyilmaz2020EvalTextGen</bcf:citekey>
-    <bcf:citekey order="78" intorder="2">Gao2024LLMNLG</bcf:citekey>
-    <bcf:citekey order="79" intorder="1">Celikyilmaz2020EvalTextGen</bcf:citekey>
-    <bcf:citekey order="79" intorder="2">Sai2020NLGSurvey</bcf:citekey>
-    <bcf:citekey order="79" intorder="3">Xiao2023MetricEval</bcf:citekey>
-    <bcf:citekey order="80" intorder="1">vanDerLee2021HumanEval</bcf:citekey>
-    <bcf:citekey order="80" intorder="2">Celikyilmaz2020EvalTextGen</bcf:citekey>
-    <bcf:citekey order="80" intorder="3">Morrison2021ReproSubjective</bcf:citekey>
-    <bcf:citekey order="81" intorder="1">vanDerLee2021HumanEval</bcf:citekey>
-    <bcf:citekey order="82" intorder="1">Elangovan2023ConSiDERS</bcf:citekey>
-    <bcf:citekey order="82" intorder="2">Morrison2021ReproSubjective</bcf:citekey>
-    <bcf:citekey order="83" intorder="1">Sai2020NLGSurvey</bcf:citekey>
-    <bcf:citekey order="84" intorder="1">Syarifudin2024AIChatbotQuality</bcf:citekey>
-    <bcf:citekey order="84" intorder="2">hsu2023chatbotsatisfaction</bcf:citekey>
-    <bcf:citekey order="85" intorder="1">vanDerLee2021HumanEval</bcf:citekey>
-    <bcf:citekey order="85" intorder="2">Syarifudin2024AIChatbotQuality</bcf:citekey>
-    <bcf:citekey order="86" intorder="1">Celikyilmaz2020EvalTextGen</bcf:citekey>
-    <bcf:citekey order="86" intorder="2">Sai2020NLGSurvey</bcf:citekey>
-    <bcf:citekey order="86" intorder="3">Gao2024LLMNLG</bcf:citekey>
-    <bcf:citekey order="87" intorder="1">vanDerLee2021HumanEval</bcf:citekey>
-    <bcf:citekey order="87" intorder="2">Celikyilmaz2020EvalTextGen</bcf:citekey>
-    <bcf:citekey order="88" intorder="1">Sai2020NLGSurvey</bcf:citekey>
-    <bcf:citekey order="88" intorder="2">Xiao2023MetricEval</bcf:citekey>
-    <bcf:citekey order="89" intorder="1">Syarifudin2024AIChatbotQuality</bcf:citekey>
-    <bcf:citekey order="89" intorder="2">hsu2023chatbotsatisfaction</bcf:citekey>
-    <bcf:citekey order="90" intorder="1">Celikyilmaz2020EvalTextGen</bcf:citekey>
-    <bcf:citekey order="90" intorder="2">vanDerLee2021HumanEval</bcf:citekey>
-    <bcf:citekey order="91" intorder="1">WiseGuyReports2024</bcf:citekey>
-    <bcf:citekey order="92" intorder="1">Petropoulos2022ForecastingPractice</bcf:citekey>
-    <bcf:citekey order="92" intorder="2">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
-    <bcf:citekey order="93" intorder="1">Petropoulos2022ForecastingPractice</bcf:citekey>
+    <bcf:citekey order="75" intorder="2">Gao2024LLMNLG</bcf:citekey>
+    <bcf:citekey order="76" intorder="1">Celikyilmaz2020EvalTextGen</bcf:citekey>
+    <bcf:citekey order="76" intorder="2">Sai2020NLGSurvey</bcf:citekey>
+    <bcf:citekey order="76" intorder="3">Xiao2023MetricEval</bcf:citekey>
+    <bcf:citekey order="77" intorder="1">vanDerLee2021HumanEval</bcf:citekey>
+    <bcf:citekey order="77" intorder="2">Celikyilmaz2020EvalTextGen</bcf:citekey>
+    <bcf:citekey order="77" intorder="3">Morrison2021ReproSubjective</bcf:citekey>
+    <bcf:citekey order="78" intorder="1">vanDerLee2021HumanEval</bcf:citekey>
+    <bcf:citekey order="79" intorder="1">Elangovan2023ConSiDERS</bcf:citekey>
+    <bcf:citekey order="79" intorder="2">Morrison2021ReproSubjective</bcf:citekey>
+    <bcf:citekey order="80" intorder="1">Sai2020NLGSurvey</bcf:citekey>
+    <bcf:citekey order="81" intorder="1">Syarifudin2024AIChatbotQuality</bcf:citekey>
+    <bcf:citekey order="81" intorder="2">hsu2023chatbotsatisfaction</bcf:citekey>
+    <bcf:citekey order="82" intorder="1">vanDerLee2021HumanEval</bcf:citekey>
+    <bcf:citekey order="82" intorder="2">Syarifudin2024AIChatbotQuality</bcf:citekey>
+    <bcf:citekey order="83" intorder="1">Celikyilmaz2020EvalTextGen</bcf:citekey>
+    <bcf:citekey order="83" intorder="2">Sai2020NLGSurvey</bcf:citekey>
+    <bcf:citekey order="83" intorder="3">Gao2024LLMNLG</bcf:citekey>
+    <bcf:citekey order="84" intorder="1">vanDerLee2021HumanEval</bcf:citekey>
+    <bcf:citekey order="84" intorder="2">Celikyilmaz2020EvalTextGen</bcf:citekey>
+    <bcf:citekey order="85" intorder="1">Sai2020NLGSurvey</bcf:citekey>
+    <bcf:citekey order="85" intorder="2">Xiao2023MetricEval</bcf:citekey>
+    <bcf:citekey order="86" intorder="1">Syarifudin2024AIChatbotQuality</bcf:citekey>
+    <bcf:citekey order="86" intorder="2">hsu2023chatbotsatisfaction</bcf:citekey>
+    <bcf:citekey order="87" intorder="1">Celikyilmaz2020EvalTextGen</bcf:citekey>
+    <bcf:citekey order="87" intorder="2">vanDerLee2021HumanEval</bcf:citekey>
+    <bcf:citekey order="88" intorder="1">WiseGuyReports2024</bcf:citekey>
+    <bcf:citekey order="89" intorder="1">Petropoulos2022ForecastingPractice</bcf:citekey>
+    <bcf:citekey order="89" intorder="2">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
+    <bcf:citekey order="90" intorder="1">Petropoulos2022ForecastingPractice</bcf:citekey>
+    <bcf:citekey order="91" intorder="1">Petropoulos2022ForecastingPractice</bcf:citekey>
+    <bcf:citekey order="91" intorder="2">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
+    <bcf:citekey order="92" intorder="1">Tuncer2023ARIMAProphetLSTM</bcf:citekey>
+    <bcf:citekey order="92" intorder="2">Masini2023MLTimeSeriesForecasting</bcf:citekey>
+    <bcf:citekey order="93" intorder="1">Tuncer2023ARIMAProphetLSTM</bcf:citekey>
+    <bcf:citekey order="93" intorder="2">Masini2023MLTimeSeriesForecasting</bcf:citekey>
     <bcf:citekey order="94" intorder="1">Petropoulos2022ForecastingPractice</bcf:citekey>
     <bcf:citekey order="94" intorder="2">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
-    <bcf:citekey order="95" intorder="1">Tuncer2023ARIMAProphetLSTM</bcf:citekey>
-    <bcf:citekey order="95" intorder="2">Masini2023MLTimeSeriesForecasting</bcf:citekey>
-    <bcf:citekey order="96" intorder="1">Tuncer2023ARIMAProphetLSTM</bcf:citekey>
-    <bcf:citekey order="96" intorder="2">Masini2023MLTimeSeriesForecasting</bcf:citekey>
-    <bcf:citekey order="97" intorder="1">Petropoulos2022ForecastingPractice</bcf:citekey>
-    <bcf:citekey order="97" intorder="2">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
-    <bcf:citekey order="98" intorder="1">Masini2023MLTimeSeriesForecasting</bcf:citekey>
-    <bcf:citekey order="99" intorder="1">Sunendar2025ComparisonARIMALSTMGRU</bcf:citekey>
-    <bcf:citekey order="99" intorder="2">Tuncer2023ARIMAProphetLSTM</bcf:citekey>
+    <bcf:citekey order="95" intorder="1">Masini2023MLTimeSeriesForecasting</bcf:citekey>
+    <bcf:citekey order="96" intorder="1">Sunendar2025ComparisonARIMALSTMGRU</bcf:citekey>
+    <bcf:citekey order="96" intorder="2">Tuncer2023ARIMAProphetLSTM</bcf:citekey>
+    <bcf:citekey order="97" intorder="1">Yunita2025NNComparison</bcf:citekey>
+    <bcf:citekey order="97" intorder="2">Zhang2024ComprehensiveTSFSurvey</bcf:citekey>
+    <bcf:citekey order="98" intorder="1">Yunita2025NNComparison</bcf:citekey>
+    <bcf:citekey order="99" intorder="1">Yunita2025NNComparison</bcf:citekey>
     <bcf:citekey order="100" intorder="1">Yunita2025NNComparison</bcf:citekey>
-    <bcf:citekey order="100" intorder="2">Zhang2024ComprehensiveTSFSurvey</bcf:citekey>
     <bcf:citekey order="101" intorder="1">Yunita2025NNComparison</bcf:citekey>
+    <bcf:citekey order="101" intorder="2">Zhang2024ComprehensiveTSFSurvey</bcf:citekey>
     <bcf:citekey order="102" intorder="1">Yunita2025NNComparison</bcf:citekey>
     <bcf:citekey order="103" intorder="1">Yunita2025NNComparison</bcf:citekey>
-    <bcf:citekey order="104" intorder="1">Yunita2025NNComparison</bcf:citekey>
+    <bcf:citekey order="103" intorder="2">Jeaab2024LSTMGRUXGBoost</bcf:citekey>
+    <bcf:citekey order="104" intorder="1">Lim2021TFT</bcf:citekey>
     <bcf:citekey order="104" intorder="2">Zhang2024ComprehensiveTSFSurvey</bcf:citekey>
-    <bcf:citekey order="105" intorder="1">Yunita2025NNComparison</bcf:citekey>
-    <bcf:citekey order="106" intorder="1">Yunita2025NNComparison</bcf:citekey>
-    <bcf:citekey order="106" intorder="2">Jeaab2024LSTMGRUXGBoost</bcf:citekey>
+    <bcf:citekey order="105" intorder="1">Lim2021TFT</bcf:citekey>
+    <bcf:citekey order="105" intorder="2">Hartanto2024TFTEnhanced</bcf:citekey>
+    <bcf:citekey order="106" intorder="1">Lim2021TFT</bcf:citekey>
     <bcf:citekey order="107" intorder="1">Lim2021TFT</bcf:citekey>
-    <bcf:citekey order="107" intorder="2">Zhang2024ComprehensiveTSFSurvey</bcf:citekey>
-    <bcf:citekey order="108" intorder="1">Lim2021TFT</bcf:citekey>
-    <bcf:citekey order="108" intorder="2">Hartanto2024TFTEnhanced</bcf:citekey>
-    <bcf:citekey order="109" intorder="1">Lim2021TFT</bcf:citekey>
-    <bcf:citekey order="110" intorder="1">Lim2021TFT</bcf:citekey>
-    <bcf:citekey order="111" intorder="1">Hartanto2024TFTEnhanced</bcf:citekey>
-    <bcf:citekey order="112" intorder="1">Hartanto2024TFTEnhanced</bcf:citekey>
-    <bcf:citekey order="112" intorder="2">Cheng2025MultivariateTFFEng</bcf:citekey>
-    <bcf:citekey order="113" intorder="1">Yunita2025NNComparison</bcf:citekey>
-    <bcf:citekey order="113" intorder="2">Zhang2024ComprehensiveTSFSurvey</bcf:citekey>
-    <bcf:citekey order="114" intorder="1">Diqi2023GRULSTMHybrid</bcf:citekey>
-    <bcf:citekey order="115" intorder="1">Zhang2024ComprehensiveTSFSurvey</bcf:citekey>
-    <bcf:citekey order="115" intorder="2">Yunita2025NNComparison</bcf:citekey>
+    <bcf:citekey order="108" intorder="1">Hartanto2024TFTEnhanced</bcf:citekey>
+    <bcf:citekey order="109" intorder="1">Hartanto2024TFTEnhanced</bcf:citekey>
+    <bcf:citekey order="109" intorder="2">Cheng2025MultivariateTFFEng</bcf:citekey>
+    <bcf:citekey order="110" intorder="1">Yunita2025NNComparison</bcf:citekey>
+    <bcf:citekey order="110" intorder="2">Zhang2024ComprehensiveTSFSurvey</bcf:citekey>
+    <bcf:citekey order="111" intorder="1">Diqi2023GRULSTMHybrid</bcf:citekey>
+    <bcf:citekey order="112" intorder="1">Zhang2024ComprehensiveTSFSurvey</bcf:citekey>
+    <bcf:citekey order="112" intorder="2">Yunita2025NNComparison</bcf:citekey>
+    <bcf:citekey order="113" intorder="1">Sunendar2025ComparisonARIMALSTMGRU</bcf:citekey>
+    <bcf:citekey order="114" intorder="1">Sabila2025LSTMGRUStockPrediction</bcf:citekey>
+    <bcf:citekey order="115" intorder="1">Hartanto2024TFTEnhanced</bcf:citekey>
     <bcf:citekey order="116" intorder="1">Sunendar2025ComparisonARIMALSTMGRU</bcf:citekey>
-    <bcf:citekey order="117" intorder="1">Sabila2025LSTMGRUStockPrediction</bcf:citekey>
-    <bcf:citekey order="118" intorder="1">Hartanto2024TFTEnhanced</bcf:citekey>
-    <bcf:citekey order="119" intorder="1">Sunendar2025ComparisonARIMALSTMGRU</bcf:citekey>
-    <bcf:citekey order="120" intorder="1">Yunita2025NNComparison</bcf:citekey>
-    <bcf:citekey order="121" intorder="1">Yunita2025NNComparison</bcf:citekey>
-    <bcf:citekey order="121" intorder="2">Petropoulos2023ForecastEval</bcf:citekey>
+    <bcf:citekey order="117" intorder="1">Yunita2025NNComparison</bcf:citekey>
+    <bcf:citekey order="118" intorder="1">Yunita2025NNComparison</bcf:citekey>
+    <bcf:citekey order="118" intorder="2">Petropoulos2023ForecastEval</bcf:citekey>
+    <bcf:citekey order="119" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
+    <bcf:citekey order="120" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
+    <bcf:citekey order="121" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
     <bcf:citekey order="122" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
     <bcf:citekey order="123" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
     <bcf:citekey order="124" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
     <bcf:citekey order="125" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
-    <bcf:citekey order="126" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
+    <bcf:citekey order="125" intorder="2">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
+    <bcf:citekey order="126" intorder="1">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
     <bcf:citekey order="127" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
-    <bcf:citekey order="128" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
-    <bcf:citekey order="128" intorder="2">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
-    <bcf:citekey order="129" intorder="1">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
+    <bcf:citekey order="128" intorder="1">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
+    <bcf:citekey order="129" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
+    <bcf:citekey order="129" intorder="2">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
     <bcf:citekey order="130" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
     <bcf:citekey order="131" intorder="1">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
     <bcf:citekey order="132" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
-    <bcf:citekey order="132" intorder="2">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
     <bcf:citekey order="133" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
-    <bcf:citekey order="134" intorder="1">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
-    <bcf:citekey order="135" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
-    <bcf:citekey order="136" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
-    <bcf:citekey order="136" intorder="2">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
-    <bcf:citekey order="137" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
+    <bcf:citekey order="133" intorder="2">Spiliotis2020ForecastingBenchmarks</bcf:citekey>
+    <bcf:citekey order="134" intorder="1">Petropoulos2023ForecastEval</bcf:citekey>
+    <bcf:citekey order="135" intorder="1">ijirt2024rulebased</bcf:citekey>
+    <bcf:citekey order="136" intorder="1">huang2021chatbot</bcf:citekey>
+    <bcf:citekey order="137" intorder="1">bamurange2025hybrid</bcf:citekey>
     <bcf:citekey order="138" intorder="1">ijirt2024rulebased</bcf:citekey>
-    <bcf:citekey order="139" intorder="1">huang2021chatbot</bcf:citekey>
-    <bcf:citekey order="140" intorder="1">bamurange2025hybrid</bcf:citekey>
-    <bcf:citekey order="141" intorder="1">ijirt2024rulebased</bcf:citekey>
-    <bcf:citekey order="142" intorder="1">ibm2025chatbottypes</bcf:citekey>
-    <bcf:citekey order="143" intorder="1">querio2025conversational</bcf:citekey>
-    <bcf:citekey order="144" intorder="1">retresco2024nlgtemplate</bcf:citekey>
-    <bcf:citekey order="145" intorder="1">retresco2024nlgtemplate</bcf:citekey>
-    <bcf:citekey order="146" intorder="1">yellowfin2025nlg</bcf:citekey>
-    <bcf:citekey order="147" intorder="1">priadinata2025lstm</bcf:citekey>
-    <bcf:citekey order="148" intorder="1">ejournal2024grulstm</bcf:citekey>
-    <bcf:citekey order="149" intorder="1">databricks2025timeseries</bcf:citekey>
-    <bcf:citekey order="150" intorder="1">jerr2024churnprediction</bcf:citekey>
-    <bcf:citekey order="151" intorder="1">ui2024churnhat</bcf:citekey>
+    <bcf:citekey order="139" intorder="1">ibm2025chatbottypes</bcf:citekey>
+    <bcf:citekey order="140" intorder="1">querio2025conversational</bcf:citekey>
+    <bcf:citekey order="141" intorder="1">retresco2024nlgtemplate</bcf:citekey>
+    <bcf:citekey order="142" intorder="1">retresco2024nlgtemplate</bcf:citekey>
+    <bcf:citekey order="143" intorder="1">yellowfin2025nlg</bcf:citekey>
+    <bcf:citekey order="144" intorder="1">priadinata2025lstm</bcf:citekey>
+    <bcf:citekey order="145" intorder="1">ejournal2024grulstm</bcf:citekey>
+    <bcf:citekey order="146" intorder="1">databricks2025timeseries</bcf:citekey>
+    <bcf:citekey order="147" intorder="1">jerr2024churnprediction</bcf:citekey>
+    <bcf:citekey order="148" intorder="1">ui2024churnhat</bcf:citekey>
+    <bcf:citekey order="149" intorder="1">Adam2021Chatbots</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="cms">

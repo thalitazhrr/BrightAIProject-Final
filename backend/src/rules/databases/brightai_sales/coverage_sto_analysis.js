@@ -22,6 +22,7 @@ module.exports = {
       // STO analysis - yang biasa digunakan
       'performa sto', 'kinerja sto', 'analisis sto', 'coverage sto',
       'cakupan sto', 'efisiensi sto', 'produktivitas sto',
+      'jangkauan sto', 'jangkauan internet',
 
       // Performance terms familiar
       'tingkat keberhasilan', 'success rate', 'penetrasi hsi',
@@ -496,6 +497,9 @@ module.exports = {
     },
 
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const analysis = this.analyzeSTOTrends(data);
 
       const hasil_analisis = data.map(sto => {

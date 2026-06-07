@@ -1,0 +1,36 @@
+\begin{minipage}{\textwidth}
+\begin{lstlisting}[caption={Fungsi Pembangkitan Respons NLG}, label={lst:nlg-generator}, style=jsstyle]
+async generateResponse(ruleResult, rule, userInput, geoCtx) {
+  // 1. Ekstraksi konteks dari data terstruktur
+  const data = ruleResult.processed_data || ruleResult.data;
+  const ctx  = this.extractCtx(data, rule.RULE_META);
+
+  // 2. Klasifikasi intent dan fokus analisis
+  const intent = intentClassifier.classifyIntent(userInput);
+  ctx.intent = intent.intent;
+  ctx.focus  = intent.focus;
+  ctx.subjek = RULE_SUBJEK[rule.RULE_META.RULE_ID]
+               || 'analisis data HSI';
+
+  // 3. Pemilihan templat berdasarkan intent
+  const template = templateLibrary.getTemplate(
+    ctx.intent, ctx
+  );
+
+  // 4. Pengisian data ke dalam templat
+  let response = template
+    .replace(/{subjek}/g,    ctx.subjek)
+    .replace(/{periode}/g,   ctx.periode)
+    .replace(/{mainValue}/g, ctx.mainValue)
+    .replace(/{mainLabel}/g, ctx.mainLabel)
+    .replace(/{geo}/g,       ctx.geoLabel);
+
+  // Tambahkan tabel data jika tersedia
+  if (ctx.breakdown) {
+    response += this.buildMarkdownTable(ctx.breakdown);
+  }
+
+  return response;
+}
+\end{lstlisting}
+\end{minipage}

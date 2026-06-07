@@ -18,57 +18,55 @@ module.exports = {
   DATABASE_CONFIG: loadRuleDatabase("BRIGHTAI_CT0_NAL"),
 
     KEYWORD_PATTERNS: {
-    required: {
-      churn_keywords: [
-        'churn rate', 'tingkat churn', 'cabut pelanggan', 'pelanggan cabut',
-        'churn regional', 'churn per regional', 'analisis churn',
-        'kehilangan pelanggan', 'pelanggan hilang', 'customer churn'
-      ],
-      service_keywords: [
-        'internet', 'broadband', 'hsi', 'koneksi internet'
-      ]
-    },
-    
-    optional: {
-      location_keywords: [
-        'regional', 'wilayah', 'area', 'daerah'
-      ],
-      analysis_keywords: [
-        'analisis', 'analysis', 'performa', 'kinerja'
-      ],
-      technical_keywords: [
-        'ct0', 'dinolkan', 'nonaktif'
-      ]
-    },
-    
+    primary: [
+      'churn rate', 'tingkat churn', 'cabut pelanggan', 'pelanggan cabut',
+      'churn regional', 'churn per regional', 'analisis churn',
+      'kehilangan pelanggan', 'pelanggan hilang', 'customer churn'
+    ],
+
+    supporting: [
+      'internet', 'broadband', 'hsi', 'koneksi internet',
+      'regional', 'wilayah', 'area', 'daerah',
+      'analisis', 'analysis', 'performa', 'kinerja',
+      'ct0', 'dinolkan', 'nonaktif'
+    ],
+
     calculateConfidence: function(inputPengguna) {
       const input = inputPengguna.toLowerCase().trim();
-      let totalScore = 0;
-      let maxPossibleScore = 0;
-      
-      // Check required keywords
-      if (this.required) {
-        Object.keys(this.required).forEach(category => {
-          const keywords = this.required[category];
-          const matches = keywords.filter(keyword => input.includes(keyword.toLowerCase())).length;
-          const categoryScore = (matches / keywords.length) * 100;
-          totalScore += categoryScore * 2; // Double weight for required
-          maxPossibleScore += 200;
-        });
+      let score = 0;
+
+      // Negative signals: defer to sibling CT0 rules when specific context present
+      const hasDurasiCtx = input.includes('durasi') || input.includes('masa layanan') || input.includes('lama layanan') || input.includes('berlangganan');
+      const hasBandwidthCtx = input.includes('bandwidth') || input.includes('kecepatan') || input.includes('speed');
+      const hasDivisiCtx = (input.includes('bandingkan') || input.includes('perbandingan') || input.includes('banding')) &&
+        (input.includes('bisnis') || input.includes('consumer') || input.includes('divisi'));
+      const hasWitelCtx = input.includes('witel') && !input.includes('regional');
+      const hasMonthlyCtx = input.includes('bulanan') || input.includes('kuartal') || input.includes('per bulan');
+
+      if (hasDurasiCtx) return 0;      // ct0_002 territory
+      if (hasBandwidthCtx) return 0;    // ct0_ebis_003 territory
+      if (hasDivisiCtx) return 0;       // ct0_006 territory
+      if (hasWitelCtx) return 0;        // ct0_004 territory
+      if (hasMonthlyCtx) return 0;      // ct0_005 territory
+
+      const primaryMatches = this.primary.filter(keyword =>
+        input.includes(keyword.toLowerCase())
+      ).length;
+
+      const supportingMatches = this.supporting.filter(keyword =>
+        input.includes(keyword.toLowerCase())
+      ).length;
+
+      if (primaryMatches > 0) {
+        score = 80 + (primaryMatches * 8) + (supportingMatches * 3);
+      } else if (
+        (input.includes('churn') || input.includes('cabut')) &&
+        (input.includes('regional') || input.includes('internet') || input.includes('hsi'))
+      ) {
+        score = 75;
       }
-      
-      // Check optional keywords  
-      if (this.optional) {
-        Object.keys(this.optional).forEach(category => {
-          const keywords = this.optional[category];
-          const matches = keywords.filter(keyword => input.includes(keyword.toLowerCase())).length;
-          const categoryScore = (matches / keywords.length) * 100;
-          totalScore += categoryScore;
-          maxPossibleScore += 100;
-        });
-      }
-      
-      return maxPossibleScore > 0 ? Math.min(100, (totalScore / maxPossibleScore) * 100) : 0;
+
+      return Math.min(score, 100);
     }
   },
 
@@ -306,6 +304,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const hasil_analisis = data.map(record => {
         const churn_assessment = this.assessChurnLevel(
           record.TOTAL_CHURN_CT0,

@@ -21,33 +21,44 @@ module.exports = {
     primary: [
       'loyalitas pelanggan hsi', 'customer loyalty', 'analisis loyalitas',
       'customer retention', 'analisis tenure', 'loyalty analysis',
-      'program loyalitas', 'loyalty program', 'customer loyalty hsi', 'kesetiaan pelanggan'
+      'program loyalitas', 'loyalty program', 'customer loyalty hsi', 'kesetiaan pelanggan',
+      'loyalitas pelanggan internet', 'tingkat loyalitas pelanggan',
+      'loyalitas pelanggan', 'tingkat loyalitas'
     ],
-    
+
     supporting: [
       'loyalitas', 'loyalty', 'tenure', 'retention', 'setia', 'loyal',
       'program', 'reward', 'point', 'lama berlangganan', 'customer lifetime',
-      'telda', 'datel', 'regional', 'witel', 'wilayah', 'distribusi'
+      'telda', 'datel', 'regional', 'witel', 'wilayah', 'distribusi',
+      'pelanggan', 'internet', 'hsi', 'customer'
     ],
-    
+
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 82 + (primaryMatches * 9) + (supportingMatches * 2);
       } else if (supportingMatches >= 3) {
         score = 70 + (supportingMatches * 3);
       }
-      
+
+      // Fallback: loyalitas + (pelanggan|customer|internet|hsi)
+      if (score === 0 && lowerInput.includes('loyalitas')) {
+        if (lowerInput.includes('pelanggan') || lowerInput.includes('customer') ||
+            lowerInput.includes('internet') || lowerInput.includes('hsi')) {
+          score = 78;
+        }
+      }
+
       return Math.min(score, 100);
     }
   },
@@ -125,7 +136,6 @@ module.exports = {
             WHERE PLBLCL IN ('BL', 'CL')
               AND CITEM NOT LIKE '%W/%'
               AND CITEM NOT LIKE '%WM%'
-              AND ASSET_STATUS IN ('ACTIVE', 'NORMAL')
               AND LOS IS NOT NULL
               AND CAST(LOS AS NUMBER) >= 0
         )
@@ -444,6 +454,9 @@ module.exports = {
     },
 
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const totalCustomers = data.reduce((sum, d) => sum + d.CUSTOMER_COUNT, 0);
       const totalHSIRevenue = data.reduce((sum, d) => sum + d.TOTAL_HSI_CONTRIBUTION, 0);
       const totalCustomerLTV = data.reduce((sum, d) => sum + d.TOTAL_CUSTOMER_LIFETIME_VALUE, 0);

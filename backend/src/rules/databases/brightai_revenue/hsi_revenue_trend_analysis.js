@@ -59,8 +59,7 @@ module.exports = {
         WITEL_BILL,
         DATEL,
         CSTO,
-        LSTO,
-        
+
         -- Customer and Service Metrics
         COUNT(DISTINCT NIP_NAS) as TOTAL_PELANGGAN,
         COUNT(DISTINCT NCLI) as TOTAL_NCLI,
@@ -107,11 +106,10 @@ module.exports = {
       AND WITEL_BILL IS NOT NULL
       AND DATEL IS NOT NULL
       AND CSTO IS NOT NULL
-      AND LSTO IS NOT NULL
       AND NIP_NAS IS NOT NULL
       AND NCLI IS NOT NULL
       AND ND IS NOT NULL
-    GROUP BY YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO, LSTO, 
+    GROUP BY YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO,
              FLAG_SCALING_SUSTAIN_REVENUE, FLAG_SCALING_MONTHLY_REVENUE
     ORDER BY YEAR_ID DESC, MONTH_ID DESC, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO, TOTAL_REVENUE DESC
   `,
@@ -214,7 +212,7 @@ module.exports = {
           regional: item.REGIONAL_BILL,
           witel: item.WITEL_BILL,
           datel: item.DATEL,
-          sto: `${item.CSTO} - ${item.LSTO}`,
+          sto: item.CSTO,
           value: item[metric],
           growth_rate: item.GROWTH_RATE_PERCENT || 'N/A'
         }));
@@ -265,6 +263,9 @@ module.exports = {
     },
 
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const totalRevenue = data.reduce((sum, d) => sum + d.TOTAL_REVENUE, 0);
       const totalCustomers = data.reduce((sum, d) => sum + d.TOTAL_PELANGGAN, 0);
       const totalNCLI = data.reduce((sum, d) => sum + d.TOTAL_NCLI, 0);
@@ -363,7 +364,6 @@ module.exports = {
           witel: item.WITEL_BILL,
           datel: item.DATEL,
           kode_sto: item.CSTO,
-          nama_sto: item.LSTO,
           total_revenue: `Rp ${item.TOTAL_REVENUE.toLocaleString('id-ID')}`,
           total_pelanggan: item.TOTAL_PELANGGAN.toLocaleString('id-ID'),
           total_ncli: item.TOTAL_NCLI.toLocaleString('id-ID'),

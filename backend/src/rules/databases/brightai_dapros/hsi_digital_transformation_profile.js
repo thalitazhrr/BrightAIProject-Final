@@ -21,33 +21,41 @@ module.exports = {
     primary: [
       'transformasi digital hsi', 'digital transformation', 'adopsi teknologi',
       'profil digital', 'digitalisasi customer', 'teknologi adoption',
-      'customer digital behavior', 'digital maturity hsi', 'tech adoption', 'modernisasi'
+      'customer digital behavior', 'digital maturity hsi', 'tech adoption', 'modernisasi',
+      'profil transformasi digital', 'transformasi digital pelanggan',
+      'adopsi digital pelanggan', 'profil digital pelanggan'
     ],
-    
+
     supporting: [
       'digital', 'teknologi', 'transformasi', 'adopsi', 'digitalisasi',
       'technology', 'innovation', 'modernisasi', 'upgrade', 'fiber', 'gpon',
-      'telda', 'datel', 'regional', 'witel', 'wilayah', 'distribusi'
+      'telda', 'datel', 'regional', 'witel', 'wilayah', 'distribusi',
+      'produk', 'bundling', 'bundle', 'hsi', 'internet', 'pelanggan', 'customer'
     ],
-    
+
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      // Hard gate: must have digital/transformasi/adopsi/modernisasi context
+      const hasDigitalCtx = lowerInput.includes('digital') || lowerInput.includes('transformasi') ||
+        lowerInput.includes('adopsi') || lowerInput.includes('modernisasi') || lowerInput.includes('digitalisasi');
+      if (!hasDigitalCtx) return 0;
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 82 + (primaryMatches * 9) + (supportingMatches * 2);
       } else if (supportingMatches >= 3) {
         score = 68 + (supportingMatches * 3);
       }
-      
+
       return Math.min(score, 100);
     }
   },
@@ -111,7 +119,6 @@ module.exports = {
             WHERE PLBLCL IN ('BL', 'CL')
               AND CITEM NOT LIKE '%W/%'
               AND CITEM NOT LIKE '%WM%'
-              AND ASSET_STATUS IN ('ACTIVE', 'NORMAL')
         )
     )
     
@@ -358,6 +365,9 @@ module.exports = {
     },
 
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const totalCustomers = data.reduce((sum, d) => sum + d.CUSTOMER_COUNT, 0);
       const transformationTrends = this.analyzeDigitalTransformationTrends(data);
       const digitalReadiness = this.assessDigitalReadiness(data);

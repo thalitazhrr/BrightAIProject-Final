@@ -123,7 +123,6 @@ module.exports = {
             WHERE PLBLCL IN ('BL', 'CL')
               AND CITEM NOT LIKE '%W/%'
               AND CITEM NOT LIKE '%WM%'
-              AND ASSET_STATUS IN ('ACTIVE', 'NORMAL')
               AND SPEED IS NOT NULL
               AND CAST(SPEED AS NUMBER) > 0
         )
@@ -415,6 +414,9 @@ module.exports = {
     },
 
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const totalCustomers = data.reduce((sum, d) => sum + d.CUSTOMER_COUNT, 0);
       const totalHSIRevenue = data.reduce((sum, d) => sum + d.TOTAL_HSI_CONTRIBUTION, 0);
       const avgSpeedOverall = data.length > 0 ? 

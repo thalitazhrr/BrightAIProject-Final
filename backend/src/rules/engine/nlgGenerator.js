@@ -44,11 +44,11 @@ const RULE_SUBJEK = {
   target_003: 'performa regional HSI terhadap target',
   target_004: 'tren pertumbuhan realisasi vs target HSI',
   target_005: 'posisi kompetitif HSI terhadap target pasar',
-  dapros_001: 'distribusi geografis pelanggan HSI',
+  dapros_001: 'segmentasi pelanggan HSI',
   dapros_002: 'bundle layanan HSI dan produk tambahan',
   dapros_003: 'profil transformasi digital pelanggan HSI',
   dapros_004: 'profil pendapatan pelanggan HSI',
-  dapros_005: 'segmentasi pelanggan HSI',
+  dapros_005: 'distribusi geografis pelanggan HSI',
   dapros_006: 'distribusi kecepatan layanan HSI',
   dapros_007: 'loyalitas dan tenure pelanggan HSI',
   ct0_ebis_001: 'tingkat churn internet per regional',
@@ -90,7 +90,7 @@ function arrayToTable(arr, maxRows = 12) {
   const toLabel = k => k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
     .replace(/\bHsi\b/g, 'HSI').replace(/\bMom\b/g, 'MoM').replace(/\bYoy\b/g, 'YoY');
   const fmt = v => (v === null || v === undefined) ? '-' :
-    (typeof v === 'number' ? v.toLocaleString('id-ID') : String(v));
+    (typeof v === 'number' ? v.toLocaleString('id-ID') : String(v).replace(/_/g, ' '));
   const header = `| ${keys.map(toLabel).join(' | ')} |`;
   const sep    = `| ${keys.map(() => '---').join(' | ')} |`;
   const rows   = arr.slice(0, maxRows).map(r => `| ${keys.map(k => fmt(r[k])).join(' | ')} |`);
@@ -264,6 +264,16 @@ function extractCtx(data, rule, recordCount, execTime, geoLabel = '') {
     }
   }
 
+  // Fallback: total_pelanggan_dianalisis at root (dapros_* rules)
+  if (ctx.mainValue === '-') {
+    const totalPel = ambil(data, 'total_pelanggan_dianalisis');
+    if (totalPel !== null && totalPel !== undefined) {
+      ctx.mainValue = String(totalPel);
+      ctx.mainLabel = 'Total Pelanggan';
+      ctx.mainUnit  = 'pelanggan';
+    }
+  }
+
   // ── Pertumbuhan ──────────────────────────────────────────────────────────────
   const tumbuh = ambil(data, 'analisis_pertumbuhan');
   if (tumbuh && typeof tumbuh === 'object') {
@@ -281,7 +291,8 @@ function extractCtx(data, rule, recordCount, execTime, geoLabel = '') {
   }
 
   // ── Breakdown produk (prosa jika ≤ 4, tabel jika > 4) ───────────────────────
-  const bdwn = ambil(data, 'breakdown_produk','breakdown_segmen','distribusi_produk');
+  const bdwn = ambil(data, 'breakdown_produk','breakdown_segmen','distribusi_produk',
+    'distribusi_segmen_utama','karakteristik_pasar','distribusi_bundle_layanan');
   if (bdwn && typeof bdwn === 'object' && !Array.isArray(bdwn)) {
     const entri = Object.entries(bdwn);
     if (entri.length > 0) {
@@ -514,7 +525,6 @@ function generatePs002(data, judul, recordCount, execTime, meta) {
       Witel: w.nama_witel,
       Regional: w.regional,
       'Total Order HSI': w.total_order_hsi,
-      'Mix Produk': w.mix_produk,
       'Bundling Rate': w.bundling_rate,
       'Avg MoM': w.avg_mom_growth,
       'Jumlah STO': w.jumlah_sto,

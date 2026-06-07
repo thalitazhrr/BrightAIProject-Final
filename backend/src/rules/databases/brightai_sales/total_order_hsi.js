@@ -323,19 +323,30 @@ module.exports = {
       };
       
       const topDigital = Object.entries(digitalProducts)
+        .filter(([, v]) => v > 0)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 2);
-      
-      insights.push({
-        kategori: 'Produk Digital Terpopuler',
-        nilai: `${topDigital.map(([k, v]) => 
-          `${k.replace('_', ' ').toUpperCase()} (${v} order)`).join(', ')}`
-      });
+
+      if (topDigital.length > 0) {
+        insights.push({
+          kategori: 'Produk Digital Terpopuler',
+          nilai: `${topDigital.map(([k, v]) =>
+            `${k.replace('_', ' ').toUpperCase()} (${v} order)`).join(', ')}`
+        });
+      } else {
+        insights.push({
+          kategori: 'Produk Digital',
+          nilai: 'Tidak ada bundling produk digital pada periode ini'
+        });
+      }
       
       return insights;
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data order HSI yang tersedia untuk scope yang dipilih.' };
+      }
       const latest = data[0];
       const volume_category = this.categorizeVolume(latest.total_order_hsi);
       const growth_category = this.categorizeGrowth(latest.mom_growth);

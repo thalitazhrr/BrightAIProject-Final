@@ -1,0 +1,51 @@
+\begin{minipage}{\textwidth}
+\begin{lstlisting}[caption={Contoh Struktur Definisi Aturan Analitik}, label={lst:rule-definition}, style=jsstyle]
+module.exports = {
+  RULE_META: {
+    RULE_ID: 'ps_001',
+    RULE_NAME: 'total_order_hsi',
+    DESCRIPTION: 'Analisis total order HSI bisnis dan basic',
+    DATABASE: 'BRIGHTAI_SALES',
+    CATEGORY: 'order_analysis',
+    COMPLEXITY: 'MEDIUM',
+    EXECUTION_PRIORITY: 'HIGH'
+  },
+
+  DATABASE_CONFIG: loadRuleDatabase("BRIGHTAI_SALES"),
+
+  KEYWORD_PATTERNS: {
+    primary: [
+      'total order hsi', 'jumlah order', 'order hsi bisnis'
+    ],
+    supporting: [
+      'order', 'hsi', 'bisnis', 'basic', 'bulanan'
+    ],
+    calculateConfidence: function(input) {
+      const lowerInput = input.toLowerCase();
+      const primaryMatches = this.primary.filter(
+        kw => lowerInput.includes(kw)
+      ).length;
+      const supportingMatches = this.supporting.filter(
+        kw => lowerInput.includes(kw)
+      ).length;
+      if (primaryMatches > 0)
+        return Math.min(80 + primaryMatches*10
+                        + supportingMatches*3, 100);
+      if (supportingMatches >= 3)
+        return 65 + supportingMatches * 4;
+      return 0;
+    }
+  },
+
+  SQL_QUERY: `SELECT ... FROM DWH_MOIS.BRIGHTAI_SALES
+              WHERE GROUP4 = 'High Speed Internet' ...`,
+
+  BUSINESS_LOGIC: {
+    formatIndonesianResponse: function(data) {
+      // Mengubah data mentah menjadi struktur terformat
+      return { ringkasan: '...', metrik: {...} };
+    }
+  }
+};
+\end{lstlisting}
+\end{minipage}

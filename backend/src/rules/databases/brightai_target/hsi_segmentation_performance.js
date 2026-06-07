@@ -44,22 +44,32 @@ module.exports = {
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      // Must have segmentation context AND target/performance context
+      const hasSegCtx =
+        lowerInput.includes('segmen') || lowerInput.includes('segment') ||
+        lowerInput.includes('segmentasi');
+      const hasTargetCtx =
+        lowerInput.includes('target') || lowerInput.includes('performa') ||
+        lowerInput.includes('kinerja') || lowerInput.includes('performance') ||
+        lowerInput.includes('pencapaian');
+      if (!hasSegCtx) return 0;
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 75 + (primaryMatches * 12) + (supportingMatches * 3);
-      } else if (lowerInput.includes('segmen') && 
-                (lowerInput.includes('hsi') || lowerInput.includes('internet'))) {
-        score = 65;
+      } else if (hasSegCtx && hasTargetCtx) {
+        score = 70;
+      } else if (hasSegCtx && (lowerInput.includes('hsi') || lowerInput.includes('internet'))) {
+        score = 60;
       }
-      
+
       return Math.min(score, 100);
     }
   },
@@ -427,6 +437,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const hasil_analisis = data.map(record => {
         const segment_potential = this.assessSegmentPotential(
           record.MARKET_SHARE_PCT,

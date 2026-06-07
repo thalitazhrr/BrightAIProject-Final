@@ -73,8 +73,8 @@ export const parseMarkdownToJSX = (text, theme = 'dark') => {
     }
 
     elements.push(
-      <div key={elements.length} className="overflow-x-auto my-3">
-        <table className={`w-full text-sm border-collapse rounded-lg overflow-hidden ${theme === 'dark' ? 'text-slate-200' : 'text-gray-800'}`}>
+      <div key={elements.length} className="overflow-x-auto my-3 rounded-lg w-full">
+        <table className={`min-w-full text-sm border-collapse ${theme === 'dark' ? 'text-slate-200' : 'text-gray-800'}`}>
           {headers.length > 0 && (
             <thead>
               <tr className={theme === 'dark' ? 'bg-slate-700' : 'bg-gray-100'}>

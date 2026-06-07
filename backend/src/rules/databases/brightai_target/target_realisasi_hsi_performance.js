@@ -41,28 +41,45 @@ module.exports = {
       'regional', 'witel', 'telda', 'segmen', 'treg'
     ],
     
-    // Simplified confidence calculation
+    // Confidence calculation — stricter to avoid absorbing target_002..005
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      // Check primary keywords
-      const primaryMatches = this.primary.filter(keyword => 
+
+      // Negative signals: queries aimed at sibling target rules
+      const hasSiblingSig =
+        lowerInput.includes('segmen') || lowerInput.includes('segment') ||
+        lowerInput.includes('kompetitif') || lowerInput.includes('competitive') ||
+        lowerInput.includes('benchmark') || lowerInput.includes('ranking') ||
+        lowerInput.includes('peringkat');
+      // Queries about regional breakdown belong to target_003
+      const hasRegionalFocus =
+        (lowerInput.includes('per regional') || lowerInput.includes('per wilayah') ||
+         lowerInput.includes('per witel') || lowerInput.includes('per treg') ||
+         lowerInput.includes('setiap regional') || lowerInput.includes('tiap regional') ||
+         lowerInput.includes('masing-masing regional'));
+      // Queries about trend/growth belong to target_004
+      const hasTrendFocus =
+        (lowerInput.includes('tren') || lowerInput.includes('trend') ||
+         lowerInput.includes('pertumbuhan') || lowerInput.includes('growth')) &&
+        !(lowerInput.includes('realisasi') && lowerInput.includes('target'));
+
+      if (hasSiblingSig || hasRegionalFocus || hasTrendFocus) return 0;
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      // Check supporting keywords
-      const supportingMatches = this.supporting.filter(keyword => 
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 80 + (primaryMatches * 10) + (supportingMatches * 2);
-      } else if (lowerInput.includes('target') && 
-                (lowerInput.includes('hsi') || lowerInput.includes('internet'))) {
+      } else if (lowerInput.includes('target') &&
+                (lowerInput.includes('realisasi') || lowerInput.includes('pencapaian') || lowerInput.includes('achievement'))) {
         score = 70;
       }
-      
+
       return Math.min(score, 100);
     }
   },
@@ -357,6 +374,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const hasil_analisis = data.map(record => {
         const performance_assessment = this.assessTargetPerformance(
           record.ACHIEVEMENT_PCT,

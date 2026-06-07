@@ -31,12 +31,14 @@ const TOPIC_CATALOG = [
     label: '[3] Profil & Segmentasi Pelanggan',
     keywords: ['pelanggan', 'customer', 'segmentasi', 'segmen', 'profil pelanggan',
                'loyalitas', 'loyalty', 'distribusi bandwidth', 'klaster', 'cluster',
-               'retensi', 'retention', 'nilai pelanggan'],
+               'retensi', 'retention', 'nilai pelanggan', 'distribusi geografis',
+               'sebaran pelanggan', 'profil wilayah'],
     examples: [
       'Segmentasi pelanggan HSI berdasarkan speed dan revenue',
       'Profil customer HSI per wilayah',
       'Distribusi bandwidth pelanggan HSI aktif',
       'Analisis loyalitas pelanggan HSI',
+      'Distribusi geografis pelanggan HSI per wilayah',
     ]
   },
   {

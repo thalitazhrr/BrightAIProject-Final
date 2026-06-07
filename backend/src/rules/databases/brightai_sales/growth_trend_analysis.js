@@ -36,23 +36,30 @@ module.exports = {
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      // Defer to target_004 when target/realisasi/pencapaian context present
+      const hasTargetCtx = lowerInput.includes('target') || lowerInput.includes('realisasi') || lowerInput.includes('pencapaian');
+      if (hasTargetCtx) return 0;
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 75 + (primaryMatches * 15) + (supportingMatches * 2);
+      } else if (lowerInput.includes('perkembangan') &&
+                (lowerInput.includes('order') || lowerInput.includes('hsi') || lowerInput.includes('internet'))) {
+        score = 75;
       } else if (lowerInput.includes('tren') || lowerInput.includes('trend')) {
         score = 65;
       } else if (lowerInput.includes('pertumbuhan') || lowerInput.includes('growth')) {
         score = 70;
       }
-      
+
       return Math.min(score, 100);
     }
   },
@@ -838,6 +845,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+        if (!data || data.length === 0) {
+          return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+        }
         const trends = this.analyzeGrowthTrends(data);
         
         const hasil_analisis = data.map(period => {

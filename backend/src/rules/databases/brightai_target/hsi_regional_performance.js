@@ -19,47 +19,47 @@ module.exports = {
 
   KEYWORD_PATTERNS: {
     primary: [
-      // Regional analysis - yang biasa digunakan
-      'regional hsi', 'treg hsi', 'performa regional', 'regional performance',
-      'analisis regional', 'regional analysis', 'distribusi regional',
-      
-      // Geographic terms familiar
-      'geografis', 'geographic', 'wilayah', 'area coverage',
-      'penetrasi wilayah', 'regional penetration'
+      // Target + Regional specific phrases
+      'performa target regional', 'target per regional', 'target regional hsi',
+      'realisasi per regional', 'pencapaian per regional', 'achievement per regional',
+      'target hsi per regional', 'target hsi per treg', 'target hsi per wilayah',
+      'realisasi hsi per regional', 'pencapaian hsi regional'
     ],
-    
+
     supporting: [
+      // Target context (required for this rule)
+      'target', 'realisasi', 'pencapaian', 'achievement',
       // Regional terms
-      'treg', 'regional', 'witel', 'telda', 'wilayah',
-      'coverage', 'jangkauan', 'distribusi', 'sebaran',
-      
+      'treg', 'regional', 'witel', 'telda',
       // Performance indicators
-      'dominasi', 'leadership', 'market leader', 'pemimpin pasar',
-      'kontribusi', 'share', 'pangsa', 'penetrasi',
-      
-      // Geographic analysis
-      'peta', 'mapping', 'clustering', 'zona', 'territory'
+      'dominasi', 'kontribusi', 'share', 'pangsa'
     ],
-    
+
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      // MUST have target/realisasi context to distinguish from ps_002/dapros_005
+      const hasTargetCtx =
+        lowerInput.includes('target') || lowerInput.includes('realisasi') ||
+        lowerInput.includes('pencapaian') || lowerInput.includes('achievement');
+      if (!hasTargetCtx) return 0;
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 80 + (primaryMatches * 10) + (supportingMatches * 2);
-      } else if (lowerInput.includes('regional') && 
-                (lowerInput.includes('hsi') || lowerInput.includes('treg'))) {
-        score = 70;
+      } else if (lowerInput.includes('target') &&
+                (lowerInput.includes('per regional') || lowerInput.includes('per wilayah') ||
+                 lowerInput.includes('per treg') || lowerInput.includes('per witel'))) {
+        score = 75;
       }
-      
+
       return Math.min(score, 100);
     }
   },
@@ -476,6 +476,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const hasil_analisis = data.map(record => {
         const regional_strength = this.assessRegionalStrength(
           record.NATIONAL_MARKET_SHARE_PCT,

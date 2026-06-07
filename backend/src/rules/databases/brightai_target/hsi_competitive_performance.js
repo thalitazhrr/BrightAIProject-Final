@@ -19,48 +19,48 @@ module.exports = {
 
   KEYWORD_PATTERNS: {
     primary: [
-      // Competitive analysis - yang biasa digunakan
-      'kompetitif hsi', 'competitive hsi', 'benchmark hsi', 'perbandingan hsi',
+      // Competitive analysis — specific phrases only
+      'kompetitif hsi', 'competitive hsi', 'benchmark hsi',
       'analisis kompetitif', 'competitive analysis', 'positioning hsi',
-      
-      // Performance comparison familiar terms
-      'benchmark', 'comparison', 'perbandingan', 'versus', 'vs',
-      'ranking', 'peringkat', 'posisi kompetitif', 'competitive position'
+      'posisi kompetitif', 'competitive position',
+      'benchmarking target', 'benchmarking pencapaian', 'benchmarking hsi',
+      'ranking regional', 'peringkat regional', 'ranking witel', 'peringkat witel'
     ],
-    
+
     supporting: [
       // Competitive terms
-      'leader', 'pemimpin', 'dominasi', 'dominance', 'market leader',
-      'follower', 'challenger', 'outperform', 'underperform',
-      
-      // Performance indicators
-      'unggul', 'superior', 'kalah', 'tertinggal', 'leading',
-      'lagging', 'average', 'rata-rata', 'above average', 'below average',
-      
-      // Benchmarking
+      'leader', 'pemimpin', 'dominasi', 'market leader',
+      'outperform', 'underperform', 'benchmark',
+      'unggul', 'superior', 'kalah', 'tertinggal',
       'best practice', 'top performer', 'bottom performer',
-      'peer comparison', 'internal benchmark'
+      'ranking', 'peringkat', 'kompetitif', 'competitive'
     ],
-    
+
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      // Must have competitive/benchmark context
+      const hasCompCtx =
+        lowerInput.includes('kompetitif') || lowerInput.includes('competitive') ||
+        lowerInput.includes('benchmark') || lowerInput.includes('ranking') ||
+        lowerInput.includes('peringkat') || lowerInput.includes('positioning');
+      if (!hasCompCtx) return 0;
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 80 + (primaryMatches * 10) + (supportingMatches * 3);
-      } else if (lowerInput.includes('benchmark') && 
-                (lowerInput.includes('hsi') || lowerInput.includes('kompetitif'))) {
-        score = 70;
+      } else if (lowerInput.includes('benchmark') &&
+                (lowerInput.includes('hsi') || lowerInput.includes('target') || lowerInput.includes('pencapaian'))) {
+        score = 75;
       }
-      
+
       return Math.min(score, 100);
     }
   },
@@ -624,6 +624,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const hasil_analisis = data.map(record => {
         const competitive_advantage = this.assessCompetitiveAdvantage(
           record.COMPETITIVE_POSITION,

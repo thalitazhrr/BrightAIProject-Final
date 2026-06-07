@@ -321,12 +321,6 @@
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
-\babel@toc {english}{}\relax 
-\babel@toc {indonesian}{}\relax 
-\babel@toc {english}{}\relax 
-\babel@toc {indonesian}{}\relax 
-\babel@toc {english}{}\relax 
-\babel@toc {indonesian}{}\relax 
 \contentsline {table}{\numberline {II.1}{\ignorespaces Perbandingan Karakteristik Model Peramalan Deret Waktu}}{37}{table.2.1}%
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
@@ -418,51 +412,53 @@
 \contentsline {table}{\numberline {III.6}{\ignorespaces Analisis \textit {Balanced Scorecard} untuk BI Tradisional}}{81}{table.3.6}%
 \contentsline {table}{\numberline {III.7}{\ignorespaces Analisis \textit {Balanced Scorecard} untuk LLM}}{83}{table.3.7}%
 \contentsline {table}{\numberline {III.8}{\ignorespaces Perbandingan \textit {Balanced Scorecard} Alternatif Solusi}}{87}{table.3.8}%
-\contentsline {table}{\numberline {III.9}{\ignorespaces Ringkasan Domain Data pada Skema USER}}{91}{table.caption.23}%
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\contentsline {table}{\numberline {III.9}{\ignorespaces Ringkasan Domain Data pada Skema \texttt {DWH\_MOIS}}}{92}{table.caption.23}%
 \contentsline {table}{\numberline {III.10}{\ignorespaces Spesifikasi Domain Data Sales}}{93}{table.caption.25}%
-\contentsline {table}{\numberline {III.11}{\ignorespaces Spesifikasi Domain Data Revenue}}{93}{table.caption.26}%
+\contentsline {table}{\numberline {III.11}{\ignorespaces Spesifikasi Domain Data Revenue}}{94}{table.caption.26}%
 \contentsline {table}{\numberline {III.12}{\ignorespaces Spesifikasi Domain Data Proses}}{94}{table.caption.27}%
-\contentsline {table}{\numberline {III.13}{\ignorespaces Spesifikasi Domain Data Target}}{94}{table.caption.28}%
+\contentsline {table}{\numberline {III.13}{\ignorespaces Spesifikasi Domain Data Target}}{95}{table.caption.28}%
 \contentsline {table}{\numberline {III.14}{\ignorespaces Spesifikasi Domain Data Churn}}{95}{table.caption.29}%
-\contentsline {table}{\numberline {III.15}{\ignorespaces Hasil Pemeriksaan Kualitas Data per Domain}}{95}{table.caption.30}%
-\contentsline {table}{\numberline {III.16}{\ignorespaces Atribut Utama Relasional Antar-Domain}}{96}{table.caption.31}%
-\contentsline {table}{\numberline {III.17}{\ignorespaces Teknik Penanganan Nilai Hilang per Jenis Atribut}}{98}{table.caption.32}%
-\contentsline {table}{\numberline {III.18}{\ignorespaces Teknik Penskalaan per Kategori Fitur}}{99}{table.caption.33}%
-\contentsline {table}{\numberline {III.19}{\ignorespaces Teknik Pengkodean Fitur Kategorikal}}{99}{table.caption.34}%
-\contentsline {table}{\numberline {III.20}{\ignorespaces Fitur Temporal yang Dihasilkan}}{100}{table.caption.35}%
-\contentsline {table}{\numberline {III.21}{\ignorespaces Fitur Lag dan Statistik Bergulir}}{100}{table.caption.36}%
-\contentsline {table}{\numberline {III.22}{\ignorespaces Fitur Agregat per Entitas}}{101}{table.caption.37}%
-\contentsline {table}{\numberline {III.23}{\ignorespaces Pembagian Data untuk Pelatihan dan Evaluasi}}{101}{table.caption.38}%
-\contentsline {table}{\numberline {III.24}{\ignorespaces Komponen Gerbang pada Arsitektur LSTM}}{103}{table.caption.39}%
-\contentsline {table}{\numberline {III.25}{\ignorespaces Komponen Gerbang pada Arsitektur GRU}}{103}{table.caption.40}%
-\contentsline {table}{\numberline {III.26}{\ignorespaces Komponen Utama Arsitektur TFT}}{104}{table.caption.41}%
-\contentsline {table}{\numberline {III.27}{\ignorespaces Perbandingan Karakteristik Model Peramalan}}{105}{table.caption.42}%
-\contentsline {table}{\numberline {III.28}{\ignorespaces Konfigurasi \textit {Hyperparameter} Model}}{106}{table.caption.43}%
-\contentsline {table}{\numberline {III.29}{\ignorespaces Fungsi Kerugian untuk Setiap Jenis Prediksi}}{106}{table.caption.44}%
-\contentsline {table}{\numberline {III.30}{\ignorespaces Integrasi Model dalam Arsitektur Sistem}}{108}{table.caption.45}%
+\contentsline {table}{\numberline {III.15}{\ignorespaces Hasil Profiling Data Deret Waktu per Metrik (Level Nasional)}}{96}{table.caption.30}%
+\contentsline {table}{\numberline {III.16}{\ignorespaces Atribut Utama Relasional Antar-Domain}}{97}{table.caption.31}%
+\contentsline {table}{\numberline {III.17}{\ignorespaces Teknik Penanganan Nilai Hilang per Jenis Atribut}}{99}{table.caption.32}%
+\contentsline {table}{\numberline {III.18}{\ignorespaces Teknik Penskalaan per Kategori Fitur}}{100}{table.caption.33}%
+\contentsline {table}{\numberline {III.19}{\ignorespaces Teknik Pengkodean Fitur Kategorikal}}{100}{table.caption.34}%
+\contentsline {table}{\numberline {III.20}{\ignorespaces Fitur Temporal yang Dihasilkan}}{101}{table.caption.35}%
+\contentsline {table}{\numberline {III.21}{\ignorespaces Fitur Lag dan Statistik Bergulir}}{101}{table.caption.36}%
+\contentsline {table}{\numberline {III.22}{\ignorespaces Fitur Agregat per Entitas}}{102}{table.caption.37}%
+\contentsline {table}{\numberline {III.23}{\ignorespaces Pembagian Data untuk Pelatihan dan Evaluasi}}{102}{table.caption.38}%
+\contentsline {table}{\numberline {III.24}{\ignorespaces Komponen Gerbang pada Arsitektur LSTM}}{104}{table.caption.39}%
+\contentsline {table}{\numberline {III.25}{\ignorespaces Komponen Gerbang pada Arsitektur GRU}}{104}{table.caption.40}%
+\contentsline {table}{\numberline {III.26}{\ignorespaces Perbandingan Karakteristik Model Peramalan}}{105}{table.caption.41}%
+\contentsline {table}{\numberline {III.27}{\ignorespaces Konfigurasi \textit {Hyperparameter} Model (Berkas \texttt {config.py})}}{106}{table.caption.42}%
+\contentsline {table}{\numberline {III.28}{\ignorespaces Fungsi Kerugian untuk Setiap Jenis Prediksi}}{106}{table.caption.43}%
+\contentsline {table}{\numberline {III.29}{\ignorespaces Integrasi Model dalam Arsitektur Sistem}}{108}{table.caption.44}%
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {IV.1}{\ignorespaces Perangkat Lunak dan Teknologi Implementasi Sistem}}{110}{table.4.1}%
-\contentsline {table}{\numberline {IV.2}{\ignorespaces Linimasa Pelaksanaan Tugas Akhir Tahap 1 (September 2025 -- Januari 2026)}}{113}{table.caption.46}%
-\contentsline {table}{\numberline {IV.3}{\ignorespaces Linimasa Pelaksanaan Tugas Akhir Tahap 2 (Februari -- Juli 2026)}}{114}{table.caption.47}%
+\contentsline {table}{\numberline {IV.2}{\ignorespaces Linimasa Pelaksanaan Tugas Akhir Tahap 1 (September 2025 -- Januari 2026)}}{113}{table.caption.45}%
+\contentsline {table}{\numberline {IV.3}{\ignorespaces Linimasa Pelaksanaan Tugas Akhir Tahap 2 (Februari -- Juli 2026)}}{114}{table.caption.46}%
 \contentsline {table}{\numberline {IV.4}{\ignorespaces Analisis Risiko dan Strategi Mitigasi}}{120}{table.4.4}%
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {V.1}{\ignorespaces Struktur Direktori Proyek \textit {Backend}}}{124}{table.5.1}%
-\contentsline {table}{\numberline {V.2}{\ignorespaces Konfigurasi \textit {Connection Pool} Oracle Database}}{125}{table.caption.48}%
+\contentsline {table}{\numberline {V.2}{\ignorespaces Konfigurasi \textit {Connection Pool} Oracle Database}}{125}{table.caption.47}%
 \contentsline {table}{\numberline {V.3}{\ignorespaces Rute API Sistem BrightAI}}{125}{table.5.3}%
-\contentsline {table}{\numberline {V.4}{\ignorespaces Komponen Struktur Definisi Aturan}}{127}{table.caption.49}%
-\contentsline {table}{\numberline {V.5}{\ignorespaces Daftar \textit {Intent} yang Diimplementasikan}}{129}{table.5.5}%
-\contentsline {table}{\numberline {V.6}{\ignorespaces Contoh Pemetaan Subjek Aturan}}{131}{table.caption.52}%
-\contentsline {table}{\numberline {V.7}{\ignorespaces Struktur Direktori Layanan \textit {Machine Learning}}}{133}{table.caption.54}%
-\contentsline {table}{\numberline {V.8}{\ignorespaces Konfigurasi \textit {Hyperparameter} Model Terimplementasi}}{135}{table.caption.56}%
-\contentsline {table}{\numberline {V.9}{\ignorespaces Target KPI Metrik Evaluasi Terimplementasi}}{139}{table.caption.59}%
-\contentsline {table}{\numberline {V.10}{\ignorespaces Komponen Utama \textit {Frontend}}}{139}{table.caption.60}%
-\contentsline {table}{\numberline {V.11}{\ignorespaces Ringkasan Komponen Sistem yang Terimplementasi}}{140}{table.caption.61}%
+\contentsline {table}{\numberline {V.4}{\ignorespaces Komponen Struktur Definisi Aturan}}{127}{table.caption.48}%
+\contentsline {table}{\numberline {V.5}{\ignorespaces Daftar \textit {Intent} yang Diimplementasikan}}{131}{table.5.5}%
+\contentsline {table}{\numberline {V.6}{\ignorespaces Contoh Pemetaan Subjek Aturan}}{135}{table.caption.51}%
+\contentsline {table}{\numberline {V.7}{\ignorespaces Struktur Direktori Layanan \textit {Machine Learning}}}{138}{table.caption.53}%
+\contentsline {table}{\numberline {V.8}{\ignorespaces Konfigurasi \textit {Hyperparameter} Model Terimplementasi}}{142}{table.caption.55}%
+\contentsline {table}{\numberline {V.9}{\ignorespaces Target KPI Metrik Evaluasi Terimplementasi}}{147}{table.caption.58}%
+\contentsline {table}{\numberline {V.10}{\ignorespaces Komponen Utama \textit {Frontend}}}{147}{table.caption.59}%
+\contentsline {table}{\numberline {V.11}{\ignorespaces Ringkasan Komponen Sistem yang Terimplementasi}}{148}{table.caption.60}%
+\contentsline {table}{\numberline {V.12}{\ignorespaces Selisih antara Rancangan dan Implementasi}}{149}{table.caption.61}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {VI.1}{\ignorespaces Cakupan Kata Kunci per \textit {Intent}}}{144}{table.caption.62}%
-\contentsline {table}{\numberline {VI.2}{\ignorespaces Metrik Evaluasi yang Digunakan}}{146}{table.caption.63}%
-\contentsline {table}{\numberline {VI.3}{\ignorespaces Perbandingan Hasil Evaluasi Model Peramalan pada Metrik \textit {Avg Install Days}}}{147}{table.caption.64}%
-\contentsline {table}{\numberline {VI.4}{\ignorespaces Rekap Umpan Balik Pengguna Internal Tim \textit {Data Management}}}{152}{table.caption.65}%
-\contentsline {table}{\numberline {VI.5}{\ignorespaces Contoh Kueri Uji dan Evaluasi Respons Sistem}}{152}{table.caption.66}%
+\contentsline {table}{\numberline {VI.1}{\ignorespaces Cakupan Kata Kunci per \textit {Intent}}}{152}{table.caption.62}%
+\contentsline {table}{\numberline {VI.2}{\ignorespaces Metrik Evaluasi yang Digunakan}}{154}{table.caption.63}%
+\contentsline {table}{\numberline {VI.3}{\ignorespaces Perbandingan Hasil Evaluasi Model Peramalan pada Metrik \textit {Avg Install Days}}}{155}{table.caption.64}%
+\contentsline {table}{\numberline {VI.4}{\ignorespaces Rekap Umpan Balik Pengguna Internal Tim \textit {Data Management}}}{160}{table.caption.65}%
+\contentsline {table}{\numberline {VI.5}{\ignorespaces Contoh Kueri Uji dan Evaluasi Respons Sistem}}{160}{table.caption.66}%
 \addvspace {10\p@ }
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 

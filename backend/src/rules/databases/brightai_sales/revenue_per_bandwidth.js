@@ -22,7 +22,8 @@ module.exports = {
       // Revenue bandwidth - yang biasa digunakan
       'revenue bandwidth', 'pendapatan bandwidth', 'revenue per bandwidth',
       'arpu bandwidth', 'pendapatan per kecepatan', 'income bandwidth',
-      
+      'revenue hsi per bandwidth', 'revenue hsi bandwidth',
+
       // Analysis terms familiar
       'analisis revenue', 'breakdown pendapatan', 'segmentasi revenue',
       'kategori bandwidth', 'bandwidth category', 'tier bandwidth'
@@ -506,6 +507,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const trends = this.analyzeBandwidthTrends(data);
       
       const hasil_analisis = data.map(kategori => {

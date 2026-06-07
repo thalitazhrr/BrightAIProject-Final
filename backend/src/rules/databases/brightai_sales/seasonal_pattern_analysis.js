@@ -58,8 +58,11 @@ module.exports = {
       
       if (primaryMatches > 0) {
         score = 75 + (primaryMatches * 12) + (supportingMatches * 3);
+      } else if ((lowerInput.includes('musiman') || lowerInput.includes('seasonal')) &&
+                (lowerInput.includes('hsi') || lowerInput.includes('order') || lowerInput.includes('penjualan') || lowerInput.includes('internet'))) {
+        score = 80;
       } else if (lowerInput.includes('musiman') || lowerInput.includes('seasonal')) {
-        score = 65;
+        score = 70;
       } else if (lowerInput.includes('pola') && lowerInput.includes('bulan')) {
         score = 60;
       }
@@ -838,6 +841,9 @@ module.exports = {
     },
     
     formatIndonesianResponse: function(data) {
+      if (!data || data.length === 0) {
+        return { error: 'no_data', message: 'Tidak ada data yang tersedia untuk scope yang dipilih.' };
+      }
       const seasonal_patterns = this.identifySeasonalPatterns(data);
       const customer_efficiency = this.analyzeCustomerEfficiency(data);
       const transaction_seasonality = this.analyzeTransactionSeasonality(data);
