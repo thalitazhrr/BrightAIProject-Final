@@ -55,7 +55,7 @@ Implementasi \textit{semantic layer} yang efektif memungkinkan organisasi untuk 
 
 \subsection{Konsep \textit{Rule-Based Query} dalam Sistem Basis Data}
 
-Secara historis, optimisasi kueri pada sistem manajemen basis data relasional banyak mengandalkan pendekatan berbasis aturan (\textit{rule-based}) dan berbasis biaya (\textit{cost-based}) untuk memilih rencana eksekusi kueri yang efisien \autocite{Yang2024MLQueryOpt,Shah2025AIDB}. Pendekatan \textit{rule-based} menggunakan seperangkat aturan heuristik yang ditetapkan pakar, seperti urutan penerapan seleksi dan proyeksi, penggunaan indeks, atau restrukturisasi \textit{join}, untuk menyederhanakan dan mengoptimalkan kueri tanpa melakukan estimasi biaya numerik yang rinci \autocite{Yang2024MLQueryOpt}. Aturan-aturan tersebut, misalnya, dapat mengharuskan operator seleksi ditempatkan sedekat mungkin dengan sumber data atau menganjurkan penggunaan indeks ketika kondisi penyaringan sesuai sehingga mengurangi jumlah baris yang harus diproses pada tahap-tahap berikutnya.
+Secara historis, optimisasi kueri pada sistem manajemen basis data relasional banyak mengandalkan pendekatan berbasis aturan (\textit{rule-based}) dan berbasis biaya (\textit{cost-based}) untuk memilih rencana eksekusi kueri yang efisien \autocite{Yang2024MLQueryOpt,Shah2025AIDB}. Pendekatan \textit{rule-based} menggunakan seperangkat aturan heuristik yang ditetapkan pakar (seperti yang diilustrasikan pada Gambar~\ref{fig:rbq}), seperti urutan penerapan seleksi dan proyeksi, penggunaan indeks, atau restrukturisasi \textit{join}, untuk menyederhanakan dan mengoptimalkan kueri tanpa melakukan estimasi biaya numerik yang rinci \autocite{Yang2024MLQueryOpt}. Aturan-aturan tersebut, misalnya, dapat mengharuskan operator seleksi ditempatkan sedekat mungkin dengan sumber data atau menganjurkan penggunaan indeks ketika kondisi penyaringan sesuai sehingga mengurangi jumlah baris yang harus diproses pada tahap-tahap berikutnya.
 
 Meskipun perkembangan terkini banyak mengarah pada optimisasi kueri berbasis kecerdasan buatan, sejumlah kajian menegaskan bahwa teknik berbasis aturan masih relevan dan sering digunakan sebagai fondasi, terutama untuk pola kueri yang berulang dan terstruktur dengan baik \autocite{Shah2025AIDB,Lubis2025ERDOpt}. Dalam konteks sistem \textit{Business Intelligence}, aturan-aturan kueri dapat dirancang untuk memetakan permintaan bisnis yang sering muncul (misalnya, ``total penjualan per bulan per segmen pelanggan'') ke pola kueri yang terstandarisasi terhadap gudang data sehingga mempercepat proses pengambilan data dan menjaga konsistensi hasil analisis.
 
@@ -85,7 +85,7 @@ Dalam konteks \textit{Business Intelligence}, beberapa kajian mengusulkan penggu
   \caption{\textit{Pattern-Based Intent Classification}}
   \label{fig:pbi}
 \end{figure}
-Bagian ini membahas pendekatan klasifikasi \textit{intent} berbasis pola untuk sistem \textit{chatbot}, dengan fokus pada mekanisme pencocokan pola, penggunaan \textit{confidence score}, dan evaluasi performa. Klasifikasi \textit{intent} merupakan komponen kritis dalam memahami maksud pengguna dari kueri bahasa alami dan menentukan respons yang sesuai berdasarkan data internal perusahaan.
+Bagian ini membahas pendekatan klasifikasi \textit{intent} berbasis pola untuk sistem \textit{chatbot} (seperti yang ditunjukkan pada Gambar~\ref{fig:pbi}), dengan fokus pada mekanisme pencocokan pola, penggunaan \textit{confidence score}, dan evaluasi performa. Klasifikasi \textit{intent} merupakan komponen kritis dalam memahami maksud pengguna dari kueri bahasa alami dan menentukan respons yang sesuai berdasarkan data internal perusahaan.
 
 \subsection{Konsep \textit{Intent Classification}}
 
@@ -237,7 +237,7 @@ Bagian ini membahas pendekatan pembangkitan bahasa alami berbasis templat untuk 
 
 \subsection{Konsep \textit{Natural Language Generation}}
 
-\textit{Natural Language Generation} (NLG) adalah proses menghasilkan teks bahasa alami dari representasi data terstruktur. Dalam konteks \textit{chatbot} Business Intelligence, NLG digunakan untuk mengubah hasil kueri basis data menjadi respons bahasa natural yang mudah dipahami pengguna \autocite{kale2020template}. NLG memungkinkan sistem untuk menyajikan informasi numerik dan data terstruktur dalam format naratif yang lebih mudah dicerna.
+\textit{Natural Language Generation} (NLG) (lihat ilustrasi pada Gambar~\ref{fig:nlg}) adalah proses menghasilkan teks bahasa alami dari representasi data terstruktur. Dalam konteks \textit{chatbot} Business Intelligence, NLG digunakan untuk mengubah hasil kueri basis data menjadi respons bahasa natural yang mudah dipahami pengguna \autocite{kale2020template}. NLG memungkinkan sistem untuk menyajikan informasi numerik dan data terstruktur dalam format naratif yang lebih mudah dicerna.
 
 Pasar NLP global diproyeksikan tumbuh dari USD 35,43 miliar pada tahun 2024 menjadi USD 438,08 miliar pada tahun 2034, dengan CAGR sebesar 28,6\% \autocite{Precedence2025}. Pertumbuhan eksponensial ini didorong oleh meningkatnya adopsi teknologi AI, \textit{cloud computing}, dan kebutuhan akan analisis data tidak terstruktur di berbagai sektor industri. Pertumbuhan pasar ini menunjukkan relevansi dan urgensi pengembangan sistem NLG untuk mendukung kebutuhan bisnis modern.
 
@@ -351,6 +351,8 @@ Berdasarkan informasi tersebut, literatur menyarankan bahwa pemilihan metrik eva
   \caption{\textit{Time Series Forecasting}}
   \label{fig:tsf}
 \end{figure}
+
+Peramalan deret waktu (\textit{Time Series Forecasting}) (diilustrasikan pada Gambar~\ref{fig:tsf}) adalah proses memprediksi nilai masa depan dari suatu variabel berdasarkan observasi nilai-nilai masa lalu dari variabel yang sama secara berurutan waktu. Dalam domain bisnis, metodologi ini fundamental untuk memproyeksikan metrik utama, seperti volume penjualan, permintaan layanan pelanggan, atau tingkat retensi pengguna, sehingga memungkinkan organisasi mengambil langkah antisipatif dan menyusun strategi berbasis data.
 
 Bagian ini membahas konsep peramalan deret waktu, model-model statistik dan pembelajaran mendalam yang digunakan, serta evaluasi performa yang komprehensif. Pembahasan mencakup ARIMA, SARIMA\label{abbr:SARIMA}, LSTM, serta perbandingan karakteristik dan performa masing-masing metode. Pemahaman yang mendalam tentang berbagai pendekatan peramalan ini menjadi fondasi penting dalam memilih dan mengimplementasikan model yang sesuai dengan karakteristik data dan kebutuhan aplikasi.
 

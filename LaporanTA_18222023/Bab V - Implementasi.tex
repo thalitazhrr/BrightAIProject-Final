@@ -487,9 +487,102 @@ Koneksi basis data & Oracle Database, \textit{connection pool} & Terimplementasi
 \end{tabular}
 \end{table}
 
-Secara keseluruhan, sistem BrightAI telah diimplementasikan sebagai aplikasi tiga lapis yang mencakup: (1) \textit{frontend} berbasis React.js pada porta 3000 yang menyediakan antarmuka percakapan, panel peramalan interaktif, dan alur terpandu; (2) \textit{backend} berbasis Node.js/Express pada porta 3001 yang mengelola autentikasi, mesin aturan dengan 38 aturan analitik pada 5 domain, klasifikasi maksud, dan pembangkitan bahasa alami; serta (3) layanan \textit{machine learning} berbasis FastAPI/PyTorch pada porta 8000 yang menyediakan kemampuan peramalan menggunakan empat model, yaitu GRU, LSTM, ARIMA, dan \textit{Prophet}.
+Secara keseluruhan, sistem BrightAI telah diimplementasikan sebagai aplikasi tiga lapis yang mencakup: (1) \textit{frontend} berbasis React.js pada porta 3000 yang menyediakan antarmuka percakapan, panel peramalan interaktif, dan alur terpandu; (2) \textit{backend} berbasis Node.js/Express pada porta 3001 yang mengelola autentikasi, mesin aturan dengan 38 aturan analitik pada 5 domain, klasifikasi maksud, dan pembangkitan bahasa alami.
 
-Seluruh komponen terhubung ke Oracle Database melalui dua skema: \texttt{DWH\_MOIS} untuk data analitik dan \texttt{USR\_RPT} untuk data operasional. Sistem menggunakan mekanisme \textit{caching} memori untuk mengoptimalkan waktu respons. Injeksi filter geografis secara dinamis memungkinkan sistem menyajikan analisis pada tingkat nasional, regional, maupun \textit{witel} tanpa duplikasi definisi aturan.
+\subsection{Antarmuka Pengguna}
+\label{subsec:antarmuka-pengguna}
+
+Bagian ini menyajikan antarmuka pengguna (\textit{user interface}) yang telah diimplementasikan sebagai realisasi tujuan perancangan antarmuka percakapan berbasis web. Setiap halaman dirancang untuk mendukung alur kerja analisis data yang intuitif bagi pengguna internal perusahaan.
+
+\subsubsection{Halaman Masuk (\textit{Login})}
+
+Halaman masuk merupakan titik masuk pengguna ke dalam sistem BrightAI. Panel kiri menampilkan \textit{branding} perusahaan dengan latar foto gedung Telkom beserta deskripsi singkat tiga fitur utama sistem, sedangkan panel kanan menyajikan formulir masuk yang meminta kredensial berupa alamat surel dan kata sandi. Formulir dilengkapi validasi masukan secara \textit{real-time} serta umpan balik kesalahan apabila kredensial tidak valid. Gambar~\ref{fig:ui-login} menunjukkan tampilan halaman masuk.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{images/imagemockup1}
+\caption{Halaman Masuk (\textit{Login}) Sistem BrightAI}
+\label{fig:ui-login}
+\end{figure}
+
+\subsubsection{Halaman Registrasi}
+
+Halaman registrasi memungkinkan pengguna internal baru untuk membuat akun pada sistem BrightAI. Formulir registrasi meminta empat isian, yaitu \textit{username}, alamat surel, nama lengkap, dan kata sandi dengan persyaratan minimal enam karakter yang terdiri dari kombinasi huruf besar, huruf kecil, dan angka. Halaman ini dapat diakses melalui tautan ``Daftar sekarang'' pada halaman masuk, dan sebaliknya pengguna yang telah memiliki akun dapat kembali ke halaman masuk melalui tautan ``Masuk''. Gambar~\ref{fig:ui-register} menunjukkan tampilan halaman registrasi.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{images/imagemockup2}
+\caption{Halaman Registrasi Pengguna Baru}
+\label{fig:ui-register}
+\end{figure}
+
+\subsubsection{Halaman Utama \textit{Chatbot}}
+
+Halaman utama \textit{chatbot} merupakan antarmuka inti sistem yang terdiri dari tiga area: (1)~bilah navigasi vertikal di sisi kiri yang menyediakan akses ke modul \textit{chatbot}, profil, dan pengaturan; (2)~panel riwayat percakapan yang memungkinkan pengguna mengelola sesi percakapan, termasuk pencarian, penggantian nama, penyematan (\textit{pin}), dan penghapusan sesi; serta (3)~area percakapan utama yang menampilkan pesan pengguna dan respons sistem. Di bagian bawah, alur terpandu (\textit{guided flow}) menyediakan mekanisme interaksi terstruktur melalui pemilihan jenis analisis, kategori domain, dan pertanyaan yang telah dikurasi. Bilah tajuk di bagian atas menampilkan status koneksi server, pengalih tema, dan informasi pengguna. Gambar~\ref{fig:ui-chat} menunjukkan tampilan halaman utama \textit{chatbot}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{images/imagemockup3}
+\caption{Halaman Utama \textit{Chatbot} BrightAI}
+\label{fig:ui-chat}
+\end{figure}
+
+\subsubsection{Halaman Profil}
+
+Halaman profil menampilkan informasi akun pengguna yang sedang masuk, meliputi nama lengkap, \textit{username}, alamat surel, dan peran (\textit{role}) dalam sistem. Halaman ini dapat diakses melalui ikon pengguna pada bilah navigasi vertikal. Gambar~\ref{fig:ui-profile} menunjukkan tampilan halaman profil.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{images/imagemockup4}
+\caption{Halaman Profil Pengguna}
+\label{fig:ui-profile}
+\end{figure}
+
+\subsubsection{Halaman Pengaturan}
+
+Halaman pengaturan menyediakan opsi konfigurasi antarmuka bagi pengguna, termasuk pengalihan tema tampilan dan preferensi notifikasi. Halaman ini dapat diakses melalui ikon pengaturan pada bilah navigasi vertikal. Gambar~\ref{fig:ui-settings} menunjukkan tampilan halaman pengaturan.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{images/imagemockup5}
+\caption{Halaman Pengaturan Sistem}
+\label{fig:ui-settings}
+\end{figure}
+
+\subsubsection{Tampilan Tema Terang (\textit{Light Mode})}
+
+Sistem mendukung dua tema tampilan, yaitu tema gelap (\textit{dark mode}) sebagai tema bawaan dan tema terang (\textit{light mode}). Pengguna dapat beralih antara kedua tema melalui tombol pengalih pada bilah tajuk. Seluruh komponen antarmuka, termasuk area percakapan, panel riwayat, dan alur terpandu, menyesuaikan skema warna secara konsisten sesuai tema yang dipilih. Gambar~\ref{fig:ui-light} menunjukkan tampilan sistem dalam tema terang.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{images/imagemockup6}
+\caption{Tampilan Antarmuka \textit{Chatbot} dalam Tema Terang (\textit{Light Mode})}
+\label{fig:ui-light}
+\end{figure}
+
+\subsubsection{Detail Respons \textit{Rule-Based Query}}
+
+Ketika pengguna mengajukan pertanyaan analitik melalui antarmuka percakapan, sistem mencocokkan kueri tersebut dengan salah satu dari 38 aturan bisnis yang tersedia, mengeksekusi kueri SQL terhadap \textit{Enterprise Data Warehouse}, dan menghasilkan respons naratif dalam bahasa Indonesia menggunakan modul NLG berbasis templat. Respons ditampilkan dalam format \textit{Markdown} yang mencakup judul analisis, tabel data dengan angka terformat sesuai konvensi Indonesia, poin-poin wawasan bisnis, serta metadata sumber data dan waktu pemrosesan. Gambar~\ref{fig:ui-rulebased} menunjukkan contoh respons sistem terhadap pertanyaan analitik berbasis aturan.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{images/imagemockup7}
+\caption{Contoh Respons \textit{Rule-Based Query} dengan Narasi NLG dan Tabel Data}
+\label{fig:ui-rulebased}
+\end{figure}
+
+\subsubsection{Detail Respons Peramalan Deret Waktu}
+
+Fitur peramalan dapat diakses melalui panel peramalan pada alur terpandu, di mana pengguna memilih metrik yang hendak diramalkan, jenis model (GRU, LSTM, ARIMA, atau \textit{Prophet}), serta cakupan wilayah (nasional, regional, atau \textit{witel}). Hasil peramalan ditampilkan dalam format naratif yang mencakup nilai prediksi untuk periode berikutnya, perbandingan terhadap nilai aktual terakhir, serta metrik evaluasi model (MAE, RMSE, sMAPE, \textit{Skill Score}). Panel ini merupakan realisasi langsung dari tujuan integrasi dan pembandingan model peramalan deret waktu ke dalam antarmuka \textit{chatbot}. Gambar~\ref{fig:ui-forecast} menunjukkan contoh hasil peramalan.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{images/imagemockup8}
+\caption{Contoh Hasil Peramalan Deret Waktu melalui Panel \textit{Forecast}}
+\label{fig:ui-forecast}
+\end{figure}
+
+Sistem terhubung ke Oracle Database melalui dua skema: \texttt{DWH\_MOIS} untuk data analitik dan \texttt{USR\_RPT} untuk data operasional. Sistem menggunakan mekanisme \textit{caching} memori untuk mengoptimalkan waktu respons. Injeksi filter geografis secara dinamis memungkinkan sistem menyajikan analisis pada tingkat nasional, regional, maupun \textit{witel} tanpa duplikasi definisi aturan.
 
 \subsection{Selisih antara Rancangan dan Implementasi}
 \label{subsec:selisih-rancangan-implementasi}
