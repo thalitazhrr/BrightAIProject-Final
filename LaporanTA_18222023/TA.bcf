@@ -5179,6 +5179,8 @@
     <bcf:citekey order="147" intorder="1">jerr2024churnprediction</bcf:citekey>
     <bcf:citekey order="148" intorder="1">ui2024churnhat</bcf:citekey>
     <bcf:citekey order="149" intorder="1">Adam2021Chatbots</bcf:citekey>
+    <bcf:citekey order="150" intorder="1">diebold1995comparing</bcf:citekey>
+    <bcf:citekey order="151" intorder="1">hansen2011model</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="cms">

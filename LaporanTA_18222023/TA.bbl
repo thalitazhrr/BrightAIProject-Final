@@ -445,6 +445,46 @@
       \verb https://www.databricks.com/glossary/semantic-layer
       \endverb
     \endentry
+    \entry{diebold1995comparing}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=15cc2e3b52b5ea2d3045be532376a348}{%
+           family={Diebold},
+           familyi={D\bibinitperiod},
+           given={Francis\bibnamedelima X.},
+           giveni={F\bibinitperiod\bibinitdelim X\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=2c47ca2ba3f38cb3329258e8242da091}{%
+           family={Mariano},
+           familyi={M\bibinitperiod},
+           given={Roberto\bibnamedelima S.},
+           giveni={R\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{b22e93c16ed1af110c2b6d60db37bd6c}
+      \strng{fullhash}{b22e93c16ed1af110c2b6d60db37bd6c}
+      \strng{fullhashraw}{b22e93c16ed1af110c2b6d60db37bd6c}
+      \strng{bibnamehash}{b22e93c16ed1af110c2b6d60db37bd6c}
+      \strng{authorbibnamehash}{b22e93c16ed1af110c2b6d60db37bd6c}
+      \strng{authornamehash}{b22e93c16ed1af110c2b6d60db37bd6c}
+      \strng{authorfullhash}{b22e93c16ed1af110c2b6d60db37bd6c}
+      \strng{authorfullhashraw}{b22e93c16ed1af110c2b6d60db37bd6c}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{author}
+      \field{journaltitle}{Journal of Business \& Economic Statistics}
+      \field{number}{3}
+      \field{title}{Comparing Predictive Accuracy}
+      \field{volume}{13}
+      \field{year}{1995}
+      \field{pages}{253\bibrangedash 263}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1080/07350015.1995.10524599
+      \endverb
+    \endentry
     \entry{Diqi2023GRULSTMHybrid}{article}{}{}
       \true{moreauthor}
       \true{morelabelname}
@@ -882,6 +922,52 @@
       \field{year}{2020}
       \verb{eprint}
       \verb 2008.05756
+      \endverb
+    \endentry
+    \entry{hansen2011model}{article}{}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=1b69f8d059ca7b024817e06b9be0fda6}{%
+           family={Hansen},
+           familyi={H\bibinitperiod},
+           given={Peter\bibnamedelima R.},
+           giveni={P\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8d526c5bfbc93e7d59acb3e0d9853324}{%
+           family={Lunde},
+           familyi={L\bibinitperiod},
+           given={Asger},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=3ca7711233031156b6b4de630faa6724}{%
+           family={Nason},
+           familyi={N\bibinitperiod},
+           given={James\bibnamedelima M.},
+           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{afc8041b233f6768b08a311935e640fe}
+      \strng{fullhash}{afc8041b233f6768b08a311935e640fe}
+      \strng{fullhashraw}{afc8041b233f6768b08a311935e640fe}
+      \strng{bibnamehash}{afc8041b233f6768b08a311935e640fe}
+      \strng{authorbibnamehash}{afc8041b233f6768b08a311935e640fe}
+      \strng{authornamehash}{afc8041b233f6768b08a311935e640fe}
+      \strng{authorfullhash}{afc8041b233f6768b08a311935e640fe}
+      \strng{authorfullhashraw}{afc8041b233f6768b08a311935e640fe}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{author}
+      \field{journaltitle}{Econometrica}
+      \field{number}{2}
+      \field{title}{The Model Confidence Set}
+      \field{volume}{79}
+      \field{year}{2011}
+      \field{pages}{453\bibrangedash 497}
+      \range{pages}{45}
+      \verb{doi}
+      \verb 10.3982/ECTA5771
       \endverb
     \endentry
     \entry{Hartanto2024TFTEnhanced}{article}{}{}

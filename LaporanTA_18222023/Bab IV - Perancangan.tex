@@ -158,16 +158,14 @@ Sistem menggunakan mekanisme pemberian nilai keyakinan dalam rentang 0 hingga 10
     \item Jika nilai keyakinan $<$ 40: Prediksi dianggap tidak cukup yakin dan sistem meminta klarifikasi kepada pengguna atau menawarkan alternatif \textit{intent} yang mungkin (\textit{fallback mechanism}).
 \end{enumerate}
 
-\paragraph{Target Performa Klasifikasi \textit{Intent}}
+\paragraph{Target Performa Pencocokan Aturan}
 
-
-Berdasarkan studi literatur dan praktik terbaik industri untuk sistem klasifikasi \textit{intent} dalam \textit{chatbot} bisnis, target performa yang ditetapkan adalah:
+Evaluasi klasifikasi difokuskan pada level pencocokan aturan (38 kelas), bukan pada level \textit{intent} (7+1 kategori). Hal ini karena taksonomi \textit{intent} dirancang bersifat saling eksklusif secara semantik dengan penanda leksikal yang tidak tumpang tindih, sehingga klasifikasi pada level tersebut bersifat deterministik dan tidak menghadirkan tantangan evaluasi yang bermakna. Tantangan sesungguhnya terletak pada pencocokan kueri ke aturan bisnis spesifik, di mana kata kunci lintas-domain dapat tumpang tindih. Berdasarkan studi literatur dan praktik terbaik industri, target performa yang ditetapkan adalah:
 
 \begin{enumerate}
-    \item Skor-F1 Makro $\geq$ 0,85: Menjamin performa yang baik dan seimbang di seluruh kelas, termasuk kelas-kelas dengan sampel pelatihan yang lebih sedikit.
-    \item Skor-F1 Tertimbang $\geq$ 0,90: Menjamin performa yang baik pada kelas-kelas mayoritas yang mewakili mayoritas pertanyaan pengguna dalam praktik.
-    \item Akurasi Keseluruhan $\geq$ 0,88: Target akurasi minimal untuk sistem dapat diterima dalam produksi.
-    \item \textit{Coverage Rate} $\geq$ 80\%: Persentase kueri yang mencapai \textit{threshold} keyakinan 40.
+    \item Akurasi Pencocokan Aturan $\geq$ 0,85: Target akurasi minimal untuk sistem dapat diterima dalam produksi.
+    \item Skor-F1 Makro $\geq$ 0,85: Menjamin performa yang baik dan seimbang di seluruh 38 kelas aturan, termasuk kelas-kelas dengan sampel uji yang lebih sedikit.
+    \item \textit{Coverage Rate} $\geq$ 80\%: Persentase kueri yang mencapai \textit{threshold} keyakinan 40 dan memperoleh respons analitik.
     \item Waktu Respons $<$ 100 milidetik: Dalam 95\% kueri agar memberikan pengalaman pengguna yang responsif.
 \end{enumerate}
 

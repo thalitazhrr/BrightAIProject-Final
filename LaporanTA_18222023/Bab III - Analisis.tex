@@ -1329,14 +1329,14 @@ Pemilihan fungsi kerugian disesuaikan dengan karakteristik masalah prediksi. Tab
 \hline
 \textbf{Jenis Prediksi} & \textbf{Fungsi Kerugian} & \textbf{Kegunaan dan Formula} \\
 \hline
-Prediksi Titik Numerik & \textit{Mean Squared Error} (MSE) & Mengukur rata-rata kuadrat kesalahan prediksi untuk nilai kontinu \\
+Prediksi Titik Numerik & \textit{Mean Squared Error} (MSE) & Mengukur rata-rata kuadrat kesalahan prediksi untuk nilai kontinu, termasuk seluruh metrik operasional (volume pesanan, jumlah \textit{churn}, pendapatan, dan lainnya) \\
 \hline
 Prediksi Kuantil & \textit{Quantile Loss (Pinball Loss)} & Menghasilkan interval kepercayaan untuk pengambilan keputusan berbasis risiko \\
 \hline
-Prediksi \textit{Churn} Biner & \textit{Binary Cross-Entropy} & Mengklasifikasi status \textit{churn} pelanggan dengan probabilitas calibrated \\
-\hline
 \end{tabular}
 \end{table}
+
+Perlu ditekankan bahwa seluruh metrik yang diramalkan dalam sistem ini, termasuk \textit{churn}, diperlakukan sebagai tugas peramalan deret waktu numerik (\textit{numeric time series forecasting}), bukan sebagai tugas klasifikasi biner. Metrik \texttt{churn\_hsi} merepresentasikan jumlah agregat pelanggan yang berhenti berlangganan (\texttt{COUNT(DISTINCT NCLI)}) pada level bulanan per wilayah, sehingga fungsi kerugian yang digunakan adalah MSE, bukan \textit{Binary Cross-Entropy}. Prediksi \textit{churn} biner per pelanggan individual (apakah seorang pelanggan tertentu akan \textit{churn} atau tidak) merupakan tugas klasifikasi yang memerlukan protokol evaluasi terpisah (akurasi, presisi, daya ingat, AUC-ROC) dan tidak diimplementasikan pada versi sistem ini.
 
 \subsection{Model Klasifikasi \textit{Intent} Berbasis Pola}
 \label{subsec:model-intent}

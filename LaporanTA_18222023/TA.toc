@@ -10,11 +10,11 @@
 \contentsline {chapter}{DAFTAR ISI}{xiii}{section*.8}%
 \contentsline {chapter}{DAFTAR GAMBAR}{xix}{section*.9}%
 \contentsline {chapter}{DAFTAR TABEL}{xxi}{section*.10}%
-\contentsline {chapter}{DAFTAR PERSAMAAN}{xxiii}{chapter*.11}%
-\contentsline {chapter}{DAFTAR ALGORITMA}{xxv}{chapter*.12}%
-\contentsline {chapter}{DAFTAR \textit {LISTING}}{xxvii}{chapter*.13}%
-\contentsline {chapter}{DAFTAR SIMBOL}{xxix}{chapter*.13}%
-\contentsline {chapter}{DAFTAR SINGKATAN}{xxxi}{table.0.1}%
+\contentsline {chapter}{DAFTAR PERSAMAAN}{xxv}{chapter*.11}%
+\contentsline {chapter}{DAFTAR ALGORITMA}{xxvii}{chapter*.12}%
+\contentsline {chapter}{DAFTAR \textit {LISTING}}{xxix}{chapter*.13}%
+\contentsline {chapter}{DAFTAR SIMBOL}{xxxi}{chapter*.13}%
+\contentsline {chapter}{DAFTAR SINGKATAN}{xxxiii}{table.0.1}%
 \setlength {\cftbeforechapskip }{10pt}
 \renewcommand {\cftchapfont }{\bfseries }
 \renewcommand {\cftchappagefont }{\bfseries }
@@ -40,7 +40,7 @@
 \babel@toc {indonesian}{}\relax 
 \contentsline {section}{\numberline {I.2}Rumusan Masalah}{3}{section.1.2}%
 \contentsline {section}{\numberline {I.3}Tujuan}{4}{section.1.3}%
-\contentsline {section}{\numberline {I.4}Batasan Masalah}{4}{section.1.4}%
+\contentsline {section}{\numberline {I.4}Batasan Masalah}{5}{section.1.4}%
 \contentsline {section}{\numberline {I.5}Metodologi}{6}{section.1.5}%
 \contentsline {subsection}{\numberline {I.5.1}Tahapan Investigasi dan Pengumpulan Fakta}{6}{subsection.1.5.1}%
 \contentsline {subsection}{\numberline {I.5.2}Studi Literatur}{7}{subsection.1.5.2}%
@@ -550,17 +550,17 @@
 \contentsline {subsubsection}{\numberline {III.6.3.3}Fungsi Kerugian}{106}{subsubsection.3.6.3.3}%
 \contentsline {subsection}{\numberline {III.6.4}Model Klasifikasi \textit {Intent} Berbasis Pola}{107}{subsection.3.6.4}%
 \contentsline {subsection}{\numberline {III.6.5}Model Pembangkitan Bahasa Alami Berbasis Templat}{107}{subsection.3.6.5}%
-\contentsline {subsection}{\numberline {III.6.6}Integrasi Model dalam Arsitektur Sistem}{107}{subsection.3.6.6}%
+\contentsline {subsection}{\numberline {III.6.6}Integrasi Model dalam Arsitektur Sistem}{108}{subsection.3.6.6}%
 \contentsline {chapter}{\numberline {IV}PERANCANGAN SISTEM \textit {BUSINESS INTELLIGENCE CHATBOT}}{109}{chapter.4}%
 \contentsline {section}{\numberline {IV.1}Rencana Implementasi}{109}{section.4.1}%
 \contentsline {subsection}{\numberline {IV.1.1}Perangkat Lunak dan Teknologi}{109}{subsection.4.1.1}%
 \contentsline {subsection}{\numberline {IV.1.2}Kebutuhan Sumber Daya Komputasi}{112}{subsection.4.1.2}%
 \contentsline {subsection}{\numberline {IV.1.3}Linimasa Pelaksanaan Tugas Akhir}{113}{subsection.4.1.3}%
 \contentsline {section}{\numberline {IV.2}Desain Pengujian dan Evaluasi}{113}{section.4.2}%
-\contentsline {subsection}{\numberline {IV.2.1}Evaluasi Klasifikasi Maksud Berbasis Pola}{114}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {IV.2.1}Evaluasi Klasifikasi Maksud Berbasis Pola}{113}{subsection.4.2.1}%
 \contentsline {paragraph}{\numberline {IV.2.1.0.1}Metrik Evaluasi Klasifikasi \textit {Intent}}{114}{paragraph.4.2.1.0.1}%
 \contentsline {paragraph}{\numberline {IV.2.1.0.2}Analisis Nilai Keyakinan (\textit {Confidence Score})}{115}{paragraph.4.2.1.0.2}%
-\contentsline {paragraph}{\numberline {IV.2.1.0.3}Target Performa Klasifikasi \textit {Intent}}{115}{paragraph.4.2.1.0.3}%
+\contentsline {paragraph}{\numberline {IV.2.1.0.3}Target Performa Pencocokan Aturan}{115}{paragraph.4.2.1.0.3}%
 \contentsline {subsection}{\numberline {IV.2.2}Evaluasi Pembangkitan Bahasa Alami Berbasis Templat}{116}{subsection.4.2.2}%
 \contentsline {paragraph}{\numberline {IV.2.2.0.1}Metrik Evaluasi NLG Otomatis}{116}{paragraph.4.2.2.0.1}%
 \contentsline {paragraph}{\numberline {IV.2.2.0.2}Evaluasi Subjektif Berbasis Pengguna}{116}{paragraph.4.2.2.0.2}%
@@ -618,45 +618,55 @@
 \contentsline {chapter}{\numberline {VI}EVALUASI}{151}{chapter.6}%
 \contentsline {section}{\numberline {VI.1}Evaluasi Klasifikasi Maksud (\textit {Intent Classification})}{151}{section.6.1}%
 \contentsline {subsection}{\numberline {VI.1.1}Cakupan \textit {Intent}}{151}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {VI.1.2}Metodologi Evaluasi Klasifikasi}{151}{subsection.6.1.2}%
-\contentsline {subsection}{\numberline {VI.1.3}Hasil Evaluasi Klasifikasi \textit {Intent}}{152}{subsection.6.1.3}%
+\contentsline {subsection}{\numberline {VI.1.2}Metodologi Evaluasi Klasifikasi}{152}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {VI.1.3}Cakupan Evaluasi Klasifikasi}{152}{subsection.6.1.3}%
 \contentsline {subsection}{\numberline {VI.1.4}Hasil Evaluasi Pencocokan Aturan}{153}{subsection.6.1.4}%
-\contentsline {subsection}{\numberline {VI.1.5}Analisis Keyakinan dan Cakupan}{153}{subsection.6.1.5}%
-\contentsline {subsection}{\numberline {VI.1.6}Analisis Pola Kesalahan}{154}{subsection.6.1.6}%
+\contentsline {subsection}{\numberline {VI.1.5}Analisis Keyakinan dan Cakupan}{154}{subsection.6.1.5}%
+\contentsline {subsection}{\numberline {VI.1.6}Analisis Pola Kesalahan}{155}{subsection.6.1.6}%
 \contentsline {subsection}{\numberline {VI.1.7}Evaluasi terhadap Target Performa}{155}{subsection.6.1.7}%
-\contentsline {subsection}{\numberline {VI.1.8}Mekanisme \textit {Fallback}}{155}{subsection.6.1.8}%
-\contentsline {section}{\numberline {VI.2}Evaluasi Pembangkitan Bahasa Alami (\textit {NLG})}{155}{section.6.2}%
-\contentsline {subsection}{\numberline {VI.2.1}Akurasi Faktual}{156}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {VI.2.2}Variasi Templat}{156}{subsection.6.2.2}%
-\contentsline {subsection}{\numberline {VI.2.3}Cakupan Subjek}{156}{subsection.6.2.3}%
-\contentsline {subsection}{\numberline {VI.2.4}Format dan Keterbacaan Keluaran}{156}{subsection.6.2.4}%
-\contentsline {section}{\numberline {VI.3}Evaluasi Peramalan Deret Waktu (\textit {Time Series Forecasting})}{156}{section.6.3}%
-\contentsline {subsection}{\numberline {VI.3.1}Protokol Evaluasi}{156}{subsection.6.3.1}%
-\contentsline {subsection}{\numberline {VI.3.2}Metrik Evaluasi}{157}{subsection.6.3.2}%
-\contentsline {subsection}{\numberline {VI.3.3}Hasil Perbandingan Empat Model pada Metrik \textit {Avg Install Days}}{157}{subsection.6.3.3}%
-\contentsline {subsection}{\numberline {VI.3.4}Analisis Hasil Evaluasi}{158}{subsection.6.3.4}%
-\contentsline {subsubsection}{\numberline {VI.3.4.1}Kinerja Model GRU}{158}{subsubsection.6.3.4.1}%
-\contentsline {subsubsection}{\numberline {VI.3.4.2}Kinerja Model LSTM}{159}{subsubsection.6.3.4.2}%
-\contentsline {subsubsection}{\numberline {VI.3.4.3}Kinerja Model ARIMA}{159}{subsubsection.6.3.4.3}%
-\contentsline {subsubsection}{\numberline {VI.3.4.4}Kegagalan Model \textit {Prophet}}{159}{subsubsection.6.3.4.4}%
-\contentsline {subsubsection}{\numberline {VI.3.4.5}Kesimpulan Perbandingan Model}{160}{subsubsection.6.3.4.5}%
-\contentsline {subsection}{\numberline {VI.3.5}Mekanisme Pembandingan Model}{160}{subsection.6.3.5}%
-\contentsline {section}{\numberline {VI.4}Evaluasi Sistem Terintegrasi}{160}{section.6.4}%
-\contentsline {subsection}{\numberline {VI.4.1}Pengujian Alur Lengkap}{160}{subsection.6.4.1}%
-\contentsline {subsection}{\numberline {VI.4.2}Pengujian Waktu Respons}{161}{subsection.6.4.2}%
-\contentsline {subsection}{\numberline {VI.4.3}Pengujian Manajemen Sesi dan Riwayat}{161}{subsection.6.4.3}%
-\contentsline {subsection}{\numberline {VI.4.4}Validasi oleh Pengguna Internal}{161}{subsection.6.4.4}%
-\contentsline {section}{\numberline {VI.5}Validasi oleh Pengguna Internal}{162}{section.6.5}%
-\contentsline {subsection}{\numberline {VI.5.1}Ruang Lingkup Validasi}{162}{subsection.6.5.1}%
-\contentsline {subsection}{\numberline {VI.5.2}Temuan Validasi}{162}{subsection.6.5.2}%
-\contentsline {section}{\numberline {VI.6}Umpan Balik Pengguna Internal}{163}{section.6.6}%
-\contentsline {subsection}{\numberline {VI.6.1}Metodologi Pengumpulan Umpan Balik}{163}{subsection.6.6.1}%
-\contentsline {subsection}{\numberline {VI.6.2}Rekap Umpan Balik}{163}{subsection.6.6.2}%
-\contentsline {subsection}{\numberline {VI.6.3}Contoh Kueri yang Diujikan}{163}{subsection.6.6.3}%
-\contentsline {section}{\numberline {VI.7}Pembahasan Hasil Evaluasi}{164}{section.6.7}%
-\contentsline {chapter}{\numberline {VII}PENUTUP}{167}{chapter.7}%
-\contentsline {section}{\numberline {VII.1}Kesimpulan}{167}{section.7.1}%
-\contentsline {section}{\numberline {VII.2}Saran}{168}{section.7.2}%
+\contentsline {subsection}{\numberline {VI.1.8}Mekanisme \textit {Fallback}}{156}{subsection.6.1.8}%
+\contentsline {section}{\numberline {VI.2}Evaluasi Pembangkitan Bahasa Alami (\textit {NLG})}{156}{section.6.2}%
+\contentsline {section}{\numberline {VI.3}Evaluasi Peramalan Deret Waktu (\textit {Time Series Forecasting})}{157}{section.6.3}%
+\contentsline {subsection}{\numberline {VI.3.1}Protokol Evaluasi}{157}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {VI.3.2}Metrik Evaluasi}{158}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {VI.3.3}Hasil Perbandingan Empat Model pada Metrik \textit {Avg Install Days}}{158}{subsection.6.3.3}%
+\contentsline {subsection}{\numberline {VI.3.4}Analisis Hasil Evaluasi}{159}{subsection.6.3.4}%
+\contentsline {subsubsection}{\numberline {VI.3.4.1}Kinerja Model GRU}{159}{subsubsection.6.3.4.1}%
+\contentsline {subsubsection}{\numberline {VI.3.4.2}Kinerja Model LSTM}{160}{subsubsection.6.3.4.2}%
+\contentsline {subsubsection}{\numberline {VI.3.4.3}Kinerja Model ARIMA}{160}{subsubsection.6.3.4.3}%
+\contentsline {subsubsection}{\numberline {VI.3.4.4}Kegagalan Model \textit {Prophet}}{160}{subsubsection.6.3.4.4}%
+\contentsline {subsubsection}{\numberline {VI.3.4.5}Kesimpulan Perbandingan Model}{161}{subsubsection.6.3.4.5}%
+\contentsline {subsubsection}{\numberline {VI.3.4.6}Catatan Metodologis: Sifat Perbandingan}{161}{subsubsection.6.3.4.6}%
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\contentsline {subsection}{\numberline {VI.3.5}Mekanisme Pembandingan Model}{162}{subsection.6.3.5}%
+\contentsline {subsection}{\numberline {VI.3.6}Evaluasi pada Metrik Bisnis Utama Lainnya}{162}{subsection.6.3.6}%
+\contentsline {subsubsection}{\numberline {VI.3.6.1}Peramalan Volume Pesanan (\textit {Order HSI})}{162}{subsubsection.6.3.6.1}%
+\contentsline {subsubsection}{\numberline {VI.3.6.2}Peramalan Volume \textit {Churn} (\textit {Churn HSI})}{164}{subsubsection.6.3.6.2}%
+\contentsline {subsubsection}{\numberline {VI.3.6.3}Peramalan Realisasi Target (\textit {Realisasi HSI})}{165}{subsubsection.6.3.6.3}%
+\contentsline {subsubsection}{\numberline {VI.3.6.4}Ringkasan Lintas Metrik}{167}{subsubsection.6.3.6.4}%
+\contentsline {section}{\numberline {VI.4}Evaluasi Sistem Terintegrasi}{167}{section.6.4}%
+\contentsline {subsection}{\numberline {VI.4.1}Pengujian Alur Lengkap}{167}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {VI.4.2}Pengujian Waktu Respons}{168}{subsection.6.4.2}%
+\contentsline {subsection}{\numberline {VI.4.3}Pengujian Manajemen Sesi dan Riwayat}{168}{subsection.6.4.3}%
+\contentsline {section}{\numberline {VI.5}Validasi oleh Pengguna Internal}{168}{section.6.5}%
+\contentsline {subsection}{\numberline {VI.5.1}Ruang Lingkup Validasi}{168}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {VI.5.2}Temuan Validasi}{169}{subsection.6.5.2}%
+\contentsline {section}{\numberline {VI.6}Umpan Balik Pengguna Internal}{169}{section.6.6}%
+\contentsline {subsection}{\numberline {VI.6.1}Metodologi Pengumpulan Umpan Balik}{169}{subsection.6.6.1}%
+\contentsline {subsection}{\numberline {VI.6.2}Rekap Umpan Balik}{170}{subsection.6.6.2}%
+\contentsline {subsection}{\numberline {VI.6.3}Contoh Kueri yang Diujikan}{170}{subsection.6.6.3}%
+\contentsline {section}{\numberline {VI.7}Pembahasan Hasil Evaluasi}{171}{section.6.7}%
+\contentsline {subsection}{\numberline {VI.7.1}Ancaman terhadap Validitas}{172}{subsection.6.7.1}%
+\contentsline {chapter}{\numberline {VII}PENUTUP}{175}{chapter.7}%
+\contentsline {section}{\numberline {VII.1}Kesimpulan}{175}{section.7.1}%
+\contentsline {section}{\numberline {VII.2}Saran}{176}{section.7.2}%
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 

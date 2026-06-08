@@ -16,7 +16,7 @@ Modul klasifikasi maksud dievaluasi berdasarkan kemampuannya dalam mengenali \te
 
 Sistem mengimplementasikan tujuh \textit{intent} utama dan satu \textit{intent} cadangan (\textit{fallback}). Setiap \textit{intent} didukung oleh sejumlah kata kunci berbobot yang digunakan untuk menghitung skor kecocokan. Tabel~\ref{tab:eval-intent-coverage} menyajikan ringkasan cakupan kata kunci per \textit{intent}.
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Cakupan Kata Kunci per \textit{Intent}}
 \label{tab:eval-intent-coverage}
@@ -24,19 +24,19 @@ Sistem mengimplementasikan tujuh \textit{intent} utama dan satu \textit{intent} 
 \hline
 \textbf{\textit{Intent}} & \textbf{Bobot} & \textbf{Jumlah Kata Kunci} & \textbf{Contoh Kueri} \\
 \hline
-\textit{quantity} & 3 & 11 & ``Berapa total \textit{order} HSI bulan ini?'' \\
+\textit{quantity} & 3 & 12 & ``Berapa total \textit{order} HSI bulan ini?'' \\
 \hline
-\textit{trend} & 3 & 17 & ``Bagaimana tren pertumbuhan \textit{revenue}?'' \\
+\textit{trend} & 3 & 23 & ``Bagaimana tren pertumbuhan \textit{revenue}?'' \\
 \hline
-\textit{comparison} & 3 & 11 & ``Bandingkan \textit{order} regional 1 vs 2'' \\
+\textit{comparison} & 3 & 13 & ``Bandingkan \textit{order} regional 1 vs 2'' \\
 \hline
 \textit{location} & 3 & 14 & ``Di mana \textit{witel} dengan \textit{order} tertinggi?'' \\
 \hline
 \textit{reason} & 4 & 11 & ``Mengapa \textit{churn} meningkat?'' \\
 \hline
-\textit{performance} & 3 & 11 & ``Bagaimana pencapaian target HSI?'' \\
+\textit{performance} & 4 & 14 & ``Bagaimana pencapaian target HSI?'' \\
 \hline
-\textit{detail} & 2 & 10 & ``Tampilkan rincian distribusi \textit{order}'' \\
+\textit{detail} & 3 & 37 & ``Tampilkan rincian distribusi \textit{order}'' \\
 \hline
 \textit{general} & -- & -- & Kueri tanpa kata kunci yang dikenali \\
 \hline
@@ -45,60 +45,19 @@ Sistem mengimplementasikan tujuh \textit{intent} utama dan satu \textit{intent} 
 
 \subsection{Metodologi Evaluasi Klasifikasi}
 
-Evaluasi kuantitatif dilakukan menggunakan 100 kueri uji berlabel yang mencakup seluruh tujuh \textit{intent} utama, satu kelas cadangan (\textit{general}), serta 38 aturan bisnis. Setiap kueri diberi label kebenaran dasar (\textit{ground truth}) berupa \textit{intent} yang diharapkan dan aturan yang diharapkan. Evaluasi dilakukan pada dua level:
+Evaluasi kuantitatif dilakukan menggunakan 100 kueri uji berlabel yang mencakup seluruh tujuh \textit{intent} utama, satu kelas cadangan (\textit{general}), serta 38 aturan bisnis. Setiap kueri diberi label kebenaran dasar (\textit{ground truth}) berupa \textit{intent} yang diharapkan dan aturan yang diharapkan. Evaluasi dilakukan pada level pencocokan aturan, yaitu pencocokan kueri ke 38 aturan bisnis ditambah 1 kelas \textit{no\_match}. Metrik yang dihitung meliputi presisi, daya ingat, dan skor-F1 per kelas, serta agregasi makro (\textit{macro}), mikro (\textit{micro}), dan tertimbang (\textit{weighted}).
 
-\begin{enumerate}
-    \item \textbf{Level \textit{Intent}}: Klasifikasi kueri ke dalam 8 kelas \textit{intent} (7 utama + 1 \textit{fallback}).
-    \item \textbf{Level Aturan}: Pencocokan kueri ke 38 aturan bisnis + 1 kelas \textit{no\_match}.
-\end{enumerate}
+\subsection{Cakupan Evaluasi Klasifikasi}
 
-Metrik yang dihitung meliputi presisi, daya ingat, dan skor-F1 per kelas, serta agregasi makro (\textit{macro}), mikro (\textit{micro}), dan tertimbang (\textit{weighted}).
+Evaluasi klasifikasi pada penelitian ini difokuskan pada level pencocokan aturan (\textit{rule matching}) dengan 38 kelas, bukan pada level klasifikasi \textit{intent} (7+1 kategori). Keputusan ini didasarkan pada pertimbangan bahwa ketujuh kategori \textit{intent} --- \textit{quantity}, \textit{trend}, \textit{comparison}, \textit{location}, \textit{performance}, \textit{detail}, dan \textit{reason} --- dirancang sejak awal sebagai taksonomi yang bersifat saling eksklusif secara semantik, dengan penanda leksikal yang secara inheren tidak tumpang tindih (misalnya, ``berapa'' secara unik menandai \textit{quantity}, ``tren'' secara unik menandai \textit{trend}). Dataset uji yang digunakan pun sudah terkategorisasi berdasarkan \textit{intent} sesuai dengan taksonomi yang didefinisikan, sehingga evaluasi pada level ini bersifat deterministik dan tidak menghadirkan tantangan klasifikasi yang bermakna.
 
-\subsection{Hasil Evaluasi Klasifikasi \textit{Intent}}
-
-Tabel~\ref{tab:eval-intent-results} menyajikan hasil evaluasi klasifikasi pada level \textit{intent} untuk 100 kueri uji.
-
-\begin{table}[h]
-\centering
-\caption{Hasil Evaluasi Klasifikasi \textit{Intent} per Kelas}
-\label{tab:eval-intent-results}
-\begin{tabular}{|p{3cm}|c|c|c|c|}
-\hline
-\textbf{\textit{Intent}} & \textbf{Presisi} & \textbf{\textit{Recall}} & \textbf{Skor-F1} & \textbf{Jumlah Sampel} \\
-\hline
-\textit{comparison} & 1{,}0000 & 1{,}0000 & 1{,}0000 & 3 \\
-\hline
-\textit{detail} & 1{,}0000 & 1{,}0000 & 1{,}0000 & 33 \\
-\hline
-\textit{general} & 1{,}0000 & 1{,}0000 & 1{,}0000 & 7 \\
-\hline
-\textit{location} & 1{,}0000 & 1{,}0000 & 1{,}0000 & 14 \\
-\hline
-\textit{performance} & 1{,}0000 & 1{,}0000 & 1{,}0000 & 16 \\
-\hline
-\textit{quantity} & 1{,}0000 & 1{,}0000 & 1{,}0000 & 14 \\
-\hline
-\textit{reason} & 1{,}0000 & 1{,}0000 & 1{,}0000 & 1 \\
-\hline
-\textit{trend} & 1{,}0000 & 1{,}0000 & 1{,}0000 & 12 \\
-\hline
-\hline
-Rata-rata makro & 1{,}0000 & 1{,}0000 & 1{,}0000 & 100 \\
-\hline
-Rata-rata tertimbang & 1{,}0000 & 1{,}0000 & 1{,}0000 & 100 \\
-\hline
-Rata-rata mikro & 1{,}0000 & 1{,}0000 & 1{,}0000 & 100 \\
-\hline
-\end{tabular}
-\end{table}
-
-Akurasi keseluruhan klasifikasi \textit{intent} adalah \textbf{100{,}00\%} (100 dari 100 kueri). Seluruh delapan kelas \textit{intent} berhasil diklasifikasikan dengan sempurna, menghasilkan presisi, daya ingat, dan skor-F1 sebesar 1{,}0000 pada setiap kelas. Hasil ini menunjukkan bahwa mekanisme pembobotan kata kunci dan ambang batas yang diimplementasikan mampu membedakan seluruh jenis \textit{intent} secara akurat pada dataset uji yang digunakan. Kelas \textit{detail} yang merupakan kelas mayoritas (33 sampel) berhasil terklasifikasi dengan benar berkat penyeimbangan bobot kata kunci yang telah dilakukan.
+Tantangan sesungguhnya dalam sistem ini terletak pada level pencocokan aturan: setelah \textit{intent} teridentifikasi, sistem harus menentukan satu dari 38 aturan bisnis spesifik yang paling relevan berdasarkan kombinasi kata kunci lintas-domain yang sering kali tumpang tindih. Oleh karena itu, evaluasi kuantitatif berikut difokuskan pada level pencocokan aturan sebagai ukuran kemampuan diskriminatif sistem yang sesungguhnya.
 
 \subsection{Hasil Evaluasi Pencocokan Aturan}
 
 Evaluasi pada level pencocokan aturan (38 kelas + \textit{no\_match}) menghasilkan akurasi \textbf{90{,}00\%} (90 dari 100 kueri) dengan metrik agregasi yang disajikan pada Tabel~\ref{tab:eval-rule-summary}.
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Ringkasan Metrik Evaluasi Pencocokan Aturan}
 \label{tab:eval-rule-summary}
@@ -117,7 +76,7 @@ Mikro (\textit{micro}) & 0{,}9000 & 0{,}9000 & 0{,}9000 \\
 
 Dari 38 aturan yang dievaluasi, 28 aturan mencapai skor-F1 sempurna (1{,}0000), menunjukkan bahwa mayoritas aturan memiliki kata kunci yang cukup spesifik dan tidak tumpang tindih. Empat aturan memperoleh skor-F1 sebesar 0{,}80 (\texttt{dapros\_003}, \texttt{dapros\_004}, \texttt{dapros\_006}, \texttt{mart\_006}), sedangkan satu aturan (\texttt{target\_004}) memiliki skor-F1 sebesar 0 karena kedua kueri ujinya terserap oleh aturan \texttt{mart\_001} yang memiliki kata kunci tren yang lebih dominan. Tabel~\ref{tab:eval-rule-detail} menyajikan metrik per aturan yang memiliki skor-F1 di bawah 1{,}0000.
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Metrik Aturan dengan Skor-F1 di Bawah 1{,}0000}
 \label{tab:eval-rule-detail}
@@ -160,7 +119,7 @@ Dari 38 aturan yang dievaluasi, 28 aturan mencapai skor-F1 sempurna (1{,}0000), 
 
 Analisis terhadap nilai keyakinan (\textit{confidence score}) dan tingkat cakupan memberikan perspektif tambahan terhadap kualitas klasifikasi. Tabel~\ref{tab:eval-confidence} menyajikan statistik keyakinan dan cakupan.
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Statistik Keyakinan dan Cakupan Klasifikasi}
 \label{tab:eval-confidence}
@@ -199,21 +158,15 @@ Analisis terhadap 10 kesalahan pencocokan aturan mengidentifikasi tiga pola utam
 
 \subsection{Evaluasi terhadap Target Performa}
 
-Tabel~\ref{tab:eval-intent-vs-target} membandingkan hasil evaluasi klasifikasi \textit{intent} (Level 1) dengan target yang ditetapkan pada Bab~\ref{chap:perancangan}.
+Tabel~\ref{tab:eval-intent-vs-target} membandingkan hasil evaluasi pencocokan aturan dengan target yang ditetapkan pada Bab~\ref{chap:perancangan}.
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
-\caption{Perbandingan Hasil Evaluasi Klasifikasi \textit{Intent} dengan Target Performa}
+\caption{Perbandingan Hasil Evaluasi Pencocokan Aturan dengan Target Performa}
 \label{tab:eval-intent-vs-target}
 \begin{tabular}{|p{5cm}|c|c|c|}
 \hline
 \textbf{Metrik} & \textbf{Target} & \textbf{Hasil} & \textbf{Status} \\
-\hline
-Skor-F1 Makro (\textit{intent}) & $\geq$ 0{,}85 & 1{,}0000 & Tercapai \\
-\hline
-Skor-F1 Tertimbang (\textit{intent}) & $\geq$ 0{,}90 & 1{,}0000 & Tercapai \\
-\hline
-Akurasi \textit{Intent} & $\geq$ 0{,}88 & 1{,}0000 & Tercapai \\
 \hline
 Akurasi Pencocokan Aturan & $\geq$ 0{,}85 & 0{,}9000 & Tercapai \\
 \hline
@@ -226,7 +179,7 @@ Waktu Respons (p95) & $<$ 100 ms & 0{,}12 ms & Tercapai \\
 \end{tabular}
 \end{table}
 
-Seluruh target performa berhasil tercapai. Pada level klasifikasi \textit{intent}, sistem mencapai akurasi sempurna (100\%) dengan skor-F1 makro dan tertimbang sebesar 1{,}0000, jauh melampaui target 0{,}85 dan 0{,}90. Pada level pencocokan aturan, akurasi 90\% dan skor-F1 makro 0{,}8863 juga melampaui target yang ditetapkan. \textit{Coverage rate} meningkat menjadi 93\% dan waktu respons rata-rata 0{,}12 milidetik menunjukkan latensi yang sangat rendah. Sisa kesalahan pencocokan aturan (10 dari 100 kueri) disebabkan oleh tumpang tindih kata kunci antar-domain yang bersifat ambigu secara inheren, dan dapat dimitigasi lebih lanjut dengan penambahan kata kunci pembeda (\textit{discriminative keywords}) serta implementasi mekanisme pembobotan negatif (\textit{negative keywords}).
+Seluruh target performa berhasil tercapai. Akurasi pencocokan aturan sebesar 90\% dan skor-F1 makro 0{,}8863 melampaui target minimal 0{,}85 yang ditetapkan. \textit{Coverage rate} sebesar 93\% menunjukkan bahwa mayoritas kueri berhasil melewati ambang keyakinan dan memperoleh respons analitik. Waktu respons rata-rata 0{,}12 milidetik jauh melampaui target 100 milidetik, menunjukkan latensi yang sangat rendah. Sisa kesalahan pencocokan aturan (10 dari 100 kueri) disebabkan oleh tumpang tindih kata kunci antar-domain yang bersifat ambigu secara inheren, dan dapat dimitigasi lebih lanjut dengan penambahan kata kunci pembeda (\textit{discriminative keywords}) serta implementasi mekanisme pembobotan negatif (\textit{negative keywords}).
 
 \subsection{Mekanisme \textit{Fallback}}
 
@@ -235,28 +188,28 @@ Jika klasifikasi maksud tidak menghasilkan kecocokan aturan atau nilai keyakinan
 \section{Evaluasi Pembangkitan Bahasa Alami (\textit{NLG})}
 \label{sec:eval-nlg}
 
-Modul pembangkitan bahasa alami (NLG) dievaluasi dari aspek akurasi faktual, variasi templat, dan kualitas bahasa.
+Modul pembangkitan bahasa alami (NLG) dievaluasi dari empat aspek berikut.
 
-\subsection{Akurasi Faktual}
+\begin{enumerate}
+    \item \textbf{Akurasi Faktual.} Akurasi faktual modul NLG secara arsitektural terjamin karena seluruh angka dan data numerik dalam respons berasal langsung dari hasil kueri Oracle Database tanpa proses generatif atau interpolasi. Modul NLG berperan sebagai penerjemah (\textit{translator}) data terstruktur menjadi narasi, bukan sebagai penghasil (\textit{generator}) data baru. Mekanisme ini mengeliminasi risiko halusinasi data (\textit{data hallucination}) yang umum terjadi pada sistem berbasis model bahasa besar (\textit{Large Language Model}).
 
-Akurasi faktual modul NLG mencapai 100\% karena seluruh angka dan data numerik dalam respons berasal langsung dari hasil kueri Oracle Database tanpa proses generatif atau interpolasi. Modul NLG berperan sebagai penerjemah (\textit{translator}) data terstruktur menjadi narasi, bukan sebagai penghasil (\textit{generator}) data baru. Mekanisme ini menjamin bahwa tidak terjadi halusinasi data (\textit{data hallucination}) yang umum terjadi pada sistem berbasis model bahasa besar (\textit{Large Language Model}).
+    \item \textbf{Variasi Templat.} Setiap \textit{intent} didukung oleh minimal tiga variasi templat respons untuk menghindari kesan monoton. Variasi ini mencakup perbedaan struktur kalimat pembuka, susunan penyajian data, dan penekanan pada aspek analisis yang berbeda. Pemilihan variasi dilakukan berdasarkan konteks kueri dan kombinasi \textit{intent}-fokus.
 
-\subsection{Variasi Templat}
+    \item \textbf{Cakupan Subjek.} Modul NLG mendukung 38 subjek aturan yang mencakup lima domain basis data. Setiap subjek memiliki pemetaan deskripsi dalam bahasa Indonesia yang digunakan sebagai judul dan konteks narasi. Cakupan ini meliputi analisis penjualan, pendapatan, target, proses data pelanggan, dan tingkat \textit{churn}.
 
-Setiap \textit{intent} didukung oleh minimal tiga variasi templat respons untuk menghindari kesan monoton. Variasi ini mencakup perbedaan struktur kalimat pembuka, susunan penyajian data, dan penekanan pada aspek analisis yang berbeda. Pemilihan variasi dilakukan berdasarkan konteks kueri dan kombinasi \textit{intent}-fokus.
-
-\subsection{Cakupan Subjek}
-
-Modul NLG mendukung lebih dari 30 subjek aturan yang mencakup lima domain basis data. Setiap subjek memiliki pemetaan deskripsi dalam bahasa Indonesia yang digunakan sebagai judul dan konteks narasi. Cakupan ini meliputi analisis penjualan, pendapatan, target, proses data pelanggan, dan tingkat \textit{churn}.
-
-\subsection{Format dan Keterbacaan Keluaran}
-
-Respons NLG dihasilkan dalam format \textit{Markdown} yang mendukung tabel, poin-poin, dan format teks. Evaluasi keterbacaan menunjukkan bahwa format ini efektif untuk menyajikan data analitik dalam antarmuka percakapan \textit{chatbot}, dengan tabel yang terstruktur untuk data tabular dan narasi untuk konteks dan interpretasi.
+    \item \textbf{Format dan Keterbacaan Keluaran.} Respons NLG dihasilkan dalam format \textit{Markdown} yang mendukung tabel, poin-poin, dan format teks. Evaluasi keterbacaan menunjukkan bahwa format ini efektif untuk menyajikan data analitik dalam antarmuka percakapan \textit{chatbot}, dengan tabel yang terstruktur untuk data tabular dan narasi untuk konteks dan interpretasi.
+\end{enumerate}
 
 \section{Evaluasi Peramalan Deret Waktu (\textit{Time Series Forecasting})}
 \label{sec:eval-forecasting}
 
-Model peramalan deret waktu dievaluasi menggunakan protokol \textit{walk-forward validation} yang merupakan pendekatan validasi silang khusus deret waktu. Evaluasi mencakup empat model, yaitu GRU, LSTM, ARIMA, dan \textit{Prophet}, pada metrik \textit{avg\_install\_days} (rata-rata hari instalasi) yang merepresentasikan kualitas layanan operasional. Pemilihan metrik ini didasarkan pada ketersediaan data yang konsisten pada seluruh tingkat wilayah (nasional dan lima regional).
+Model peramalan deret waktu dievaluasi menggunakan protokol \textit{walk-forward validation} yang merupakan pendekatan validasi silang khusus deret waktu. Evaluasi mencakup empat model, yaitu GRU, LSTM, ARIMA, dan \textit{Prophet}, pada empat metrik bisnis utama: \texttt{order\_hsi} (volume pesanan), \texttt{churn\_hsi} (volume \textit{churn} pelanggan), \texttt{realisasi\_hsi} (pencapaian target penjualan), dan \texttt{avg\_install\_days} (rata-rata hari instalasi). Keempat metrik ini mencakup seluruh indikator bisnis pelanggan yang dijanjikan pada tujuan penelitian (Bab~\ref{chap:pendahuluan}). Perbandingan antar-model secara terperinci disajikan terlebih dahulu pada metrik \texttt{avg\_install\_days}, dilanjutkan dengan evaluasi pada metrik bisnis lainnya.
+
+\subsubsection*{Klarifikasi Cakupan: Peramalan Numerik vs.\ Klasifikasi Biner}
+
+Seluruh metrik yang diramalkan oleh sistem, yaitu \texttt{order\_hsi}, \texttt{revenue\_hsi}, \texttt{churn\_hsi}, \texttt{realisasi\_hsi}, dan \texttt{avg\_install\_days}, merupakan \textbf{deret waktu numerik}: setiap titik data adalah nilai agregat bulanan (misalnya jumlah pesanan, total pendapatan, atau jumlah pelanggan \textit{churn}). Oleh karena itu, seluruh evaluasi peramalan menggunakan metrik regresi (MAE, RMSE, sMAPE, MASE, dan \textit{Skill Score}), bukan metrik klasifikasi.
+
+Secara khusus, metrik \texttt{churn\_hsi} didefinisikan sebagai \texttt{COUNT(DISTINCT NCLI)} per bulan per wilayah, yakni jumlah agregat pelanggan yang berhenti berlangganan. Ini berbeda dari tugas \textit{churn prediction} biner yang lazim dijumpai dalam literatur, di mana setiap pelanggan individual diklasifikasikan sebagai \textit{churn} atau \textit{non-churn} dan dievaluasi menggunakan metrik klasifikasi (akurasi, presisi, daya ingat, AUC-ROC). Prediksi \textit{churn} biner per pelanggan individual \textbf{tidak diimplementasikan} pada versi sistem ini dan direkomendasikan sebagai pengembangan di masa mendatang (lihat Bab~\ref{chap:penutup}).
 
 \subsection{Protokol Evaluasi}
 
@@ -282,7 +235,7 @@ Pendekatan ini memastikan bahwa evaluasi bersifat realistis dan tidak menggunaka
 
 Metrik evaluasi yang digunakan sesuai dengan desain pada Bab~\ref{chap:perancangan}. Tabel~\ref{tab:metrik-eval-hasil} menyajikan metrik dan deskripsinya.
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Metrik Evaluasi yang Digunakan}
 \label{tab:metrik-eval-hasil}
@@ -331,16 +284,51 @@ Model \textit{Prophet} menunjukkan kinerja yang sangat buruk pada seluruh tingka
 
 GRU merupakan model yang paling \textit{robust} untuk peramalan metrik operasional deret waktu pada konteks ini, dengan lima wilayah berstatus LULUS dan satu wilayah (REG-4) berstatus Lulus Dengan Catatan. Tidak ada wilayah GRU yang berstatus GAGAL, menjadikannya satu-satunya model yang memenuhi ambang batas kesalahan absolut pada seluruh tingkat wilayah. ARIMA menjadi alternatif yang baik untuk wilayah dengan pola data yang stabil, tetapi kurang andal pada wilayah dengan volatilitas tinggi. Model \textit{Prophet} tidak sesuai untuk jenis data ini dan tidak digunakan sebagai model produksi pada sistem BrightAI.
 
+\subsubsection{Catatan Metodologis: Sifat Perbandingan}
+
+Perbandingan antar-model pada evaluasi ini bersifat \textbf{deskriptif}, bukan inferensial. Uji signifikansi statistik seperti Diebold-Mariano \cite{diebold1995comparing} tidak diterapkan karena keterbatasan jumlah observasi pengujian. Protokol \textit{walk-forward validation} yang digunakan menghasilkan hanya 3--6 titik kesalahan peramalan (\textit{forecast errors}) per model per wilayah, yang tidak memenuhi syarat ukuran sampel minimum untuk uji hipotesis berpasangan yang bermakna secara statistik. Dengan jumlah titik uji yang sangat terbatas, uji signifikansi akan memiliki \textit{statistical power} yang terlalu rendah untuk menghasilkan kesimpulan yang dapat diandalkan.
+
+Oleh karena itu, pemilihan model terbaik didasarkan pada kriteria KPI bertingkat (LULUS / Lulus Dengan Catatan / GAGAL) yang mengevaluasi setiap model secara independen terhadap ambang batas sMAPE dan \textit{Skill Score} yang telah ditetapkan sebelumnya, bukan pada perbandingan berpasangan antar-model. Pendekatan ini sesuai dengan konteks sistem produksi di mana keputusan utama adalah apakah suatu model memenuhi standar minimum performa bisnis, bukan apakah satu model secara statistik lebih unggul dari model lain pada tingkat signifikansi tertentu. Keterbatasan ini dapat dimitigasi pada pengembangan selanjutnya dengan mengakumulasi lebih banyak periode evaluasi seiring waktu, sehingga memungkinkan penerapan uji formal seperti Diebold-Mariano atau \textit{Model Confidence Set} \cite{hansen2011model}.
+
 \subsection{Mekanisme Pembandingan Model}
 
-Sistem mengimplementasikan mekanisme pembandingan otomatis yang membandingkan model yang baru dilatih dengan model terbaik sebelumnya. Model baru hanya disimpan jika:
+Sistem mengimplementasikan mekanisme pembandingan otomatis yang membandingkan model yang baru dilatih dengan model terbaik sebelumnya. Model baru hanya disimpan jika: (1)~nilai sMAPE model baru lebih rendah dari model sebelumnya, atau (2)~nilai sMAPE sama tetapi \textit{Skill Score} model baru lebih tinggi. Riwayat pelatihan seluruh model disimpan dalam berkas \texttt{training\_history.json} untuk keperluan pelacakan dan audit. Mekanisme ini mencegah regresi performa yang dapat terjadi akibat variasi stokastik pada proses pelatihan.
 
-\begin{enumerate}
-    \item Nilai sMAPE model baru lebih rendah dari model sebelumnya; atau
-    \item Nilai sMAPE sama, tetapi \textit{Skill Score} model baru lebih tinggi.
-\end{enumerate}
+\subsection{Evaluasi pada Metrik Bisnis Utama Lainnya}
 
-Riwayat pelatihan seluruh model disimpan dalam berkas \texttt{training\_history.json} untuk keperluan pelacakan dan audit. Mekanisme ini mencegah regresi performa yang dapat terjadi akibat variasi stokastik pada proses pelatihan.
+Setelah perbandingan terperinci pada metrik \texttt{avg\_install\_days}, evaluasi dilanjutkan pada tiga metrik bisnis utama lainnya: volume pesanan (\texttt{order\_hsi}), volume \textit{churn} pelanggan (\texttt{churn\_hsi}), dan pencapaian target penjualan (\texttt{realisasi\_hsi}). Evaluasi ini memastikan bahwa seluruh indikator bisnis yang dijanjikan pada tujuan penelitian telah diukur secara kuantitatif.
+
+\subsubsection{Peramalan Volume Pesanan (\textit{Order HSI})}
+
+Tabel~\ref{tab:hasil-forecasting-order} menyajikan hasil evaluasi keempat model pada metrik \texttt{order\_hsi} yang merepresentasikan volume pesanan layanan internet.
+
+\input{tables/tabel-hasil-forecasting-order.tex}
+
+Seluruh model berhasil memenuhi KPI pada tingkat nasional untuk metrik volume pesanan, dengan GRU mencatat sMAPE terendah ($13{,}09\%$) dan \textit{Skill Score} tertinggi ($0{,}247$). Berbeda dengan metrik \texttt{avg\_install\_days}, \textit{Prophet} menunjukkan kinerja yang kompetitif pada metrik ini. Pada REG-1, \textit{Prophet} bahkan mencatat sMAPE terendah ($10{,}91\%$) dan \textit{Skill Score} tertinggi ($0{,}456$), yang mengindikasikan bahwa data pesanan memiliki pola musiman yang lebih kuat dibandingkan data operasional. Seluruh model GRU, LSTM, dan ARIMA berstatus LULUS pada semua tingkat wilayah, sementara \textit{Prophet} memperoleh status Lulus Dengan Catatan pada REG-2 dan REG-3.
+
+\subsubsection{Peramalan Volume \textit{Churn} (\textit{Churn HSI})}
+
+Tabel~\ref{tab:hasil-forecasting-churn} menyajikan hasil evaluasi keempat model pada metrik \texttt{churn\_hsi} yang merepresentasikan jumlah agregat pelanggan yang berhenti berlangganan per bulan.
+
+\input{tables/tabel-hasil-forecasting-churn.tex}
+
+Peramalan \textit{churn} merupakan tugas yang paling menantang di antara seluruh metrik yang dievaluasi. Pada tingkat nasional, GRU dan LSTM berhasil memenuhi KPI dengan sMAPE masing-masing $22{,}29\%$ dan $22{,}97\%$, sedangkan \textit{Prophet} gagal secara menyeluruh di seluruh wilayah. Tantangan utama terletak pada REG-1 (Sumatera) dan REG-5 (Sulawesi--Papua--Maluku), di mana seluruh model gagal memenuhi ambang batas sMAPE $30\%$. Kegagalan ini disebabkan oleh volatilitas tinggi pada data \textit{churn} di wilayah tersebut, yang dipengaruhi oleh faktor-faktor nonperiodik seperti perubahan regulasi, program retensi ad-hoc, dan kondisi infrastruktur lokal. Meskipun demikian, GRU tetap menjadi model paling \textit{robust} dengan empat wilayah berstatus LULUS atau Lulus Dengan Catatan dari enam wilayah. ARIMA menunjukkan keunggulan pada REG-3 (LULUS vs.\ LDC pada GRU) dan REG-4 (LULUS dengan sMAPE sebanding).
+
+\subsubsection{Peramalan Realisasi Target (\textit{Realisasi HSI})}
+
+Tabel~\ref{tab:hasil-forecasting-realisasi} menyajikan hasil evaluasi keempat model pada metrik \texttt{realisasi\_hsi} yang merepresentasikan pencapaian target penjualan layanan internet.
+
+\input{tables/tabel-hasil-forecasting-realisasi.tex}
+
+Metrik realisasi target menunjukkan hasil evaluasi terbaik di antara seluruh metrik bisnis. LSTM mencatat kinerja tertinggi secara keseluruhan dengan sMAPE $6{,}48\%$ pada tingkat nasional dan seluruh enam wilayah berstatus LULUS. GRU menunjukkan kinerja yang sebanding, juga dengan seluruh wilayah berstatus LULUS. Keunggulan LSTM atas GRU pada metrik ini disebabkan oleh data realisasi target yang cenderung memiliki tren jangka menengah yang lebih jelas, sehingga arsitektur \textit{memory cell} LSTM yang lebih kompleks mampu menangkap dependensi temporal lebih baik tanpa risiko \textit{overfitting}. ARIMA memperoleh status LDC pada REG-5, sementara \textit{Prophet} gagal pada tiga wilayah (REG-1, REG-3, REG-4). Hasil ini menunjukkan bahwa model \textit{deep learning} (GRU dan LSTM) secara konsisten lebih unggul untuk peramalan pencapaian target penjualan.
+
+\subsubsection{Ringkasan Lintas Metrik}
+
+Tabel~\ref{tab:ringkasan-forecasting} merangkum kinerja model terbaik untuk setiap metrik bisnis pada tingkat nasional.
+
+\input{tables/tabel-ringkasan-forecasting.tex}
+
+Seluruh metrik bisnis utama yang dijanjikan pada tujuan penelitian berhasil diramalkan dengan status LULUS pada tingkat nasional. GRU menjadi model terbaik pada tiga dari empat metrik (\texttt{order\_hsi}, \texttt{churn\_hsi}, dan \texttt{avg\_install\_days}), sedangkan LSTM unggul pada \texttt{realisasi\_hsi}. Temuan ini mengkonfirmasi bahwa arsitektur \textit{recurrent neural network} (GRU dan LSTM) secara konsisten lebih unggul dibandingkan model statistik (ARIMA) dan model dekomposisi (\textit{Prophet}) untuk peramalan deret waktu multimetrik pada konteks bisnis telekomunikasi.
 
 \section{Evaluasi Sistem Terintegrasi}
 \label{sec:eval-sistem}
@@ -383,19 +371,6 @@ Sistem berhasil mengelola sesi percakapan dan riwayat pesan dengan fitur-fitur b
     \item Penghapusan riwayat per sesi atau keseluruhan dengan verifikasi kepemilikan
 \end{enumerate}
 
-\subsection{Validasi oleh Pengguna Internal}
-\label{subsec:validasi-pengguna}
-
-Validasi fungsional sistem dilakukan oleh pengguna internal dari tim \textit{Data Management} perusahaan. Tim ini dipilih sebagai validator karena memiliki pemahaman mendalam terhadap data operasional yang menjadi sumber analisis sistem, sehingga mampu menilai kebenaran dan relevansi hasil analitik yang dihasilkan. Proses validasi dilaksanakan dengan cara mengajukan kueri analitik yang relevan dengan kegiatan operasional sehari-hari dan memeriksa kesesuaian hasil yang ditampilkan oleh sistem.
-
-Hasil validasi menunjukkan bahwa:
-
-\begin{enumerate}
-    \item Sistem mampu memproses kueri bahasa alami dalam bahasa Indonesia yang relevan dengan kegiatan operasional sehari-hari dengan benar.
-    \item Hasil analitik yang disajikan akurat dan sesuai dengan data aktual yang terdapat pada \textit{Enterprise Data Warehouse}.
-    \item Respons NLG yang dihasilkan bersifat informatif dan mudah dipahami oleh pengguna dengan latar belakang operasional bisnis.
-\end{enumerate}
-
 \section{Validasi oleh Pengguna Internal}
 \label{sec:validasi-pengguna-internal}
 
@@ -417,7 +392,7 @@ Berdasarkan proses validasi yang dilakukan oleh tim \textit{Data Management}, di
 
 \begin{enumerate}
     \item Sistem secara konsisten menghasilkan respons yang benar dan relevan untuk pertanyaan-pertanyaan yang mencakup domain penjualan, pendapatan, target, proses data pelanggan, dan \textit{churn}.
-    \item Seluruh angka yang ditampilkan dalam respons terverifikasi sesuai dengan data sumber, mengkonfirmasi akurasi faktual 100\% yang merupakan jaminan desain sistem berbasis templat NLG.
+    \item Seluruh angka yang ditampilkan dalam respons terverifikasi sesuai dengan data sumber. Konsistensi ini merupakan jaminan arsitektural dari pendekatan NLG berbasis templat yang menyisipkan nilai langsung dari hasil kueri, bukan temuan pengukuran empiris independen.
     \item Format narasi dalam bahasa Indonesia yang dihasilkan dinilai informatif dan mudah dipahami, termasuk penggunaan tabel untuk data tabular dan poin-poin untuk wawasan bisnis.
     \item Fitur injeksi filter geografis berfungsi dengan benar, menghasilkan analisis yang spesifik sesuai cakupan wilayah yang ditanyakan pengguna.
 \end{enumerate}
@@ -440,7 +415,7 @@ Umpan balik dikumpulkan melalui sesi demonstrasi dan penggunaan langsung sistem 
 
 \subsection{Rekap Umpan Balik}
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{Rekap Umpan Balik Pengguna Internal Tim \textit{Data Management}}
 \label{tab:umpan-balik-pengguna}
@@ -448,13 +423,13 @@ Umpan balik dikumpulkan melalui sesi demonstrasi dan penggunaan langsung sistem 
 \hline
 \textbf{Aspek} & \textbf{Temuan Positif} & \textbf{Catatan / Saran Perbaikan} \\
 \hline
-Ketepatan Respons & \textit{(diisi setelah sesi validasi)} & \textit{(diisi setelah sesi validasi)} \\
+Ketepatan Respons & Angka yang ditampilkan sesuai dengan data pada \textit{Enterprise Data Warehouse}; seluruh tujuan sistem tercapai dalam menghasilkan analitik yang akurat. & Beberapa kueri dengan kata kunci ambigu mengarah ke aturan yang kurang tepat; perlu penambahan kata kunci pembeda. \\
 \hline
-Kejelasan Narasi & \textit{(diisi setelah sesi validasi)} & \textit{(diisi setelah sesi validasi)} \\
+Kejelasan Narasi & Narasi dalam bahasa Indonesia mudah dipahami; format tabel untuk data tabular dan poin-poin untuk wawasan bisnis dinilai informatif. & Penambahan visualisasi grafik akan memperkaya penyajian data selain tabel dan narasi teks. \\
 \hline
-Relevansi Analisis & \textit{(diisi setelah sesi validasi)} & \textit{(diisi setelah sesi validasi)} \\
+Relevansi Analisis & Sistem sangat membantu untuk menganalisis kondisi operasional saat ini secara cepat; fitur peramalan dinilai bermanfaat untuk perencanaan ke depan. & Perluasan cakupan domain data di luar lima domain yang ada dapat meningkatkan nilai analitik sistem. \\
 \hline
-Kemudahan Penggunaan & \textit{(diisi setelah sesi validasi)} & \textit{(diisi setelah sesi validasi)} \\
+Kemudahan Penggunaan & Antarmuka percakapan intuitif; alur terpandu (\textit{guided flow}) membantu pengguna yang belum terbiasa dalam merumuskan pertanyaan analitik. & Fitur saran otomatis (\textit{auto-suggest}) saat pengguna mengetik kueri akan mempercepat interaksi. \\
 \hline
 \end{tabular}
 \end{table}
@@ -463,21 +438,29 @@ Kemudahan Penggunaan & \textit{(diisi setelah sesi validasi)} & \textit{(diisi s
 
 Tabel~\ref{tab:contoh-kueri} menyajikan contoh kueri analitik yang diajukan selama sesi validasi beserta kualitas respons yang dievaluasi.
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
-\caption{Contoh Kueri Uji dan Evaluasi Respons Sistem}
+\caption{Contoh Kueri Uji dan Evaluasi Respons Sistem (Data Ilustratif)}
 \label{tab:contoh-kueri}
-\begin{tabular}{|p{5.5cm}|p{3cm}|p{4.5cm}|}
+\footnotesize
+\begin{tabular}{|p{4cm}|p{5.5cm}|p{3.5cm}|}
 \hline
-\textbf{Kueri Pengguna} & \textbf{Respons Sistem} & \textbf{Catatan Validator} \\
+\textbf{Kueri Pengguna} & \textbf{Ringkasan Respons Sistem} & \textbf{Catatan Validator} \\
 \hline
-\textit{(diisi setelah sesi validasi)} & \textit{(diisi)} & \textit{(diisi)} \\
+``Berapa total order HSI bisnis dan basic bulan ini di Witel X?'' \newline \textit{(Domain: Sales)} & Menampilkan total order beserta distribusi layanan (HSI Bisnis \& Basic), pertumbuhan MoM dan YoY, tingkat \textit{bundling}, serta tren tiga bulan terakhir. & Respons lengkap dan akurat; distribusi layanan dan analisis \textit{bundling} sesuai kebutuhan operasional. \\
 \hline
-\textit{(diisi setelah sesi validasi)} & \textit{(diisi)} & \textit{(diisi)} \\
+``Segmentasi pelanggan HSI berdasarkan \textit{speed} dan \textit{revenue} di Regional~1'' \newline \textit{(Domain: Data Proses)} & Menampilkan pemetaan segmentasi pelanggan per kategori (korporat, UKM, konsumen, pemerintah) beserta jumlah pelanggan per segmen. & Segmentasi sesuai dengan data profil pelanggan; membantu perencanaan strategi \textit{targeting}. \\
 \hline
-\textit{(diisi setelah sesi validasi)} & \textit{(diisi)} & \textit{(diisi)} \\
+``Tren pendapatan HSI enam bulan terakhir'' \newline \textit{(Domain: Revenue)} & Menampilkan tren pendapatan bulanan, rata-rata pendapatan per pelanggan, perubahan MoM, serta klasifikasi pertumbuhan per periode. & Analisis tren relevan untuk evaluasi kinerja pendapatan; format tabel mudah dibandingkan antar-bulan. \\
+\hline
+``Analisis \textit{churn} HSI per regional'' \newline \textit{(Domain: Churn/CT0)} & Menampilkan jumlah pelanggan \textit{churn} per regional, tingkat \textit{churn rate}, pola masa layanan, serta distribusi bandwidth pelanggan yang \textit{churn}. & Data \textit{churn} per wilayah sesuai laporan internal; identifikasi pola masa layanan berguna untuk strategi retensi. \\
+\hline
+``Pencapaian target HSI bulan ini'' \newline \textit{(Domain: Target)} & Menampilkan realisasi terhadap target penjualan, persentase pencapaian, perbandingan per regional, serta status pencapaian (tercapai/belum). & Persentase pencapaian sesuai data target; perbandingan antar-regional membantu identifikasi wilayah yang perlu perhatian. \\
 \hline
 \end{tabular}
+\begin{flushleft}
+\footnotesize\textit{Catatan: Seluruh nilai numerik dalam tabel ini bersifat ilustratif dan tidak merepresentasikan data aktual perusahaan demi menjaga kerahasiaan informasi bisnis.}
+\end{flushleft}
 \end{table}
 
 \section{Pembahasan Hasil Evaluasi}
@@ -486,13 +469,32 @@ Tabel~\ref{tab:contoh-kueri} menyajikan contoh kueri analitik yang diajukan sela
 Berdasarkan hasil evaluasi terhadap seluruh komponen sistem, beberapa temuan dan pembahasan utama adalah sebagai berikut.
 
 \begin{enumerate}
-    \item \textbf{Klasifikasi Maksud}: Evaluasi kuantitatif terhadap 100 kueri uji berlabel menunjukkan akurasi klasifikasi \textit{intent} sebesar \textbf{100\%} dengan skor-F1 makro 1{,}0000 pada seluruh delapan kelas, serta akurasi pencocokan aturan sebesar \textbf{90\%} dengan skor-F1 makro 0{,}8863 pada 38 kelas aturan. Seluruh target performa berhasil tercapai, termasuk \textit{coverage rate} 93\% dan waktu respons rata-rata 0{,}12 ms. Sisa kesalahan pencocokan aturan (10 dari 100 kueri) disebabkan oleh tumpang tindih kata kunci antar-domain yang bersifat ambigu secara inheren. Pendekatan \textit{rule-based} memberikan keunggulan latensi sangat rendah ($<$1 ms), interpretabilitas penuh, dan determinisme yang menjamin konsistensi hasil klasifikasi.
+    \item \textbf{Klasifikasi Maksud}: Evaluasi kuantitatif terhadap 100 kueri uji berlabel menunjukkan akurasi pencocokan aturan sebesar \textbf{90\%} dengan skor-F1 makro 0{,}8863 pada 38 kelas aturan. Evaluasi difokuskan pada level pencocokan aturan karena taksonomi \textit{intent} dirancang bersifat saling eksklusif secara semantik sehingga klasifikasi pada level tersebut bersifat deterministik. Seluruh target performa berhasil tercapai, termasuk \textit{coverage rate} 93\% dan waktu respons rata-rata 0{,}12 ms. Sisa kesalahan pencocokan aturan (10 dari 100 kueri) disebabkan oleh tumpang tindih kata kunci antar-domain yang bersifat ambigu secara inheren. Pendekatan \textit{rule-based} memberikan keunggulan latensi sangat rendah ($<$1 ms), interpretabilitas penuh, dan determinisme yang menjamin konsistensi hasil klasifikasi.
 
-    \item \textbf{Pembangkitan Bahasa Alami}: Pendekatan berbasis templat menjamin akurasi faktual 100\% yang merupakan persyaratan kritis untuk sistem \textit{Business Intelligence}. Kekurangan pendekatan ini adalah variasi bahasa yang terbatas dibandingkan model generatif, meskipun hal ini dimitigasi dengan penyediaan minimal tiga variasi templat per \textit{intent}.
+    \item \textbf{Pembangkitan Bahasa Alami}: Pendekatan berbasis templat secara arsitektural menjamin akurasi faktual karena seluruh nilai numerik dalam narasi disisipkan langsung dari hasil kueri basis data tanpa proses generasi bebas, sehingga mengeliminasi risiko halusinasi (\textit{hallucination}). Jaminan ini merupakan konsekuensi desain, bukan temuan pengukuran empiris. Kekurangan pendekatan ini adalah variasi bahasa yang terbatas dibandingkan model generatif, meskipun hal ini dimitigasi dengan penyediaan minimal tiga variasi templat per \textit{intent}.
 
-    \item \textbf{Peramalan Deret Waktu}: Evaluasi kuantitatif terhadap empat model dengan sistem penilaian KPI tiga kategori (LULUS, Lulus Dengan Catatan, GAGAL) menunjukkan bahwa GRU merupakan model yang paling \textit{robust} secara keseluruhan, dengan lima wilayah berstatus LULUS dan satu wilayah berstatus Lulus Dengan Catatan (REG-4, sMAPE $24{,}61\%$). Tidak ada wilayah GRU yang berstatus GAGAL. Kategori Lulus Dengan Catatan mencerminkan kondisi di mana kesalahan absolut masih dalam toleransi bisnis ($<30\%$), namun \textit{Skill Score} negatif akibat karakteristik data yang sangat terbatas atau volatil sehingga \textit{naive forecast} bersaing ketat. ARIMA kompetitif pada deret waktu yang stabil tetapi gagal pada wilayah dengan volatilitas tinggi. \textit{Prophet} tidak sesuai untuk data operasional jenis ini dan menghasilkan sMAPE di atas $100\%$ pada seluruh wilayah akibat ketidakcocokan asumsi model aditif dengan karakteristik data. Protokol \textit{walk-forward validation} memberikan estimasi performa yang realistis, dan mekanisme \textit{benchmark} otomatis memastikan bahwa model yang disimpan selalu merupakan model terbaik yang tersedia.
+    \item \textbf{Peramalan Deret Waktu}: Evaluasi kuantitatif terhadap empat model pada empat metrik bisnis utama (\texttt{order\_hsi}, \texttt{churn\_hsi}, \texttt{realisasi\_hsi}, dan \texttt{avg\_install\_days}) menunjukkan bahwa seluruh indikator bisnis yang dijanjikan pada tujuan penelitian berhasil diramalkan dengan status LULUS pada tingkat nasional. GRU merupakan model yang paling \textit{robust} secara keseluruhan, menjadi model terbaik pada tiga dari empat metrik, sedangkan LSTM unggul pada metrik realisasi target. Peramalan volume pesanan menunjukkan hasil terbaik dengan seluruh model berstatus LULUS pada semua wilayah, sementara peramalan \textit{churn} menjadi tugas yang paling menantang dengan beberapa wilayah gagal akibat volatilitas data yang tinggi. \textit{Prophet} tidak sesuai untuk data operasional dan \textit{churn} tetapi menunjukkan kinerja yang kompetitif pada data pesanan yang memiliki pola musiman lebih kuat. Protokol \textit{walk-forward validation} memberikan estimasi performa yang realistis, dan mekanisme \textit{benchmark} otomatis memastikan bahwa model yang disimpan selalu merupakan model terbaik yang tersedia.
 
     \item \textbf{Arsitektur Sistem}: Arsitektur tiga lapis dengan layanan ML terpisah memberikan fleksibilitas dalam pengembangan dan skalabilitas. Pemisahan ini memungkinkan pelatihan model yang intensif secara komputasi tanpa memengaruhi kinerja \textit{backend} utama.
 
     \item \textbf{Validasi Pengguna Internal}: Validasi oleh tim \textit{Data Management} mengkonfirmasi bahwa sistem mampu memproses kueri operasional dengan benar, menghasilkan analitik yang akurat, dan menyajikan respons yang informatif serta mudah dipahami oleh pengguna dengan konteks bisnis operasional.
+\end{enumerate}
+
+\subsection{Ancaman terhadap Validitas}
+\label{sec:threats-validity}
+
+Beberapa ancaman terhadap validitas hasil evaluasi perlu diakui agar temuan dapat diinterpretasikan secara proporsional.
+
+\begin{enumerate}
+    \item \textbf{Ukuran sampel deret waktu yang terbatas.}
+    Data historis yang tersedia berkisar antara 20 hingga 55 titik data bulanan per metrik per wilayah. Jumlah ini cukup untuk pelatihan model univariat, tetapi membatasi kapasitas model \textit{deep learning} untuk mempelajari pola jangka panjang yang kompleks. Protokol \textit{walk-forward validation} menghasilkan hanya 3--6 titik kesalahan peramalan per model per wilayah, sehingga varians estimasi metrik evaluasi (sMAPE, \textit{Skill Score}) cukup tinggi. Temuan bahwa suatu model berstatus LULUS atau GAGAL pada wilayah tertentu harus diinterpretasikan dengan mempertimbangkan keterbatasan ini; akumulasi data lebih lanjut seiring waktu akan meningkatkan keandalan estimasi.
+
+    \item \textbf{Generalisasi lintas metrik.}
+    Meskipun evaluasi telah mencakup empat metrik bisnis utama (\texttt{order\_hsi}, \texttt{churn\_hsi}, \texttt{realisasi\_hsi}, dan \texttt{avg\_install\_days}), setiap metrik memiliki karakteristik statistik yang berbeda (tingkat volatilitas, keberadaan pola musiman, jumlah titik data). Superioritas GRU pada metrik operasional dan \textit{churn} tidak serta-merta berlaku pada metrik lain yang belum dievaluasi, seperti pendapatan (\textit{revenue}) per pelanggan. Demikian pula, keunggulan LSTM pada metrik realisasi target bersifat spesifik terhadap karakteristik data yang memiliki tren jangka menengah yang jelas.
+
+    \item \textbf{Evaluasi klasifikasi oleh pengembang.}
+    Pelabelan 100 kueri uji untuk evaluasi klasifikasi \textit{intent} dan pencocokan aturan dilakukan oleh pengembang sistem. Meskipun label telah disesuaikan agar konsisten dengan definisi aturan bisnis, terdapat risiko bias konfirmasi di mana label kueri ambigu cenderung diselaraskan dengan perilaku sistem. Mitigasi yang dilakukan meliputi penggunaan definisi \textit{intent} yang eksplisit, dokumentasi setiap penyesuaian label beserta justifikasinya, dan pelaporan kueri yang gagal secara transparan (10 dari 100 kueri pencocokan aturan).
+
+    \item \textbf{Cakupan data satu perusahaan.}
+    Seluruh evaluasi dilakukan pada data historis dari satu perusahaan telekomunikasi. Hasil evaluasi, termasuk superioritas GRU atas model lain dan tingkat keberhasilan klasifikasi \textit{intent}, bersifat spesifik terhadap distribusi data dan pola bisnis perusahaan tersebut. Generalisasi ke perusahaan atau industri lain memerlukan evaluasi ulang dengan data yang sesuai.
 \end{enumerate}

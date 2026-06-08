@@ -1,0 +1,61 @@
+\begin{table}[H]
+\centering
+\caption{Perbandingan Hasil Evaluasi Model Peramalan pada Metrik \textit{Order HSI}}
+\label{tab:hasil-forecasting-order}
+\begin{tabular}{|p{2.2cm}|p{1.5cm}|c|c|c|c|}
+\hline
+\textbf{Wilayah} & \textbf{Model} & \textbf{sMAPE (\%)} & \textbf{MASE} & \textbf{\textit{Skill Score}} & \textbf{KPI} \\
+\hline
+\multirow{4}{*}{Nasional} & GRU & $13{,}09$ & $0{,}418$ & $0{,}247$ & LULUS \\
+\cline{2-6}
+ & LSTM & $16{,}50$ & $0{,}521$ & $0{,}063$ & LULUS \\
+\cline{2-6}
+ & ARIMA & $16{,}74$ & $0{,}538$ & $0{,}032$ & LULUS \\
+\cline{2-6}
+ & \textit{Prophet} & $15{,}27$ & $0{,}534$ & $0{,}039$ & LULUS \\
+\hline
+\multirow{4}{*}{REG-1} & GRU & $16{,}43$ & $0{,}617$ & $0{,}103$ & LULUS \\
+\cline{2-6}
+ & LSTM & $14{,}84$ & $0{,}561$ & $0{,}215$ & LULUS \\
+\cline{2-6}
+ & ARIMA & $16{,}38$ & $0{,}588$ & $0{,}176$ & LULUS \\
+\cline{2-6}
+ & \textit{Prophet} & $10{,}91$ & $0{,}388$ & $0{,}456$ & LULUS \\
+\hline
+\multirow{4}{*}{REG-2} & GRU & $10{,}77$ & $0{,}422$ & $0{,}307$ & LULUS \\
+\cline{2-6}
+ & LSTM & $12{,}60$ & $0{,}493$ & $0{,}165$ & LULUS \\
+\cline{2-6}
+ & ARIMA & $13{,}55$ & $0{,}524$ & $0{,}112$ & LULUS \\
+\cline{2-6}
+ & \textit{Prophet} & $19{,}63$ & $0{,}845$ & $-0{,}434$ & LDC \\
+\hline
+\multirow{4}{*}{REG-3} & GRU & $15{,}54$ & $0{,}414$ & $0{,}167$ & LULUS \\
+\cline{2-6}
+ & LSTM & $15{,}49$ & $0{,}410$ & $0{,}158$ & LULUS \\
+\cline{2-6}
+ & ARIMA & $16{,}85$ & $0{,}458$ & $0{,}060$ & LULUS \\
+\cline{2-6}
+ & \textit{Prophet} & $22{,}93$ & $0{,}711$ & $-0{,}460$ & LDC \\
+\hline
+\multirow{4}{*}{REG-4} & GRU & $20{,}76$ & $0{,}823$ & $0{,}228$ & LULUS \\
+\cline{2-6}
+ & LSTM & $21{,}27$ & $0{,}838$ & $0{,}223$ & LULUS \\
+\cline{2-6}
+ & ARIMA & $16{,}09$ & $0{,}645$ & $0{,}402$ & LULUS \\
+\cline{2-6}
+ & \textit{Prophet} & $27{,}29$ & $1{,}013$ & $0{,}061$ & LULUS \\
+\hline
+\multirow{4}{*}{REG-5} & GRU & $13{,}16$ & $0{,}495$ & $0{,}211$ & LULUS \\
+\cline{2-6}
+ & LSTM & $13{,}34$ & $0{,}501$ & $0{,}236$ & LULUS \\
+\cline{2-6}
+ & ARIMA & $18{,}29$ & $0{,}661$ & $-0{,}009$ & LULUS \\
+\cline{2-6}
+ & \textit{Prophet} & $14{,}83$ & $0{,}547$ & $0{,}166$ & LULUS \\
+\hline
+\end{tabular}
+\begin{flushleft}
+\footnotesize\textit{Keterangan: LDC = Lulus Dengan Catatan (sMAPE $< 30\%$ namun \textit{Skill Score} $\in (-0{,}5;\ -0{,}1]$).}
+\end{flushleft}
+\end{table}
