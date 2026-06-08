@@ -1,117 +1,174 @@
 % ==========================================
-% BAB IV PERANCANGAN
+% BAB IV PERANCANGAN (DESAIN KONSEP SOLUSI)
 % ==========================================
 \cleardoublepage
 \chapter{PERANCANGAN SISTEM \textit{BUSINESS INTELLIGENCE CHATBOT}}
 \label{chap:perancangan}
 
-Bab ini menyajikan perancangan sistem \textit{Business Intelligence} berbasis \textit{chatbot} yang mengintegrasikan klasifikasi maksud berbasis pola, pembangkitan bahasa alami berbasis templat, dan peramalan deret waktu. Pembahasan mencakup daftar perangkat dan teknologi yang digunakan, estimasi kebutuhan sumber daya, linimasa pelaksanaan tugas akhir, serta desain pengujian dan evaluasi yang akan dilakukan terhadap setiap komponen sistem. Selain itu, bab ini juga membahas analisis risiko dan strategi mitigasi untuk mengantisipasi kendala yang mungkin terjadi selama proses pengembangan.
+Berdasarkan analisis komprehensif terhadap permasalahan yang dihadapi dan kebutuhan pengguna yang telah diuraikan pada bab-bab sebelumnya, penelitian ini mengajukan solusi terintegrasi berupa \textit{Business Intelligence Chatbot System} berbasis teknologi pembelajaran mendalam (\textit{deep learning}) yang menggabungkan tiga komponen utama, yaitu mekanisme pencocokan pola (\textit{pattern-based intent classification}) untuk pemahaman maksud pengguna, mesin kueri berbasis aturan (\textit{rule-based query engine}) untuk pengambilan data terstruktur, serta model peramalan deret waktu (\textit{time series forecasting}) untuk analisis prediktif. Solusi yang diajukan dirancang dengan visi untuk menghilangkan hambatan aksesibilitas data analitik bagi pengguna nonteknis melalui antarmuka percakapan yang intuitif dan responsif dalam bahasa alami, sekaligus meningkatkan kecepatan pengambilan keputusan melalui otomatisasi proses analisis dan pelaporan. Sistem ini mengintegrasikan kemampuan deskriptif, diagnostik, dan prediktif dalam satu \textit{platform} terpadu yang memanfaatkan infrastruktur \textit{Enterprise Data Warehouse} yang telah ada sehingga meminimalkan disrupsi terhadap operasional bisnis yang sedang berjalan dan mengurangi kebutuhan perubahan drastis pada lanskap teknologi eksisting.
 
-\section{Rencana Implementasi}
-\label{sec:rencana-implementasi}
+Transformasi dari kondisi \textit{status quo} menuju solusi yang diusulkan melibatkan perubahan yang bersifat fundamental pada tiga aspek utama, yaitu arsitektur sistem yang bergeser dari pelaporan manual dan \textit{dashboard} statis menuju sistem otomatis berbasis percakapan dengan kemampuan pemrosesan mendekati \textit{real-time}, kemampuan analitik yang berkembang dari analisis retrospektif menjadi analisis prediktif yang bersifat proaktif, serta pengalaman pengguna yang beralih dari ketergantungan pada pengguna teknis yang memahami SQL menjadi kemudahan akses bagi pengguna bisnis umum melalui interaksi berbasis bahasa alami. Dengan demikian, sistem diharapkan mampu menjembatani kesenjangan antara kebutuhan pengambilan keputusan yang cepat dan kompleksitas teknis yang selama ini menjadi penghalang utama dalam pemanfaatan penuh kapabilitas data dan analitik di lingkungan organisasi.
 
-Dalam perencanaan implementasi sistem \textit{Business Intelligence Chatbot} yang mengintegrasikan komponen \textit{rule-based query}, \textit{template-based Natural Language Generation}, dan \textit{time series forecasting}, telah disusun daftar perangkat lunak, \textit{framework}, dan pustaka yang diperlukan untuk mendukung proses pengembangan. Selain itu, dirancang pula linimasa pelaksanaan tugas akhir yang menggambarkan rencana pengerjaan tiap tahap berdasarkan metodologi CRISP-DM (\textit{Cross-Industry Standard Process for Data Mining}).
+Sistem analitik yang ada saat ini (\textit{as-is}) masih mengikuti pola operasional tradisional yang berfokus pada pelaporan manual dan eksplorasi data yang terbatas. Proses dimulai dari identifikasi kebutuhan analitik oleh pengguna bisnis, dilanjutkan dengan penerjemahan kebutuhan tersebut menjadi kueri basis data oleh analis atau tim teknis, eksekusi kueri terhadap \textit{Enterprise Data Warehouse}, pemrosesan dan transformasi data untuk memenuhi standar kualitas serta format analisis, kemudian diakhiri dengan penyajian hasil dalam bentuk laporan atau visualisasi \textit{dashboard}. Keterbatasan utama dari pola \textit{as-is} ini mencakup waktu respons yang lama akibat proses multi-tahap dengan \textit{multiple touchpoint} antardepartemen sebelum \textit{insight} dapat dihasilkan, tingkat aksesibilitas yang rendah karena hanya pengguna dengan keahlian teknis yang mampu melakukan analisis secara mandiri, ketiadaan kemampuan prediktif karena sistem berfokus pada analisis historis tanpa dukungan \textit{forecasting} untuk pengambilan keputusan proaktif, serta efisiensi operasional yang rendah karena tim teknis harus mengalokasikan waktu signifikan untuk mengonversi permintaan analitik menjadi \textit{query} teknis alih-alih berfokus pada aktivitas bernilai tambah yang lebih strategis.
+
+\section{Alur Proses Bisnis Sistem Analitik Saat Ini (\textit{As-Is})}
+\label{sec:asis}
+
+Proses bisnis sistem analitik saat ini direpresentasikan dalam notasi BPMN (\textit{Business Process Model and Notation}) yang menggambarkan interaksi antar aktor, keputusan-keputusan kritis, dan aliran data dalam organisasi. Proses dimulai dengan identifikasi kebutuhan analisis baru oleh pengguna bisnis, dilanjutkan dengan klarifikasi kebutuhan dan pengembangan \textit{query} oleh tim teknis, eksekusi \textit{query} pada \textit{data warehouse}, pemrosesan data hasil \textit{query}, pembangunan \textit{dashboard} atau laporan, \textit{review} dan validasi internal, iterasi perbaikan apabila diperlukan, serta diakhiri dengan publikasi hasil analisis kepada pengguna akhir. Di dalam alur tersebut terdapat beberapa titik keputusan (\textit{decision point}) yang bersifat kritis, antara lain: apakah permintaan dapat dipenuhi dengan \textit{dashboard existing} atau memerlukan \textit{custom query}, apakah data hasil \textit{query} sudah sesuai dengan ekspektasi pengguna atau memerlukan transformasi tambahan, serta apakah hasil analisis sudah valid untuk dipublikasikan atau masih memerlukan revisi. Proses \textit{as-is} ini bersifat iteratif dengan siklus umpan balik yang panjang dan kurang efisien dalam memenuhi kebutuhan analitik yang dinamis dan beragam dari pengguna bisnis. Diagram BPMN yang menggambarkan proses \textit{as-is} disajikan pada Gambar~\ref{fig:bpmnasis}.
+
+\begin{figure}[H] 
+  \centering
+  \includegraphics[width=1\textwidth,
+                   height=1\textheight,
+                   keepaspectratio]{images/bpmnasis}
+  \caption{BPMN Sistem \textit{As-Is}}
+  \label{fig:bpmnasis}
+\end{figure}
+
+Visualisasi proses \textit{as-is} menunjukkan kompleksitas dan iterasi yang terlibat dalam setiap siklus permintaan analitik. Pengguna bisnis harus menunggu beberapa tahap pemrosesan, \textit{review}, dan validasi sebelum hasil analisis dapat diakses. Aliran data bersifat linear dengan berbagai \textit{handoff} antar departemen sehingga menciptakan \textit{bottleneck} dan jeda yang signifikan. Pengalaman pengguna berpusat pada antarmuka \textit{dashboard} statis, tanpa kemampuan untuk melakukan eksplorasi data secara interaktif maupun berinteraksi melalui dialog percakapan yang natural.
+
+\section{Alur Proses Bisnis Sistem Analitik dengan Chatbot BI (\textit{To-Be})}
+\label{sec:tobe}
+
+Proses bisnis sistem analitik yang diusulkan (\textit{to-be}) merepresentasikan tingkat otomatisasi dan optimasi yang signifikan dibandingkan proses \textit{as-is}. Proses dimulai ketika pengguna mengajukan pertanyaan dalam bahasa alami kepada sistem \textit{chatbot}, yang kemudian dilanjutkan dengan proses \textit{login} ke sistem \textit{BI chatbot} untuk keperluan autentikasi dan otorisasi pengguna. Setelah autentikasi berhasil, sistem membangun halaman dialog \textit{chatbot} sebagai antarmuka utama interaksi antara pengguna dan sistem yang bersifat \textit{AI-powered}. Tahap pemrosesan dimulai dengan klasifikasi maksud berbasis pola untuk mengidentifikasi jenis pertanyaan yang diajukan, apakah bersifat deskriptif, diagnostik, atau prediktif. Berdasarkan jenis \textit{intent} tersebut, sistem melakukan perutean (\textit{routing}) ke modul yang sesuai, yaitu untuk analisis deskriptif dan diagnostik, sistem menggunakan \textit{rule-based query engine} untuk menghasilkan dan mengeksekusi kueri terstruktur terhadap \textit{data warehouse}; sedangkan untuk analisis prediktif, sistem mengakses model \textit{forecasting} yang telah dilatih untuk menghasilkan prediksi sesuai dengan rentang waktu (\textit{time horizon}) dan parameter yang relevan. Setelah hasil analisis diperoleh, sistem melakukan perhitungan KPI dan agregasi data, kemudian menerapkan \textit{natural language generation} berbasis templat (\textit{template-based NLG}) untuk mengonversi keluaran numerik menjadi narasi dalam bahasa alami yang koheren dan mudah dipahami. Respons yang telah diformat dalam Bahasa Indonesia kemudian ditampilkan kembali kepada pengguna melalui antarmuka \textit{chatbot}, dan pada tahap akhir pengguna dapat mengakses \textit{dashboard} untuk melakukan \textit{ad-hoc analysis} atau pelacakan KPI tambahan apabila diperlukan, atau proses diakhiri ketika analisis dinyatakan selesai.
+
+Keunggulan proses \textit{to-be} dibandingkan proses \textit{as-is} terletak pada beberapa aspek utama: \textbf{kecepatan eksekusi} yang jauh lebih tinggi (hitungan menit dibandingkan hari) berkat eksekusi kueri \textit{real-time}, \textbf{aksesibilitas yang lebih luas} karena tidak lagi memerlukan keahlian teknis SQL untuk mengakses \textit{insight}, \textbf{otomatisasi proses} yang mengurangi beban kerja manual tim teknis melalui pemanfaatan \textit{rule-based query} dan penanganan \textit{intent} otomatis, \textbf{kemampuan analitik yang diperluas} melalui integrasi komponen prediktif berbasis \textit{machine learning}, serta \textbf{pengalaman pengguna} yang lebih baik melalui antarmuka percakapan yang natural dan responsif. Secara keseluruhan, rancangan \textit{to-be} ini memungkinkan siklus permintaan hingga penyajian hasil analitik standar diselesaikan dalam waktu kurang dari satu menit untuk mayoritas kasus sehingga lebih selaras dengan kebutuhan pengambilan keputusan yang cepat dan berbasis data. Diagram BPMN yang menggambarkan proses \textit{to-be} disajikan pada Gambar~\ref{fig:bpmntobe}.
+
+\begin{figure}[H] 
+  \centering
+  \includegraphics[width=1\textwidth,
+                   height=1\textheight,
+                   keepaspectratio]{images/bpmntobe}
+  \caption{BPMN Sistem \textit{To-Be}}
+  \label{fig:bpmntobe}
+\end{figure}
+
+Visualisasi proses \textit{to-be} menunjukkan peningkatan yang signifikan dalam efisiensi dan responsivitas sistem. Pengguna dapat secara langsung mengajukan pertanyaan melalui antarmuka \textit{chatbot} tanpa perlu menunggu atau melibatkan tim teknis. Aliran data bersifat paralel dengan otomatisasi penuh pada tahap pemrosesan sehingga memungkinkan hasil analisis diterima dalam waktu yang sangat singkat. Pengalaman pengguna berpusat pada dialog percakapan yang interaktif, dengan kemampuan untuk melakukan eksplorasi data secara \textit{real-time} serta mengajukan kueri lanjutan (\textit{follow-up queries}) secara mulus.
+
+\section{Perbandingan Sistem Saat Ini (\textit{As-Is}) dan Sistem Baru (\textit{To-Be})}
+\label{sec:perbandingan-asis-tobe}
+
+Berdasarkan analisis proses bisnis yang telah diuraikan pada bagian sebelumnya, terdapat perbedaan fundamental antara sistem analitik saat ini (\textit{as-is}) dan sistem yang diusulkan (\textit{to-be}). Sistem \textit{as-is} mengandalkan pelaporan manual dengan keterlibatan tim teknis pada setiap tahap, sedangkan sistem \textit{to-be} mengotomatisasi sebagian besar proses melalui antarmuka percakapan berbasis \textit{chatbot}. Perbandingan kedua sistem berdasarkan aspek-aspek kritis disajikan pada Tabel~\ref{tab:perbandingan-asis-tobe}.
+
+\begin{longtable}{|p{2.5cm}|p{5.5cm}|p{5.5cm}|}
+\caption{Perbandingan Sistem \textit{As-Is} dan \textit{To-Be}} \label{tab:perbandingan-asis-tobe} \\
+\hline
+\textbf{Aspek} & \textbf{Sistem \textit{As-Is}} & \textbf{Sistem \textit{To-Be}} \\
+\hline
+\endfirsthead
+\multicolumn{3}{c}{\tablename\ \thetable\ -- \textit{Lanjutan dari halaman sebelumnya}} \\
+\hline
+\textbf{Aspek} & \textbf{Sistem \textit{As-Is}} & \textbf{Sistem \textit{To-Be}} \\
+\hline
+\endhead
+\hline \multicolumn{3}{r}{\textit{Bersambung ke halaman berikutnya}} \\
+\endfoot
+\hline
+\endlastfoot
+
+Waktu Respons & 2--5 hari untuk kueri kompleks & $<$2 menit untuk 95\% kueri \\
+\hline
+
+Antarmuka Pengguna & \textit{Dashboard} statis, laporan manual & Antarmuka percakapan (\textit{chatbot}) dalam Bahasa Indonesia \\
+\hline
+
+Ketergantungan Teknis & Memerlukan tim TI/analis data untuk setiap permintaan & Pengguna nonteknis dapat mengakses \textit{insight} secara mandiri \\
+\hline
+
+Aksesibilitas & Terbatas pada pengguna dengan keahlian SQL & Seluruh pengguna internal dapat mengakses melalui bahasa alami \\
+\hline
+
+Kemampuan Analitik & Deskriptif dan diagnostik (historis) & Deskriptif, diagnostik, dan prediktif (\textit{forecasting}) \\
+\hline
+
+Proses Pengambilan Data & Ekstraksi manual dari berbagai sistem, transformasi via \textit{spreadsheet} & Otomatis melalui \textit{rule-based query engine} \\
+\hline
+
+Kemampuan Prediktif & Tidak tersedia atau dilakukan manual secara periodik & Terintegrasi dengan model \textit{time series forecasting} (LSTM/GRU/Prophet/ARIMA) \\
+\hline
+
+Format Respons & Tabel, grafik, laporan tertulis & Narasi bahasa alami (\textit{template-based NLG}) dengan visualisasi pendukung \\
+\hline
+
+Siklus \textit{Feedback} & Iteratif dan panjang dengan banyak \textit{handoff} & \textit{Real-time} dengan kemampuan kueri lanjutan \\
+\hline
+
+Skalabilitas & Terbatas oleh kapasitas tim teknis & Skala horizontal melalui arsitektur layanan mikro \\
+\hline
+
+Ketersediaan & Jam kerja (bergantung pada tim teknis) & Diakses setiap saat (\textit{self-service}) \\
+\hline
+
+\end{longtable}
+
+
+\section{Rancangan Solusi Keseluruhan}
+\label{sec:rancangan-solusi}
+
+Rancangan solusi keseluruhan mengintegrasikan lima lapisan (\textit{layer}) arsitektur yang saling terhubung, yakni lapisan presentasi (\textit{presentation layer}), lapisan aplikasi (\textit{application layer}), lapisan logika bisnis (\textit{business logic layer}), lapisan data (\textit{data layer}), dan lapisan infrastruktur (\textit{infrastructure layer}). Integrasi kelima lapisan tersebut memastikan bahwa sistem memiliki tingkat fleksibilitas, skalabilitas, dan kemudahan pemeliharaan (\textit{maintainability}) yang tinggi untuk mendukung pertumbuhan bisnis serta evolusi kebutuhan analitik di masa depan.
+
+\subsection{Komponen-Komponen Utama Arsitektur}
+\label{subsec:komponen-arsitektur}
+
+Lapisan presentasi mencakup antarmuka pengguna yang dibangun dengan teknologi \textit{web} modern, dengan fokus pada antarmuka \textit{chatbot} berbasis \textit{web} yang mendukung interaksi waktu nyata (\textit{real-time}) dengan \textit{backend} sistem. Antarmuka ini diimplementasikan menggunakan kerangka kerja \textit{frontend} modern dengan pemanfaatan komunikasi asinkronus yang memungkinkan percakapan dua arah tanpa penundaan yang signifikan. Lapisan ini juga mencakup komponen untuk menampilkan visualisasi data, metrik interaktif, dan laporan yang terintegrasi dengan hasil analisis yang dihasilkan oleh \textit{backend}.
+
+Lapisan aplikasi mengenkapsulasi logika inti sistem yang terdiri atas beberapa modul utama. Modul \textit{Natural Language Understanding} (NLU) bertanggung jawab untuk melakukan penguraian (\textit{parsing}) dan pemahaman terhadap masukan pengguna dalam bahasa alami. Modul manajemen dialog mengelola status percakapan dan menjaga koherensi dalam dialog multigiliran (\textit{multi-turn}). Modul pembangkitan respons menghasilkan tanggapan yang sesuai berdasarkan hasil analisis yang diterima dari lapisan logika bisnis. Di sisi lain, lapisan logika bisnis mencakup implementasi aturan bisnis yang telah didefinisikan, mesin klasifikasi maksud, mesin kueri berbasis aturan, model \textit{machine learning} untuk peramalan, serta repositori templat untuk NLG. Lapisan ini merupakan jantung sistem yang mengonversi maksud pengguna menjadi aksi teknis yang konkret dan menghasilkan wawasan berbasis data.
+
+Lapisan data mencakup koneksi dan interaksi dengan \textit{Enterprise Data Warehouse} yang menyimpan data transaksional dan data utama, serta lapisan singgahan (\textit{cache}) untuk menyimpan hasil kueri yang sering diakses guna meningkatkan performa. Lapisan ini juga mencakup repositori untuk menyimpan model \textit{machine learning} yang telah dilatih, metadata mengenai sumber data, dan log audit untuk melacak seluruh interaksi pengguna dengan sistem. Lapisan infrastruktur mencakup komponen teknis yang mendukung operasional sistem secara keseluruhan, antara lain \textit{web server} untuk aplikasi \textit{chatbot}, infrastruktur API untuk penanganan permintaan, layanan pemantauan (\textit{monitoring}) dan pencatatan (\textit{logging}), serta komponen keamanan untuk autentikasi dan otorisasi pengguna.
+
+\subsection{Arsitektur Sistem dan Aliran Data}
+\label{subsec:arsitektur-aliran-data}
+
+Arsitektur sistem secara keseluruhan dirancang dengan pendekatan modular berbasis layanan, dengan setiap komponen fungsional (seperti layanan \textit{chatbot}, layanan kueri, layanan peramalan, dan layanan NLG) diimplementasikan secara terpisah. Komunikasi antarkomponen dilakukan melalui API REST untuk memastikan keterikatan yang longgar (\textit{loose coupling}) dan tingkat ketahanan (\textit{resilience}) yang memadai terhadap gangguan.
+
+Diagram arsitektur sistem yang lebih rinci disajikan pada Gambar~\ref{fig:arsitektur}, yang memperlihatkan integrasi kelima lapisan dan aliran data antarkomponen di dalam sistem. Arsitektur ini dirancang untuk mendukung:
+
+\begin{enumerate}
+    \item \textbf{Skalabilitas horizontal}, dengan setiap layanan dapat diduplikasi sesuai dengan kebutuhan kapasitas.
+    \item \textbf{Ketahanan (\textit{Resilience})} sehingga kegagalan pada satu layanan tidak secara langsung menyebabkan kegagalan sistem secara keseluruhan.
+    \item \textbf{Kemudahan Pemeliharaan} karena setiap modul dapat dikembangkan, diuji, dan di-\textit{deploy} secara independen.
+    \item \textbf{Interoperabilitas}, melalui kemampuan setiap layanan untuk berinteraksi menggunakan standar API.
+    \item \textbf{Keamanan}, dengan penerapan autentikasi berlapis dan enkripsi data.
+\end{enumerate}
+
+\begin{figure}[H] 
+  \centering
+  \includegraphics[width=1\textwidth,
+                   height=1\textheight,
+                   keepaspectratio]{images/arsitektur}
+  \caption{Diagram Arsitektur Sistem Baru Secara Keseluruhan}
+  \label{fig:arsitektur}
+\end{figure}
+
+Diagram arsitektur ini menggunakan sistem pewarnaan aliran untuk membedakan jenis interaksi yang terjadi antar komponen sehingga pembacaan terhadap alur kerja sistem menjadi lebih jelas. Aliran berwarna biru menggambarkan proses internal dan komunikasi tingkat layanan, yaitu interaksi antarmodul di dalam \textit{backend} seperti layanan autentikasi, modul klasifikasi maksud, manajemen dialog, mesin kueri berbasis aturan, serta layanan peramalan. Aliran berwarna oranye merepresentasikan proses pengambilan data dan eksekusi kueri analitik, khususnya komunikasi antara \textit{backend} dan \textit{Enterprise Data Warehouse} melalui sistem koneksi \textit{Oracle} untuk memperoleh data historis maupun metrik operasional yang relevan. Sementara itu, aliran berwarna ungu menunjukkan aliran data lintas lapisan dan propagasi hasil, yaitu bagaimana keluaran analitik dikembalikan ke lapisan logika bisnis untuk diproses lebih lanjut melalui mekanisme templating NLG. Aliran berwarna abu-abu menggambarkan operasi infrastruktur (seperti \textit{logging}, \textit{rate limiting}, pemantauan) yang dikelola oleh unit infrastruktur API guna menjaga keandalan sistem secara menyeluruh. Aliran berwarna merah digunakan untuk menandakan jalur penanganan kesalahan (\textit{error handling}). Melalui pemisahan aliran ini, diagram memberikan representasi yang lebih presisi mengenai bagaimana permintaan dari antarmuka diproses secara \textit{end-to-end}, mulai dari autentikasi, analisis \textit{intent}, eksekusi aturan, perhitungan prediktif, pengambilan data ke EDW, hingga penyusunan dan pengiriman kembali respons kepada pengguna.
+
+Sebagai catatan komprehensif terhadap diagram arsitektur sistem di atas, komponen \textit{Temporal Fusion Transformer} (TFT) dicantumkan pada desain layanan peramalan sebagai bentuk rancangan sistem prediktif yang holistik. Akan tetapi, implementasi secara teknis pada penelitian ini difokuskan secara eksklusif pada pemodelan LSTM dan GRU. Model TFT diposisikan sebagai landasan teoretis untuk pengembangan iterasi sistem di masa mendatang mengingat tingginya kompleksitas komputasi serta besarnya kebutuhan volume data latih yang dipersyaratkan oleh arsitektur tersebut.
+
+Dalam mencegah terjadinya latensi yang tinggi, aspek waktu respons ditetapkan sebagai salah satu metrik krusial dalam perancangan ini mengingat produk yang dikembangkan beroperasi pada level operasional dan harus mampu memberikan jawaban secara cepat terhadap permintaan analitik harian. Tantangan utama muncul dari karakteristik \textit{Enterprise Data Warehouse} yang menyimpan data dalam volume besar sehingga eksekusi kueri kompleks berpotensi menimbulkan penundaan. Dalam mengatasi hal tersebut, sistem menerapkan mekanisme optimasi, termasuk tembolok tingkat aturan (\textit{rule-level caching}) dengan pendekatan \textit{Time To Live} (TTL) yang memastikan hasil kueri disimpan sementara dan digunakan kembali tanpa perlu mengakses EDW setiap kali pengguna mengajukan permintaan yang sama. Kombinasi dari strategi ini memungkinkan penurunan latensi secara konsisten dan memastikan bahwa sistem tetap responsif dalam konteks penggunaan operasional.
+
+\section{Kebutuhan Perangkat dan Lingkungan Sistem}
+\label{sec:perangkat}
+
+Untuk memastikan bahwa arsitektur yang dirancang dapat diimplementasikan dan direproduksi, sistem memerlukan spesifikasi perangkat lunak dan perangkat keras tertentu yang berfungsi sebagai fondasi dari pengembangan sistem (\textit{environment setup}).
 
 \subsection{Perangkat Lunak dan Teknologi}
 \label{subsec:tools}
 
-Dalam melakukan implementasi sistem, dibutuhkan beberapa perangkat lunak dan teknologi yang mendukung proses pengembangan. Perangkat pada Tabel~\ref{tab:tools} memiliki fungsi dan peran yang berbeda dalam mengimplementasikan sistem \textit{Business Intelligence Chatbot}.
+Dalam melakukan implementasi dan pembangunan sistem yang nyata (tidak hanya sekadar rancangan), dibutuhkan beberapa perangkat lunak, pustaka pemrograman (\textit{libraries}), dan teknologi pendukung. Daftar teknologi pada Tabel~\ref{tab:tools} merincikan versi dan fungsi spesifik setiap perangkat dalam sistem \textit{Business Intelligence Chatbot}. Penjabaran ini memastikan bahwa seluruh proses, dari akuisisi data, pelatihan model, hingga rekayasa fitur, dapat ditelusuri dan direproduksi secara akurat.
 
 \input{tables/tabel-tools.tex}
 
 \subsection{Kebutuhan Sumber Daya Komputasi}
 \label{subsec:resources}
 
-Dalam mendukung proses pelatihan model \textit{deep learning} dan pengembangan sistem, diperlukan sumber daya komputasi yang memadai. Pelatihan model peramalan deret waktu berbasis LSTM dan GRU memerlukan akselerasi GPU\label{abbr:GPU} untuk mempercepat proses komputasi. Google Colaboratory menyediakan akses gratis ke GPU T4 NVIDIA dengan batasan akses per sesi sebesar 15GB memori GPU dan durasi eksekusi maksimal 12 jam per sesi.
+Dalam mendukung proses pelatihan model \textit{deep learning} dan pengujian arsitektur yang diusulkan, diperlukan sumber daya komputasi yang memadai. Pelatihan model peramalan deret waktu berbasis LSTM dan GRU memerlukan akselerasi GPU untuk mempercepat proses komputasi yang kompleks. Pengembangan sistem ini memanfaatkan Google Colaboratory yang menyediakan akses ke GPU NVIDIA T4 dengan kapasitas 15GB memori GPU. 
 
-Dalam kebutuhan pelatihan model yang lebih intensif atau eksperimen dengan \textit{hyperparameter tuning} yang ekstensif, dapat dipertimbangkan pembelian unit komputasi tambahan pada Google Colab Pro dengan estimasi biaya sekitar \$10 untuk 100 \textit{computing units}. Alternatif lain adalah penggunaan layanan \textit{cloud computing} seperti Google Cloud Platform, Amazon Web Services, atau Microsoft Azure dengan konfigurasi instans GPU sesuai kebutuhan.
-
-Dalam \textit{deployment} sistem produksi, diperlukan infrastruktur server dengan spesifikasi prosesor dengan minimal 4 \textit{cores}, memori RAM minimal 16GB, penyimpanan SSD minimal 100GB, dan koneksi jaringan yang stabil. Sistem dapat di-\textit{deploy} pada infrastruktur \textit{on-premise} perusahaan atau menggunakan layanan \textit{cloud} dengan pertimbangan keamanan dan privasi data internal.
-
-\subsection{Linimasa Pelaksanaan Tugas Akhir}
-\label{subsec:timeline}
-
-Dalam mencapai target penyelesaian tugas akhir, maka diperlukan suatu linimasa untuk memastikan seluruh bagian dari penelitian dilakukan. Terdapat dua tahap pengerjaan tugas akhir, yaitu tahap 1 pada Tabel~\ref{tab:timeline1} serta linimasa tahap 2 pada Tabel~\ref{tab:timeline2}.
-
-\begin{table}[h]
-\centering
-\caption{Linimasa Pelaksanaan Tugas Akhir Tahap 1 (September 2025 -- Januari 2026)}
-\label{tab:timeline1}
-\scriptsize
-\begin{tabular}{|p{3cm}|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline
-\multirow{2}{*}{\textbf{Kegiatan}} & \multicolumn{4}{c|}{\textbf{Sep}} & \multicolumn{4}{c|}{\textbf{Okt}} & \multicolumn{4}{c|}{\textbf{Nov}} & \multicolumn{4}{c|}{\textbf{Des}} & \multicolumn{4}{c|}{\textbf{Jan}} \\
-\cline{2-21}
-& 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 \\
-\hline
-Pembuatan Laporan TA I & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & \\
-\hline
-Investigasi dan Pengumpulan Fakta & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & & & & & & & & & & & & \\
-\hline
-\textit{Business Understanding} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & & & & & & & & & & & \\
-\hline
-Kajian Teori dan Studi Literatur & & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & & & & & & & & \\
-\hline
-Pembuatan BAB I & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & & & & & & & & & \\
-\hline
-Pembuatan BAB II & & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & & & & & & \\
-\hline
-Pembuatan BAB III & & & & & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & & & \\
-\hline
-Pembuatan BAB IV & & & & & & & & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & \\
-\hline
-Pembuatan BAB V & & & & & & & & & & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & \\
-\hline
-Finalisasi Laporan TA I & & & & & & & & & & & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & \\
-\hline
-Seminar Laporan TA I & & & & & & & & & & & & & & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & & \\
-\hline
-\end{tabular}
-\end{table}
-
-\begin{table}[h]
-\centering
-\caption{Linimasa Pelaksanaan Tugas Akhir Tahap 2 (Februari -- Juli 2026)}
-\label{tab:timeline2}
-\scriptsize
-\begin{tabular}{|p{1.5cm}|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline
-\multirow{2}{*}{\textbf{Kegiatan}} & \multicolumn{4}{c|}{\textbf{Feb}} & \multicolumn{4}{c|}{\textbf{Mar}} & \multicolumn{4}{c|}{\textbf{Apr}} & \multicolumn{4}{c|}{\textbf{Mei}} & \multicolumn{4}{c|}{\textbf{Jun}} & \multicolumn{4}{c|}{\textbf{Jul}} \\
-\cline{2-25}
-& 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 \\
-\hline
-Pembuatan Laporan TA II & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & \\
-\hline
-\textit{Data Understanding} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & & & & & & & & & & & & & & & & \\
-\hline
-\textit{Data Gathering} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & & & & & & & & & & & & & & & \\
-\hline
-\textit{Exploratory Data Analysis} & & & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & & & & & & & & & & & & & \\
-\hline
-\textit{Data Preparation} & & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & & & & & & & & & & & \\
-\hline
-Kajian dan Penentuan Model & & & & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & & & & & & & & & & \\
-\hline
-\textit{Modeling} & & & & & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & & & & & & \\
-\hline
-Implementasi Sistem & & & & & & & & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & & & & \\
-\hline
-\textit{Evaluation} & & & & & & & & & & & & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & & \\
-\hline
-Pembuatan BAB IV dan V & & & & & & & & & & & & & & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & & & \\
-\hline
-Finalisasi Laporan TA II & & & & & & & & & & & & & & & & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & \cellcolor{blue!30} & & & \\
-\hline
-Sidang Akhir & & & & & & & & & & & & & & & & & & & & & & \cellcolor{blue!30} & \cellcolor{blue!30} & \\
-\hline
-\end{tabular}
-\end{table}
-
+Untuk tahap implementasi dan peluncuran produk secara langsung (\textit{deployment}), infrastruktur peladen (\textit{server}) dirancang untuk memiliki spesifikasi minimal 4 inti prosesor (\textit{cores}), memori RAM sebesar 16GB, dan penyimpanan berbasis SSD minimal 100GB guna memastikan aliran data yang cepat tanpa \textit{bottleneck} pada sistem berkas. 
 
 \section{Desain Pengujian dan Evaluasi}
 \label{sec:evaluasi}
 
-Dalam memastikan bahwa sistem yang dikembangkan memenuhi kebutuhan fungsional dan nonfungsional yang telah ditetapkan, dirancang strategi pengujian dan evaluasi yang komprehensif. Evaluasi dilakukan terhadap setiap komponen utama sistem, yaitu modul klasifikasi maksud berbasis pola, modul pembangkitan bahasa alami berbasis templat, dan modul peramalan deret waktu. Selain itu, dilakukan pula evaluasi sistem secara keseluruhan melalui pengujian integrasi dan pengukuran kepuasan pengguna.
+Dalam memastikan bahwa sistem yang dikembangkan memenuhi spesifikasi dari desain arsitektur yang diajukan dan menguji keberhasilan implementasi, dirancang strategi pengujian dan evaluasi. Evaluasi ini mencakup penyelesaian bagian-bagian inti yang paling menantang dari sistem: modul klasifikasi maksud berbasis pola, pembangkitan bahasa alami (NLG), dan performa prediksi deret waktu.
 
 \subsection{Evaluasi Klasifikasi Maksud Berbasis Pola}
 \label{subsec:eval-intent}
@@ -151,185 +208,54 @@ dengan $K$ adalah jumlah kelas \textit{intent} dalam sistem.
 
 \paragraph{Analisis Nilai Keyakinan (\textit{Confidence Score})}
 
-Sistem menggunakan mekanisme pemberian nilai keyakinan dalam rentang 0 hingga 100 untuk setiap prediksi klasifikasi maksud. Nilai dihitung melalui fungsi \texttt{calculateConfidence} yang menjumlahkan bobot kata kunci primer dan pendukung yang cocok ($c = \min(100,\;\text{skor} \times 10)$). Ambang batas (\textit{threshold}) ditetapkan pada nilai 40 (setara 0{,}40 pada skala 0--1) dengan ketentuan sebagai berikut.
-
+Sistem menggunakan mekanisme pemberian nilai keyakinan dalam rentang 0 hingga 100 untuk setiap prediksi klasifikasi maksud. Nilai dihitung melalui fungsi penjumlah bobot kata kunci primer dan pendukung yang cocok ($c = \min(100,\;\text{skor} \times 10)$). Ambang batas (\textit{threshold}) ditetapkan pada nilai 40 dengan ketentuan:
 \begin{enumerate}
-    \item Jika nilai keyakinan $\geq$ 40: Prediksi dianggap valid dan sistem memberikan respons berdasarkan \textit{intent} yang teridentifikasi.
-    \item Jika nilai keyakinan $<$ 40: Prediksi dianggap tidak cukup yakin dan sistem meminta klarifikasi kepada pengguna atau menawarkan alternatif \textit{intent} yang mungkin (\textit{fallback mechanism}).
-\end{enumerate}
-
-\paragraph{Target Performa Pencocokan Aturan}
-
-Evaluasi klasifikasi difokuskan pada level pencocokan aturan (38 kelas), bukan pada level \textit{intent} (7+1 kategori). Hal ini karena taksonomi \textit{intent} dirancang bersifat saling eksklusif secara semantik dengan penanda leksikal yang tidak tumpang tindih, sehingga klasifikasi pada level tersebut bersifat deterministik dan tidak menghadirkan tantangan evaluasi yang bermakna. Tantangan sesungguhnya terletak pada pencocokan kueri ke aturan bisnis spesifik, di mana kata kunci lintas-domain dapat tumpang tindih. Berdasarkan studi literatur dan praktik terbaik industri, target performa yang ditetapkan adalah:
-
-\begin{enumerate}
-    \item Akurasi Pencocokan Aturan $\geq$ 0,85: Target akurasi minimal untuk sistem dapat diterima dalam produksi.
-    \item Skor-F1 Makro $\geq$ 0,85: Menjamin performa yang baik dan seimbang di seluruh 38 kelas aturan, termasuk kelas-kelas dengan sampel uji yang lebih sedikit.
-    \item \textit{Coverage Rate} $\geq$ 80\%: Persentase kueri yang mencapai \textit{threshold} keyakinan 40 dan memperoleh respons analitik.
-    \item Waktu Respons $<$ 100 milidetik: Dalam 95\% kueri agar memberikan pengalaman pengguna yang responsif.
+    \item Jika nilai keyakinan $\geq$ 40: Prediksi dianggap valid.
+    \item Jika nilai keyakinan $<$ 40: Sistem meminta klarifikasi (\textit{fallback mechanism}).
 \end{enumerate}
 
 \subsection{Evaluasi Pembangkitan Bahasa Alami Berbasis Templat}
 \label{subsec:eval-nlg}
 
-Modul \textit{Natural Language Generation} (NLG) berbasis templat dievaluasi dari dua aspek utama: akurasi faktual (\textit{factual accuracy}) dan kualitas bahasa (\textit{linguistic quality}). Evaluasi dilakukan dengan kombinasi metrik otomatis dan penilaian manusia untuk mendapatkan gambaran komprehensif mengenai kualitas keluaran sistem.
+Modul \textit{Natural Language Generation} (NLG) dievaluasi dari dua aspek: akurasi faktual dan evaluasi subjektif oleh pengguna internal.
 
-\paragraph{Metrik Evaluasi NLG Otomatis}
+\paragraph{Akurasi Faktual}
 
-Metrik otomatis yang digunakan untuk mengevaluasi kualitas respons NLG mencakup:
-
-\begin{enumerate}
-    \item \textbf{BLEU Score}: Mengukur kecocokan n-gram antara keluaran sistem dan teks rujukan. Formula dasar BLEU adalah:
-    \begin{equation}
-    \text{BLEU} = BP \cdot \exp\left(\sum_{n=1}^{N} w_n \log p_n\right)
-    \end{equation}
-    \eqcaption{BLEU \textit{Score}}
-    dengan $p_n$ adalah presisi n-gram, $w_n$ adalah bobot untuk setiap tingkat n-gram, dan $BP$ adalah faktor penalti panjang (\textit{brevity penalty}).
-    
-    \item \textbf{ROUGE Score}: Mengukur \textit{recall} kecocokan n-gram, khususnya ROUGE-L yang mengukur \textit{longest common subsequence} antara keluaran dan rujukan.
-    
-    \item \textbf{BERTScore}: Mengukur kesamaan semantik berbasis representasi vektor dari model BERT, lebih sensitif terhadap parafrase dan variasi leksikal.
-    
-    \item \textbf{Akurasi Faktual}: Persentase respons yang menyajikan data numerik dan informasi bisnis dengan benar sesuai hasil kueri. Target adalah 100\% akurasi faktual.
-\end{enumerate}
+Akurasi faktual dievaluasi dengan memverifikasi apakah seluruh nilai numerik dan informasi bisnis dalam respons NLG sesuai dengan hasil kueri dari basis data. Karena pendekatan NLG berbasis templat bersifat deterministik dan menyisipkan data langsung dari hasil kueri tanpa proses generatif, akurasi faktual dijamin secara arsitektural (Target: 100\%).
 
 \paragraph{Evaluasi Subjektif Berbasis Pengguna}
 
-Selain metrik otomatis, dilakukan penilaian subjektif oleh evaluator manusia dengan skala 1--5 untuk dimensi berikut.
-
+Kualitas keluaran NLG dinilai secara subjektif oleh pengguna internal perusahaan menggunakan kuesioner berskala Likert 1--5 pada empat dimensi utama:
 \begin{enumerate}
-    \item \textbf{Kelancaran (\textit{Fluency})}: Seberapa lancar dan alami teks respons dibaca.
-    \item \textbf{Kewajaran (\textit{Naturalness})}: Seberapa wajar respons jika dibandingkan dengan respons manusia.
-    \item \textbf{Kejelasan (\textit{Clarity})}: Seberapa mudah respons dipahami oleh pengguna.
-    \item \textbf{Kecukupan (\textit{Adequacy})}: Seberapa lengkap respons menjawab pertanyaan pengguna.
-\end{enumerate}
-
-\paragraph{Target Performa NLG}
-
-Target performa untuk modul NLG berbasis templat adalah:
-
-\begin{enumerate}
-    \item Akurasi Faktual: 100\% (tidak ada kesalahan penyajian data numerik).
-    \item BLEU Score $\geq$ 0,40 untuk respons yang memiliki templat rujukan.
-    \item Skor rata-rata penilaian subjektif $\geq$ 4,0 dari skala 5,0 untuk setiap dimensi evaluasi.
-    \item Variasi respons: Minimal 3 variasi templat untuk setiap jenis \textit{intent} untuk menghindari respons yang monoton.
+    \item \textbf{Ketepatan Respons}: Menilai apakah jawaban yang diberikan sistem sesuai dengan data aktual.
+    \item \textbf{Kejelasan Narasi}: Menilai apakah narasi, tabel, dan penjelasan yang dihasilkan sistem mudah dipahami.
+    \item \textbf{Relevansi Analisis}: Menilai apakah \textit{insight} atau analisis yang diberikan sistem relevan dengan konteks pertanyaan pengguna.
+    \item \textbf{Kemudahan Penggunaan}: Menilai apakah antarmuka dan alur interaksi sistem bersifat intuitif.
 \end{enumerate}
 
 \subsection{Evaluasi Peramalan Deret Waktu}
 \label{subsec:eval-forecasting}
 
-Modul peramalan deret waktu dievaluasi menggunakan protokol \textit{rolling-origin backtesting} pada beberapa horizon prediksi. Evaluasi mencakup dua kelompok model: (1) \textit{baseline} statistik berupa ARIMA/SARIMA dan Prophet, serta (2) model \textit{deep learning} utama berupa LSTM dan GRU. Perbandingan antara \textit{baseline} statistik dan model \textit{deep learning} merupakan komponen evaluasi yang kritis untuk memvalidasi justifikasi pemilihan model dalam penelitian ini.
-
-\paragraph{Metrik Evaluasi \textit{Forecasting}}
-
-Metrik evaluasi yang digunakan untuk mengukur performa model peramalan deret waktu mencakup:
+Model dievaluasi menggunakan protokol \textit{rolling-origin backtesting} untuk mencegah \textit{data leakage}. Evaluasi mencakup \textit{baseline} (ARIMA, Prophet) dan model utama (LSTM, GRU).
 
 \begin{enumerate}
-    \item \textbf{MAE (\textit{Mean Absolute Error})}: Rata-rata nilai absolut selisih antara prediksi dan nilai aktual.
-    \begin{equation}
-    \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|
-    \end{equation}
-    \eqcaption{MAE (\textit{Mean Absolute Error})}
-
-    \item \textbf{RMSE (\textit{Root Mean Squared Error})}: Akar kuadrat dari rata-rata kuadrat selisih, lebih sensitif terhadap kesalahan besar.
-    \begin{equation}
-    \text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
-    \end{equation}
-    \eqcaption{RMSE (\textit{Root Mean Squared Error})}
-
-    \item \textbf{sMAPE (\textit{Symmetric Mean Absolute Percentage Error})}: Persentase kesalahan simetris yang mengatasi masalah pembagian nol.
+    \item \textbf{MAE (\textit{Mean Absolute Error})}: Rata-rata nilai absolut selisih prediksi dan aktual.
+    \item \textbf{RMSE (\textit{Root Mean Squared Error})}: Akar kuadrat rata-rata kuadrat selisih.
+    \item \textbf{sMAPE (\textit{Symmetric Mean Absolute Percentage Error})}:
     \begin{equation}
     \text{sMAPE} = \frac{100\%}{n} \sum_{i=1}^{n} \frac{|y_i - \hat{y}_i|}{(|y_i| + |\hat{y}_i|)/2}
     \end{equation}
-    \eqcaption{sMAPE (\textit{Symmetric Mean Absolute Percentage Error})}
+    \eqcaption{sMAPE}
 
-    \item \textbf{MASE (\textit{Mean Absolute Scaled Error})}: Kesalahan yang diskalakan terhadap kesalahan \textit{naive forecast}, memungkinkan perbandingan antar-seri waktu.
+    \item \textbf{MASE (\textit{Mean Absolute Scaled Error})}:
     \begin{equation}
     \text{MASE} = \frac{\text{MAE}}{\frac{1}{n-1} \sum_{i=2}^{n} |y_i - y_{i-1}|}
     \end{equation}
-    \eqcaption{MASE (\textit{Mean Absolute Scaled Error})}
+    \eqcaption{MASE}
 \end{enumerate}
 
-\paragraph{\textit{Skill Score} terhadap Garis Dasar}
-
-Dalam mengukur peningkatan performa model terhadap garis dasar (\textit{seasonal naive}), dihitung \textit{skill score} dengan formula:
-
+Dalam mengukur peningkatan performa model terhadap garis dasar (\textit{seasonal naive}), dihitung \textit{skill score}:
 \begin{equation}
 \text{\textit{Skill Score}} = 1 - \frac{\text{MAE}_{\text{model}}}{\text{MAE}_{\text{baseline}}}
 \end{equation}
 \eqcaption{\textit{Skill Score}}
-
-Nilai \textit{skill score} positif menunjukkan bahwa model mengungguli garis dasar, dengan nilai mendekati 1 menunjukkan peningkatan yang signifikan.
-
-\paragraph{Validasi Silang Deret Waktu (\textit{Time Series Cross-Validation})}
-
-Evaluasi model menggunakan strategi validasi silang khusus deret waktu (\textit{expanding window} atau \textit{sliding window}) untuk memastikan bahwa evaluasi tidak menggunakan data masa depan (\textit{data leakage}). Proses validasi mencakup:
-
-\begin{enumerate}
-    \item Pembagian data menjadi \textit{training set} (minimal 70\%), \textit{validation set} (15\%), dan \textit{test set} (15\%).
-    \item Evaluasi pada beberapa horizon prediksi: 7 hari, 14 hari, 30 hari, dan 90 hari.
-    \item Pelaporan hasil per horizon dan per entitas prioritas (median dan rentang antar-kuartil).
-\end{enumerate}
-
-\paragraph{Target Performa \textit{Forecasting}}
-
-Target performa untuk model peramalan deret waktu adalah:
-
-\begin{enumerate}
-    \item MASE $<$ 1,0: Model harus mengungguli \textit{naive forecast}.
-    \item sMAPE $<$ 15\% untuk prediksi jangka pendek (7--14 hari).
-    \item sMAPE $<$ 25\% untuk prediksi jangka menengah (30--90 hari).
-    \item \textit{Skill Score} $>$ 0,20 terhadap garis dasar \textit{seasonal naive}.
-    \item Waktu inferensi $<$ 500 milidetik per permintaan prediksi.
-\end{enumerate}
-
-\subsection{Evaluasi Sistem Terintegrasi}
-\label{subsec:eval-system}
-
-Selain evaluasi per komponen, dilakukan pula evaluasi sistem secara keseluruhan melalui pengujian integrasi dan pengukuran performa \textit{end-to-end}.
-
-\paragraph{Pengujian Integrasi}
-
-Pengujian integrasi dilakukan untuk memverifikasi bahwa seluruh komponen sistem dapat bekerja sama dengan baik. Skenario pengujian mencakup:
-
-\begin{enumerate}
-    \item Pengujian alur lengkap dari input pengguna hingga respons akhir.
-    \item Pengujian skenario percakapan multi-\textit{turn}.
-    \item Pengujian mekanisme \textit{fallback} ketika klasifikasi maksud tidak yakin.
-    \item Pengujian integrasi dengan \textit{Enterprise Data Warehouse}.
-\end{enumerate}
-
-\paragraph{Pengujian Performa Sistem}
-
-Pengujian performa sistem mencakup:
-
-\begin{enumerate}
-    \item \textbf{Waktu Respons \textit{End-to-End}}: Target $<$ 2 detik untuk 95\% permintaan analitik standar dan $<$ 5 detik untuk permintaan peramalan.
-    \item \textbf{\textit{Throughput}}: Kemampuan sistem menangani minimal 50 permintaan konkuren.
-    \item \textbf{\textit{Load Testing}}: Pengujian beban untuk menilai skalabilitas sistem pada kondisi puncak.
-\end{enumerate}
-
-\paragraph{Evaluasi Kebergunaan (\textit{Usability})}
-
-Evaluasi kebergunaan dilakukan melalui validasi oleh pengguna internal perusahaan, dengan melibatkan tim \textit{Data Management} sebagai kelompok pengguna kunci yang memiliki pemahaman mendalam terhadap data operasional bisnis. Evaluasi mencakup:
-
-\begin{enumerate}
-    \item \textbf{System Usability Scale (SUS)}: Kuesioner standar 10 pertanyaan untuk mengukur persepsi kebergunaan sistem. Target skor SUS $\geq$ 70 (kategori ``baik'').
-    \item \textbf{Tingkat Penyelesaian Tugas (\textit{Task Completion Rate})}: Persentase pengguna yang berhasil menyelesaikan skenario tugas yang diberikan. Target $\geq$ 90\%.
-    \item \textbf{Umpan Balik Kualitatif}: Pengumpulan masukan terkait kemudahan penggunaan, kejelasan respons, dan saran perbaikan.
-\end{enumerate}
-
-\section{Analisis Risiko dan Mitigasi}
-\label{sec:risiko}
-
-Dalam memitigasi skenario dengan terdapat kondisi yang di luar ekspektasi awal, maka perlu dilakukan analisis risiko. Tabel~\ref{tab:risiko} menyajikan identifikasi risiko potensial beserta strategi mitigasi yang direncanakan.
-
-\input{tables/tabel-risiko.tex}
-
-
-
-
-% Ilustrasikan desain konsep solusi dalam bentuk model konseptual dan penjelasan secara ringkas, 
-% beserta perbedaannya dengan sistem saat ini. Ilustrasi harus dapat dibandingkan (\textit{before} and \textit{after}). 
-% Karena masih berupa proposal, bab ini hanya berisi gambar desain konsep solusi tersebut dan 
-% penjelasan perbandingannya dengan gambar sistem yang ada saat ini (yang tergambar di awal Bab \ref{chap:analisis-masalah}).

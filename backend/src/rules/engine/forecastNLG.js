@@ -18,20 +18,6 @@ const METRIC_CONFIG = {
     turun: 'Penurunan volume order perlu dikaji lebih lanjut, baik dari sisi faktor musiman, pergeseran kompetitor, maupun perubahan pola permintaan secara struktural.',
     tip: 'Pantau kesiapan kapasitas STO dan ketersediaan sumber daya manusia instalasi di setiap witel untuk mengantisipasi perubahan volume.',
   },
-  revenue_hsi: {
-    label: 'Revenue HSI',
-    subjek: 'pendapatan layanan High Speed Internet (HSI)',
-    naik: 'Pertumbuhan pendapatan ini menunjukkan tren positif yang perlu dipertahankan melalui program peningkatan nilai pelanggan (upsell) serta penguatan program retensi.',
-    turun: 'Penurunan pendapatan memerlukan evaluasi menyeluruh terhadap portofolio produk, kebijakan harga, serta tingkat penonaktifan layanan (churn) yang mungkin memengaruhi basis pelanggan aktif.',
-    tip: 'Korelasikan data ini dengan tren subscriber aktif dan tingkat fulfillment untuk memperoleh gambaran yang lebih komprehensif.',
-  },
-  recurring_revenue: {
-    label: 'Recurring Revenue HSI',
-    subjek: 'pendapatan berulang (recurring revenue) layanan HSI',
-    naik: 'Kenaikan pendapatan berulang mencerminkan kondisi basis pelanggan yang sehat dan stabil, yang merupakan fondasi keberlanjutan bisnis jangka panjang.',
-    turun: 'Penurunan pendapatan berulang berpotensi disebabkan oleh peningkatan churn pelanggan existing. Pemantauan tren CT0 secara berkala sangat disarankan.',
-    tip: 'Pendapatan berulang yang stabil merupakan indikator kualitas retensi pelanggan — prioritaskan program loyalitas untuk mempertahankan momentum ini.',
-  },
   churn_hsi: {
     label: 'Churn HSI',
     subjek: 'jumlah penonaktifan layanan (churn) HSI',
@@ -53,13 +39,6 @@ const METRIC_CONFIG = {
     naik: 'Pertumbuhan pelanggan aktif menunjukkan ekspansi bisnis yang sehat. Pastikan kualitas layanan tetap terjaga seiring dengan bertambahnya volume pelanggan.',
     turun: 'Penurunan pelanggan aktif mengindikasikan bahwa tingkat churn melampaui akuisisi pelanggan baru. Diperlukan strategi retensi dan akuisisi yang lebih agresif.',
     tip: 'Pertumbuhan bersih pelanggan merupakan selisih antara order baru yang terfulfill dan jumlah churn. Pantau kedua sisi secara bersamaan untuk gambaran yang utuh.',
-  },
-  fulfillment_rate: {
-    label: 'Fulfillment Rate HSI',
-    subjek: 'tingkat keberhasilan fulfillment order HSI',
-    naik: 'Peningkatan fulfillment rate mencerminkan perbaikan kinerja operasional yang nyata dan terukur.',
-    turun: 'Penurunan fulfillment rate mengindikasikan adanya hambatan operasional di lapangan. Identifikasi STO atau witel yang mengalami kendala untuk tindakan korektif yang tepat sasaran.',
-    tip: 'Tingkat fulfillment di bawah 85% umumnya menjadi sinyal adanya kelebihan beban kapasitas di lapangan yang perlu segera ditangani.',
   },
   avg_install_days: {
     label: 'Rata-rata Hari Instalasi HSI',

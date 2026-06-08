@@ -32,21 +32,28 @@ module.exports = {
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 80 + (primaryMatches * 10) + (supportingMatches * 2);
       } else if (supportingMatches >= 3) {
         score = 65 + (supportingMatches * 4);
       }
-      
+
+      // Penalti jika kueri mengandung konteks target/realisasi → serahkan ke target_004
+      const hasTargetCtx = lowerInput.includes('target') || lowerInput.includes('realisasi') ||
+        lowerInput.includes('pencapaian') || lowerInput.includes('achievement');
+      if (hasTargetCtx && !lowerInput.includes('revenue') && !lowerInput.includes('pendapatan')) {
+        score = Math.max(0, score - 25);
+      }
+
       return Math.min(score, 100);
     }
   },

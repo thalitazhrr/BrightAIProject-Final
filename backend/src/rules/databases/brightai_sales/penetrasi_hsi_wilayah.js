@@ -752,7 +752,7 @@ module.exports = {
       }, {});
     },
 
-    formatResponIndonesia: function(data) {
+    formatIndonesianResponse: function(data) {
       const hasil = data.map(area => {
         const peluang = this.penilaianPeluangPasar(
           area.penetrasi_hsi_order,

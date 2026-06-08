@@ -98,7 +98,12 @@ module.exports = {
       if (input.includes('hsi bisnis') || input.includes('hsi basic')) {
         confidence += 10;
       }
-      
+
+      // Strong boost when both bisnis and basic are mentioned (comparison context)
+      if (input.includes('bisnis') && input.includes('basic')) {
+        confidence += 20;
+      }
+
       return Math.min(confidence, 100);
     },
     

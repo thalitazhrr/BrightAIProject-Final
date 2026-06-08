@@ -24,8 +24,8 @@ module.exports = {
       'adopsi digital', 'digital adoption', 'layanan digital',
       
       // Specific products familiar
-      'oca interaction', 'oca blast', 'pijar sekolah', 'netmonk',
-      'bundling digital', 'cross selling digital', 'attachment digital'
+      'oca interaction', 'oca blast', 'pijar sekolah', 'pijar', 'netmonk',
+      'produk digital', 'bundling digital', 'cross selling digital', 'attachment digital'
     ],
     
     supporting: [

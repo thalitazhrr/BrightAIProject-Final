@@ -411,25 +411,24 @@
 \babel@toc {indonesian}{}\relax 
 \contentsline {figure}{\numberline {III.1}{\ignorespaces Detail \textit {Rule-Based} yang Telah Ada}}{93}{figure.caption.24}%
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {IV.1}{\ignorespaces BPMN Sistem \textit {As-Is}}}{111}{figure.caption.45}%
+\contentsline {figure}{\numberline {IV.2}{\ignorespaces BPMN Sistem \textit {To-Be}}}{113}{figure.caption.46}%
+\contentsline {figure}{\numberline {IV.3}{\ignorespaces Diagram Arsitektur Sistem Baru Secara Keseluruhan}}{116}{figure.caption.47}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {V.1}{\ignorespaces Halaman Masuk (\textit {Login}) Sistem BrightAI}}{149}{figure.caption.61}%
-\contentsline {figure}{\numberline {V.2}{\ignorespaces Halaman Registrasi Pengguna Baru}}{150}{figure.caption.62}%
-\contentsline {figure}{\numberline {V.3}{\ignorespaces Halaman Utama \textit {Chatbot} BrightAI}}{150}{figure.caption.63}%
-\contentsline {figure}{\numberline {V.4}{\ignorespaces Halaman Profil Pengguna}}{151}{figure.caption.64}%
-\contentsline {figure}{\numberline {V.5}{\ignorespaces Halaman Pengaturan Sistem}}{151}{figure.caption.65}%
-\contentsline {figure}{\numberline {V.6}{\ignorespaces Tampilan Antarmuka \textit {Chatbot} dalam Tema Terang (\textit {Light Mode})}}{152}{figure.caption.66}%
-\contentsline {figure}{\numberline {V.7}{\ignorespaces Contoh Respons \textit {Rule-Based Query} dengan Narasi NLG dan Tabel Data}}{153}{figure.caption.67}%
-\contentsline {figure}{\numberline {V.8}{\ignorespaces Contoh Hasil Peramalan Deret Waktu melalui Panel \textit {Forecast}}}{153}{figure.caption.68}%
-\addvspace {10\p@ }
-\babel@toc {english}{}\relax 
-\babel@toc {indonesian}{}\relax 
-\babel@toc {english}{}\relax 
-\babel@toc {indonesian}{}\relax 
+\contentsline {figure}{\numberline {V.1}{\ignorespaces Halaman Masuk (\textit {Login}) Sistem BrightAI}}{151}{figure.caption.62}%
+\contentsline {figure}{\numberline {V.2}{\ignorespaces Halaman Registrasi Pengguna Baru}}{152}{figure.caption.63}%
+\contentsline {figure}{\numberline {V.3}{\ignorespaces Halaman Utama \textit {Chatbot} BrightAI}}{152}{figure.caption.64}%
+\contentsline {figure}{\numberline {V.4}{\ignorespaces Halaman Profil Pengguna}}{153}{figure.caption.65}%
+\contentsline {figure}{\numberline {V.5}{\ignorespaces Halaman Pengaturan Sistem}}{153}{figure.caption.66}%
+\contentsline {figure}{\numberline {V.6}{\ignorespaces Tampilan Antarmuka \textit {Chatbot} dalam Tema Terang (\textit {Light Mode})}}{154}{figure.caption.67}%
+\contentsline {figure}{\numberline {V.7}{\ignorespaces Contoh Respons \textit {Rule-Based Query} dengan Narasi NLG dan Tabel Data}}{155}{figure.caption.68}%
+\contentsline {figure}{\numberline {V.8}{\ignorespaces Contoh Hasil Peramalan Deret Waktu melalui Panel \textit {Forecast}}}{155}{figure.caption.69}%
 \addvspace {10\p@ }
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
+\addvspace {10\p@ }
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
@@ -602,3 +601,12 @@
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\babel@toc {english}{}\relax 
+\babel@toc {indonesian}{}\relax 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {B.1}{\ignorespaces Tangkapan Layar Formulir Pertanyaan Evaluasi Sistem BrightAI}}{204}{figure.caption.86}%
+\contentsline {figure}{\numberline {B.2}{\ignorespaces Tangkapan Layar Hasil Jawaban Evaluasi Internal (\textit {Officer Data Management})}}{204}{figure.caption.87}%
+\addvspace {10\p@ }

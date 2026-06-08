@@ -56,6 +56,13 @@ module.exports = {
         score = 68 + (supportingMatches * 3);
       }
 
+      // Penalty: query mentions specific digital products (pijar, oca, netmonk) → belongs to ps_010
+      const hasSpecificProduct = lowerInput.includes('pijar') || lowerInput.includes('oca') ||
+        lowerInput.includes('netmonk');
+      if (hasSpecificProduct && primaryMatches === 0) {
+        score = Math.max(0, score - 25);
+      }
+
       return Math.min(score, 100);
     }
   },

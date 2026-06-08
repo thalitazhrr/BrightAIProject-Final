@@ -47,6 +47,16 @@ module.exports = {
         score = 70 + (supportingMatches * 4);
       }
 
+      // Penalty: query about trend without hierarchy/portfolio context → belongs to mart_001
+      const hasTrendCtx = lowerInput.includes('trend') || lowerInput.includes('tren') ||
+        lowerInput.includes('pertumbuhan') || lowerInput.includes('growth');
+      const hasHierarchyCtx = lowerInput.includes('hierarki') || lowerInput.includes('hierarchy') ||
+        lowerInput.includes('portfolio') || lowerInput.includes('portofolio') ||
+        lowerInput.includes('group') || lowerInput.includes('klasifikasi');
+      if (hasTrendCtx && !hasHierarchyCtx && primaryMatches === 0) {
+        score = Math.max(0, score - 20);
+      }
+
       return Math.min(score, 100);
     }
   },

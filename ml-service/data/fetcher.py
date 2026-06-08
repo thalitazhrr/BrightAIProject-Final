@@ -531,12 +531,9 @@ def fetch_avg_install_days(
 # ── Registry fungsi fetch ─────────────────────────────────────────────────────
 FETCH_REGISTRY = {
     "order_hsi":         fetch_order_hsi,
-    "revenue_hsi":       fetch_revenue_hsi,
     "churn_hsi":         fetch_churn_hsi,
     "realisasi_hsi":     fetch_realisasi_hsi,
     "subscriber_hsi":    fetch_subscriber_hsi,
-    "fulfillment_rate":  fetch_fulfillment_rate,
-    "recurring_revenue": fetch_recurring_revenue,
     "avg_install_days":  fetch_avg_install_days,
 }
 
@@ -560,11 +557,8 @@ def aggregate_national(df: pd.DataFrame) -> pd.DataFrame:
 # Mapping metric → (table, witel_col, regional_col, regional_format)
 _WITEL_SOURCE = {
     "order_hsi":         (config.SCHEMA_SALES,   "WITEL",      "REGIONAL",      "numeric"),
-    "fulfillment_rate":  (config.SCHEMA_SALES,   "WITEL",      "REGIONAL",      "numeric"),
     "avg_install_days":  (config.SCHEMA_SALES,   "WITEL",      "REGIONAL",      "numeric"),
     "churn_hsi":         (config.SCHEMA_CHURN,   "WITEL",      "REGIONAL",      "numeric"),
-    "revenue_hsi":       (config.SCHEMA_REVENUE, "WITEL_BILL", "REGIONAL_BILL", "reg"),
-    "recurring_revenue": (config.SCHEMA_REVENUE, "WITEL_BILL", "REGIONAL_BILL", "reg"),
     "realisasi_hsi":     (config.SCHEMA_TARGET,  "WITEL",      "TREG",          "reg"),
     "subscriber_hsi":    (config.SCHEMA_DAPROS,  "WITEL",      "REGIONAL",      "reg"),
 }

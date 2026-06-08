@@ -1,10 +1,82 @@
 % \cleardoublepage
-% \chapter{KODE PROGRAM}
-% Pada umumnya, kode program tidak perlu disertakan di dalam laporan tugas akhir karena kode program biasanya sangat panjang
-% dan sudah disimpan dalam bentuk berkas-berkas elektronik terpisah di repositori daring. 
-% Namun, jika ada bagian kode program singkat yang penting untuk ditulis dalam laporan tugas akhir, 
-% bagian tersebut dapat disertakan di dalam laporan.
-% \section{Perangkat Lunak untuk Akuisisi Data dari Sensor Ultrasonik}
-% \lstinputlisting[language=Python, caption=Binary search code]{listings/binary-search-python.tex}  
-% \section{Perangkat Lunak untuk Pengolahan Data Akuisisi dan Visualisasi Hasil Pengukuran Jarak} 
-% asdjfkjashdkjfas
+\chapter{HASIL WAWANCARA}
+
+Wawancara terstruktur dilakukan untuk menggali kebutuhan fungsional dan nonfungsional sistem \textit{Business Intelligence} berbasis \textit{chatbot}. Wawancara melibatkan dua narasumber dari PT Telkom Indonesia yang merepresentasikan perspektif manajemen dan teknis.
+
+\section*{Narasumber 1: Bapak Purwanto}
+\textit{Manager Regional Data Management}
+
+\begin{longtable}{|p{4.5cm}|p{7.5cm}|}
+\caption{Hasil Wawancara dengan Bapak Purwanto} \\
+\hline
+\textbf{Pertanyaan} & \textbf{Jawaban} \\
+\hline
+\endfirsthead
+\multicolumn{2}{c}{\tablename\ \thetable\ -- \textit{Lanjutan dari halaman sebelumnya}} \\
+\hline
+\textbf{Pertanyaan} & \textbf{Jawaban} \\
+\hline
+\endhead
+\hline \multicolumn{2}{r}{\textit{Bersambung ke halaman berikutnya}} \\
+\endfoot
+\hline
+\endlastfoot
+
+Bagaimana kondisi sistem analitik saat ini? & Saat ini kami masih mengandalkan dasbor statis dan pelaporan manual. Setiap permintaan analisis khusus harus diproses oleh tim TI atau analis data. Proses ekstraksi data dari berbagai sistem (CRM, billing, order management) memakan waktu 2--5 hari untuk kueri kompleks. \\
+\hline
+
+Apa tantangan utama yang dihadapi? & Tantangan utama adalah ketergantungan pada tim teknis yang terbatas. Hanya sekitar 10--15 dari 200 lebih pengguna internal yang memiliki kemampuan SQL. Selain itu, belum ada fitur prediktif yang mudah diakses, peramalan masih dilakukan manual dengan hasil berupa laporan bulanan, bukan real-time. \\
+\hline
+
+Fitur apa yang diharapkan dari sistem baru? & Kami membutuhkan sistem yang dapat merespons pertanyaan bisnis dalam hitungan menit melalui antarmuka percakapan Bahasa Indonesia. Fitur utama yang diharapkan: query on-demand, peramalan prediktif otomatis, dan respons naratif yang mudah dipahami pengguna nonteknis. \\
+\hline
+
+Bagaimana dengan aspek keamanan data? & Keamanan adalah prioritas. Sistem harus memiliki enkripsi, kontrol akses berbasis peran, dan audit trail lengkap. Data sensitif pelanggan tidak boleh ditampilkan langsung dalam respons chatbot. \\
+\hline
+
+Apa target keberhasilan sistem? & Target utama: 70\% pengguna internal mengadopsi sistem dalam 6 bulan, waktu respons berkurang dari 2--5 hari menjadi kurang dari 2 menit, dan skor kepuasan pengguna (SUS) minimal 70. \\
+\hline
+
+\end{longtable}
+
+\section*{Narasumber 2: Mas Renno Rifaldo}
+\textit{Officer Regional Data Mining and Processing}
+
+\begin{longtable}{|p{4.5cm}|p{7.5cm}|}
+\caption{Hasil Wawancara dengan Mas Renno Rifaldo} \\
+\hline
+\textbf{Pertanyaan} & \textbf{Jawaban} \\
+\hline
+\endfirsthead
+\multicolumn{2}{c}{\tablename\ \thetable\ -- \textit{Lanjutan dari halaman sebelumnya}} \\
+\hline
+\textbf{Pertanyaan} & \textbf{Jawaban} \\
+\hline
+\endhead
+\hline \multicolumn{2}{r}{\textit{Bersambung ke halaman berikutnya}} \\
+\endfoot
+\hline
+\endlastfoot
+
+Apa kendala teknis integrasi data saat ini? & Kami memiliki sistem database yang terpadu pada Oracle dan beberapa sistem legacy. Kualitas data antar-sistem tidak konsisten, dan data warehouse hanya di-update sekali sehari (batch malam). \\
+\hline
+
+Data apa saja yang tersedia untuk analisis? & Data historis pelanggan tersedia minimal 1 tahun, mencakup informasi pesanan (order), target penjualan, tingkat churn, dan pendapatan. Data disimpan di Oracle Data Warehouse. \\
+\hline
+
+Pendekatan teknis apa yang direkomendasikan? & Kami merekomendasikan pendekatan yang aman untuk data, cepat, akurat, dan tidak membosankan dalam penyajian data pada percakapan AI. Backend menggunakan FastAPI dengan target response time di bawah 2 detik. \\
+\hline
+
+Apa batasan teknis yang perlu diperhatikan? & Sistem harus dapat menangani latency dan throughput yang memadai. Perlu caching strategy untuk kueri yang sering diakses. Arsitektur harus scalable untuk mengakomodasi pertumbuhan pengguna dan volume data. \\
+\hline
+
+Bagaimana rencana infrastruktur? & Gunakan Tools bebas untuk deployment. Oracle Database tetap sebagai single source of truth dengan tambahan Redis untuk caching. \\
+\hline
+
+\end{longtable}
+
+\section*{Kesimpulan}
+
+Berdasarkan wawancara dengan kedua narasumber, teridentifikasi bahwa kondisi sistem saat ini masih mengandalkan pelaporan manual dan dasbor statis dengan waktu respons 2--5 hari untuk kueri kompleks. Tantangan utama mencakup ketergantungan pada tim teknis terbatas, fragmentasi sistem data, dan ketiadaan fitur prediktif yang mudah diakses.
+
+Kedua narasumber mengkonfirmasi kebutuhan akan sistem Business Intelligence berbasis chatbot yang dapat mempercepat akses insight, mendukung antarmuka bahasa alami dalam Bahasa Indonesia, dan menyediakan kemampuan peramalan prediktif. Data historis pelanggan (pesanan, target, churn, pendapatan) tersedia minimal 1 tahun di Oracle Data Warehouse sebagai basis pengembangan sistem.

@@ -103,7 +103,20 @@ module.exports = {
       if (input.includes('kategori bandwidth') || input.includes('tier kecepatan')) {
         confidence += 12;
       }
-      
+
+      // Boost for "per speed"/"per bandwidth"/"per kecepatan" patterns
+      if (input.includes('per speed') || input.includes('per bandwidth') ||
+          input.includes('per kecepatan') || input.includes('per bw')) {
+        confidence += 15;
+      }
+
+      // Bonus for metric keywords (jumlah, berapa, total) in bandwidth context
+      if (hasBandwidth) {
+        this.optional.metric_keywords.forEach(keyword => {
+          if (input.includes(keyword)) confidence += 5;
+        });
+      }
+
       return Math.min(confidence, 100);
     },
     

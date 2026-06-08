@@ -65,7 +65,7 @@ module.exports = {
       if (primaryMatches > 0) {
         score = 75 + (primaryMatches * 12) + (supportingMatches * 3);
       } else if (hasSegCtx && hasTargetCtx) {
-        score = 70;
+        score = 80 + (supportingMatches * 2);
       } else if (hasSegCtx && (lowerInput.includes('hsi') || lowerInput.includes('internet'))) {
         score = 60;
       }

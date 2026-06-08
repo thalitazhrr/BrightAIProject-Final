@@ -54,6 +54,26 @@ module.exports = {
         score = 70 + (supportingMatches * 3);
       }
 
+      // Penalty: query about order/pesanan → belongs to ps_002, not revenue regional
+      const hasOrderCtx = lowerInput.includes('order') || lowerInput.includes('pesanan') ||
+        lowerInput.includes('penjualan');
+      if (hasOrderCtx && !lowerInput.includes('revenue') && !lowerInput.includes('pendapatan')) {
+        score = Math.max(0, score - 25);
+      }
+
+      // Penalty: query about penetrasi → belongs to ps_004
+      if (lowerInput.includes('penetrasi') && !lowerInput.includes('revenue') &&
+          !lowerInput.includes('pendapatan')) {
+        score = Math.max(0, score - 25);
+      }
+
+      // Penalty: query about target/realisasi → belongs to target_003
+      const hasTargetCtx = lowerInput.includes('target') || lowerInput.includes('realisasi') ||
+        lowerInput.includes('pencapaian');
+      if (hasTargetCtx && !lowerInput.includes('revenue') && !lowerInput.includes('pendapatan')) {
+        score = Math.max(0, score - 25);
+      }
+
       return Math.min(score, 100);
     }
   },

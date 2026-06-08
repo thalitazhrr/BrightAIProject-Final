@@ -49,7 +49,27 @@ module.exports = {
       } else if (supportingMatches >= 3) {
         score = 70 + (supportingMatches * 3);
       }
-      
+
+      // Penalty: query about target/realisasi → bukan profil revenue dapros
+      const hasTargetCtx = lowerInput.includes('target') || lowerInput.includes('realisasi') ||
+        lowerInput.includes('pencapaian') || lowerInput.includes('achievement');
+      if (hasTargetCtx && !lowerInput.includes('revenue') && !lowerInput.includes('pendapatan') &&
+          !lowerInput.includes('arpu') && !lowerInput.includes('profil')) {
+        score = Math.max(0, score - 25);
+      }
+
+      // Penalty: query about order/pesanan → bukan profil revenue dapros
+      const hasOrderCtx = lowerInput.includes('order') || lowerInput.includes('pesanan');
+      if (hasOrderCtx && !lowerInput.includes('revenue') && !lowerInput.includes('pendapatan')) {
+        score = Math.max(0, score - 25);
+      }
+
+      // Penalty: query about penetrasi → bukan profil revenue dapros
+      if (lowerInput.includes('penetrasi') && !lowerInput.includes('revenue') &&
+          !lowerInput.includes('pendapatan') && !lowerInput.includes('profil')) {
+        score = Math.max(0, score - 25);
+      }
+
       return Math.min(score, 100);
     }
   },

@@ -1,0 +1,30 @@
+{
+  "evaluated_at": "2026-06-08T22:48:38.278873",
+  "total_test_cases": 12,
+  "successful": 0,
+  "failed": 12,
+  "failed_ids": [
+    "TC-001",
+    "TC-002",
+    "TC-003",
+    "TC-004",
+    "TC-005",
+    "TC-006",
+    "TC-007",
+    "TC-008",
+    "TC-009",
+    "TC-010",
+    "TC-011",
+    "TC-012"
+  ],
+  "avg_bleu_1": 0.0,
+  "avg_bleu_2": 0.0,
+  "avg_bleu_3": 0.0,
+  "avg_bleu_4": 0.0,
+  "avg_rouge_1": 0.0,
+  "avg_rouge_2": 0.0,
+  "avg_rouge_l": 0.0,
+  "avg_bertscore_p": 0.0,
+  "avg_bertscore_r": 0.0,
+  "avg_bertscore_f1": 0.0
+}

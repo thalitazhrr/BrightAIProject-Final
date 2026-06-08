@@ -6,11 +6,8 @@ import telkomApi from '../services/telkomApi';
 
 const METRICS = [
   { value: 'order_hsi',         label: 'Order HSI',         unit: 'order',     model: 'gru'  },
-  { value: 'revenue_hsi',       label: 'Revenue HSI',       unit: 'Rp',        model: 'lstm' },
   { value: 'churn_hsi',         label: 'Churn HSI',         unit: 'pelanggan', model: 'gru'  },
   { value: 'realisasi_hsi',     label: 'Realisasi HSI',     unit: 'SSL',       model: 'lstm' },
-  { value: 'fulfillment_rate',  label: 'Fulfillment Rate',  unit: '%',         model: 'gru'  },
-  { value: 'recurring_revenue', label: 'Recurring Revenue', unit: 'Rp',        model: 'lstm' },
   { value: 'avg_install_days',  label: 'Avg Install Days',  unit: 'hari',      model: 'gru'  },
 ];
 
@@ -62,14 +59,12 @@ function generateExplanation(result, metricMeta) {
     konteks = 'Perlu perhatian — kenaikan churn mengindikasikan risiko kehilangan pelanggan lebih tinggi bulan depan.';
   else if (result.metric === 'churn_hsi' && !isUp)
     konteks = 'Positif — penurunan churn menunjukkan retensi pelanggan membaik.';
-  else if ((result.metric === 'order_hsi' || result.metric === 'revenue_hsi') && isUp)
+  else if (result.metric === 'order_hsi' && isUp)
     konteks = 'Tren positif — pertumbuhan yang perlu dipertahankan dengan kesiapan operasional.';
-  else if ((result.metric === 'order_hsi' || result.metric === 'revenue_hsi') && !isUp)
+  else if (result.metric === 'order_hsi' && !isUp)
     konteks = 'Perlu investigasi — penurunan perlu dikaji apakah disebabkan faktor musiman atau penurunan struktural.';
   else if (result.metric === 'avg_install_days' && isUp)
     konteks = 'Perlu perhatian — waktu instalasi diprediksi lebih lama, dapat berdampak pada kepuasan pelanggan.';
-  else if (result.metric === 'fulfillment_rate' && !isUp)
-    konteks = 'Waspada — penurunan fulfillment rate mengindikasikan potensi gangguan operasional.';
 
   return `**Analisis Prediksi ${label} — ${scope}**
 

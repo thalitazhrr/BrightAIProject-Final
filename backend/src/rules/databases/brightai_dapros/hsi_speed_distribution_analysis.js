@@ -33,21 +33,26 @@ module.exports = {
     calculateConfidence: function(input) {
       const lowerInput = input.toLowerCase();
       let score = 0;
-      
-      const primaryMatches = this.primary.filter(keyword => 
+
+      // Hard gate: must have speed/kecepatan/bandwidth context
+      const hasSpeedCtx = lowerInput.includes('speed') || lowerInput.includes('kecepatan') ||
+        lowerInput.includes('bandwidth') || lowerInput.includes('mbps');
+      if (!hasSpeedCtx) return 0;
+
+      const primaryMatches = this.primary.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
-      const supportingMatches = this.supporting.filter(keyword => 
+
+      const supportingMatches = this.supporting.filter(keyword =>
         lowerInput.includes(keyword.toLowerCase())
       ).length;
-      
+
       if (primaryMatches > 0) {
         score = 85 + (primaryMatches * 8) + (supportingMatches * 2);
       } else if (supportingMatches >= 3) {
         score = 68 + (supportingMatches * 4);
       }
-      
+
       return Math.min(score, 100);
     }
   },

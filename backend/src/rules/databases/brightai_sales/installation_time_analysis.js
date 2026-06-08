@@ -733,7 +733,7 @@ module.exports = {
       };
     },
     
-    formatResponIndonesia: function(data) {
+    formatIndonesianResponse: function(data) {
       const pola = this.analisisPolaPemakaianWaktu(data);
       
       const hasil_analisis = data.map(sto => {

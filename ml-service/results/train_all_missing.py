@@ -22,11 +22,8 @@ BASE = "http://localhost:8000/forecast"
 
 METRICS = [
     "order_hsi",
-    "revenue_hsi",
     "churn_hsi",
     "realisasi_hsi",
-    "fulfillment_rate",
-    "recurring_revenue",
     "avg_install_days",
 ]
 
@@ -35,11 +32,8 @@ REGIONALS = ["NASIONAL", "REG-1", "REG-2", "REG-3", "REG-4", "REG-5"]
 # Model utama per metric (sesuai rekomendasi TA)
 MAIN_MODELS = {
     "order_hsi":        ["gru", "lstm", "prophet", "arima"],
-    "revenue_hsi":      ["gru", "lstm", "prophet", "arima"],
     "churn_hsi":        ["gru", "lstm", "prophet", "arima"],
     "realisasi_hsi":    ["gru", "lstm", "prophet", "arima"],
-    "fulfillment_rate": ["gru", "lstm", "prophet", "arima"],
-    "recurring_revenue":["gru", "lstm", "prophet", "arima"],
     "avg_install_days": ["gru", "lstm", "prophet", "arima"],
 }
 

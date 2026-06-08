@@ -73,26 +73,61 @@ sys.path.insert(0, str(BACKEND_DIR))
 
 
 # ── NLG caller ────────────────────────────────────────────────────────────────
+_AUTH_TOKEN = None
+
+def _get_token() -> str:
+    """Login atau register untuk mendapat JWT token."""
+    global _AUTH_TOKEN
+    if _AUTH_TOKEN:
+        return _AUTH_TOKEN
+
+    import urllib.request, urllib.error
+
+    BASE = "http://localhost:3001/api/auth"
+    creds = {"email": "eval@brightai.com", "password": "EvalPass123"}
+
+    # Try login first
+    for endpoint in [f"{BASE}/login", f"{BASE}/register"]:
+        body = dict(creds)
+        if "register" in endpoint:
+            body.update({"username": "evaluser", "full_name": "Eval User"})
+        payload = json.dumps(body).encode()
+        try:
+            req = urllib.request.Request(endpoint, data=payload,
+                                        headers={"Content-Type": "application/json"}, method="POST")
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read())
+                if data.get("token"):
+                    _AUTH_TOKEN = data["token"]
+                    return _AUTH_TOKEN
+        except Exception:
+            continue
+    raise RuntimeError("Cannot obtain auth token")
+
+
 def call_nlg(query: str) -> str:
     """
-    Panggil NLG BrightAI via backend API atau langsung via modul.
-    Saat ini menggunakan HTTP call ke backend lokal.
-    Ganti BASE_URL jika port berbeda.
+    Panggil NLG BrightAI via backend API.
+    Endpoint: POST /api/chat/message  (requires JWT)
     """
     import urllib.request
     import urllib.error
 
     BASE_URL = "http://localhost:3001"
+    token    = _get_token()
     payload  = json.dumps({"message": query, "sessionId": "eval-session"}).encode()
 
     try:
         req = urllib.request.Request(
-            f"{BASE_URL}/chat/message",
+            f"{BASE_URL}/api/chat/message",
             data=payload,
-            headers={"Content-Type": "application/json"},
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {token}",
+            },
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=30) as resp:
+        with urllib.request.urlopen(req, timeout=60) as resp:
             data = json.loads(resp.read())
             return data.get("response", "")
     except urllib.error.URLError as e:
@@ -324,7 +359,6 @@ def _mock_generate(tc: dict) -> str:
     """
     templates = {
         "order_hsi":       "Data order HSI menunjukkan tren positif dengan pertumbuhan yang konsisten di beberapa periode terakhir.",
-        "revenue_hsi":     "Revenue HSI mengalami peningkatan signifikan yang didorong oleh pertumbuhan jumlah pelanggan aktif.",
         "churn_hsi":       "Tingkat churn pelanggan HSI bervariasi antar wilayah dan memerlukan perhatian pada daerah dengan churn tinggi.",
         "realisasi_hsi":   "Realisasi target HSI menunjukkan pencapaian yang bervariasi, dengan beberapa regional melampaui target.",
         "fulfillment_hsi": "Tingkat fulfillment order HSI mencerminkan efisiensi operasional dalam penyelesaian permintaan pelanggan.",

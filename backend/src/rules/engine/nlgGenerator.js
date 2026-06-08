@@ -161,7 +161,8 @@ function extractCtx(data, rule, recordCount, execTime, geoLabel = '') {
   if (sumEks && typeof sumEks === 'object') {
     // Nilai utama: rata-rata pencapaian target
     const rataCap = ambil(sumEks,
-      'rata_rata_pencapaian', 'rata_rata_achievement', 'rata_rata_pencapaian_pct');
+      'rata_rata_pencapaian', 'rata_rata_achievement', 'rata_rata_pencapaian_pct',
+      'rata_rata_competitive_strength');
     if (rataCap && ctx.mainValue === '-') {
       ctx.mainValue = String(rataCap).replace('%', '');
       ctx.mainUnit  = '%';
@@ -181,7 +182,7 @@ function extractCtx(data, rule, recordCount, execTime, geoLabel = '') {
     }
 
     // Distribusi kategori performa sebagai breakdown
-    const distKat = ambil(sumEks, 'distribusi_kategori');
+    const distKat = ambil(sumEks, 'distribusi_kategori', 'distribusi_posisi_kompetitif');
     if (distKat && typeof distKat === 'object' && !ctx.hasBreakdown) {
       const entri = Object.entries(distKat).filter(([, v]) => v > 0);
       if (entri.length > 0) {
@@ -274,6 +275,18 @@ function extractCtx(data, rule, recordCount, execTime, geoLabel = '') {
     }
   }
 
+  // Fallback: total_unit_dianalisis / total_periode_dianalisis / total_wilayah_analisis
+  // (ps_006 fulfillment, ps_012 growth trend, ps_004 penetrasi)
+  if (ctx.mainValue === '-') {
+    const totalUnit = ambil(data,
+      'total_unit_dianalisis', 'total_periode_dianalisis', 'total_wilayah_analisis');
+    if (totalUnit !== null && totalUnit !== undefined) {
+      ctx.mainValue = String(totalUnit);
+      ctx.mainLabel = 'Total Unit Dianalisis';
+      ctx.mainUnit  = 'unit';
+    }
+  }
+
   // ── Pertumbuhan ──────────────────────────────────────────────────────────────
   const tumbuh = ambil(data, 'analisis_pertumbuhan');
   if (tumbuh && typeof tumbuh === 'object') {
@@ -292,7 +305,8 @@ function extractCtx(data, rule, recordCount, execTime, geoLabel = '') {
 
   // ── Breakdown produk (prosa jika ≤ 4, tabel jika > 4) ───────────────────────
   const bdwn = ambil(data, 'breakdown_produk','breakdown_segmen','distribusi_produk',
-    'distribusi_segmen_utama','karakteristik_pasar','distribusi_bundle_layanan');
+    'distribusi_segmen_utama','karakteristik_pasar','distribusi_bundle_layanan',
+    'distribusi_performa');
   if (bdwn && typeof bdwn === 'object' && !Array.isArray(bdwn)) {
     const entri = Object.entries(bdwn);
     if (entri.length > 0) {
@@ -359,7 +373,8 @@ function extractCtx(data, rule, recordCount, execTime, geoLabel = '') {
   if (!ctx.hasPelanggan) {
     const total = ambil(data,
       'total_pelanggan_dianalisis', 'total_churn_dianalisis',
-      'total_sto_dianalisis', 'total_channel_aktif', 'total_kategori_bandwidth');
+      'total_sto_dianalisis', 'total_channel_aktif', 'total_kategori_bandwidth',
+      'total_unit_dianalisis', 'total_periode_dianalisis', 'total_wilayah_analisis');
     if (total !== null) {
       ctx.pelangganUnik = String(total);
       ctx.hasPelanggan  = true;
@@ -370,12 +385,15 @@ function extractCtx(data, rule, recordCount, execTime, geoLabel = '') {
   // Coba semua key insight yang digunakan di berbagai rule, urutan prioritas
   const wsKeys = [
     'wawasan_bisnis','insight','rekomendasi',               // ps_001, dapros_*
-    'insight_strategis',                                    // target_001
+    'insight_strategis','insights_strategis',               // target_001, ps_010
     'insight_bisnis',                                       // mart_* (revenue rules)
     'insight_geografis', 'insight_prediktif',               // target_003, target_004
     'insights_bundling',                                    // ps_002
     'insight_utama',                                        // ps_005/006/008/009, ct0_*
+    'wawasan_utama',                                        // ps_012
     'rekomendasi_strategis', 'rekomendasi_aksi',            // banyak rules
+    'rekomendasi_kompetitif',                               // target_005
+    'rekomendasi_prioritas',                                // ps_010
   ];
   for (const wsKey of wsKeys) {
     if (ctx.hasInsights) break;

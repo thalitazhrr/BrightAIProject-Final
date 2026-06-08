@@ -18,11 +18,8 @@ logger = logging.getLogger(__name__)
 
 MetricType = Literal[
     "order_hsi",
-    "revenue_hsi",
     "churn_hsi",
     "realisasi_hsi",
-    "fulfillment_rate",
-    "recurring_revenue",
     "avg_install_days",
 ]
 
@@ -477,33 +474,12 @@ def available_metrics():
                 "model":  "gru",
                 "unit":   "order",
             },
-            "fulfillment_rate": {
-                "desc":   "% order HSI yang berhasil dipasang per bulan",
-                "source": "BRIGHTAI_SALES",
-                "rules":  ["ps_006"],
-                "model":  "gru",
-                "unit":   "%",
-            },
             "avg_install_days": {
                 "desc":   "Rata-rata hari instalasi HSI per bulan",
                 "source": "BRIGHTAI_SALES",
                 "rules":  ["ps_007"],
                 "model":  "gru",
                 "unit":   "hari",
-            },
-            "revenue_hsi": {
-                "desc":   "Total revenue HSI bulanan",
-                "source": "BRIGHTAI_REVENUE",
-                "rules":  ["mart_001", "mart_002"],
-                "model":  "lstm",
-                "unit":   "Rp",
-            },
-            "recurring_revenue": {
-                "desc":   "Revenue recurring HSI bulanan (REV SCALING RECURRING)",
-                "source": "BRIGHTAI_REVENUE",
-                "rules":  ["mart_004"],
-                "model":  "lstm",
-                "unit":   "Rp",
             },
             "realisasi_hsi": {
                 "desc":   "Realisasi HSI bulanan (SSL terpasang vs target)",

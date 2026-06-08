@@ -54,10 +54,15 @@ module.exports = {
 
       if (primaryMatches > 0) {
         score = 80 + (primaryMatches * 10) + (supportingMatches * 2);
-      } else if (lowerInput.includes('target') &&
+      } else if (hasTargetCtx &&
                 (lowerInput.includes('per regional') || lowerInput.includes('per wilayah') ||
                  lowerInput.includes('per treg') || lowerInput.includes('per witel'))) {
-        score = 75;
+        score = 78;
+      } else if (hasTargetCtx &&
+                (lowerInput.includes('regional') || lowerInput.includes('wilayah') ||
+                 lowerInput.includes('treg') || lowerInput.includes('witel'))) {
+        // Broader match: target context + regional mention (e.g. "di setiap regional")
+        score = 75 + (supportingMatches * 2);
       }
 
       return Math.min(score, 100);

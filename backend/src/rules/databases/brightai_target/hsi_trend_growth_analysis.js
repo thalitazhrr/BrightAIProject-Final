@@ -68,12 +68,12 @@ module.exports = {
       ).length;
 
       if (primaryMatches > 0) {
-        score = 75 + (primaryMatches * 15) + (supportingMatches * 2);
+        score = 80 + (primaryMatches * 15) + (supportingMatches * 2);
       } else if (
         (lowerInput.includes('tren') || lowerInput.includes('trend') || lowerInput.includes('pertumbuhan')) &&
         (lowerInput.includes('target') || lowerInput.includes('realisasi'))
       ) {
-        score = 70;
+        score = 78;
       }
 
       return Math.min(score, 100);

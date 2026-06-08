@@ -59,6 +59,26 @@ module.exports = {
         }
       }
 
+      // Penalty: query about order/sales context → bukan loyalitas
+      const hasOrderCtx = lowerInput.includes('order') || lowerInput.includes('pesanan') ||
+        lowerInput.includes('penjualan');
+      if (hasOrderCtx && !lowerInput.includes('loyalitas') && !lowerInput.includes('loyalty') &&
+          !lowerInput.includes('retention') && !lowerInput.includes('tenure')) {
+        score = Math.max(0, score - 30);
+      }
+
+      // Penalty: query about target/realisasi/pencapaian → bukan loyalitas
+      const hasTargetCtx = lowerInput.includes('target') || lowerInput.includes('realisasi') ||
+        lowerInput.includes('pencapaian') || lowerInput.includes('achievement');
+      if (hasTargetCtx && !lowerInput.includes('loyalitas') && !lowerInput.includes('loyalty')) {
+        score = Math.max(0, score - 30);
+      }
+
+      // Penalty: query about penetrasi → bukan loyalitas
+      if (lowerInput.includes('penetrasi') && !lowerInput.includes('loyalitas')) {
+        score = Math.max(0, score - 25);
+      }
+
       return Math.min(score, 100);
     }
   },

@@ -35993,7 +35993,7 @@
         "skill_ok": true
       }
     },
-    "is_best": true,
+    "is_best": false,
     "benchmark": {
       "prev_smape": 39.1239,
       "prev_skill_score": -0.0193,
@@ -36851,7 +36851,7 @@
         "skill_ok": true
       }
     },
-    "is_best": true,
+    "is_best": false,
     "benchmark": {
       "prev_smape": 34.7415,
       "prev_skill_score": 0.0497,
@@ -39776,7 +39776,7 @@
         "skill_ok": true
       }
     },
-    "is_best": true,
+    "is_best": false,
     "benchmark": {
       "prev_smape": 34.3465,
       "prev_skill_score": 0.0594,
@@ -40595,7 +40595,7 @@
         "skill_ok": true
       }
     },
-    "is_best": true,
+    "is_best": false,
     "benchmark": {
       "prev_smape": 36.8993,
       "prev_skill_score": 0.0269,
@@ -50866,5 +50866,6323 @@
     },
     "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_order_hsi_reg2_bandung.pth",
     "trained_at": "2026-06-01 16:57:24"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": true,
+    "epochs_run": 38,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1438.32,
+    "change_pct": 12.54,
+    "val_metrics": {
+      "mae": 529.2848,
+      "rmse": 692.3805,
+      "mape": 26.666,
+      "smape": 31.0688,
+      "mase": 0.72,
+      "skill_score": 0.0144,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.3326,
+      "prev_skill_score": 0.1811,
+      "prev_trained_at": "2026-05-21 12:04:15"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:17:02"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 34,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1593.0,
+    "change_pct": 24.65,
+    "val_metrics": {
+      "mae": 513.4036,
+      "rmse": 677.8536,
+      "mape": 25.7448,
+      "smape": 30.0543,
+      "mase": 0.6984,
+      "skill_score": 0.0439,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.3326,
+      "prev_skill_score": 0.1811,
+      "prev_trained_at": "2026-05-21 12:04:15"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:18:51"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 32,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1579.85,
+    "change_pct": 23.62,
+    "val_metrics": {
+      "mae": 517.6371,
+      "rmse": 685.041,
+      "mape": 25.9836,
+      "smape": 30.2946,
+      "mase": 0.7042,
+      "skill_score": 0.0361,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.0543,
+      "prev_skill_score": 0.0439,
+      "prev_trained_at": "2026-06-08 12:18:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:18:53"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1564.11,
+    "change_pct": 22.39,
+    "val_metrics": {
+      "mae": 531.0909,
+      "rmse": 697.7324,
+      "mape": 26.6591,
+      "smape": 31.2401,
+      "mase": 0.7225,
+      "skill_score": 0.011,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.0543,
+      "prev_skill_score": 0.0439,
+      "prev_trained_at": "2026-06-08 12:18:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:18:54"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1603.92,
+    "change_pct": 25.5,
+    "val_metrics": {
+      "mae": 524.2169,
+      "rmse": 679.4357,
+      "mape": 26.4957,
+      "smape": 30.7435,
+      "mase": 0.7132,
+      "skill_score": 0.0238,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.0543,
+      "prev_skill_score": 0.0439,
+      "prev_trained_at": "2026-06-08 12:18:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:18:56"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 40,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1610.11,
+    "change_pct": 25.99,
+    "val_metrics": {
+      "mae": 518.2452,
+      "rmse": 680.5007,
+      "mape": 26.1349,
+      "smape": 30.3685,
+      "mase": 0.705,
+      "skill_score": 0.0349,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.0543,
+      "prev_skill_score": 0.0439,
+      "prev_trained_at": "2026-06-08 12:18:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:18:57"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 35,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1589.81,
+    "change_pct": 24.4,
+    "val_metrics": {
+      "mae": 516.778,
+      "rmse": 685.0015,
+      "mape": 25.6537,
+      "smape": 30.3438,
+      "mase": 0.703,
+      "skill_score": 0.0377,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.0543,
+      "prev_skill_score": 0.0439,
+      "prev_trained_at": "2026-06-08 12:18:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:18:58"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 35,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1582.49,
+    "change_pct": 23.83,
+    "val_metrics": {
+      "mae": 484.9919,
+      "rmse": 666.8583,
+      "mape": 23.3819,
+      "smape": 28.1925,
+      "mase": 0.6598,
+      "skill_score": 0.0968,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": true,
+        "skill_ok": true
+      }
+    },
+    "is_best": true,
+    "benchmark": {
+      "prev_smape": 30.0543,
+      "prev_skill_score": 0.0439,
+      "prev_trained_at": "2026-06-08 12:18:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:18:59"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 38,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1543.81,
+    "change_pct": 20.8,
+    "val_metrics": {
+      "mae": 531.5933,
+      "rmse": 692.6674,
+      "mape": 26.6634,
+      "smape": 31.4918,
+      "mase": 0.7232,
+      "skill_score": 0.0101,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 28.1925,
+      "prev_skill_score": 0.0968,
+      "prev_trained_at": "2026-06-08 12:18:59"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:00"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 34,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1515.45,
+    "change_pct": 18.58,
+    "val_metrics": {
+      "mae": 525.0145,
+      "rmse": 679.9062,
+      "mape": 25.8249,
+      "smape": 30.9794,
+      "mase": 0.7142,
+      "skill_score": 0.0223,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 28.1925,
+      "prev_skill_score": 0.0968,
+      "prev_trained_at": "2026-06-08 12:18:59"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:02"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1655.69,
+    "change_pct": 29.55,
+    "val_metrics": {
+      "mae": 519.0003,
+      "rmse": 688.2992,
+      "mape": 25.9565,
+      "smape": 30.3336,
+      "mase": 0.7061,
+      "skill_score": 0.0335,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 28.1925,
+      "prev_skill_score": 0.0968,
+      "prev_trained_at": "2026-06-08 12:18:59"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:03"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 38,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1648.61,
+    "change_pct": 29.0,
+    "val_metrics": {
+      "mae": 515.1564,
+      "rmse": 687.2153,
+      "mape": 25.7422,
+      "smape": 30.0757,
+      "mase": 0.7008,
+      "skill_score": 0.0407,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 28.1925,
+      "prev_skill_score": 0.0968,
+      "prev_trained_at": "2026-06-08 12:18:59"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:05"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 33,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1592.59,
+    "change_pct": 24.62,
+    "val_metrics": {
+      "mae": 507.6347,
+      "rmse": 683.9876,
+      "mape": 25.3198,
+      "smape": 29.5892,
+      "mase": 0.6906,
+      "skill_score": 0.0547,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": true,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 28.1925,
+      "prev_skill_score": 0.0968,
+      "prev_trained_at": "2026-06-08 12:18:59"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:06"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1700.7,
+    "change_pct": 33.08,
+    "val_metrics": {
+      "mae": 505.2306,
+      "rmse": 671.0939,
+      "mape": 25.504,
+      "smape": 29.2688,
+      "mase": 0.6873,
+      "skill_score": 0.0592,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": true,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 28.1925,
+      "prev_skill_score": 0.0968,
+      "prev_trained_at": "2026-06-08 12:18:59"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:08"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 36,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1702.59,
+    "change_pct": 33.22,
+    "val_metrics": {
+      "mae": 542.2503,
+      "rmse": 689.5869,
+      "mape": 27.6124,
+      "smape": 32.0468,
+      "mase": 0.7377,
+      "skill_score": -0.0098,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 28.1925,
+      "prev_skill_score": 0.0968,
+      "prev_trained_at": "2026-06-08 12:18:59"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:10"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 35,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1696.7,
+    "change_pct": 32.76,
+    "val_metrics": {
+      "mae": 497.1879,
+      "rmse": 666.4106,
+      "mape": 25.0492,
+      "smape": 28.6412,
+      "mase": 0.6764,
+      "skill_score": 0.0741,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": true,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 28.1925,
+      "prev_skill_score": 0.0968,
+      "prev_trained_at": "2026-06-08 12:18:59"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:12"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1483.11,
+    "change_pct": 16.05,
+    "val_metrics": {
+      "mae": 535.7284,
+      "rmse": 681.3694,
+      "mape": 27.1832,
+      "smape": 31.4661,
+      "mase": 0.7288,
+      "skill_score": 0.0024,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 32.9728,
+      "prev_skill_score": 0.1168,
+      "prev_trained_at": "2026-05-21 12:26:24"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:13"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 39,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1579.04,
+    "change_pct": 23.56,
+    "val_metrics": {
+      "mae": 497.3007,
+      "rmse": 670.594,
+      "mape": 24.4297,
+      "smape": 29.0025,
+      "mase": 0.6765,
+      "skill_score": 0.0739,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": true,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.4661,
+      "prev_skill_score": 0.0024,
+      "prev_trained_at": "2026-06-08 12:19:13"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:14"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 39,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1509.44,
+    "change_pct": 18.11,
+    "val_metrics": {
+      "mae": 548.1859,
+      "rmse": 697.2106,
+      "mape": 27.5571,
+      "smape": 32.3992,
+      "mase": 0.7458,
+      "skill_score": -0.0208,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 29.0025,
+      "prev_skill_score": 0.0739,
+      "prev_trained_at": "2026-06-08 12:19:14"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:16"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 45,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1473.14,
+    "change_pct": 15.27,
+    "val_metrics": {
+      "mae": 521.0015,
+      "rmse": 683.3742,
+      "mape": 25.7411,
+      "smape": 30.613,
+      "mase": 0.7088,
+      "skill_score": 0.0298,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 29.0025,
+      "prev_skill_score": 0.0739,
+      "prev_trained_at": "2026-06-08 12:19:14"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:17"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 39,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1416.23,
+    "change_pct": 10.82,
+    "val_metrics": {
+      "mae": 522.0508,
+      "rmse": 683.9294,
+      "mape": 25.6402,
+      "smape": 30.6522,
+      "mase": 0.7102,
+      "skill_score": 0.0278,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 29.0025,
+      "prev_skill_score": 0.0739,
+      "prev_trained_at": "2026-06-08 12:19:14"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:19"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 39,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1428.35,
+    "change_pct": 11.76,
+    "val_metrics": {
+      "mae": 532.644,
+      "rmse": 694.1818,
+      "mape": 26.1711,
+      "smape": 31.4225,
+      "mase": 0.7246,
+      "skill_score": 0.0081,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 29.0025,
+      "prev_skill_score": 0.0739,
+      "prev_trained_at": "2026-06-08 12:19:14"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:20"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 38,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1374.35,
+    "change_pct": 7.54,
+    "val_metrics": {
+      "mae": 584.5779,
+      "rmse": 707.7894,
+      "mape": 29.58,
+      "smape": 35.0697,
+      "mase": 0.7953,
+      "skill_score": -0.0886,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 29.0025,
+      "prev_skill_score": 0.0739,
+      "prev_trained_at": "2026-06-08 12:19:14"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:22"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1329.67,
+    "change_pct": 4.04,
+    "val_metrics": {
+      "mae": 529.2299,
+      "rmse": 692.249,
+      "mape": 25.6012,
+      "smape": 31.1117,
+      "mase": 0.72,
+      "skill_score": 0.0145,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 29.0025,
+      "prev_skill_score": 0.0739,
+      "prev_trained_at": "2026-06-08 12:19:14"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:23"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 38,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1300.24,
+    "change_pct": 1.74,
+    "val_metrics": {
+      "mae": 472.2782,
+      "rmse": 666.0376,
+      "mape": 22.3245,
+      "smape": 27.2754,
+      "mase": 0.6425,
+      "skill_score": 0.1205,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": true,
+        "skill_ok": true
+      }
+    },
+    "is_best": true,
+    "benchmark": {
+      "prev_smape": 29.0025,
+      "prev_skill_score": 0.0739,
+      "prev_trained_at": "2026-06-08 12:19:14"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:24"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1573.12,
+    "change_pct": 23.09,
+    "val_metrics": {
+      "mae": 498.0347,
+      "rmse": 675.6718,
+      "mape": 24.7898,
+      "smape": 29.051,
+      "mase": 0.6775,
+      "skill_score": 0.0726,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": true,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 27.2754,
+      "prev_skill_score": 0.1205,
+      "prev_trained_at": "2026-06-08 12:19:24"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:27"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 42,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1582.71,
+    "change_pct": 23.84,
+    "val_metrics": {
+      "mae": 514.7582,
+      "rmse": 681.3455,
+      "mape": 25.7706,
+      "smape": 30.1371,
+      "mase": 0.7003,
+      "skill_score": 0.0414,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 27.2754,
+      "prev_skill_score": 0.1205,
+      "prev_trained_at": "2026-06-08 12:19:24"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:28"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 36,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1595.84,
+    "change_pct": 24.87,
+    "val_metrics": {
+      "mae": 502.5596,
+      "rmse": 675.7971,
+      "mape": 25.0218,
+      "smape": 29.304,
+      "mase": 0.6837,
+      "skill_score": 0.0641,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": true,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 27.2754,
+      "prev_skill_score": 0.1205,
+      "prev_trained_at": "2026-06-08 12:19:24"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:30"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 45,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1684.13,
+    "change_pct": 31.78,
+    "val_metrics": {
+      "mae": 529.5844,
+      "rmse": 674.6169,
+      "mape": 27.0465,
+      "smape": 31.1344,
+      "mase": 0.7205,
+      "skill_score": 0.0138,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 27.2754,
+      "prev_skill_score": 0.1205,
+      "prev_trained_at": "2026-06-08 12:19:24"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:32"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 45,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1637.28,
+    "change_pct": 28.11,
+    "val_metrics": {
+      "mae": 529.153,
+      "rmse": 676.7979,
+      "mape": 27.0261,
+      "smape": 31.2354,
+      "mase": 0.7199,
+      "skill_score": 0.0146,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 27.2754,
+      "prev_skill_score": 0.1205,
+      "prev_trained_at": "2026-06-08 12:19:24"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:35"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-5",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1278.0,
+    "forecast_period": "2026-06",
+    "prediction": 1651.16,
+    "change_pct": 29.2,
+    "val_metrics": {
+      "mae": 508.8934,
+      "rmse": 662.4087,
+      "mape": 25.6773,
+      "smape": 29.744,
+      "mase": 0.6923,
+      "skill_score": 0.0523,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": true,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 27.2754,
+      "prev_skill_score": 0.1205,
+      "prev_trained_at": "2026-06-08 12:19:24"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg5.pth",
+    "trained_at": "2026-06-08 12:19:36"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 36,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2293.95,
+    "change_pct": 39.79,
+    "val_metrics": {
+      "mae": 854.8937,
+      "rmse": 1028.8903,
+      "mape": 32.3051,
+      "smape": 36.5503,
+      "mase": 0.8322,
+      "skill_score": -0.1518,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 34.0667,
+      "prev_skill_score": 0.0659,
+      "prev_trained_at": "2026-05-21 12:25:45"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:34"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 35,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2239.98,
+    "change_pct": 36.5,
+    "val_metrics": {
+      "mae": 849.0667,
+      "rmse": 1015.6343,
+      "mape": 32.3776,
+      "smape": 36.2622,
+      "mase": 0.8265,
+      "skill_score": -0.144,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 34.0667,
+      "prev_skill_score": 0.0659,
+      "prev_trained_at": "2026-05-21 12:25:45"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:35"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 34,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2273.28,
+    "change_pct": 38.53,
+    "val_metrics": {
+      "mae": 833.4758,
+      "rmse": 1003.6213,
+      "mape": 31.5212,
+      "smape": 35.5215,
+      "mase": 0.8113,
+      "skill_score": -0.123,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 34.0667,
+      "prev_skill_score": 0.0659,
+      "prev_trained_at": "2026-05-21 12:25:45"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:36"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2214.5,
+    "change_pct": 34.95,
+    "val_metrics": {
+      "mae": 833.1768,
+      "rmse": 1006.0875,
+      "mape": 31.5284,
+      "smape": 35.4633,
+      "mase": 0.8111,
+      "skill_score": -0.1226,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 34.0667,
+      "prev_skill_score": 0.0659,
+      "prev_trained_at": "2026-05-21 12:25:45"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:38"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 34,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2148.21,
+    "change_pct": 30.91,
+    "val_metrics": {
+      "mae": 823.7451,
+      "rmse": 1005.9969,
+      "mape": 31.0272,
+      "smape": 35.1068,
+      "mase": 0.8019,
+      "skill_score": -0.1099,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 34.0667,
+      "prev_skill_score": 0.0659,
+      "prev_trained_at": "2026-05-21 12:25:45"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:39"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 42,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2274.12,
+    "change_pct": 38.58,
+    "val_metrics": {
+      "mae": 830.6642,
+      "rmse": 1006.7658,
+      "mape": 31.1655,
+      "smape": 35.5027,
+      "mase": 0.8086,
+      "skill_score": -0.1192,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 34.0667,
+      "prev_skill_score": 0.0659,
+      "prev_trained_at": "2026-05-21 12:25:45"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:41"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 40,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2184.04,
+    "change_pct": 33.09,
+    "val_metrics": {
+      "mae": 798.9159,
+      "rmse": 983.6765,
+      "mape": 29.6092,
+      "smape": 33.908,
+      "mase": 0.7777,
+      "skill_score": -0.0764,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 34.0667,
+      "prev_skill_score": 0.0659,
+      "prev_trained_at": "2026-05-21 12:25:45"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:42"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2231.18,
+    "change_pct": 35.96,
+    "val_metrics": {
+      "mae": 840.941,
+      "rmse": 1009.2112,
+      "mape": 31.533,
+      "smape": 35.873,
+      "mase": 0.8186,
+      "skill_score": -0.133,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 33.908,
+      "prev_skill_score": -0.0764,
+      "prev_trained_at": "2026-06-08 12:20:42"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:44"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2307.41,
+    "change_pct": 40.61,
+    "val_metrics": {
+      "mae": 833.7198,
+      "rmse": 1000.5107,
+      "mape": 31.7191,
+      "smape": 35.3619,
+      "mase": 0.8116,
+      "skill_score": -0.1233,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 33.908,
+      "prev_skill_score": -0.0764,
+      "prev_trained_at": "2026-06-08 12:20:42"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:47"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 44,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2299.52,
+    "change_pct": 40.13,
+    "val_metrics": {
+      "mae": 834.9509,
+      "rmse": 1006.0875,
+      "mape": 31.3635,
+      "smape": 35.5351,
+      "mase": 0.8128,
+      "skill_score": -0.125,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 33.908,
+      "prev_skill_score": -0.0764,
+      "prev_trained_at": "2026-06-08 12:20:42"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:49"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 34,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2020.61,
+    "change_pct": 23.13,
+    "val_metrics": {
+      "mae": 786.4288,
+      "rmse": 950.3041,
+      "mape": 29.4938,
+      "smape": 33.2679,
+      "mase": 0.7655,
+      "skill_score": -0.0596,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 33.908,
+      "prev_skill_score": -0.0764,
+      "prev_trained_at": "2026-06-08 12:20:42"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:50"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2168.27,
+    "change_pct": 32.13,
+    "val_metrics": {
+      "mae": 732.4008,
+      "rmse": 942.079,
+      "mape": 26.4042,
+      "smape": 30.9544,
+      "mase": 0.713,
+      "skill_score": 0.0132,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": true,
+    "benchmark": {
+      "prev_smape": 33.2679,
+      "prev_skill_score": -0.0596,
+      "prev_trained_at": "2026-06-08 12:20:50"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:51"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 35,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2083.24,
+    "change_pct": 26.95,
+    "val_metrics": {
+      "mae": 741.7316,
+      "rmse": 933.8927,
+      "mape": 27.2035,
+      "smape": 31.1396,
+      "mase": 0.722,
+      "skill_score": 0.0006,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:52"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 36,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2148.82,
+    "change_pct": 30.95,
+    "val_metrics": {
+      "mae": 829.9367,
+      "rmse": 989.9388,
+      "mape": 31.4382,
+      "smape": 35.2161,
+      "mase": 0.8079,
+      "skill_score": -0.1182,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:53"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 35,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2136.87,
+    "change_pct": 30.22,
+    "val_metrics": {
+      "mae": 800.4679,
+      "rmse": 992.0612,
+      "mape": 29.9323,
+      "smape": 33.8791,
+      "mase": 0.7792,
+      "skill_score": -0.0785,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:55"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2276.28,
+    "change_pct": 38.71,
+    "val_metrics": {
+      "mae": 785.3011,
+      "rmse": 966.348,
+      "mape": 29.0657,
+      "smape": 33.0897,
+      "mase": 0.7645,
+      "skill_score": -0.0581,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:56"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 36,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2293.13,
+    "change_pct": 39.74,
+    "val_metrics": {
+      "mae": 769.6266,
+      "rmse": 968.5884,
+      "mape": 28.5887,
+      "smape": 32.2156,
+      "mase": 0.7492,
+      "skill_score": -0.037,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:20:58"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2292.83,
+    "change_pct": 39.72,
+    "val_metrics": {
+      "mae": 795.8992,
+      "rmse": 977.6861,
+      "mape": 29.7069,
+      "smape": 33.5141,
+      "mase": 0.7748,
+      "skill_score": -0.0724,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:00"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2285.16,
+    "change_pct": 39.25,
+    "val_metrics": {
+      "mae": 783.6219,
+      "rmse": 958.8948,
+      "mape": 29.5217,
+      "smape": 33.0604,
+      "mase": 0.7628,
+      "skill_score": -0.0558,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:01"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 40,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2242.53,
+    "change_pct": 36.66,
+    "val_metrics": {
+      "mae": 787.402,
+      "rmse": 974.1953,
+      "mape": 29.4661,
+      "smape": 33.0485,
+      "mase": 0.7665,
+      "skill_score": -0.0609,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:03"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2316.66,
+    "change_pct": 41.17,
+    "val_metrics": {
+      "mae": 873.4911,
+      "rmse": 1064.45,
+      "mape": 33.0076,
+      "smape": 37.5074,
+      "mase": 0.8503,
+      "skill_score": -0.1769,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:05"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2352.18,
+    "change_pct": 43.34,
+    "val_metrics": {
+      "mae": 833.598,
+      "rmse": 999.0744,
+      "mape": 32.0096,
+      "smape": 35.3911,
+      "mase": 0.8115,
+      "skill_score": -0.1231,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:07"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2332.29,
+    "change_pct": 42.13,
+    "val_metrics": {
+      "mae": 796.4482,
+      "rmse": 977.9413,
+      "mape": 30.2529,
+      "smape": 33.5659,
+      "mase": 0.7753,
+      "skill_score": -0.0731,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:08"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 42,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2396.98,
+    "change_pct": 46.07,
+    "val_metrics": {
+      "mae": 841.6859,
+      "rmse": 1063.1902,
+      "mape": 31.447,
+      "smape": 35.9097,
+      "mase": 0.8193,
+      "skill_score": -0.134,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:10"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2392.85,
+    "change_pct": 45.82,
+    "val_metrics": {
+      "mae": 847.5547,
+      "rmse": 1032.6965,
+      "mape": 32.1662,
+      "smape": 35.9251,
+      "mase": 0.8251,
+      "skill_score": -0.1419,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:12"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2265.17,
+    "change_pct": 38.04,
+    "val_metrics": {
+      "mae": 813.0899,
+      "rmse": 989.6835,
+      "mape": 30.4353,
+      "smape": 34.4678,
+      "mase": 0.7915,
+      "skill_score": -0.0955,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 34.1864,
+      "prev_skill_score": 0.0627,
+      "prev_trained_at": "2026-05-21 12:05:03"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:13"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2278.0,
+    "change_pct": 38.82,
+    "val_metrics": {
+      "mae": 810.6846,
+      "rmse": 981.4612,
+      "mape": 30.0576,
+      "smape": 34.4305,
+      "mase": 0.7892,
+      "skill_score": -0.0923,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 34.1864,
+      "prev_skill_score": 0.0627,
+      "prev_trained_at": "2026-05-21 12:05:03"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:15"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2132.62,
+    "change_pct": 29.96,
+    "val_metrics": {
+      "mae": 809.4698,
+      "rmse": 987.4393,
+      "mape": 30.1861,
+      "smape": 34.3168,
+      "mase": 0.788,
+      "skill_score": -0.0906,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 34.1864,
+      "prev_skill_score": 0.0627,
+      "prev_trained_at": "2026-05-21 12:05:03"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:17"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 42,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2129.74,
+    "change_pct": 29.78,
+    "val_metrics": {
+      "mae": 818.7217,
+      "rmse": 986.1831,
+      "mape": 30.6918,
+      "smape": 34.7558,
+      "mase": 0.797,
+      "skill_score": -0.1031,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 34.1864,
+      "prev_skill_score": 0.0627,
+      "prev_trained_at": "2026-05-21 12:05:03"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:18"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 42,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2107.21,
+    "change_pct": 28.41,
+    "val_metrics": {
+      "mae": 797.4379,
+      "rmse": 978.308,
+      "mape": 29.2624,
+      "smape": 33.7833,
+      "mase": 0.7763,
+      "skill_score": -0.0744,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 34.1864,
+      "prev_skill_score": 0.0627,
+      "prev_trained_at": "2026-05-21 12:05:03"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:20"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 50,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2130.59,
+    "change_pct": 29.84,
+    "val_metrics": {
+      "mae": 838.6748,
+      "rmse": 995.2332,
+      "mape": 31.4931,
+      "smape": 35.7266,
+      "mase": 0.8164,
+      "skill_score": -0.13,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 33.7833,
+      "prev_skill_score": -0.0744,
+      "prev_trained_at": "2026-06-08 12:21:20"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:21"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 47,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2257.73,
+    "change_pct": 37.58,
+    "val_metrics": {
+      "mae": 791.05,
+      "rmse": 967.6782,
+      "mape": 29.1107,
+      "smape": 33.4885,
+      "mase": 0.77,
+      "skill_score": -0.0658,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 33.7833,
+      "prev_skill_score": -0.0744,
+      "prev_trained_at": "2026-06-08 12:21:20"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:23"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 50,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2224.75,
+    "change_pct": 35.57,
+    "val_metrics": {
+      "mae": 798.0367,
+      "rmse": 977.2911,
+      "mape": 29.3772,
+      "smape": 33.8545,
+      "mase": 0.7768,
+      "skill_score": -0.0752,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 33.4885,
+      "prev_skill_score": -0.0658,
+      "prev_trained_at": "2026-06-08 12:21:23"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:25"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 49,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2088.81,
+    "change_pct": 27.29,
+    "val_metrics": {
+      "mae": 790.5884,
+      "rmse": 972.8958,
+      "mape": 28.6631,
+      "smape": 33.5101,
+      "mase": 0.7696,
+      "skill_score": -0.0652,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 33.4885,
+      "prev_skill_score": -0.0658,
+      "prev_trained_at": "2026-06-08 12:21:23"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:26"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 6,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 45,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2085.78,
+    "change_pct": 27.1,
+    "val_metrics": {
+      "mae": 822.2674,
+      "rmse": 998.0912,
+      "mape": 30.5496,
+      "smape": 34.9351,
+      "mase": 0.8004,
+      "skill_score": -0.1079,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 33.4885,
+      "prev_skill_score": -0.0658,
+      "prev_trained_at": "2026-06-08 12:21:23"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:28"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2162.32,
+    "change_pct": 31.77,
+    "val_metrics": {
+      "mae": 872.0411,
+      "rmse": 1025.8767,
+      "mape": 32.4646,
+      "smape": 37.3298,
+      "mase": 0.8489,
+      "skill_score": -0.1749,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 33.4885,
+      "prev_skill_score": -0.0658,
+      "prev_trained_at": "2026-06-08 12:21:23"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:30"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2044.41,
+    "change_pct": 24.58,
+    "val_metrics": {
+      "mae": 787.0327,
+      "rmse": 959.5042,
+      "mape": 28.433,
+      "smape": 33.3044,
+      "mase": 0.7661,
+      "skill_score": -0.0604,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 33.4885,
+      "prev_skill_score": -0.0658,
+      "prev_trained_at": "2026-06-08 12:21:23"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:31"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 42,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2015.72,
+    "change_pct": 22.83,
+    "val_metrics": {
+      "mae": 871.8466,
+      "rmse": 1019.8451,
+      "mape": 32.6524,
+      "smape": 37.3795,
+      "mase": 0.8487,
+      "skill_score": -0.1747,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 33.3044,
+      "prev_skill_score": -0.0604,
+      "prev_trained_at": "2026-06-08 12:21:31"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:33"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2003.72,
+    "change_pct": 22.1,
+    "val_metrics": {
+      "mae": 825.6263,
+      "rmse": 989.9491,
+      "mape": 30.3004,
+      "smape": 35.1838,
+      "mase": 0.8037,
+      "skill_score": -0.1124,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 33.3044,
+      "prev_skill_score": -0.0604,
+      "prev_trained_at": "2026-06-08 12:21:31"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:34"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 44,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2104.41,
+    "change_pct": 28.24,
+    "val_metrics": {
+      "mae": 741.9352,
+      "rmse": 947.3176,
+      "mape": 26.2439,
+      "smape": 31.1785,
+      "mase": 0.7222,
+      "skill_score": 0.0004,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 33.3044,
+      "prev_skill_score": -0.0604,
+      "prev_trained_at": "2026-06-08 12:21:31"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:36"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 44,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2248.46,
+    "change_pct": 37.02,
+    "val_metrics": {
+      "mae": 795.5358,
+      "rmse": 989.2501,
+      "mape": 29.631,
+      "smape": 33.5592,
+      "mase": 0.7744,
+      "skill_score": -0.0719,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:38"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 45,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2235.34,
+    "change_pct": 36.22,
+    "val_metrics": {
+      "mae": 810.7838,
+      "rmse": 990.2258,
+      "mape": 30.4077,
+      "smape": 34.2483,
+      "mase": 0.7893,
+      "skill_score": -0.0924,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:39"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2262.07,
+    "change_pct": 37.85,
+    "val_metrics": {
+      "mae": 798.6359,
+      "rmse": 982.934,
+      "mape": 29.6706,
+      "smape": 33.7595,
+      "mase": 0.7774,
+      "skill_score": -0.076,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:41"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 45,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2240.26,
+    "change_pct": 36.52,
+    "val_metrics": {
+      "mae": 788.0714,
+      "rmse": 967.0117,
+      "mape": 29.1979,
+      "smape": 33.2816,
+      "mase": 0.7671,
+      "skill_score": -0.0618,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:43"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 9,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2262.43,
+    "change_pct": 37.87,
+    "val_metrics": {
+      "mae": 785.3369,
+      "rmse": 973.9534,
+      "mape": 29.1703,
+      "smape": 33.1305,
+      "mase": 0.7645,
+      "skill_score": -0.0581,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:45"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 46,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2338.87,
+    "change_pct": 42.53,
+    "val_metrics": {
+      "mae": 807.4307,
+      "rmse": 1003.1848,
+      "mape": 30.0705,
+      "smape": 34.1371,
+      "mase": 0.786,
+      "skill_score": -0.0879,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:48"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 45,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2352.74,
+    "change_pct": 43.37,
+    "val_metrics": {
+      "mae": 829.5535,
+      "rmse": 997.4226,
+      "mape": 31.4356,
+      "smape": 35.0819,
+      "mase": 0.8075,
+      "skill_score": -0.1177,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:50"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 45,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2284.76,
+    "change_pct": 39.23,
+    "val_metrics": {
+      "mae": 853.3311,
+      "rmse": 1062.3715,
+      "mape": 31.7861,
+      "smape": 36.5534,
+      "mase": 0.8307,
+      "skill_score": -0.1497,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:53"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 47,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2366.68,
+    "change_pct": 44.22,
+    "val_metrics": {
+      "mae": 819.1557,
+      "rmse": 1037.9089,
+      "mape": 30.5366,
+      "smape": 34.5842,
+      "mase": 0.7974,
+      "skill_score": -0.1037,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:55"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 12,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 46,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2355.6,
+    "change_pct": 43.55,
+    "val_metrics": {
+      "mae": 816.6102,
+      "rmse": 982.4229,
+      "mape": 30.9999,
+      "smape": 34.4581,
+      "mase": 0.7949,
+      "skill_score": -0.1003,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:21:57"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2091.07,
+    "change_pct": 27.43,
+    "val_metrics": {
+      "mae": 808.0392,
+      "rmse": 980.624,
+      "mape": 30.2638,
+      "smape": 34.2553,
+      "mase": 0.7866,
+      "skill_score": -0.0887,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:08"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2122.49,
+    "change_pct": 29.34,
+    "val_metrics": {
+      "mae": 785.8357,
+      "rmse": 967.0401,
+      "mape": 29.7484,
+      "smape": 33.0348,
+      "mase": 0.765,
+      "skill_score": -0.0588,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:09"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 38,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2181.4,
+    "change_pct": 32.93,
+    "val_metrics": {
+      "mae": 773.7181,
+      "rmse": 946.4133,
+      "mape": 28.8793,
+      "smape": 32.8185,
+      "mase": 0.7532,
+      "skill_score": -0.0425,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:10"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2186.46,
+    "change_pct": 33.24,
+    "val_metrics": {
+      "mae": 824.5692,
+      "rmse": 1012.4949,
+      "mape": 31.4814,
+      "smape": 35.2031,
+      "mase": 0.8027,
+      "skill_score": -0.111,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:11"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 36,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2157.39,
+    "change_pct": 31.47,
+    "val_metrics": {
+      "mae": 757.064,
+      "rmse": 968.7352,
+      "mape": 27.3585,
+      "smape": 32.0304,
+      "mase": 0.737,
+      "skill_score": -0.02,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:12"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 40,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2047.03,
+    "change_pct": 24.74,
+    "val_metrics": {
+      "mae": 741.0063,
+      "rmse": 948.9832,
+      "mape": 26.5714,
+      "smape": 31.2706,
+      "mase": 0.7213,
+      "skill_score": 0.0016,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:13"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 40,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2203.87,
+    "change_pct": 34.3,
+    "val_metrics": {
+      "mae": 868.7557,
+      "rmse": 1011.3505,
+      "mape": 33.1882,
+      "smape": 36.9346,
+      "mase": 0.8457,
+      "skill_score": -0.1705,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:14"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 40,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2182.71,
+    "change_pct": 33.01,
+    "val_metrics": {
+      "mae": 770.5918,
+      "rmse": 963.5084,
+      "mape": 27.6905,
+      "smape": 32.547,
+      "mase": 0.7501,
+      "skill_score": -0.0383,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:15"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2198.01,
+    "change_pct": 33.94,
+    "val_metrics": {
+      "mae": 867.2373,
+      "rmse": 1021.9959,
+      "mape": 32.9086,
+      "smape": 36.9766,
+      "mase": 0.8442,
+      "skill_score": -0.1685,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:16"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 39,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2009.78,
+    "change_pct": 22.47,
+    "val_metrics": {
+      "mae": 801.2388,
+      "rmse": 992.1619,
+      "mape": 30.3436,
+      "smape": 34.032,
+      "mase": 0.78,
+      "skill_score": -0.0795,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:18"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 47,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1935.26,
+    "change_pct": 17.93,
+    "val_metrics": {
+      "mae": 810.4443,
+      "rmse": 986.1325,
+      "mape": 29.2134,
+      "smape": 34.444,
+      "mase": 0.7889,
+      "skill_score": -0.0919,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:19"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 49,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2100.68,
+    "change_pct": 28.01,
+    "val_metrics": {
+      "mae": 767.2843,
+      "rmse": 959.4824,
+      "mape": 27.2689,
+      "smape": 32.3686,
+      "mase": 0.7469,
+      "skill_score": -0.0338,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:20"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 45,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1966.02,
+    "change_pct": 19.81,
+    "val_metrics": {
+      "mae": 802.7482,
+      "rmse": 980.8369,
+      "mape": 29.0286,
+      "smape": 34.0936,
+      "mase": 0.7814,
+      "skill_score": -0.0816,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:21"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1952.53,
+    "change_pct": 18.98,
+    "val_metrics": {
+      "mae": 782.4567,
+      "rmse": 971.5226,
+      "mape": 27.9241,
+      "smape": 33.0584,
+      "mase": 0.7617,
+      "skill_score": -0.0542,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:22"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 49,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2065.23,
+    "change_pct": 25.85,
+    "val_metrics": {
+      "mae": 837.7513,
+      "rmse": 988.0866,
+      "mape": 30.7444,
+      "smape": 35.8429,
+      "mase": 0.8155,
+      "skill_score": -0.1287,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:23"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 34,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2232.22,
+    "change_pct": 36.03,
+    "val_metrics": {
+      "mae": 801.8741,
+      "rmse": 984.7487,
+      "mape": 30.1161,
+      "smape": 33.9184,
+      "mase": 0.7806,
+      "skill_score": -0.0804,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:24"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 33,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2201.42,
+    "change_pct": 34.15,
+    "val_metrics": {
+      "mae": 808.1317,
+      "rmse": 986.8525,
+      "mape": 30.8521,
+      "smape": 34.1241,
+      "mase": 0.7867,
+      "skill_score": -0.0888,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:26"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 34,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2233.86,
+    "change_pct": 36.13,
+    "val_metrics": {
+      "mae": 824.0533,
+      "rmse": 995.1135,
+      "mape": 30.9264,
+      "smape": 35.1449,
+      "mase": 0.8022,
+      "skill_score": -0.1103,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:27"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 34,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2250.14,
+    "change_pct": 37.12,
+    "val_metrics": {
+      "mae": 773.2455,
+      "rmse": 970.1943,
+      "mape": 28.2158,
+      "smape": 32.7111,
+      "mase": 0.7527,
+      "skill_score": -0.0418,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:28"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 34,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2181.04,
+    "change_pct": 32.91,
+    "val_metrics": {
+      "mae": 792.0968,
+      "rmse": 965.1777,
+      "mape": 30.0692,
+      "smape": 33.4878,
+      "mase": 0.7711,
+      "skill_score": -0.0672,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:29"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2157.95,
+    "change_pct": 31.5,
+    "val_metrics": {
+      "mae": 808.2934,
+      "rmse": 984.6028,
+      "mape": 29.9357,
+      "smape": 34.363,
+      "mase": 0.7868,
+      "skill_score": -0.0891,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:30"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 44,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2172.38,
+    "change_pct": 32.38,
+    "val_metrics": {
+      "mae": 793.1213,
+      "rmse": 969.5757,
+      "mape": 28.7052,
+      "smape": 33.604,
+      "mase": 0.7721,
+      "skill_score": -0.0686,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:32"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2093.79,
+    "change_pct": 27.59,
+    "val_metrics": {
+      "mae": 802.2806,
+      "rmse": 981.9805,
+      "mape": 29.3958,
+      "smape": 34.0951,
+      "mase": 0.781,
+      "skill_score": -0.0809,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:33"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2087.46,
+    "change_pct": 27.21,
+    "val_metrics": {
+      "mae": 837.8021,
+      "rmse": 998.0468,
+      "mape": 31.5006,
+      "smape": 35.6901,
+      "mase": 0.8156,
+      "skill_score": -0.1288,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:34"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2150.83,
+    "change_pct": 31.07,
+    "val_metrics": {
+      "mae": 801.5618,
+      "rmse": 977.0972,
+      "mape": 29.3522,
+      "smape": 34.1291,
+      "mase": 0.7803,
+      "skill_score": -0.08,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:35"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 42,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2069.45,
+    "change_pct": 26.11,
+    "val_metrics": {
+      "mae": 756.6481,
+      "rmse": 940.1695,
+      "mape": 27.2204,
+      "smape": 31.792,
+      "mase": 0.7366,
+      "skill_score": -0.0195,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:36"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 38,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1996.0,
+    "change_pct": 21.63,
+    "val_metrics": {
+      "mae": 787.6359,
+      "rmse": 956.4883,
+      "mape": 29.2382,
+      "smape": 33.2899,
+      "mase": 0.7667,
+      "skill_score": -0.0612,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:37"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 39,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2091.29,
+    "change_pct": 27.44,
+    "val_metrics": {
+      "mae": 804.5814,
+      "rmse": 977.1227,
+      "mape": 29.9254,
+      "smape": 34.2262,
+      "mase": 0.7832,
+      "skill_score": -0.084,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:38"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1969.18,
+    "change_pct": 20.0,
+    "val_metrics": {
+      "mae": 830.0326,
+      "rmse": 999.5831,
+      "mape": 31.0725,
+      "smape": 35.3685,
+      "mase": 0.808,
+      "skill_score": -0.1183,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:39"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 39,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2067.97,
+    "change_pct": 26.02,
+    "val_metrics": {
+      "mae": 811.267,
+      "rmse": 985.2028,
+      "mape": 29.8938,
+      "smape": 34.485,
+      "mase": 0.7897,
+      "skill_score": -0.0931,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:40"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 35,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2227.29,
+    "change_pct": 35.73,
+    "val_metrics": {
+      "mae": 774.8328,
+      "rmse": 971.2944,
+      "mape": 28.3921,
+      "smape": 32.8937,
+      "mase": 0.7543,
+      "skill_score": -0.044,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:41"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 32,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2064.75,
+    "change_pct": 25.82,
+    "val_metrics": {
+      "mae": 771.8607,
+      "rmse": 964.6789,
+      "mape": 29.3017,
+      "smape": 32.4686,
+      "mase": 0.7514,
+      "skill_score": -0.04,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:42"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 33,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2148.37,
+    "change_pct": 30.92,
+    "val_metrics": {
+      "mae": 772.5056,
+      "rmse": 943.6621,
+      "mape": 28.4505,
+      "smape": 32.609,
+      "mase": 0.752,
+      "skill_score": -0.0408,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:43"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 32,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2211.02,
+    "change_pct": 34.74,
+    "val_metrics": {
+      "mae": 782.7902,
+      "rmse": 978.48,
+      "mape": 28.9972,
+      "smape": 33.2107,
+      "mase": 0.762,
+      "skill_score": -0.0547,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:44"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 32,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2176.44,
+    "change_pct": 32.63,
+    "val_metrics": {
+      "mae": 835.5615,
+      "rmse": 981.9769,
+      "mape": 31.807,
+      "smape": 35.2641,
+      "mase": 0.8134,
+      "skill_score": -0.1258,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:45"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 36,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2048.61,
+    "change_pct": 24.84,
+    "val_metrics": {
+      "mae": 842.6146,
+      "rmse": 1001.6297,
+      "mape": 31.0955,
+      "smape": 35.946,
+      "mase": 0.8202,
+      "skill_score": -0.1353,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:46"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 34,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2009.42,
+    "change_pct": 22.45,
+    "val_metrics": {
+      "mae": 801.0012,
+      "rmse": 984.8475,
+      "mape": 30.5399,
+      "smape": 33.9501,
+      "mase": 0.7797,
+      "skill_score": -0.0792,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:47"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2193.86,
+    "change_pct": 33.69,
+    "val_metrics": {
+      "mae": 808.5602,
+      "rmse": 969.9403,
+      "mape": 30.5403,
+      "smape": 34.3456,
+      "mase": 0.7871,
+      "skill_score": -0.0894,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:48"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2192.6,
+    "change_pct": 33.61,
+    "val_metrics": {
+      "mae": 804.3408,
+      "rmse": 994.0477,
+      "mape": 30.1743,
+      "smape": 34.1099,
+      "mase": 0.783,
+      "skill_score": -0.0837,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:49"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 35,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2056.56,
+    "change_pct": 25.32,
+    "val_metrics": {
+      "mae": 791.621,
+      "rmse": 971.1553,
+      "mape": 30.1774,
+      "smape": 33.3015,
+      "mase": 0.7706,
+      "skill_score": -0.0666,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.9544,
+      "prev_skill_score": 0.0132,
+      "prev_trained_at": "2026-06-08 12:20:51"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:50"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 47,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2237.92,
+    "change_pct": 36.38,
+    "val_metrics": {
+      "mae": 841.4723,
+      "rmse": 1004.9943,
+      "mape": 31.1827,
+      "smape": 35.9759,
+      "mase": 0.8191,
+      "skill_score": -0.1338,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:52"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1967.34,
+    "change_pct": 19.89,
+    "val_metrics": {
+      "mae": 789.3407,
+      "rmse": 966.8858,
+      "mape": 28.4393,
+      "smape": 33.3924,
+      "mase": 0.7684,
+      "skill_score": -0.0635,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:53"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2061.15,
+    "change_pct": 25.6,
+    "val_metrics": {
+      "mae": 833.3656,
+      "rmse": 996.4207,
+      "mape": 30.5601,
+      "smape": 35.4901,
+      "mase": 0.8112,
+      "skill_score": -0.1228,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:54"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 44,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2070.17,
+    "change_pct": 26.15,
+    "val_metrics": {
+      "mae": 834.9777,
+      "rmse": 988.9679,
+      "mape": 31.1491,
+      "smape": 35.5898,
+      "mase": 0.8128,
+      "skill_score": -0.125,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:55"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 42,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2042.7,
+    "change_pct": 24.48,
+    "val_metrics": {
+      "mae": 794.6971,
+      "rmse": 970.8521,
+      "mape": 28.9028,
+      "smape": 33.6628,
+      "mase": 0.7736,
+      "skill_score": -0.0707,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:57"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 46,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1971.36,
+    "change_pct": 20.13,
+    "val_metrics": {
+      "mae": 864.4964,
+      "rmse": 1020.6295,
+      "mape": 31.8064,
+      "smape": 37.095,
+      "mase": 0.8415,
+      "skill_score": -0.1648,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:58"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 49,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2162.96,
+    "change_pct": 31.81,
+    "val_metrics": {
+      "mae": 777.7497,
+      "rmse": 960.5307,
+      "mape": 28.4008,
+      "smape": 32.9232,
+      "mase": 0.7571,
+      "skill_score": -0.0479,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:23:59"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 48,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2050.22,
+    "change_pct": 24.94,
+    "val_metrics": {
+      "mae": 847.9824,
+      "rmse": 998.9006,
+      "mape": 31.8924,
+      "smape": 36.2237,
+      "mase": 0.8255,
+      "skill_score": -0.1425,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:00"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 49,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2124.9,
+    "change_pct": 29.49,
+    "val_metrics": {
+      "mae": 849.0394,
+      "rmse": 997.2854,
+      "mape": 31.3673,
+      "smape": 36.3558,
+      "mase": 0.8265,
+      "skill_score": -0.1439,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:01"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 45,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1934.75,
+    "change_pct": 17.9,
+    "val_metrics": {
+      "mae": 860.4095,
+      "rmse": 1008.9831,
+      "mape": 32.1394,
+      "smape": 36.8128,
+      "mase": 0.8376,
+      "skill_score": -0.1593,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:03"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 56,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1823.81,
+    "change_pct": 11.14,
+    "val_metrics": {
+      "mae": 814.9529,
+      "rmse": 996.8277,
+      "mape": 28.8979,
+      "smape": 34.6862,
+      "mase": 0.7933,
+      "skill_score": -0.098,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:04"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 59,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1868.14,
+    "change_pct": 13.84,
+    "val_metrics": {
+      "mae": 818.7344,
+      "rmse": 992.7137,
+      "mape": 29.0976,
+      "smape": 34.8983,
+      "mase": 0.797,
+      "skill_score": -0.1031,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:05"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 63,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1991.97,
+    "change_pct": 21.39,
+    "val_metrics": {
+      "mae": 821.6971,
+      "rmse": 1010.958,
+      "mape": 28.7598,
+      "smape": 35.0217,
+      "mase": 0.7999,
+      "skill_score": -0.1071,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:07"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 59,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1952.32,
+    "change_pct": 18.97,
+    "val_metrics": {
+      "mae": 815.4302,
+      "rmse": 1000.8915,
+      "mape": 29.0587,
+      "smape": 34.736,
+      "mase": 0.7938,
+      "skill_score": -0.0987,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:08"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 63,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1995.61,
+    "change_pct": 21.61,
+    "val_metrics": {
+      "mae": 833.8353,
+      "rmse": 1010.8854,
+      "mape": 29.5158,
+      "smape": 35.6264,
+      "mase": 0.8117,
+      "skill_score": -0.1235,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:10"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2206.68,
+    "change_pct": 34.47,
+    "val_metrics": {
+      "mae": 828.4857,
+      "rmse": 1006.3796,
+      "mape": 31.1401,
+      "smape": 35.2049,
+      "mase": 0.8065,
+      "skill_score": -0.1163,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:11"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 39,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2100.35,
+    "change_pct": 27.99,
+    "val_metrics": {
+      "mae": 776.3868,
+      "rmse": 980.446,
+      "mape": 27.9527,
+      "smape": 32.8289,
+      "mase": 0.7558,
+      "skill_score": -0.0461,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:12"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 40,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2128.09,
+    "change_pct": 29.68,
+    "val_metrics": {
+      "mae": 793.9702,
+      "rmse": 960.7679,
+      "mape": 29.1195,
+      "smape": 33.6578,
+      "mase": 0.7729,
+      "skill_score": -0.0698,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:14"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2136.41,
+    "change_pct": 30.19,
+    "val_metrics": {
+      "mae": 805.5924,
+      "rmse": 990.5215,
+      "mape": 29.6273,
+      "smape": 34.2967,
+      "mase": 0.7842,
+      "skill_score": -0.0854,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:15"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 40,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2103.4,
+    "change_pct": 28.18,
+    "val_metrics": {
+      "mae": 848.0594,
+      "rmse": 996.3628,
+      "mape": 32.0589,
+      "smape": 36.0136,
+      "mase": 0.8255,
+      "skill_score": -0.1426,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:16"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 55,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2024.67,
+    "change_pct": 23.38,
+    "val_metrics": {
+      "mae": 836.9694,
+      "rmse": 1002.4485,
+      "mape": 30.5973,
+      "smape": 35.7472,
+      "mase": 0.8147,
+      "skill_score": -0.1277,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:18"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 49,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1929.17,
+    "change_pct": 17.56,
+    "val_metrics": {
+      "mae": 827.3231,
+      "rmse": 1009.4172,
+      "mape": 29.3172,
+      "smape": 35.2859,
+      "mase": 0.8054,
+      "skill_score": -0.1147,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:19"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 48,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1888.69,
+    "change_pct": 15.09,
+    "val_metrics": {
+      "mae": 784.1566,
+      "rmse": 977.433,
+      "mape": 28.1991,
+      "smape": 33.2491,
+      "mase": 0.7633,
+      "skill_score": -0.0565,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:21"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 48,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1899.01,
+    "change_pct": 15.72,
+    "val_metrics": {
+      "mae": 799.9743,
+      "rmse": 987.5312,
+      "mape": 28.1804,
+      "smape": 33.9122,
+      "mase": 0.7787,
+      "skill_score": -0.0778,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:22"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 54,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1894.04,
+    "change_pct": 15.42,
+    "val_metrics": {
+      "mae": 754.118,
+      "rmse": 955.4698,
+      "mape": 26.6088,
+      "smape": 31.6549,
+      "mase": 0.7341,
+      "skill_score": -0.0161,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:23"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 52,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2100.64,
+    "change_pct": 28.01,
+    "val_metrics": {
+      "mae": 821.2531,
+      "rmse": 993.918,
+      "mape": 29.242,
+      "smape": 35.0498,
+      "mase": 0.7994,
+      "skill_score": -0.1065,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:25"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 47,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1892.12,
+    "change_pct": 15.3,
+    "val_metrics": {
+      "mae": 794.4062,
+      "rmse": 996.3516,
+      "mape": 27.7947,
+      "smape": 33.6102,
+      "mase": 0.7733,
+      "skill_score": -0.0703,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:26"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1840.24,
+    "change_pct": 12.14,
+    "val_metrics": {
+      "mae": 861.12,
+      "rmse": 1017.064,
+      "mape": 31.2746,
+      "smape": 37.0385,
+      "mase": 0.8383,
+      "skill_score": -0.1602,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:27"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 51,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2037.5,
+    "change_pct": 24.16,
+    "val_metrics": {
+      "mae": 858.5941,
+      "rmse": 1007.4685,
+      "mape": 31.572,
+      "smape": 36.9347,
+      "mase": 0.8358,
+      "skill_score": -0.1568,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:28"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 51,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2019.29,
+    "change_pct": 23.05,
+    "val_metrics": {
+      "mae": 803.8956,
+      "rmse": 968.645,
+      "mape": 29.4994,
+      "smape": 34.098,
+      "mase": 0.7826,
+      "skill_score": -0.0831,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:29"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2126.09,
+    "change_pct": 29.56,
+    "val_metrics": {
+      "mae": 848.3998,
+      "rmse": 995.3541,
+      "mape": 31.8671,
+      "smape": 36.1707,
+      "mase": 0.8259,
+      "skill_score": -0.1431,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:30"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 34,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 1975.03,
+    "change_pct": 20.36,
+    "val_metrics": {
+      "mae": 854.2376,
+      "rmse": 1009.1476,
+      "mape": 32.2015,
+      "smape": 36.4075,
+      "mase": 0.8316,
+      "skill_score": -0.151,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:31"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 41,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2198.31,
+    "change_pct": 33.96,
+    "val_metrics": {
+      "mae": 770.3903,
+      "rmse": 957.9675,
+      "mape": 28.5933,
+      "smape": 32.3877,
+      "mase": 0.7499,
+      "skill_score": -0.038,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:32"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 37,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2021.49,
+    "change_pct": 23.19,
+    "val_metrics": {
+      "mae": 795.8754,
+      "rmse": 981.5749,
+      "mape": 29.1442,
+      "smape": 33.7262,
+      "mase": 0.7747,
+      "skill_score": -0.0723,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:33"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 36,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2103.85,
+    "change_pct": 28.21,
+    "val_metrics": {
+      "mae": 769.2334,
+      "rmse": 963.8787,
+      "mape": 27.6069,
+      "smape": 32.4025,
+      "mase": 0.7488,
+      "skill_score": -0.0364,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:34"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 45,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2114.3,
+    "change_pct": 28.84,
+    "val_metrics": {
+      "mae": 848.6706,
+      "rmse": 994.8797,
+      "mape": 31.4563,
+      "smape": 36.2631,
+      "mase": 0.8261,
+      "skill_score": -0.1435,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": false
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:36"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2167.39,
+    "change_pct": 32.08,
+    "val_metrics": {
+      "mae": 736.1419,
+      "rmse": 944.9622,
+      "mape": 26.2047,
+      "smape": 30.8286,
+      "mase": 0.7166,
+      "skill_score": 0.0082,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": true,
+    "benchmark": {
+      "prev_smape": 31.1785,
+      "prev_skill_score": 0.0004,
+      "prev_trained_at": "2026-06-08 12:21:36"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:37"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2154.21,
+    "change_pct": 31.27,
+    "val_metrics": {
+      "mae": 798.9966,
+      "rmse": 972.0536,
+      "mape": 28.9367,
+      "smape": 33.8609,
+      "mase": 0.7778,
+      "skill_score": -0.0765,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.8286,
+      "prev_skill_score": 0.0082,
+      "prev_trained_at": "2026-06-08 12:24:37"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:38"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 43,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2119.97,
+    "change_pct": 29.19,
+    "val_metrics": {
+      "mae": 801.4807,
+      "rmse": 966.0806,
+      "mape": 29.4683,
+      "smape": 33.9863,
+      "mase": 0.7802,
+      "skill_score": -0.0799,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.8286,
+      "prev_skill_score": 0.0082,
+      "prev_trained_at": "2026-06-08 12:24:37"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:40"
+  },
+  {
+    "status": "success",
+    "model_type": "lstm",
+    "metric": "churn_hsi",
+    "regional": "REG-1",
+    "witel": null,
+    "data_points": 41,
+    "window_size": 3,
+    "n_test": 5,
+    "auto_tuned": false,
+    "epochs_run": 45,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 1641.0,
+    "forecast_period": "2026-06",
+    "prediction": 2189.55,
+    "change_pct": 33.43,
+    "val_metrics": {
+      "mae": 815.4613,
+      "rmse": 986.8057,
+      "mape": 30.0232,
+      "smape": 34.6094,
+      "mase": 0.7938,
+      "skill_score": -0.0987,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": false,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 30.8286,
+      "prev_skill_score": 0.0082,
+      "prev_trained_at": "2026-06-08 12:24:37"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/lstm_churn_hsi_reg1.pth",
+    "trained_at": "2026-06-08 12:24:41"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "order_hsi",
+    "regional": "REG-1",
+    "witel": "ACEH",
+    "data_points": 43,
+    "window_size": 12,
+    "n_test": 6,
+    "auto_tuned": true,
+    "epochs_run": 39,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 598.0,
+    "forecast_period": "2026-06",
+    "prediction": 554.0,
+    "change_pct": -7.36,
+    "val_metrics": {
+      "mae": 144.1757,
+      "rmse": 169.2375,
+      "mape": 22.8903,
+      "smape": 25.345,
+      "mase": 0.8492,
+      "skill_score": 0.1036,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": true,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 22.1307,
+      "prev_skill_score": 0.3542,
+      "prev_trained_at": "2026-05-01 22:54:49"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_order_hsi_reg1_aceh.pth",
+    "trained_at": "2026-06-08 14:39:23"
   }
 ]
