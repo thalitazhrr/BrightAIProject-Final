@@ -4980,7 +4980,7 @@
   <bcf:section number="0">
     <bcf:citekey order="1" intorder="1">Straits2024</bcf:citekey>
     <bcf:citekey order="2" intorder="1">EastVC2025</bcf:citekey>
-    <bcf:citekey order="3" intorder="1">Brynjolfsson2016DDD</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">gul2023from</bcf:citekey>
     <bcf:citekey order="4" intorder="1">Qaltivate2025</bcf:citekey>
     <bcf:citekey order="5" intorder="1">Adam2021Chatbots</bcf:citekey>
     <bcf:citekey order="6" intorder="1">Iqbal2021</bcf:citekey>
@@ -4990,12 +4990,12 @@
     <bcf:citekey order="10" intorder="1">sorour2020business</bcf:citekey>
     <bcf:citekey order="11" intorder="1">khaddam2025ai</bcf:citekey>
     <bcf:citekey order="12" intorder="1">sorour2020business</bcf:citekey>
-    <bcf:citekey order="13" intorder="1">Brynjolfsson2016DDD</bcf:citekey>
+    <bcf:citekey order="13" intorder="1">gul2023from</bcf:citekey>
     <bcf:citekey order="14" intorder="1">Straits2024</bcf:citekey>
-    <bcf:citekey order="15" intorder="1">Torres2018BIPerformance</bcf:citekey>
-    <bcf:citekey order="16" intorder="1">Torres2018BIPerformance</bcf:citekey>
-    <bcf:citekey order="17" intorder="1">Brynjolfsson2016DDD</bcf:citekey>
-    <bcf:citekey order="18" intorder="1">Torres2018BIPerformance</bcf:citekey>
+    <bcf:citekey order="15" intorder="1">sahoo2023artificial</bcf:citekey>
+    <bcf:citekey order="16" intorder="1">sahoo2023artificial</bcf:citekey>
+    <bcf:citekey order="17" intorder="1">gul2023from</bcf:citekey>
+    <bcf:citekey order="18" intorder="1">sahoo2023artificial</bcf:citekey>
     <bcf:citekey order="19" intorder="1">databricks2025semantic</bcf:citekey>
     <bcf:citekey order="20" intorder="1">atscale2025semantic</bcf:citekey>
     <bcf:citekey order="21" intorder="1">dbt2024semantic</bcf:citekey>
@@ -5179,8 +5179,8 @@
     <bcf:citekey order="147" intorder="1">jerr2024churnprediction</bcf:citekey>
     <bcf:citekey order="148" intorder="1">ui2024churnhat</bcf:citekey>
     <bcf:citekey order="149" intorder="1">Adam2021Chatbots</bcf:citekey>
-    <bcf:citekey order="150" intorder="1">diebold1995comparing</bcf:citekey>
-    <bcf:citekey order="151" intorder="1">hansen2011model</bcf:citekey>
+    <bcf:citekey order="150" intorder="1">pypi2025diebold</bcf:citekey>
+    <bcf:citekey order="151" intorder="1">arch2025mcs</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="cms">

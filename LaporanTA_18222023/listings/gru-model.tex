@@ -1,4 +1,3 @@
-\begin{minipage}{\textwidth}
 \begin{lstlisting}[caption={Implementasi Arsitektur Model GRU}, label={lst:gru-model}, style=pythonstyle]
 import torch
 import torch.nn as nn
@@ -28,4 +27,3 @@ class GRUForecaster(nn.Module):
         out = self.dropout(out[:, -1, :])   # timestep terakhir
         return self.fc(out)                 # (batch, horizon)
 \end{lstlisting}
-\end{minipage}

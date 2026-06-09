@@ -131,6 +131,39 @@
       \field{pages}{1\bibrangedash 12}
       \range{pages}{12}
     \endentry
+    \entry{arch2025mcs}{online}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=acf0d290911cc22ea567cf80c8f0d541}{%
+           family={{Arch Library Documentation}},
+           familyi={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{acf0d290911cc22ea567cf80c8f0d541}
+      \strng{fullhash}{acf0d290911cc22ea567cf80c8f0d541}
+      \strng{fullhashraw}{acf0d290911cc22ea567cf80c8f0d541}
+      \strng{bibnamehash}{acf0d290911cc22ea567cf80c8f0d541}
+      \strng{authorbibnamehash}{acf0d290911cc22ea567cf80c8f0d541}
+      \strng{authornamehash}{acf0d290911cc22ea567cf80c8f0d541}
+      \strng{authorfullhash}{acf0d290911cc22ea567cf80c8f0d541}
+      \strng{authorfullhashraw}{acf0d290911cc22ea567cf80c8f0d541}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Model Confidence Set (MCS) for Time Series Evaluation}
+      \field{urlday}{4}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://arch.readthedocs.io/en/latest/bootstrap/mcs.html
+      \endverb
+      \verb{url}
+      \verb https://arch.readthedocs.io/en/latest/bootstrap/mcs.html
+      \endverb
+    \endentry
     \entry{atscale2025semantic}{online}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=0599d0ac9d4ebf339effd77726caba85}{%
@@ -196,46 +229,6 @@
       \range{pages}{12}
       \verb{doi}
       \verb 10.70619/vol5iss4pp41-52
-      \endverb
-    \endentry
-    \entry{Brynjolfsson2016DDD}{article}{}{}
-      \name{author}{2}{}{%
-        {{un=0,uniquepart=base,hash=7bd9f54569cb8c0301da00ed49b5a752}{%
-           family={Brynjolfsson},
-           familyi={B\bibinitperiod},
-           given={Erik},
-           giveni={E\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=383e0e0bf3503c1c74d4f609a2518439}{%
-           family={McElheran},
-           familyi={M\bibinitperiod},
-           given={Kristina},
-           giveni={K\bibinitperiod},
-           givenun=0}}%
-      }
-      \strng{namehash}{160621d1f9a94f2afcb5e8673ea635b1}
-      \strng{fullhash}{160621d1f9a94f2afcb5e8673ea635b1}
-      \strng{fullhashraw}{160621d1f9a94f2afcb5e8673ea635b1}
-      \strng{bibnamehash}{160621d1f9a94f2afcb5e8673ea635b1}
-      \strng{authorbibnamehash}{160621d1f9a94f2afcb5e8673ea635b1}
-      \strng{authornamehash}{160621d1f9a94f2afcb5e8673ea635b1}
-      \strng{authorfullhash}{160621d1f9a94f2afcb5e8673ea635b1}
-      \strng{authorfullhashraw}{160621d1f9a94f2afcb5e8673ea635b1}
-      \field{sortinit}{B}
-      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{author}
-      \field{journaltitle}{American Economic Review}
-      \field{number}{5}
-      \field{title}{The Rapid Adoption of Data-Driven Decision-Making}
-      \field{volume}{106}
-      \field{year}{2016}
-      \field{pages}{133\bibrangedash 139}
-      \range{pages}{7}
-      \verb{doi}
-      \verb 10.1257/aer.p20161016
       \endverb
     \endentry
     \entry{Celikyilmaz2020EvalTextGen}{article}{}{}
@@ -443,46 +436,6 @@
       \endverb
       \verb{url}
       \verb https://www.databricks.com/glossary/semantic-layer
-      \endverb
-    \endentry
-    \entry{diebold1995comparing}{article}{}{}
-      \name{author}{2}{}{%
-        {{un=0,uniquepart=base,hash=15cc2e3b52b5ea2d3045be532376a348}{%
-           family={Diebold},
-           familyi={D\bibinitperiod},
-           given={Francis\bibnamedelima X.},
-           giveni={F\bibinitperiod\bibinitdelim X\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=2c47ca2ba3f38cb3329258e8242da091}{%
-           family={Mariano},
-           familyi={M\bibinitperiod},
-           given={Roberto\bibnamedelima S.},
-           giveni={R\bibinitperiod\bibinitdelim S\bibinitperiod},
-           givenun=0}}%
-      }
-      \strng{namehash}{b22e93c16ed1af110c2b6d60db37bd6c}
-      \strng{fullhash}{b22e93c16ed1af110c2b6d60db37bd6c}
-      \strng{fullhashraw}{b22e93c16ed1af110c2b6d60db37bd6c}
-      \strng{bibnamehash}{b22e93c16ed1af110c2b6d60db37bd6c}
-      \strng{authorbibnamehash}{b22e93c16ed1af110c2b6d60db37bd6c}
-      \strng{authornamehash}{b22e93c16ed1af110c2b6d60db37bd6c}
-      \strng{authorfullhash}{b22e93c16ed1af110c2b6d60db37bd6c}
-      \strng{authorfullhashraw}{b22e93c16ed1af110c2b6d60db37bd6c}
-      \field{sortinit}{D}
-      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{author}
-      \field{journaltitle}{Journal of Business \& Economic Statistics}
-      \field{number}{3}
-      \field{title}{Comparing Predictive Accuracy}
-      \field{volume}{13}
-      \field{year}{1995}
-      \field{pages}{253\bibrangedash 263}
-      \range{pages}{11}
-      \verb{doi}
-      \verb 10.1080/07350015.1995.10524599
       \endverb
     \endentry
     \entry{Diqi2023GRULSTMHybrid}{article}{}{}
@@ -924,50 +877,43 @@
       \verb 2008.05756
       \endverb
     \endentry
-    \entry{hansen2011model}{article}{}{}
-      \name{author}{3}{}{%
-        {{un=0,uniquepart=base,hash=1b69f8d059ca7b024817e06b9be0fda6}{%
-           family={Hansen},
-           familyi={H\bibinitperiod},
-           given={Peter\bibnamedelima R.},
-           giveni={P\bibinitperiod\bibinitdelim R\bibinitperiod},
+    \entry{gul2023from}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=40111a738d3df3288c97cfbc81a524af}{%
+           family={Gul},
+           familyi={G\bibinitperiod},
+           given={Raazia},
+           giveni={R\bibinitperiod},
            givenun=0}}%
-        {{un=0,uniquepart=base,hash=8d526c5bfbc93e7d59acb3e0d9853324}{%
-           family={Lunde},
-           familyi={L\bibinitperiod},
-           given={Asger},
-           giveni={A\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=3ca7711233031156b6b4de630faa6724}{%
-           family={Nason},
-           familyi={N\bibinitperiod},
-           given={James\bibnamedelima M.},
-           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod},
+        {{un=0,uniquepart=base,hash=1c1096c3cabd27badcaf23763ba858b8}{%
+           family={Al-Faryan},
+           familyi={A\bibinithyphendelim F\bibinitperiod},
+           given={Mamdouh\bibnamedelimb Abdulaziz\bibnamedelima Saleh},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim S\bibinitperiod},
            givenun=0}}%
       }
-      \strng{namehash}{afc8041b233f6768b08a311935e640fe}
-      \strng{fullhash}{afc8041b233f6768b08a311935e640fe}
-      \strng{fullhashraw}{afc8041b233f6768b08a311935e640fe}
-      \strng{bibnamehash}{afc8041b233f6768b08a311935e640fe}
-      \strng{authorbibnamehash}{afc8041b233f6768b08a311935e640fe}
-      \strng{authornamehash}{afc8041b233f6768b08a311935e640fe}
-      \strng{authorfullhash}{afc8041b233f6768b08a311935e640fe}
-      \strng{authorfullhashraw}{afc8041b233f6768b08a311935e640fe}
-      \field{sortinit}{H}
-      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \strng{namehash}{aacc985a4823084332c1fc081b3ba57f}
+      \strng{fullhash}{aacc985a4823084332c1fc081b3ba57f}
+      \strng{fullhashraw}{aacc985a4823084332c1fc081b3ba57f}
+      \strng{bibnamehash}{aacc985a4823084332c1fc081b3ba57f}
+      \strng{authorbibnamehash}{aacc985a4823084332c1fc081b3ba57f}
+      \strng{authornamehash}{aacc985a4823084332c1fc081b3ba57f}
+      \strng{authorfullhash}{aacc985a4823084332c1fc081b3ba57f}
+      \strng{authorfullhashraw}{aacc985a4823084332c1fc081b3ba57f}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{author}
-      \field{journaltitle}{Econometrica}
-      \field{number}{2}
-      \field{title}{The Model Confidence Set}
-      \field{volume}{79}
-      \field{year}{2011}
-      \field{pages}{453\bibrangedash 497}
-      \range{pages}{45}
+      \field{journaltitle}{Humanities and Social Sciences Communications}
+      \field{title}{From insights to impact: leveraging data analytics for data-driven decision-making and productivity in banking sector}
+      \field{volume}{10}
+      \field{year}{2023}
+      \field{pages}{1\bibrangedash 12}
+      \range{pages}{12}
       \verb{doi}
-      \verb 10.3982/ECTA5771
+      \verb 10.1057/s41599-023-02122-x
       \endverb
     \endentry
     \entry{Hartanto2024TFTEnhanced}{article}{}{}
@@ -2301,6 +2247,39 @@
       \field{pages}{78\bibrangedash 95}
       \range{pages}{18}
     \endentry
+    \entry{pypi2025diebold}{online}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=7b6d2ab40b87ffd42bb725262bf8465b}{%
+           family={{Python Package Index}},
+           familyi={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{7b6d2ab40b87ffd42bb725262bf8465b}
+      \strng{fullhash}{7b6d2ab40b87ffd42bb725262bf8465b}
+      \strng{fullhashraw}{7b6d2ab40b87ffd42bb725262bf8465b}
+      \strng{bibnamehash}{7b6d2ab40b87ffd42bb725262bf8465b}
+      \strng{authorbibnamehash}{7b6d2ab40b87ffd42bb725262bf8465b}
+      \strng{authornamehash}{7b6d2ab40b87ffd42bb725262bf8465b}
+      \strng{authorfullhash}{7b6d2ab40b87ffd42bb725262bf8465b}
+      \strng{authorfullhashraw}{7b6d2ab40b87ffd42bb725262bf8465b}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Diebold-Mariano Test Implementation in Python}
+      \field{urlday}{4}
+      \field{urlmonth}{11}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://pypi.org/project/dieboldmariano/
+      \endverb
+      \verb{url}
+      \verb https://pypi.org/project/dieboldmariano/
+      \endverb
+    \endentry
     \entry{Qaltivate2025}{online}{}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=4a91ac35cb75693c02d20be1b48d88ff}{%
@@ -2479,6 +2458,57 @@
       \field{title}{Deep Learning, {GRU} ({Gated Recurrent Unit}), {LSTM} ({Long Short-Term Memory}) Stock Price Prediction}
       \field{volume}{X}
       \field{year}{2025}
+    \endentry
+    \entry{sahoo2023artificial}{article}{}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=14bfa9f94ae11ac4b99db1825b694aee}{%
+           family={Sahoo},
+           familyi={S\bibinitperiod},
+           given={Saumyaranjan},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8344c73f9bd0bc983573bb610dfa5ed2}{%
+           family={Kumar},
+           familyi={K\bibinitperiod},
+           given={Satish},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=f7fb182557d9cb1eae3c66ed8c84498f}{%
+           family={Donthu},
+           familyi={D\bibinitperiod},
+           given={Naveen},
+           giveni={N\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=2c07500a1abd2992ada441418ee7409f}{%
+           family={Singh},
+           familyi={S\bibinitperiod},
+           given={Alok\bibnamedelima Kumar},
+           giveni={A\bibinitperiod\bibinitdelim K\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{dfe7da66e07fecdce163323733ad4e25}
+      \strng{fullhash}{5b6ef8c863e54e07f8798afb52b9ce38}
+      \strng{fullhashraw}{5b6ef8c863e54e07f8798afb52b9ce38}
+      \strng{bibnamehash}{5b6ef8c863e54e07f8798afb52b9ce38}
+      \strng{authorbibnamehash}{5b6ef8c863e54e07f8798afb52b9ce38}
+      \strng{authornamehash}{dfe7da66e07fecdce163323733ad4e25}
+      \strng{authorfullhash}{5b6ef8c863e54e07f8798afb52b9ce38}
+      \strng{authorfullhashraw}{5b6ef8c863e54e07f8798afb52b9ce38}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{author}
+      \field{journaltitle}{Industrial Marketing Management}
+      \field{title}{Artificial intelligence capabilities, open innovation, and business performance -- Empirical insights from multinational B2B companies}
+      \field{volume}{114}
+      \field{year}{2023}
+      \field{pages}{1\bibrangedash 15}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1016/j.indmarman.2023.12.008
+      \endverb
     \endentry
     \entry{Sai2020NLGSurvey}{article}{}{}
       \name{author}{3}{}{%
@@ -2945,52 +2975,6 @@
       \field{year}{2025}
       \field{pages}{1\bibrangedash 10}
       \range{pages}{10}
-    \endentry
-    \entry{Torres2018BIPerformance}{article}{}{}
-      \name{author}{3}{}{%
-        {{un=0,uniquepart=base,hash=0fb912662d3d1353b614ae43ad14ee03}{%
-           family={Torres},
-           familyi={T\bibinitperiod},
-           given={Rozan},
-           giveni={R\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=985fc2a77a97dcee7b582e139ad7f768}{%
-           family={Sidorova},
-           familyi={S\bibinitperiod},
-           given={Anna},
-           giveni={A\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=09408f386bfad74a9a49fef78e18d1c4}{%
-           family={Jones},
-           familyi={J\bibinitperiod},
-           given={Mary\bibnamedelima C.},
-           giveni={M\bibinitperiod\bibinitdelim C\bibinitperiod},
-           givenun=0}}%
-      }
-      \strng{namehash}{ddc51ccef62f55ce7c6f89efe6bc054d}
-      \strng{fullhash}{ddc51ccef62f55ce7c6f89efe6bc054d}
-      \strng{fullhashraw}{ddc51ccef62f55ce7c6f89efe6bc054d}
-      \strng{bibnamehash}{ddc51ccef62f55ce7c6f89efe6bc054d}
-      \strng{authorbibnamehash}{ddc51ccef62f55ce7c6f89efe6bc054d}
-      \strng{authornamehash}{ddc51ccef62f55ce7c6f89efe6bc054d}
-      \strng{authorfullhash}{ddc51ccef62f55ce7c6f89efe6bc054d}
-      \strng{authorfullhashraw}{ddc51ccef62f55ce7c6f89efe6bc054d}
-      \field{sortinit}{T}
-      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{author}
-      \field{journaltitle}{Information \& Management}
-      \field{number}{7}
-      \field{title}{Enabling Firm Performance through Business Intelligence and Analytics: A Dynamic Capabilities Perspective}
-      \field{volume}{55}
-      \field{year}{2018}
-      \field{pages}{822\bibrangedash 839}
-      \range{pages}{18}
-      \verb{doi}
-      \verb 10.1016/j.im.2018.03.010
-      \endverb
     \endentry
     \entry{Tuncer2023ARIMAProphetLSTM}{article}{}{}
       \name{author}{2}{}{%

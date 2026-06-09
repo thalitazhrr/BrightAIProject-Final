@@ -79,7 +79,7 @@
 \contentsline {subsubsection}{\numberline {II.1.3.1}Komponen Inti \textit {Semantic Layer}}{13}{subsubsection.2.1.3.1}%
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
-\contentsline {section}{\numberline {II.2}\textit {Rule-Based Query} dan Implementasinya pada \textit {Chatbot}}{14}{section.2.2}%
+\contentsline {section}{\numberline {II.2}\textit {Rule-Based Query} dan Implementasinya pada \textit {Chatbot}}{13}{section.2.2}%
 \contentsline {subsection}{\numberline {II.2.1}Konsep \textit {Rule-Based Query} dalam Sistem Basis Data}{14}{subsection.2.2.1}%
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
@@ -513,165 +513,165 @@
 \contentsline {subsection}{\numberline {III.4.1}Sumber Data dan Arsitektur Penyimpanan}{91}{subsection.3.4.1}%
 \contentsline {subsubsection}{\numberline {III.4.1.1}Asal-Usul Data dan Izin Pemakaian}{91}{subsubsection.3.4.1.1}%
 \contentsline {subsubsection}{\numberline {III.4.1.2}Domain SALES}{93}{subsubsection.3.4.1.2}%
-\contentsline {subsubsection}{\numberline {III.4.1.3}Domain REVENUE}{93}{subsubsection.3.4.1.3}%
+\contentsline {subsubsection}{\numberline {III.4.1.3}Domain REVENUE}{94}{subsubsection.3.4.1.3}%
 \contentsline {subsubsection}{\numberline {III.4.1.4}Domain DATA\_PROSES}{94}{subsubsection.3.4.1.4}%
-\contentsline {subsubsection}{\numberline {III.4.1.5}Domain TARGET}{94}{subsubsection.3.4.1.5}%
-\contentsline {subsubsection}{\numberline {III.4.1.6}Domain CT0}{95}{subsubsection.3.4.1.6}%
-\contentsline {subsection}{\numberline {III.4.2}Analisis Kualitas Data}{95}{subsection.3.4.2}%
-\contentsline {subsubsection}{\numberline {III.4.2.1}Kelengkapan dan Konsistensi Data}{95}{subsubsection.3.4.2.1}%
-\contentsline {subsubsection}{\numberline {III.4.2.2}Analisis Struktur Temporal}{96}{subsubsection.3.4.2.2}%
-\contentsline {subsubsection}{\numberline {III.4.2.3}Analisis Relevansi Fitur}{97}{subsubsection.3.4.2.3}%
-\contentsline {subsection}{\numberline {III.4.3}Atribut Relasional Antar-Domain}{97}{subsection.3.4.3}%
-\contentsline {section}{\numberline {III.5}Persiapan Data (\textit {Data Preparation})}{98}{section.3.5}%
-\contentsline {subsection}{\numberline {III.5.1}Pembersihan Data}{98}{subsection.3.5.1}%
-\contentsline {subsubsection}{\numberline {III.5.1.1}Penanganan Nilai Hilang}{98}{subsubsection.3.5.1.1}%
-\contentsline {subsubsection}{\numberline {III.5.1.2}Penghapusan Duplikasi}{98}{subsubsection.3.5.1.2}%
-\contentsline {subsubsection}{\numberline {III.5.1.3}Deteksi dan Penanganan \textit {Outlier}}{99}{subsubsection.3.5.1.3}%
-\contentsline {subsection}{\numberline {III.5.2}Transformasi Data}{99}{subsection.3.5.2}%
-\contentsline {subsubsection}{\numberline {III.5.2.1}Normalisasi dan Standardisasi}{99}{subsubsection.3.5.2.1}%
-\contentsline {subsubsection}{\numberline {III.5.2.2}Transformasi Logaritmik}{99}{subsubsection.3.5.2.2}%
-\contentsline {subsubsection}{\numberline {III.5.2.3}Pengkodean Fitur Kategorikal}{100}{subsubsection.3.5.2.3}%
-\contentsline {subsection}{\numberline {III.5.3}Rekayasa Fitur untuk Peramalan Deret Waktu}{100}{subsection.3.5.3}%
-\contentsline {subsubsection}{\numberline {III.5.3.1}Fitur Temporal}{100}{subsubsection.3.5.3.1}%
-\contentsline {subsubsection}{\numberline {III.5.3.2}Fitur \textit {Lag} dan \textit {Rolling Statistics}}{101}{subsubsection.3.5.3.2}%
-\contentsline {subsubsection}{\numberline {III.5.3.3}Fitur Agregat per Entitas}{101}{subsubsection.3.5.3.3}%
-\contentsline {subsection}{\numberline {III.5.4}Pembagian Data untuk Pelatihan dan Evaluasi}{101}{subsection.3.5.4}%
-\contentsline {subsection}{\numberline {III.5.5}Penyimpanan \textit {Dataset} Final}{102}{subsection.3.5.5}%
-\contentsline {section}{\numberline {III.6}Pemodelan Data (\textit {Data Modelling})}{102}{section.3.6}%
-\contentsline {subsection}{\numberline {III.6.1}Arsitektur Model Peramalan Deret Waktu}{103}{subsection.3.6.1}%
-\contentsline {subsubsection}{\numberline {III.6.1.1}Model \textit {Baseline} Statistik: ARIMA dan Prophet}{103}{subsubsection.3.6.1.1}%
-\contentsline {subsubsection}{\numberline {III.6.1.2}Model LSTM (\textit {Long Short-Term Memory})}{103}{subsubsection.3.6.1.2}%
-\contentsline {subsubsection}{\numberline {III.6.1.3}Model GRU (\textit {Gated Recurrent Unit})}{104}{subsubsection.3.6.1.3}%
-\contentsline {subsubsection}{\numberline {III.6.1.4}Perbandingan Karakteristik Model}{105}{subsubsection.3.6.1.4}%
-\contentsline {subsection}{\numberline {III.6.2}Konfigurasi \textit {Hyperparameter}}{105}{subsection.3.6.2}%
-\contentsline {subsection}{\numberline {III.6.3}Strategi Pelatihan Model}{105}{subsection.3.6.3}%
-\contentsline {subsubsection}{\numberline {III.6.3.1}\textit {Early Stopping}}{105}{subsubsection.3.6.3.1}%
-\contentsline {subsubsection}{\numberline {III.6.3.2}Regularisasi}{106}{subsubsection.3.6.3.2}%
-\contentsline {subsubsection}{\numberline {III.6.3.3}Fungsi Kerugian}{106}{subsubsection.3.6.3.3}%
-\contentsline {subsection}{\numberline {III.6.4}Model Klasifikasi \textit {Intent} Berbasis Pola}{107}{subsection.3.6.4}%
-\contentsline {subsection}{\numberline {III.6.5}Model Pembangkitan Bahasa Alami Berbasis Templat}{107}{subsection.3.6.5}%
-\contentsline {subsection}{\numberline {III.6.6}Integrasi Model dalam Arsitektur Sistem}{108}{subsection.3.6.6}%
-\contentsline {chapter}{\numberline {IV}PERANCANGAN SISTEM \textit {BUSINESS INTELLIGENCE CHATBOT}}{109}{chapter.4}%
-\contentsline {section}{\numberline {IV.1}Alur Proses Bisnis Sistem Analitik Saat Ini (\textit {As-Is})}{110}{section.4.1}%
-\contentsline {section}{\numberline {IV.2}Alur Proses Bisnis Sistem Analitik dengan Chatbot BI (\textit {To-Be})}{111}{section.4.2}%
-\contentsline {section}{\numberline {IV.3}Perbandingan Sistem Saat Ini (\textit {As-Is}) dan Sistem Baru (\textit {To-Be})}{113}{section.4.3}%
-\contentsline {section}{\numberline {IV.4}Rancangan Solusi Keseluruhan}{114}{section.4.4}%
-\contentsline {subsection}{\numberline {IV.4.1}Komponen-Komponen Utama Arsitektur}{115}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {IV.4.2}Arsitektur Sistem dan Aliran Data}{115}{subsection.4.4.2}%
-\contentsline {section}{\numberline {IV.5}Kebutuhan Perangkat dan Lingkungan Sistem}{117}{section.4.5}%
-\contentsline {subsection}{\numberline {IV.5.1}Perangkat Lunak dan Teknologi}{118}{subsection.4.5.1}%
-\contentsline {subsection}{\numberline {IV.5.2}Kebutuhan Sumber Daya Komputasi}{121}{subsection.4.5.2}%
-\contentsline {section}{\numberline {IV.6}Desain Pengujian dan Evaluasi}{121}{section.4.6}%
-\contentsline {subsection}{\numberline {IV.6.1}Evaluasi Klasifikasi Maksud Berbasis Pola}{121}{subsection.4.6.1}%
-\contentsline {paragraph}{\numberline {IV.6.1.0.1}Metrik Evaluasi Klasifikasi \textit {Intent}}{121}{paragraph.4.6.1.0.1}%
-\contentsline {paragraph}{\numberline {IV.6.1.0.2}Analisis Nilai Keyakinan (\textit {Confidence Score})}{122}{paragraph.4.6.1.0.2}%
-\contentsline {subsection}{\numberline {IV.6.2}Evaluasi Pembangkitan Bahasa Alami Berbasis Templat}{122}{subsection.4.6.2}%
-\contentsline {paragraph}{\numberline {IV.6.2.0.1}Akurasi Faktual}{122}{paragraph.4.6.2.0.1}%
-\contentsline {paragraph}{\numberline {IV.6.2.0.2}Evaluasi Subjektif Berbasis Pengguna}{122}{paragraph.4.6.2.0.2}%
-\contentsline {subsection}{\numberline {IV.6.3}Evaluasi Peramalan Deret Waktu}{123}{subsection.4.6.3}%
-\contentsline {chapter}{\numberline {V}IMPLEMENTASI SISTEM \textit {BUSINESS INTELLIGENCE CHATBOT}}{125}{chapter.5}%
-\contentsline {section}{\numberline {V.1}Arsitektur Sistem Terimplementasi}{125}{section.5.1}%
-\contentsline {section}{\numberline {V.2}Implementasi \textit {Backend} (Node.js/Express)}{126}{section.5.2}%
-\contentsline {subsection}{\numberline {V.2.1}Struktur Proyek \textit {Backend}}{126}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {V.2.2}Konfigurasi \textit {Middleware} Keamanan}{126}{subsection.5.2.2}%
-\contentsline {subsection}{\numberline {V.2.3}Koneksi Oracle Database}{127}{subsection.5.2.3}%
-\contentsline {subsection}{\numberline {V.2.4}Rute API (\textit {API Routes})}{127}{subsection.5.2.4}%
-\contentsline {section}{\numberline {V.3}Implementasi Mesin Aturan (\textit {Rule Engine})}{128}{section.5.3}%
-\contentsline {subsection}{\numberline {V.3.1}Arsitektur Mesin Aturan}{128}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {V.3.2}Struktur Definisi Aturan}{129}{subsection.5.3.2}%
-\contentsline {subsection}{\numberline {V.3.3}Injeksi Filter Geografis}{131}{subsection.5.3.3}%
-\contentsline {subsection}{\numberline {V.3.4}Mekanisme \textit {Caching}}{133}{subsection.5.3.4}%
-\contentsline {section}{\numberline {V.4}Implementasi Klasifikasi Maksud (\textit {Intent Classification})}{133}{section.5.4}%
-\contentsline {subsection}{\numberline {V.4.1}Arsitektur Klasifikasi}{133}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {V.4.2}Algoritma Perhitungan Skor}{133}{subsection.5.4.2}%
-\contentsline {section}{\numberline {V.5}Implementasi Pembangkitan Bahasa Alami (\textit {NLG})}{136}{section.5.5}%
-\contentsline {subsection}{\numberline {V.5.1}Alur Pembangkitan Respons}{136}{subsection.5.5.1}%
-\contentsline {subsection}{\numberline {V.5.2}Peta Subjek Aturan}{137}{subsection.5.5.2}%
-\contentsline {subsection}{\numberline {V.5.3}Format Keluaran}{137}{subsection.5.5.3}%
-\contentsline {section}{\numberline {V.6}Implementasi Layanan \textit {Machine Learning}}{139}{section.5.6}%
-\contentsline {subsection}{\numberline {V.6.1}Struktur Proyek Layanan ML}{139}{subsection.5.6.1}%
-\contentsline {subsection}{\numberline {V.6.2}Implementasi Model GRU dan LSTM}{139}{subsection.5.6.2}%
-\contentsline {subsection}{\numberline {V.6.3}\textit {Pipeline} Pelatihan}{143}{subsection.5.6.3}%
-\contentsline {subsubsection}{\numberline {V.6.3.1}Penyesuaian Otomatis Ukuran Jendela (\textit {Auto-Tune Window Size})}{143}{subsubsection.5.6.3.1}%
-\contentsline {subsubsection}{\numberline {V.6.3.2}Validasi \textit {Walk-Forward}}{145}{subsubsection.5.6.3.2}%
-\contentsline {subsubsection}{\numberline {V.6.3.3}Mekanisme \textit {Benchmark} terhadap Model Sebelumnya}{146}{subsubsection.5.6.3.3}%
-\contentsline {subsubsection}{\numberline {V.6.3.4}Deteksi Data Parsial}{146}{subsubsection.5.6.3.4}%
-\contentsline {subsubsection}{\numberline {V.6.3.5}Tata Kelola Reprodusibilitas}{146}{subsubsection.5.6.3.5}%
-\contentsline {paragraph}{\numberline {V.6.3.5.1}Keterbatasan.}{147}{paragraph.5.6.3.5.1}%
-\contentsline {subsection}{\numberline {V.6.4}Praolah Data}{147}{subsection.5.6.4}%
-\contentsline {subsection}{\numberline {V.6.5}Implementasi Model \textit {Baseline} Statistik (ARIMA dan \textit {Prophet})}{148}{subsection.5.6.5}%
-\contentsline {subsubsection}{\numberline {V.6.5.1}ARIMA (\textit {Auto-Regressive Integrated Moving Average})}{148}{subsubsection.5.6.5.1}%
-\contentsline {subsubsection}{\numberline {V.6.5.2}\textit {Prophet}}{148}{subsubsection.5.6.5.2}%
-\contentsline {subsection}{\numberline {V.6.6}Metrik Evaluasi Terimplementasi}{148}{subsection.5.6.6}%
-\contentsline {section}{\numberline {V.7}Implementasi \textit {Frontend} (React.js)}{148}{section.5.7}%
-\contentsline {section}{\numberline {V.8}Implementasi Autentikasi dan Keamanan}{149}{section.5.8}%
-\contentsline {subsection}{\numberline {V.8.1}Autentikasi Berbasis JWT}{149}{subsection.5.8.1}%
-\contentsline {subsection}{\numberline {V.8.2}Validasi Masukan}{150}{subsection.5.8.2}%
-\contentsline {section}{\numberline {V.9}Ringkasan Implementasi}{150}{section.5.9}%
+\contentsline {subsubsection}{\numberline {III.4.1.5}Domain TARGET}{95}{subsubsection.3.4.1.5}%
+\contentsline {subsubsection}{\numberline {III.4.1.6}Domain CT0}{96}{subsubsection.3.4.1.6}%
+\contentsline {subsection}{\numberline {III.4.2}Analisis Kualitas Data}{96}{subsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {III.4.2.1}Kelengkapan dan Konsistensi Data}{96}{subsubsection.3.4.2.1}%
+\contentsline {subsubsection}{\numberline {III.4.2.2}Analisis Struktur Temporal}{97}{subsubsection.3.4.2.2}%
+\contentsline {subsubsection}{\numberline {III.4.2.3}Analisis Relevansi Fitur}{98}{subsubsection.3.4.2.3}%
+\contentsline {subsection}{\numberline {III.4.3}Atribut Relasional Antar-Domain}{98}{subsection.3.4.3}%
+\contentsline {section}{\numberline {III.5}Persiapan Data (\textit {Data Preparation})}{99}{section.3.5}%
+\contentsline {subsection}{\numberline {III.5.1}Pembersihan Data}{99}{subsection.3.5.1}%
+\contentsline {subsubsection}{\numberline {III.5.1.1}Penanganan Nilai Hilang}{99}{subsubsection.3.5.1.1}%
+\contentsline {subsubsection}{\numberline {III.5.1.2}Penghapusan Duplikasi}{100}{subsubsection.3.5.1.2}%
+\contentsline {subsubsection}{\numberline {III.5.1.3}Deteksi dan Penanganan \textit {Outlier}}{100}{subsubsection.3.5.1.3}%
+\contentsline {subsection}{\numberline {III.5.2}Transformasi Data}{100}{subsection.3.5.2}%
+\contentsline {subsubsection}{\numberline {III.5.2.1}Normalisasi dan Standardisasi}{100}{subsubsection.3.5.2.1}%
+\contentsline {subsubsection}{\numberline {III.5.2.2}Transformasi Logaritmik}{101}{subsubsection.3.5.2.2}%
+\contentsline {subsubsection}{\numberline {III.5.2.3}Pengkodean Fitur Kategorikal}{101}{subsubsection.3.5.2.3}%
+\contentsline {subsection}{\numberline {III.5.3}Rekayasa Fitur untuk Peramalan Deret Waktu}{101}{subsection.3.5.3}%
+\contentsline {subsubsection}{\numberline {III.5.3.1}Fitur Temporal}{101}{subsubsection.3.5.3.1}%
+\contentsline {subsubsection}{\numberline {III.5.3.2}Fitur \textit {Lag} dan \textit {Rolling Statistics}}{102}{subsubsection.3.5.3.2}%
+\contentsline {subsubsection}{\numberline {III.5.3.3}Fitur Agregat per Entitas}{103}{subsubsection.3.5.3.3}%
+\contentsline {subsection}{\numberline {III.5.4}Pembagian Data untuk Pelatihan dan Evaluasi}{103}{subsection.3.5.4}%
+\contentsline {subsection}{\numberline {III.5.5}Penyimpanan \textit {Dataset} Final}{104}{subsection.3.5.5}%
+\contentsline {section}{\numberline {III.6}Pemodelan Data (\textit {Data Modelling})}{104}{section.3.6}%
+\contentsline {subsection}{\numberline {III.6.1}Arsitektur Model Peramalan Deret Waktu}{104}{subsection.3.6.1}%
+\contentsline {subsubsection}{\numberline {III.6.1.1}Model \textit {Baseline} Statistik: ARIMA dan Prophet}{104}{subsubsection.3.6.1.1}%
+\contentsline {subsubsection}{\numberline {III.6.1.2}Model LSTM (\textit {Long Short-Term Memory})}{105}{subsubsection.3.6.1.2}%
+\contentsline {subsubsection}{\numberline {III.6.1.3}Model GRU (\textit {Gated Recurrent Unit})}{105}{subsubsection.3.6.1.3}%
+\contentsline {subsubsection}{\numberline {III.6.1.4}Perbandingan Karakteristik Model}{106}{subsubsection.3.6.1.4}%
+\contentsline {subsection}{\numberline {III.6.2}Konfigurasi \textit {Hyperparameter}}{107}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {III.6.3}Strategi Pelatihan Model}{107}{subsection.3.6.3}%
+\contentsline {subsubsection}{\numberline {III.6.3.1}\textit {Early Stopping}}{107}{subsubsection.3.6.3.1}%
+\contentsline {subsubsection}{\numberline {III.6.3.2}Regularisasi}{108}{subsubsection.3.6.3.2}%
+\contentsline {subsubsection}{\numberline {III.6.3.3}Fungsi Kerugian}{108}{subsubsection.3.6.3.3}%
+\contentsline {subsection}{\numberline {III.6.4}Model Klasifikasi \textit {Intent} Berbasis Pola}{108}{subsection.3.6.4}%
+\contentsline {subsection}{\numberline {III.6.5}Model Pembangkitan Bahasa Alami Berbasis Templat}{109}{subsection.3.6.5}%
+\contentsline {subsection}{\numberline {III.6.6}Integrasi Model dalam Arsitektur Sistem}{109}{subsection.3.6.6}%
+\contentsline {chapter}{\numberline {IV}PERANCANGAN SISTEM \textit {BUSINESS INTELLIGENCE CHATBOT}}{111}{chapter.4}%
+\contentsline {section}{\numberline {IV.1}Alur Proses Bisnis Sistem Analitik Saat Ini (\textit {As-Is})}{112}{section.4.1}%
+\contentsline {section}{\numberline {IV.2}Alur Proses Bisnis Sistem Analitik dengan Chatbot BI (\textit {To-Be})}{113}{section.4.2}%
+\contentsline {section}{\numberline {IV.3}Perbandingan Sistem Saat Ini (\textit {As-Is}) dan Sistem Baru (\textit {To-Be})}{114}{section.4.3}%
+\contentsline {section}{\numberline {IV.4}Rancangan Solusi Keseluruhan}{116}{section.4.4}%
+\contentsline {subsection}{\numberline {IV.4.1}Komponen-Komponen Utama Arsitektur}{116}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {IV.4.2}Arsitektur Sistem dan Aliran Data}{117}{subsection.4.4.2}%
+\contentsline {section}{\numberline {IV.5}Kebutuhan Perangkat dan Lingkungan Sistem}{119}{section.4.5}%
+\contentsline {subsection}{\numberline {IV.5.1}Perangkat Lunak dan Teknologi}{119}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {IV.5.2}Kebutuhan Sumber Daya Komputasi}{122}{subsection.4.5.2}%
+\contentsline {section}{\numberline {IV.6}Desain Pengujian dan Evaluasi}{123}{section.4.6}%
+\contentsline {subsection}{\numberline {IV.6.1}Evaluasi Klasifikasi Maksud Berbasis Pola}{123}{subsection.4.6.1}%
+\contentsline {subsubsection}{\numberline {IV.6.1.1}Metrik Evaluasi Klasifikasi \textit {Intent}}{123}{subsubsection.4.6.1.1}%
+\contentsline {subsubsection}{\numberline {IV.6.1.2}Analisis Nilai Keyakinan (\textit {Confidence Score})}{124}{subsubsection.4.6.1.2}%
+\contentsline {subsection}{\numberline {IV.6.2}Evaluasi Pembangkitan Bahasa Alami Berbasis Templat}{124}{subsection.4.6.2}%
+\contentsline {subsubsection}{\numberline {IV.6.2.1}Akurasi Faktual}{124}{subsubsection.4.6.2.1}%
+\contentsline {subsubsection}{\numberline {IV.6.2.2}Evaluasi Subjektif Berbasis Pengguna}{124}{subsubsection.4.6.2.2}%
+\contentsline {subsection}{\numberline {IV.6.3}Evaluasi Peramalan Deret Waktu}{125}{subsection.4.6.3}%
+\contentsline {chapter}{\numberline {V}IMPLEMENTASI SISTEM \textit {BUSINESS INTELLIGENCE CHATBOT}}{127}{chapter.5}%
+\contentsline {section}{\numberline {V.1}Arsitektur Sistem Terimplementasi}{127}{section.5.1}%
+\contentsline {section}{\numberline {V.2}Implementasi \textit {Backend} (Node.js/Express)}{128}{section.5.2}%
+\contentsline {subsection}{\numberline {V.2.1}Struktur Proyek \textit {Backend}}{128}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {V.2.2}Konfigurasi \textit {Middleware} Keamanan}{128}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {V.2.3}Koneksi Oracle Database}{129}{subsection.5.2.3}%
+\contentsline {subsection}{\numberline {V.2.4}Rute API (\textit {API Routes})}{129}{subsection.5.2.4}%
+\contentsline {section}{\numberline {V.3}Implementasi Mesin Aturan (\textit {Rule Engine})}{130}{section.5.3}%
+\contentsline {subsection}{\numberline {V.3.1}Arsitektur Mesin Aturan}{130}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {V.3.2}Struktur Definisi Aturan}{131}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {V.3.3}Injeksi Filter Geografis}{132}{subsection.5.3.3}%
+\contentsline {subsection}{\numberline {V.3.4}Mekanisme \textit {Caching}}{135}{subsection.5.3.4}%
+\contentsline {section}{\numberline {V.4}Implementasi Klasifikasi Maksud (\textit {Intent Classification})}{135}{section.5.4}%
+\contentsline {subsection}{\numberline {V.4.1}Arsitektur Klasifikasi}{135}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {V.4.2}Algoritma Perhitungan Skor}{136}{subsection.5.4.2}%
+\contentsline {section}{\numberline {V.5}Implementasi Pembangkitan Bahasa Alami (\textit {NLG})}{137}{section.5.5}%
+\contentsline {subsection}{\numberline {V.5.1}Alur Pembangkitan Respons}{137}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {V.5.2}Peta Subjek Aturan}{139}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {V.5.3}Format Keluaran}{139}{subsection.5.5.3}%
+\contentsline {section}{\numberline {V.6}Implementasi Layanan \textit {Machine Learning}}{140}{section.5.6}%
+\contentsline {subsection}{\numberline {V.6.1}Struktur Proyek Layanan ML}{141}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {V.6.2}Implementasi Model GRU dan LSTM}{141}{subsection.5.6.2}%
+\contentsline {subsection}{\numberline {V.6.3}\textit {Pipeline} Pelatihan}{144}{subsection.5.6.3}%
+\contentsline {subsubsection}{\numberline {V.6.3.1}Penyesuaian Otomatis Ukuran Jendela (\textit {Auto-Tune Window Size})}{146}{subsubsection.5.6.3.1}%
+\contentsline {subsubsection}{\numberline {V.6.3.2}Validasi \textit {Walk-Forward}}{146}{subsubsection.5.6.3.2}%
+\contentsline {subsubsection}{\numberline {V.6.3.3}Mekanisme \textit {Benchmark} terhadap Model Sebelumnya}{147}{subsubsection.5.6.3.3}%
+\contentsline {subsubsection}{\numberline {V.6.3.4}Deteksi Data Parsial}{147}{subsubsection.5.6.3.4}%
+\contentsline {subsubsection}{\numberline {V.6.3.5}Tata Kelola Reprodusibilitas}{148}{subsubsection.5.6.3.5}%
+\contentsline {paragraph}{\numberline {V.6.3.5.1}Keterbatasan.}{148}{paragraph.5.6.3.5.1}%
+\contentsline {subsection}{\numberline {V.6.4}Praolah Data}{148}{subsection.5.6.4}%
+\contentsline {subsection}{\numberline {V.6.5}Implementasi Model \textit {Baseline} Statistik (ARIMA dan \textit {Prophet})}{149}{subsection.5.6.5}%
+\contentsline {subsubsection}{\numberline {V.6.5.1}ARIMA (\textit {Auto-Regressive Integrated Moving Average})}{149}{subsubsection.5.6.5.1}%
+\contentsline {subsubsection}{\numberline {V.6.5.2}\textit {Prophet}}{149}{subsubsection.5.6.5.2}%
+\contentsline {subsection}{\numberline {V.6.6}Metrik Evaluasi Terimplementasi}{149}{subsection.5.6.6}%
+\contentsline {section}{\numberline {V.7}Implementasi \textit {Frontend} (React.js)}{150}{section.5.7}%
+\contentsline {section}{\numberline {V.8}Implementasi Autentikasi dan Keamanan}{151}{section.5.8}%
+\contentsline {subsection}{\numberline {V.8.1}Autentikasi Berbasis JWT}{151}{subsection.5.8.1}%
+\contentsline {subsection}{\numberline {V.8.2}Validasi Masukan}{151}{subsection.5.8.2}%
+\contentsline {section}{\numberline {V.9}Ringkasan Implementasi}{151}{section.5.9}%
 \contentsline {subsection}{\numberline {V.9.1}Antarmuka Pengguna}{151}{subsection.5.9.1}%
-\contentsline {subsubsection}{\numberline {V.9.1.1}Halaman Masuk (\textit {Login})}{151}{subsubsection.5.9.1.1}%
-\contentsline {subsubsection}{\numberline {V.9.1.2}Halaman Registrasi}{151}{subsubsection.5.9.1.2}%
-\contentsline {subsubsection}{\numberline {V.9.1.3}Halaman Utama \textit {Chatbot}}{152}{subsubsection.5.9.1.3}%
-\contentsline {subsubsection}{\numberline {V.9.1.4}Halaman Profil}{153}{subsubsection.5.9.1.4}%
-\contentsline {subsubsection}{\numberline {V.9.1.5}Halaman Pengaturan}{153}{subsubsection.5.9.1.5}%
-\contentsline {subsubsection}{\numberline {V.9.1.6}Tampilan Tema Terang (\textit {Light Mode})}{154}{subsubsection.5.9.1.6}%
-\contentsline {subsubsection}{\numberline {V.9.1.7}Detail Respons \textit {Rule-Based Query}}{154}{subsubsection.5.9.1.7}%
-\contentsline {subsubsection}{\numberline {V.9.1.8}Detail Respons Peramalan Deret Waktu}{154}{subsubsection.5.9.1.8}%
-\contentsline {subsection}{\numberline {V.9.2}Selisih antara Rancangan dan Implementasi}{155}{subsection.5.9.2}%
-\contentsline {chapter}{\numberline {VI}EVALUASI}{157}{chapter.6}%
-\contentsline {section}{\numberline {VI.1}Evaluasi Klasifikasi Maksud (\textit {Intent Classification})}{157}{section.6.1}%
-\contentsline {subsection}{\numberline {VI.1.1}Cakupan \textit {Intent}}{157}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {VI.1.2}Metodologi Evaluasi Klasifikasi}{158}{subsection.6.1.2}%
-\contentsline {subsection}{\numberline {VI.1.3}Cakupan Evaluasi Klasifikasi}{158}{subsection.6.1.3}%
-\contentsline {subsection}{\numberline {VI.1.4}Hasil Evaluasi Pencocokan Aturan}{159}{subsection.6.1.4}%
-\contentsline {subsection}{\numberline {VI.1.5}Analisis Keyakinan dan Cakupan}{160}{subsection.6.1.5}%
-\contentsline {subsection}{\numberline {VI.1.6}Analisis Mekanisme Disambiguasi}{161}{subsection.6.1.6}%
-\contentsline {subsection}{\numberline {VI.1.7}Evaluasi terhadap Target Performa}{161}{subsection.6.1.7}%
-\contentsline {subsection}{\numberline {VI.1.8}Mekanisme \textit {Fallback}}{162}{subsection.6.1.8}%
-\contentsline {section}{\numberline {VI.2}Evaluasi Pembangkitan Bahasa Alami (\textit {NLG})}{162}{section.6.2}%
-\contentsline {subsection}{\numberline {VI.2.1}Akurasi Faktual}{162}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {VI.2.2}Evaluasi Subjektif oleh Pengguna Internal}{162}{subsection.6.2.2}%
-\contentsline {subsection}{\numberline {VI.2.3}Karakteristik Teknis Modul NLG}{163}{subsection.6.2.3}%
-\contentsline {section}{\numberline {VI.3}Evaluasi Peramalan Deret Waktu (\textit {Time Series Forecasting})}{163}{section.6.3}%
-\contentsline {subsection}{\numberline {VI.3.1}Protokol Evaluasi}{164}{subsection.6.3.1}%
-\contentsline {subsection}{\numberline {VI.3.2}Metrik Evaluasi}{164}{subsection.6.3.2}%
-\contentsline {subsection}{\numberline {VI.3.3}Hasil Evaluasi per Metrik Bisnis}{165}{subsection.6.3.3}%
-\contentsline {subsubsection}{\numberline {VI.3.3.1}Peramalan Rata-rata Hari Instalasi (\textit {Avg Install Days})}{165}{subsubsection.6.3.3.1}%
-\contentsline {subsubsection}{\numberline {VI.3.3.2}Peramalan Volume Pesanan (\textit {Order HSI})}{167}{subsubsection.6.3.3.2}%
-\contentsline {subsubsection}{\numberline {VI.3.3.3}Peramalan Volume \textit {Churn} (\textit {Churn HSI})}{168}{subsubsection.6.3.3.3}%
+\contentsline {subsubsection}{\numberline {V.9.1.1}Halaman Masuk (\textit {Login})}{152}{subsubsection.5.9.1.1}%
+\contentsline {subsubsection}{\numberline {V.9.1.2}Halaman Registrasi}{152}{subsubsection.5.9.1.2}%
+\contentsline {subsubsection}{\numberline {V.9.1.3}Halaman Utama \textit {Chatbot}}{153}{subsubsection.5.9.1.3}%
+\contentsline {subsubsection}{\numberline {V.9.1.4}Halaman Profil}{154}{subsubsection.5.9.1.4}%
+\contentsline {subsubsection}{\numberline {V.9.1.5}Halaman Pengaturan}{155}{subsubsection.5.9.1.5}%
+\contentsline {subsubsection}{\numberline {V.9.1.6}Tampilan Tema Terang (\textit {Light Mode})}{155}{subsubsection.5.9.1.6}%
+\contentsline {subsubsection}{\numberline {V.9.1.7}Detail Respons \textit {Rule-Based Query}}{156}{subsubsection.5.9.1.7}%
+\contentsline {subsubsection}{\numberline {V.9.1.8}Detail Respons Peramalan Deret Waktu}{157}{subsubsection.5.9.1.8}%
+\contentsline {subsection}{\numberline {V.9.2}Selisih antara Rancangan dan Implementasi}{157}{subsection.5.9.2}%
+\contentsline {chapter}{\numberline {VI}EVALUASI}{159}{chapter.6}%
+\contentsline {section}{\numberline {VI.1}Evaluasi Klasifikasi Maksud (\textit {Intent Classification})}{159}{section.6.1}%
+\contentsline {subsection}{\numberline {VI.1.1}Cakupan \textit {Intent}}{159}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {VI.1.2}Metodologi Evaluasi Klasifikasi}{159}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {VI.1.3}Cakupan Evaluasi Klasifikasi}{160}{subsection.6.1.3}%
+\contentsline {subsection}{\numberline {VI.1.4}Hasil Evaluasi Pencocokan Aturan}{161}{subsection.6.1.4}%
+\contentsline {subsection}{\numberline {VI.1.5}Analisis Keyakinan dan Cakupan}{162}{subsection.6.1.5}%
+\contentsline {subsection}{\numberline {VI.1.6}Analisis Mekanisme Disambiguasi}{162}{subsection.6.1.6}%
+\contentsline {subsection}{\numberline {VI.1.7}Evaluasi terhadap Target Performa}{163}{subsection.6.1.7}%
+\contentsline {subsection}{\numberline {VI.1.8}Mekanisme \textit {Fallback}}{163}{subsection.6.1.8}%
+\contentsline {section}{\numberline {VI.2}Evaluasi Pembangkitan Bahasa Alami (\textit {NLG})}{163}{section.6.2}%
+\contentsline {subsection}{\numberline {VI.2.1}Akurasi Faktual}{163}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {VI.2.2}Evaluasi Subjektif oleh Pengguna Internal}{164}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {VI.2.3}Karakteristik Teknis Modul NLG}{164}{subsection.6.2.3}%
+\contentsline {section}{\numberline {VI.3}Evaluasi Peramalan Deret Waktu (\textit {Time Series Forecasting})}{164}{section.6.3}%
+\contentsline {subsection}{\numberline {VI.3.1}Protokol Evaluasi}{165}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {VI.3.2}Metrik Evaluasi}{166}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {VI.3.3}Hasil Evaluasi per Metrik Bisnis}{166}{subsection.6.3.3}%
+\contentsline {subsubsection}{\numberline {VI.3.3.1}Peramalan Rata-rata Hari Instalasi (\textit {Avg Install Days})}{167}{subsubsection.6.3.3.1}%
+\contentsline {subsubsection}{\numberline {VI.3.3.2}Peramalan Volume Pesanan (\textit {Order HSI})}{168}{subsubsection.6.3.3.2}%
+\contentsline {subsubsection}{\numberline {VI.3.3.3}Peramalan Volume \textit {Churn} (\textit {Churn HSI})}{169}{subsubsection.6.3.3.3}%
 \contentsline {subsubsection}{\numberline {VI.3.3.4}Peramalan Realisasi Target (\textit {Realisasi HSI})}{170}{subsubsection.6.3.3.4}%
-\contentsline {subsubsection}{\numberline {VI.3.3.5}Ringkasan Lintas Metrik}{172}{subsubsection.6.3.3.5}%
+\contentsline {subsubsection}{\numberline {VI.3.3.5}Ringkasan Lintas Metrik}{170}{subsubsection.6.3.3.5}%
 \contentsline {subsection}{\numberline {VI.3.4}Analisis Komparatif Antar-Model}{172}{subsection.6.3.4}%
 \contentsline {subsubsection}{\numberline {VI.3.4.1}Kinerja Model GRU}{172}{subsubsection.6.3.4.1}%
-\contentsline {subsubsection}{\numberline {VI.3.4.2}Kinerja Model LSTM}{173}{subsubsection.6.3.4.2}%
-\contentsline {subsubsection}{\numberline {VI.3.4.3}Kinerja Model ARIMA}{173}{subsubsection.6.3.4.3}%
+\contentsline {subsubsection}{\numberline {VI.3.4.2}Kinerja Model LSTM}{172}{subsubsection.6.3.4.2}%
+\contentsline {subsubsection}{\numberline {VI.3.4.3}Kinerja Model ARIMA}{172}{subsubsection.6.3.4.3}%
 \contentsline {subsubsection}{\numberline {VI.3.4.4}Kegagalan Model \textit {Prophet}}{173}{subsubsection.6.3.4.4}%
 \contentsline {subsubsection}{\numberline {VI.3.4.5}Kesimpulan Perbandingan Model}{173}{subsubsection.6.3.4.5}%
-\contentsline {subsubsection}{\numberline {VI.3.4.6}Catatan Metodologis: Sifat Perbandingan}{174}{subsubsection.6.3.4.6}%
+\contentsline {subsubsection}{\numberline {VI.3.4.6}Catatan Metodologis: Sifat Perbandingan}{173}{subsubsection.6.3.4.6}%
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
 \contentsline {subsection}{\numberline {VI.3.5}Mekanisme Pembandingan Model}{174}{subsection.6.3.5}%
-\contentsline {section}{\numberline {VI.4}Evaluasi Sistem Terintegrasi}{175}{section.6.4}%
-\contentsline {subsection}{\numberline {VI.4.1}Pengujian Alur Lengkap}{175}{subsection.6.4.1}%
+\contentsline {section}{\numberline {VI.4}Evaluasi Sistem Terintegrasi}{174}{section.6.4}%
+\contentsline {subsection}{\numberline {VI.4.1}Pengujian Alur Lengkap}{174}{subsection.6.4.1}%
 \contentsline {subsection}{\numberline {VI.4.2}Pengujian Waktu Respons}{175}{subsection.6.4.2}%
 \contentsline {subsection}{\numberline {VI.4.3}Pengujian Manajemen Sesi dan Riwayat}{175}{subsection.6.4.3}%
-\contentsline {section}{\numberline {VI.5}Validasi oleh Pengguna Internal}{176}{section.6.5}%
-\contentsline {subsection}{\numberline {VI.5.1}Ruang Lingkup Validasi}{176}{subsection.6.5.1}%
+\contentsline {section}{\numberline {VI.5}Validasi oleh Pengguna Internal}{175}{section.6.5}%
+\contentsline {subsection}{\numberline {VI.5.1}Ruang Lingkup Validasi}{175}{subsection.6.5.1}%
 \contentsline {subsection}{\numberline {VI.5.2}Temuan Validasi}{176}{subsection.6.5.2}%
 \contentsline {section}{\numberline {VI.6}Umpan Balik Pengguna Internal}{176}{section.6.6}%
-\contentsline {subsection}{\numberline {VI.6.1}Profil Responden dan Metodologi}{177}{subsection.6.6.1}%
-\contentsline {subsection}{\numberline {VI.6.2}Hasil Penilaian Kuantitatif}{177}{subsection.6.6.2}%
-\contentsline {subsection}{\numberline {VI.6.3}Umpan Balik Kualitatif}{178}{subsection.6.6.3}%
-\contentsline {subsection}{\numberline {VI.6.4}Masukan dan Saran Perbaikan}{178}{subsection.6.6.4}%
-\contentsline {subsection}{\numberline {VI.6.5}Rekap Umpan Balik per Aspek}{179}{subsection.6.6.5}%
-\contentsline {subsection}{\numberline {VI.6.6}Contoh Kueri yang Diujikan}{179}{subsection.6.6.6}%
+\contentsline {subsection}{\numberline {VI.6.1}Profil Responden dan Metodologi}{176}{subsection.6.6.1}%
+\contentsline {subsection}{\numberline {VI.6.2}Hasil Penilaian Kuantitatif}{176}{subsection.6.6.2}%
+\contentsline {subsection}{\numberline {VI.6.3}Umpan Balik Kualitatif}{177}{subsection.6.6.3}%
+\contentsline {subsection}{\numberline {VI.6.4}Masukan dan Saran Perbaikan}{177}{subsection.6.6.4}%
+\contentsline {subsection}{\numberline {VI.6.5}Rekap Umpan Balik per Aspek}{178}{subsection.6.6.5}%
+\contentsline {subsection}{\numberline {VI.6.6}Contoh Kueri yang Diujikan}{178}{subsection.6.6.6}%
 \contentsline {section}{\numberline {VI.7}Pembahasan Hasil Evaluasi}{180}{section.6.7}%
-\contentsline {subsection}{\numberline {VI.7.1}Ancaman terhadap Validitas}{182}{subsection.6.7.1}%
-\contentsline {chapter}{\numberline {VII}PENUTUP}{185}{chapter.7}%
-\contentsline {section}{\numberline {VII.1}Kesimpulan}{185}{section.7.1}%
-\contentsline {section}{\numberline {VII.2}Saran}{186}{section.7.2}%
+\contentsline {subsection}{\numberline {VI.7.1}Ancaman terhadap Validitas}{181}{subsection.6.7.1}%
+\contentsline {chapter}{\numberline {VII}PENUTUP}{183}{chapter.7}%
+\contentsline {section}{\numberline {VII.1}Kesimpulan}{183}{section.7.1}%
+\contentsline {section}{\numberline {VII.2}Saran}{184}{section.7.2}%
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
@@ -848,6 +848,6 @@
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
-\contentsline {chapter}{Lampiran \numberline {A}HASIL WAWANCARA}{199}{appendix.1.A}%
-\contentsline {chapter}{Lampiran \numberline {B}HASIL FORMULIR EVALUASI HASIL SISTEM BRIGHTAI (INTERNAL)}{203}{appendix.1.B}%
-\contentsline {chapter}{Lampiran \numberline {C}TAUTAN REPOSITORI KODE SUMBER}{205}{appendix.1.C}%
+\contentsline {chapter}{Lampiran \numberline {A}HASIL WAWANCARA}{197}{appendix.1.A}%
+\contentsline {chapter}{Lampiran \numberline {B}HASIL FORMULIR EVALUASI HASIL SISTEM BRIGHTAI (INTERNAL)}{201}{appendix.1.B}%
+\contentsline {chapter}{Lampiran \numberline {C}TAUTAN REPOSITORI KODE SUMBER}{203}{appendix.1.C}%

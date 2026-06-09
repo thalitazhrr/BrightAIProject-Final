@@ -696,7 +696,7 @@ Seluruh data yang digunakan dalam penelitian ini merupakan data operasional inte
 
 Data yang diproses oleh sistem bersifat agregat dan tidak mengandung informasi identitas pribadi pelanggan secara langsung. Atribut pelanggan seperti \texttt{NCLI}, \texttt{ND}, dan \texttt{NOTEL} yang terdapat dalam tabel sumber digunakan semata-mata sebagai kunci penghitungan agregasi (misalnya \texttt{COUNT(DISTINCT NCLI)} untuk menghitung jumlah pelanggan unik) dan tidak ditampilkan maupun disimpan dalam keluaran sistem. Seluruh respons \textit{chatbot} dan hasil peramalan disajikan dalam bentuk metrik agregat pada level wilayah (regional, witel) dan periode waktu (bulanan), sehingga tidak memungkinkan identifikasi pelanggan individual. Sistem juga dirancang dengan akses baca saja (\textit{read-only}) terhadap basis data, tanpa kemampuan untuk mengubah, menghapus, atau mengekspor data mentah dari \textit{data warehouse}.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Ringkasan Domain Data pada Skema \texttt{DWH\_MOIS}}
 \label{tab:ringkasan-domain}
@@ -719,7 +719,7 @@ Data yang diproses oleh sistem bersifat agregat dan tidak mengandung informasi i
 
 Kelima kategori strategi bisnis utama yang tercermin dalam 38 aturan tersebut secara komprehensif menggambarkan berbagai aspek analisis yang mendukung pengambilan keputusan berbasis data (lihat rekapitulasi pada Gambar~\ref{fig:detailrb}). Kategori pertama, yaitu \textit{Churn Analysis}, terdiri dari enam aturan yang secara khusus menganalisis pola perpindahan pelanggan, tingkat retensi di tingkat regional, serta strategi mitigasi \textit{churn} yang efektif untuk mempertahankan pelanggan dan mengurangi potensi kehilangan pelanggan strategis. Selanjutnya, kategori kedua, \textit{Customer Intelligence}, mencakup tujuh aturan yang berfokus pada analisis loyalitas pelanggan, segmentasi profil berdasarkan karakteristik demografis maupun perilaku, serta proses transformasi digital yang mendukung personalisasi layanan dan peningkatan pengalaman pelanggan secara keseluruhan. Kategori ketiga, \textit{Revenue Analytics}, terdiri dari delapan aturan yang menitikberatkan pada analisis pendapatan lintas wilayah geografis, perilaku pelanggan terhadap pendapatan, siklus hidup pelanggan, serta strategi penetrasi pasar yang optimal untuk meningkatkan profitabilitas. Pada kategori keempat, \textit{Order and Operations}, terdapat dua belas aturan yang mengkaji performa kanal penjualan, tingkat pemenuhan pesanan, tren pertumbuhan volume penjualan, serta efisiensi operasional yang berkontribusi terhadap peningkatan layanan dan penguatan proses bisnis. Terakhir, kategori kelima, \textit{Performance and Target}, mencakup lima aturan yang memberikan evaluasi terhadap KPI dan melakukan benchmarking secara kompetitif terhadap target kinerja di tingkat regional maupun segmentasi pelanggan sehingga memungkinkan pengawasan dan pengendalian yang lebih efektif terhadap pencapaian strategi bisnis secara menyeluruh.
 
-\begin{figure}[H] 
+\begin{figure}[htbp] 
   \centering
   \includegraphics[width=1\textwidth,
                    height=0.3\textheight,
@@ -728,11 +728,13 @@ Kelima kategori strategi bisnis utama yang tercermin dalam 38 aturan tersebut se
   \label{fig:detailrb}
 \end{figure}
 
+Kategori-kategori tersebut dirancang berdasarkan analisis kebutuhan komprehensif terhadap kueri-kueri esensial yang secara rutin diajukan oleh tingkat manajerial.
+
 \subsubsection{Domain SALES}
 
 Domain \texttt{SALES} merupakan domain utama yang merepresentasikan informasi terkait volume permintaan, performa penjualan, serta penetrasi layanan pada berbagai tingkatan wilayah operasional. Tabel ini menyajikan struktur data yang komprehensif, mencakup dimensi geografis, waktu, produk, serta atribut pelanggan dan metrik performa layanan. Tabel~\ref{tab:spesifikasi-sales} menyajikan spesifikasi lengkap domain ini.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Spesifikasi Domain Data Sales}
 \label{tab:spesifikasi-sales}
@@ -757,11 +759,13 @@ Metrik Performa & \texttt{COMPLETION\_RATE}, \texttt{FULFILLMENT\_STATUS} \\
 \end{tabular}
 \end{table}
 
+Pemetaan parameter penjualan pada tabel di atas berfungsi mengisolasi informasi performa aktivasi layanan secara akurat.
+
 \subsubsection{Domain REVENUE}
 
 Domain \texttt{\texttt{REVENUE}} dirancang untuk mendukung analisis pendapatan, profitabilitas, serta distribusi pendapatan pada berbagai lapisan wilayah operasional. Domain ini memuat data yang mencakup identitas pelanggan, dimensi geografis, periode waktu, serta metrik utama terkait pendapatan yang dihasilkan per pelanggan maupun per layanan. Tabel~\ref{tab:spesifikasi-revenue} menyajikan spesifikasi lengkap domain ini.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Spesifikasi Domain Data Revenue}
 \label{tab:spesifikasi-revenue}
@@ -788,11 +792,13 @@ Metrik Kinerja & \texttt{REVENUE\_PER\_PELANGGAN}, \texttt{REVENUE\_PER\_NCLI} \
 \end{tabular}
 \end{table}
 
+Struktur \textit{revenue} yang dipaparkan dalam tabel ini memfasilitasi pelacakan pertumbuhan moneter berbasis waktu.
+
 \subsubsection{Domain DATA\_PROSES}
 
 Domain \texttt{DATA\_PROSES} secara khusus dikembangkan untuk mendukung proses profiling dan segmentasi pelanggan secara komprehensif. Domain ini dirancang untuk mengidentifikasi atribut pelanggan, tingkat digitalisasi, serta segmentasi berdasarkan perilaku dan karakteristik layanan. Melalui data yang diperbarui secara berkala, \texttt{DATA\_PROSES} memungkinkan analisis longitudinal terkait penetrasi produk digital, partisipasi dalam program loyalitas, dan atribut layanan pelanggan secara geografis maupun demografis. Tabel~\ref{tab:spesifikasi-dapros} menyajikan spesifikasi lengkap domain ini.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Spesifikasi Domain Data Proses}
 \label{tab:spesifikasi-dapros}
@@ -819,11 +825,13 @@ Metrik Pendapatan & \texttt{TREMS\_REV\_P}, \texttt{TREMS\_REV\_REF}, \texttt{AD
 \end{tabular}
 \end{table}
 
+Melalui atribut segmentasi pelanggan tersebut, manajer wilayah dapat membedah penyebaran konsumen dan status kepemilikan jaringan.
+
 \subsubsection{Domain TARGET}
 
 Domain \texttt{TARGET} difokuskan pada evaluasi target kinerja, analisis kesenjangan (\textit{gap analysis}), serta pemantauan pencapaian strategi penjualan dan layanan. Domain ini memungkinkan manajemen untuk membandingkan antara nilai target dan realisasi, sekaligus mengukur tingkat pencapaian dalam berbagai konteks wilayah, produk, dan waktu. Tabel~\ref{tab:spesifikasi-target} menyajikan spesifikasi lengkap domain ini.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Spesifikasi Domain Data Target}
 \label{tab:spesifikasi-target}
@@ -848,11 +856,13 @@ Metrik Evaluasi & \texttt{GAP\_ANALYSIS}, \texttt{PERFORMANCE\_SCORE} \\
 \end{tabular}
 \end{table}
 
+Metrik capaian target di atas digunakan sebagai tolok ukur utama guna memastikan bahwa ekspansi bisnis tetap berada di jalur operasional yang direncanakan.
+
 \subsubsection{Domain CT0}
 
 Domain \texttt{CT0} dirancang untuk menganalisis perilaku \textit{churn} pelanggan serta strategi retensi yang berkaitan dengan siklus hidup layanan. Domain ini memungkinkan pengukuran tingkat \textit{churn}, identifikasi pelanggan dengan risiko tinggi, serta pelacakan masa aktif layanan pelanggan. Struktur data dalam \texttt{CT0} mencakup status pelanggan, metrik \textit{churn}, alasan perpindahan layanan, serta parameter durasi berlangganan. Tabel~\ref{tab:spesifikasi-churn} menyajikan spesifikasi lengkap domain ini.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Spesifikasi Domain Data Churn}
 \label{tab:spesifikasi-churn}
@@ -877,6 +887,8 @@ Dimensi Siklus Hidup & \texttt{MASA\_LAYANAN}, \texttt{PERIODE\_CHURN}, \texttt{
 \end{tabular}
 \end{table}
 
+Parameter atrisi (CT0) melengkapi wawasan dengan indikator retensi, memampukan para pengambil keputusan untuk merancang mitigasi kepergian pelanggan (\textit{churn}) dengan lebih efektif.
+
 \subsection{Analisis Kualitas Data}
 \label{subsec:kualitas-data}
 
@@ -888,7 +900,7 @@ Pemeriksaan kelengkapan data dilakukan untuk mengidentifikasi nilai yang hilang 
 
 Profiling dilakukan melalui kueri \texttt{SELECT} langsung ke skema \texttt{DWH\_MOIS} pada \textit{Enterprise Data Warehouse} selama periode pelatihan model (Mei--Juni 2026). Setiap metrik diagregasi pada level bulanan sehingga satu baris mewakili satu bulan observasi. Proses penarikan data menerapkan filter \texttt{IS NOT NULL} pada kolom kunci masing-masing tabel guna memastikan hanya baris yang memiliki nilai valid yang diproses. Tabel~\ref{tab:kualitas-data} menyajikan hasil profiling nyata berdasarkan jumlah titik data (\textit{data points}) bulanan yang berhasil ditarik untuk setiap metrik pada level nasional.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Hasil Profiling Data Deret Waktu per Metrik (Level Nasional)}
 \label{tab:kualitas-data}
@@ -931,7 +943,7 @@ Dalam peramalan multivariat, fitur-fitur yang digunakan harus memiliki hubungan 
 
 Dalam menjamin interoperabilitas antar-domain, sistem memanfaatkan sejumlah atribut utama yang bersifat relasional. Atribut-atribut ini digunakan sebagai parameter utama dalam penyusunan aturan (\textit{rules}) pada masing-masing domain data, memungkinkan sistem untuk membentuk kondisi logika yang terstruktur dan presisi. Tabel~\ref{tab:atribut-relasional} menyajikan atribut utama relasional yang menghubungkan kelima domain data.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Atribut Utama Relasional Antar-Domain}
 \label{tab:atribut-relasional}
@@ -975,7 +987,7 @@ Proses pembersihan data bertujuan untuk menangani permasalahan kualitas data yan
 
 Data deret waktu sering kali mengandung nilai yang hilang (\textit{missing values}) yang dapat ditangani menggunakan beberapa teknik. Teknik \textit{forward fill} mempropagasi nilai observasi terakhir ke depan hingga ditemukan nilai baru, sedangkan \textit{backward fill} melakukan sebaliknya. Teknik interpolasi memperkirakan nilai yang hilang berdasarkan titik data di sekitarnya. Pemilihan teknik penanganan nilai hilang disesuaikan dengan karakteristik data dan konteks bisnis. Tabel~\ref{tab:teknik-missing} menyajikan teknik penanganan nilai hilang yang digunakan untuk setiap jenis atribut.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Teknik Penanganan Nilai Hilang per Jenis Atribut}
 \label{tab:teknik-missing}
@@ -996,6 +1008,8 @@ Variabel Target & Tidak Diimputasi & Menghindari bias pada variabel target predi
 \end{tabular}
 \end{table}
 
+Inventarisasi kualitas di atas menunjukkan bahwa meskipun sebagian besar atribut memiliki keutuhan informasi yang layak, beberapa anomali memerlukan prapemrosesan agar terhindar dari distorsi kalkulasi analitik.
+
 \subsubsection{Penghapusan Duplikasi}
 
 Rekaman duplikat diidentifikasi berdasarkan kombinasi kunci unik yang terdiri dari \texttt{CUSTOMER\_ID}, \texttt{PERIODE}, dan \texttt{PRODUCT\_TYPE}. Rekaman duplikat dihapus dengan mempertahankan rekaman terbaru berdasarkan \textit{timestamp} pembaruan. Proses ini memastikan bahwa setiap kombinasi pelanggan, periode, dan produk hanya memiliki satu rekaman yang valid dan tidak ada redundansi data yang dapat menyebabkan bias dalam model.
@@ -1013,7 +1027,7 @@ Transformasi data dilakukan untuk menyesuaikan format dan skala data agar sesuai
 
 Normalisasi dan standardisasi merupakan teknik penskalaan data yang kritis untuk model \textit{deep learning} guna mencegah ketidakstabilan pembelajaran dan meningkatkan performa model. Tabel~\ref{tab:teknik-scaling} menyajikan teknik penskalaan yang digunakan untuk setiap kategori fitur dalam sistem.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Teknik Penskalaan per Kategori Fitur}
 \label{tab:teknik-scaling}
@@ -1034,6 +1048,8 @@ Fitur Temporal & Normalisasi Min-Max & Mempertahankan skala relatif antar period
 \end{tabular}
 \end{table}
 
+Setelah langkah pembersihan ini, keandalan kumpulan data dapat dijamin, menihilkan peluang munculnya duplikasi sinyal yang merugikan akurasi inferensi di tahap berikutnya.
+
 \subsubsection{Transformasi Logaritmik}
 
 Dalam fitur dengan distribusi \textit{skewed} (miring), transformasi logaritmik diterapkan untuk mengurangi kemiriman dan membuat distribusi lebih mendekati normal. Transformasi ini meningkatkan performa model dengan memastikan data terdistribusi lebih simetris. Penambahan konstanta 1 dilakukan untuk menangani nilai nol dalam data.
@@ -1042,7 +1058,7 @@ Dalam fitur dengan distribusi \textit{skewed} (miring), transformasi logaritmik 
 
 Fitur kategorikal dikonversi menjadi representasi numerik menggunakan teknik \textit{one-hot encoding} untuk kategori dengan kardinalitas rendah (kurang dari 10 nilai unik) dan \textit{label encoding} untuk kategori dengan kardinalitas tinggi. Tabel~\ref{tab:encoding} menyajikan teknik pengkodean yang digunakan untuk setiap fitur kategorikal utama.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Teknik Pengkodean Fitur Kategorikal}
 \label{tab:encoding}
@@ -1063,6 +1079,8 @@ Fitur kategorikal dikonversi menjadi representasi numerik menggunakan teknik \te
 \end{tabular}
 \end{table}
 
+Transformasi logaritmik ini secara matematis meredam rentang deviasi (\textit{variance}) deret waktu yang bersifat eksponensial, sehingga data berada pada distribusi berskala lebih seragam dan mempermudah konvergensi model komputasi.
+
 \subsection{Rekayasa Fitur untuk Peramalan Deret Waktu}
 \label{subsec:feature-engineering}
 
@@ -1072,7 +1090,7 @@ Rekayasa fitur (\textit{feature engineering}) merupakan proses pembuatan fitur b
 
 Fitur temporal diekstraksi dari dimensi waktu untuk menangkap pola musiman dan siklis dalam data. Tabel~\ref{tab:fitur-temporal} menyajikan fitur temporal yang dihasilkan.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Fitur Temporal yang Dihasilkan}
 \label{tab:fitur-temporal}
@@ -1093,11 +1111,13 @@ Fitur temporal diekstraksi dari dimensi waktu untuk menangkap pola musiman dan s
 \end{tabular}
 \end{table}
 
+Konstruksi data temporal di atas menyediakan konteks kronologis fundamental untuk memosisikan setiap observasi data dalam aliran peristiwa yang berkesinambungan.
+
 \subsubsection{Fitur \textit{Lag} dan \textit{Rolling Statistics}}
 
 Fitur \textit{lag} dibuat dengan menggeser nilai variabel target ke periode sebelumnya untuk menangkap dependensi temporal. Selain itu, statistik bergulir (\textit{rolling statistics}) dihitung untuk menangkap tren dan volatilitas. Tabel~\ref{tab:fitur-lag} menyajikan fitur \textit{lag} dan statistik bergulir yang dihasilkan.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Fitur Lag dan Statistik Bergulir}
 \label{tab:fitur-lag}
@@ -1118,11 +1138,13 @@ Fitur \textit{lag} dibuat dengan menggeser nilai variabel target ke periode sebe
 \end{tabular}
 \end{table}
 
+Variabel-variabel retrospektif ini memainkan peran krusial dalam mengungkap pola autokorelasi, di mana performa pada bulan-bulan sebelumnya berfungsi sebagai prediktor kuat bagi tren di periode yang akan datang.
+
 \subsubsection{Fitur Agregat per Entitas}
 
 Fitur agregat dihitung untuk setiap entitas (pelanggan, wilayah, produk) guna menangkap karakteristik historis yang dapat memengaruhi nilai target. Tabel~\ref{tab:fitur-agregat} menyajikan fitur agregat yang dihasilkan.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Fitur Agregat per Entitas}
 \label{tab:fitur-agregat}
@@ -1143,12 +1165,14 @@ Fitur agregat dihitung untuk setiap entitas (pelanggan, wilayah, produk) guna me
 \end{tabular}
 \end{table}
 
+Sebagai pelengkap aspek waktu, agregasi lintas entitas (nasional maupun regional) memberikan kerangka referensi hierarkis yang memampukan model untuk mengenali dinamika proporsional wilayah tertentu terhadap konstelasi bisnis secara keseluruhan.
+
 \subsection{Pembagian Data untuk Pelatihan dan Evaluasi}
 \label{subsec:split-data}
 
 Pembagian data untuk model peramalan deret waktu menggunakan pendekatan \textit{time-based split} untuk mencegah \textit{data leakage} dan memastikan evaluasi yang realistis. Data dibagi berdasarkan urutan waktu dengan proporsi yang disajikan pada Tabel~\ref{tab:split-data}.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Pembagian Data untuk Pelatihan dan Evaluasi}
 \label{tab:split-data}
@@ -1187,7 +1211,7 @@ Sistem peramalan dalam penelitian ini mengadopsi pendekatan bertahap yang dimula
 
 Model ARIMA (\textit{Autoregressive Integrated Moving Average}) dan Prophet digunakan sebagai \textit{baseline} pembanding dalam evaluasi sistem peramalan. Penggunaan \textit{baseline} statistik ini penting untuk memberikan konteks kuantitatif bagi penilaian performa model \textit{deep learning}: apabila model \textit{deep learning} tidak secara konsisten mengungguli \textit{baseline} statistik, maka penggunaan model yang lebih kompleks tidak dapat dibenarkan secara teknis dan praktis.
 
-ARIMA diimplementasikan untuk setiap seri waktu secara individual menggunakan seleksi parameter otomatis berdasarkan kriteria informasi AIC (\textit{Akaike Information Criterion}). Untuk data yang menunjukkan pola musiman yang signifikan secara statistik (berdasarkan uji Augmented Dickey-Fuller), digunakan varian SARIMA dengan parameter musiman (\(P, D, Q, m\)).
+ARIMA diimplementasikan untuk setiap seri waktu secara individual menggunakan seleksi parameter otomatis berdasarkan kriteria informasi AIC (\textit{Akaike Information Criterion}). Data yang menunjukkan pola musiman yang signifikan secara statistik (berdasarkan uji Augmented Dickey-Fuller) menggunakan varian SARIMA dengan parameter musiman (\(P, D, Q, m\)).
 
 Prophet diimplementasikan dengan konfigurasi standar yang mencakup deteksi titik perubahan tren secara otomatis dan komponen musiman tahunan. Prophet dipilih sebagai \textit{baseline} kedua karena kemampuannya menangani data bisnis dengan tren dan musiman yang kompleks tanpa memerlukan pra-pemrosesan manual yang ekstensif.
 
@@ -1197,7 +1221,7 @@ Hasil evaluasi \textit{baseline} statistik ini kemudian dibandingkan dengan mode
 
 LSTM merupakan jenis jaringan saraf berulang (\textit{Recurrent Neural Network}, RNN) yang dirancang untuk mengatasi masalah gradien menghilang (\textit{vanishing gradient}) pada RNN tradisional dan mampu mempelajari dependensi jangka panjang dalam data sekuens. Arsitektur LSTM terdiri dari sel memori dan tiga gerbang utama yang diuraikan pada Tabel~\ref{tab:lstm-gates}.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Komponen Gerbang pada Arsitektur LSTM}
 \label{tab:lstm-gates}
@@ -1220,7 +1244,7 @@ Keunggulan LSTM terletak pada kemampuannya untuk mempelajari dependensi jangka p
 
 GRU merupakan varian yang lebih sederhana dari LSTM dengan jumlah parameter yang lebih sedikit sehingga lebih efisien dalam menangkap dan mempertahankan dependensi jangka pendek dan jangka panjang dalam data deret waktu. GRU menggunakan dua gerbang utama, yaitu \textit{update gate} dan \textit{reset gate}. Tabel~\ref{tab:gru-gates} menyajikan komponen gerbang pada arsitektur GRU.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Komponen Gerbang pada Arsitektur GRU}
 \label{tab:gru-gates}
@@ -1241,7 +1265,7 @@ Dibandingkan dengan LSTM, GRU memiliki struktur yang lebih sederhana dengan lebi
 
 Tabel~\ref{tab:perbandingan-model} menyajikan perbandingan karakteristik seluruh model peramalan yang diimplementasikan dalam penelitian ini, mencakup model statistik \textit{baseline} (ARIMA/SARIMA dan Prophet) serta model \textit{deep learning} utama (LSTM dan GRU).
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Perbandingan Karakteristik Model Peramalan}
 \label{tab:perbandingan-model}
@@ -1270,12 +1294,14 @@ Peran dalam Penelitian & \textit{Baseline} & \textit{Baseline} & Model Utama & M
 \end{tabular}
 \end{table}
 
+Pemisahan partisi antara porsi historis, periode validasi, dan pengujian pamungkas mengamankan protokol pengujian yang objektif, mencegah terjadinya asimilasi informasi (\textit{data leakage}) yang sering menjadi jebakan pemodelan deret waktu.
+
 \subsection{Konfigurasi \textit{Hyperparameter}}
 \label{subsec:hyperparameter}
 
 Konfigurasi \textit{hyperparameter} untuk model LSTM dan GRU ditetapkan sebagai nilai tetap pada berkas \texttt{config.py} berdasarkan praktik terbaik dari literatur. Tabel~\ref{tab:hyperparameter} menyajikan konfigurasi \textit{hyperparameter} yang digunakan dalam pelatihan.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Konfigurasi \textit{Hyperparameter} Model (Berkas \texttt{config.py})}
 \label{tab:hyperparameter}
@@ -1304,6 +1330,8 @@ Horizon Prediksi (\texttt{HORIZON}) & 1 & 1 & Jumlah bulan yang diprediksi \\
 \end{tabular}
 \end{table}
 
+Matriks nilai di atas mendefinisikan ruang pencarian (\textit{search space}) algoritma untuk menemukan takaran interaksi parameter yang optimal, menyeimbangkan kompleksitas komputasional dengan kapasitas generalisasi masing-masing model.
+
 \subsection{Strategi Pelatihan Model}
 \label{subsec:strategi-pelatihan}
 
@@ -1321,7 +1349,7 @@ Teknik regularisasi yang digunakan mencakup \textit{dropout} untuk mencegah \tex
 
 Pemilihan fungsi kerugian disesuaikan dengan karakteristik masalah prediksi. Tabel~\ref{tab:loss-function} menyajikan fungsi kerugian yang digunakan untuk setiap jenis prediksi.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Fungsi Kerugian untuk Setiap Jenis Prediksi}
 \label{tab:loss-function}
@@ -1371,7 +1399,7 @@ Ketiga komponen model (peramalan deret waktu, klasifikasi \textit{intent}, dan N
 
 Tabel~\ref{tab:integrasi-model} menyajikan ringkasan integrasi model dalam sistem.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Integrasi Model dalam Arsitektur Sistem}
 \label{tab:integrasi-model}

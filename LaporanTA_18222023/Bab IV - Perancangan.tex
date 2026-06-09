@@ -16,7 +16,7 @@ Sistem analitik yang ada saat ini (\textit{as-is}) masih mengikuti pola operasio
 
 Proses bisnis sistem analitik saat ini direpresentasikan dalam notasi BPMN (\textit{Business Process Model and Notation}) yang menggambarkan interaksi antar aktor, keputusan-keputusan kritis, dan aliran data dalam organisasi. Proses dimulai dengan identifikasi kebutuhan analisis baru oleh pengguna bisnis, dilanjutkan dengan klarifikasi kebutuhan dan pengembangan \textit{query} oleh tim teknis, eksekusi \textit{query} pada \textit{data warehouse}, pemrosesan data hasil \textit{query}, pembangunan \textit{dashboard} atau laporan, \textit{review} dan validasi internal, iterasi perbaikan apabila diperlukan, serta diakhiri dengan publikasi hasil analisis kepada pengguna akhir. Di dalam alur tersebut terdapat beberapa titik keputusan (\textit{decision point}) yang bersifat kritis, antara lain: apakah permintaan dapat dipenuhi dengan \textit{dashboard existing} atau memerlukan \textit{custom query}, apakah data hasil \textit{query} sudah sesuai dengan ekspektasi pengguna atau memerlukan transformasi tambahan, serta apakah hasil analisis sudah valid untuk dipublikasikan atau masih memerlukan revisi. Proses \textit{as-is} ini bersifat iteratif dengan siklus umpan balik yang panjang dan kurang efisien dalam memenuhi kebutuhan analitik yang dinamis dan beragam dari pengguna bisnis. Diagram BPMN yang menggambarkan proses \textit{as-is} disajikan pada Gambar~\ref{fig:bpmnasis}.
 
-\begin{figure}[H] 
+\begin{figure}[htbp] 
   \centering
   \includegraphics[width=1\textwidth,
                    height=1\textheight,
@@ -34,7 +34,7 @@ Proses bisnis sistem analitik yang diusulkan (\textit{to-be}) merepresentasikan 
 
 Keunggulan proses \textit{to-be} dibandingkan proses \textit{as-is} terletak pada beberapa aspek utama: \textbf{kecepatan eksekusi} yang jauh lebih tinggi (hitungan menit dibandingkan hari) berkat eksekusi kueri \textit{real-time}, \textbf{aksesibilitas yang lebih luas} karena tidak lagi memerlukan keahlian teknis SQL untuk mengakses \textit{insight}, \textbf{otomatisasi proses} yang mengurangi beban kerja manual tim teknis melalui pemanfaatan \textit{rule-based query} dan penanganan \textit{intent} otomatis, \textbf{kemampuan analitik yang diperluas} melalui integrasi komponen prediktif berbasis \textit{machine learning}, serta \textbf{pengalaman pengguna} yang lebih baik melalui antarmuka percakapan yang natural dan responsif. Secara keseluruhan, rancangan \textit{to-be} ini memungkinkan siklus permintaan hingga penyajian hasil analitik standar diselesaikan dalam waktu kurang dari satu menit untuk mayoritas kasus sehingga lebih selaras dengan kebutuhan pengambilan keputusan yang cepat dan berbasis data. Diagram BPMN yang menggambarkan proses \textit{to-be} disajikan pada Gambar~\ref{fig:bpmntobe}.
 
-\begin{figure}[H] 
+\begin{figure}[htbp] 
   \centering
   \includegraphics[width=1\textwidth,
                    height=1\textheight,
@@ -131,7 +131,7 @@ Diagram arsitektur sistem yang lebih rinci disajikan pada Gambar~\ref{fig:arsite
     \item \textbf{Keamanan}, dengan penerapan autentikasi berlapis dan enkripsi data.
 \end{enumerate}
 
-\begin{figure}[H] 
+\begin{figure}[htbp] 
   \centering
   \includegraphics[width=1\textwidth,
                    height=1\textheight,
@@ -149,7 +149,7 @@ Dalam mencegah terjadinya latensi yang tinggi, aspek waktu respons ditetapkan se
 \section{Kebutuhan Perangkat dan Lingkungan Sistem}
 \label{sec:perangkat}
 
-Untuk memastikan bahwa arsitektur yang dirancang dapat diimplementasikan dan direproduksi, sistem memerlukan spesifikasi perangkat lunak dan perangkat keras tertentu yang berfungsi sebagai fondasi dari pengembangan sistem (\textit{environment setup}).
+Dalam memastikan bahwa arsitektur yang dirancang dapat diimplementasikan dan direproduksi, sistem memerlukan spesifikasi perangkat lunak dan perangkat keras tertentu yang berfungsi sebagai fondasi dari pengembangan sistem (\textit{environment setup}).
 
 \subsection{Perangkat Lunak dan Teknologi}
 \label{subsec:tools}
@@ -163,7 +163,7 @@ Dalam melakukan implementasi dan pembangunan sistem yang nyata (tidak hanya seka
 
 Dalam mendukung proses pelatihan model \textit{deep learning} dan pengujian arsitektur yang diusulkan, diperlukan sumber daya komputasi yang memadai. Pelatihan model peramalan deret waktu berbasis LSTM dan GRU memerlukan akselerasi GPU untuk mempercepat proses komputasi yang kompleks. Pengembangan sistem ini memanfaatkan Google Colaboratory yang menyediakan akses ke GPU NVIDIA T4 dengan kapasitas 15GB memori GPU. 
 
-Untuk tahap implementasi dan peluncuran produk secara langsung (\textit{deployment}), infrastruktur peladen (\textit{server}) dirancang untuk memiliki spesifikasi minimal 4 inti prosesor (\textit{cores}), memori RAM sebesar 16GB, dan penyimpanan berbasis SSD minimal 100GB guna memastikan aliran data yang cepat tanpa \textit{bottleneck} pada sistem berkas. 
+Dalam tahap implementasi dan peluncuran produk secara langsung (\textit{deployment}), infrastruktur peladen (\textit{server}) dirancang untuk memiliki spesifikasi minimal 4 inti prosesor (\textit{cores}), memori RAM sebesar 16GB, dan penyimpanan berbasis SSD minimal 100GB guna memastikan aliran data yang cepat tanpa \textit{bottleneck} pada sistem berkas. 
 
 \section{Desain Pengujian dan Evaluasi}
 \label{sec:evaluasi}
@@ -175,7 +175,7 @@ Dalam memastikan bahwa sistem yang dikembangkan memenuhi spesifikasi dari desain
 
 Modul pencocokan kueri ke aturan bisnis dievaluasi menggunakan metrik standar klasifikasi multi-kelas. Sistem mengimplementasikan tujuh kategori \textit{intent} yang dipetakan ke 38 aturan bisnis; evaluasi dilakukan pada level pencocokan aturan (38 kelas) dengan pendekatan \textit{one-vs-all} dan agregasi metrik menggunakan strategi \textit{macro-averaging}, \textit{micro-averaging}, dan \textit{weighted-averaging}.
 
-\paragraph{Metrik Evaluasi Klasifikasi \textit{Intent}}
+\subsubsection{Metrik Evaluasi Klasifikasi \textit{Intent}}
 
 Metrik evaluasi yang digunakan untuk mengukur performa klasifikasi maksud mencakup:
 
@@ -206,7 +206,7 @@ Formula perhitungan metrik agregasi adalah sebagai berikut.
 
 dengan $K$ adalah jumlah kelas \textit{intent} dalam sistem.
 
-\paragraph{Analisis Nilai Keyakinan (\textit{Confidence Score})}
+\subsubsection{Analisis Nilai Keyakinan (\textit{Confidence Score})}
 
 Sistem menggunakan mekanisme pemberian nilai keyakinan dalam rentang 0 hingga 100 untuk setiap prediksi klasifikasi maksud. Nilai dihitung melalui fungsi penjumlah bobot kata kunci primer dan pendukung yang cocok ($c = \min(100,\;\text{skor} \times 10)$). Ambang batas (\textit{threshold}) ditetapkan pada nilai 40 dengan ketentuan:
 \begin{enumerate}
@@ -219,11 +219,11 @@ Sistem menggunakan mekanisme pemberian nilai keyakinan dalam rentang 0 hingga 10
 
 Modul \textit{Natural Language Generation} (NLG) dievaluasi dari dua aspek: akurasi faktual dan evaluasi subjektif oleh pengguna internal.
 
-\paragraph{Akurasi Faktual}
+\subsubsection{Akurasi Faktual}
 
 Akurasi faktual dievaluasi dengan memverifikasi apakah seluruh nilai numerik dan informasi bisnis dalam respons NLG sesuai dengan hasil kueri dari basis data. Karena pendekatan NLG berbasis templat bersifat deterministik dan menyisipkan data langsung dari hasil kueri tanpa proses generatif, akurasi faktual dijamin secara arsitektural (Target: 100\%).
 
-\paragraph{Evaluasi Subjektif Berbasis Pengguna}
+\subsubsection{Evaluasi Subjektif Berbasis Pengguna}
 
 Kualitas keluaran NLG dinilai secara subjektif oleh pengguna internal perusahaan menggunakan kuesioner berskala Likert 1--5 pada empat dimensi utama:
 \begin{enumerate}

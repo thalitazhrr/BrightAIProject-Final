@@ -1,6 +1,7 @@
-\contentsline {algorithm}{\numberline {V.1}{\ignorespaces Injeksi Filter Geografis ke dalam Kueri SQL}}{132}{algorithm.caption.50}%
-\contentsline {algorithm}{\numberline {V.2}{\ignorespaces Klasifikasi Maksud Berbasis Pencocokan Pola Kata Kunci Berbobot}}{136}{algorithm.caption.51}%
-\contentsline {algorithm}{\numberline {V.3}{\ignorespaces Pembangkitan Respons Berbasis Templat (\textit {Template-Based NLG})}}{139}{algorithm.caption.53}%
-\contentsline {algorithm}{\numberline {V.4}{\ignorespaces Pelatihan GRU/LSTM dengan \textit {Early Stopping} dan \textit {Learning Rate Scheduling}}}{143}{algorithm.caption.55}%
-\contentsline {algorithm}{\numberline {V.5}{\ignorespaces Penyesuaian Otomatis Ukuran Jendela (\textit {Auto-Tune Window Size})}}{145}{algorithm.caption.57}%
-\contentsline {algorithm}{\numberline {V.6}{\ignorespaces \textit {Walk-Forward Validation} untuk Evaluasi Model Peramalan}}{146}{algorithm.caption.58}%
+\contentsline {algorithm}{\numberline {V.1}{\ignorespaces Injeksi Filter Geografis ke dalam Kueri SQL (Bagian 1)}}{133}{algorithm.caption.50}%
+\contentsline {algorithm}{\numberline {V.2}{\ignorespaces Injeksi Filter Geografis ke dalam Kueri SQL (Bagian 2)}}{134}{algorithm.caption.51}%
+\contentsline {algorithm}{\numberline {V.3}{\ignorespaces Klasifikasi Maksud Berbasis Pencocokan Pola Kata Kunci Berbobot}}{138}{algorithm.caption.52}%
+\contentsline {algorithm}{\numberline {V.4}{\ignorespaces Pembangkitan Respons Berbasis Templat (\textit {Template-Based NLG})}}{141}{algorithm.caption.54}%
+\contentsline {algorithm}{\numberline {V.5}{\ignorespaces Pelatihan GRU/LSTM dengan \textit {Early Stopping} dan \textit {Learning Rate Scheduling}}}{145}{algorithm.caption.57}%
+\contentsline {algorithm}{\numberline {V.6}{\ignorespaces Penyesuaian Otomatis Ukuran Jendela (\textit {Auto-Tune Window Size})}}{146}{algorithm.caption.58}%
+\contentsline {algorithm}{\numberline {V.7}{\ignorespaces \textit {Walk-Forward Validation} untuk Evaluasi Model Peramalan}}{147}{algorithm.caption.59}%

@@ -47,7 +47,7 @@ Sistem mengimplementasikan beberapa lapisan \textit{middleware} keamanan pada Ex
 
 Koneksi ke Oracle Database dikelola melalui modul \texttt{config/database.js} menggunakan pustaka \texttt{node-oracledb}. Satu \textit{connection pool} melayani akses ke kedua skema: \texttt{DWH\_MOIS} untuk kueri analitik dan \texttt{USR\_RPT} untuk operasi autentikasi serta manajemen sesi. Konfigurasi \textit{pool} disajikan pada Tabel~\ref{tab:pool-config}.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Konfigurasi \textit{Connection Pool} Oracle Database}
 \label{tab:pool-config}
@@ -94,7 +94,7 @@ Alur pemrosesan kueri dalam mesin aturan mengikuti tahapan sebagai berikut.
 
 Setiap aturan didefinisikan sebagai objek JavaScript yang memiliki struktur terstandar. Komponen utama setiap aturan disajikan pada Tabel~\ref{tab:struktur-rule}.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Komponen Struktur Definisi Aturan}
 \label{tab:struktur-rule}
@@ -130,9 +130,11 @@ Mesin aturan mengimplementasikan fitur injeksi filter geografis secara dinamis k
     \item \textbf{Mode Injeksi Otomatis}: Jika tidak ada penanda, sistem melakukan pemindaian baris demi baris untuk menemukan blok \texttt{FROM DWH\_MOIS} dan menyisipkan klausa filter pada posisi yang tepat sebelum \texttt{GROUP BY} atau penutup subkueri.
 \end{enumerate}
 
-Algoritma~\ref{alg:geo-filter} mendeskripsikan prosedur lengkap deteksi cakupan geografis dan injeksi filter ke dalam kueri SQL.
+Dalam membedah mekanisme tersebut, Algoritma~\ref{alg:geo-filter-1} merinci prosedur tahap awal yang mengekstraksi intensi cakupan geografis dari pertanyaan pengguna. Proses ini diawali dengan pengecekan hierarkis mulai dari kata kunci tingkat nasional hingga pencocokan struktur \textit{witel}.
 
 \input{algorithms/geo-filter-injection.tex}
+
+Eksekusi modifikasi SQL pada algoritma di atas merepresentasikan kemampuan sistem dalam menyisipkan klausa \texttt{WHERE} tambahan secara terprogram. Penggunaan pencarian \textit{placeholder} serta pemindaian leksikal mendalam memastikan integritas logika basis data tetap terjaga. Melalui arsitektur ini, \textit{dashboard} percakapan dijamin hanya menarik dan merender analisis agregat untuk geografi yang relevan dan memiliki hak akses, mewujudkan prinsip isolasi wilayah fungsional.
 
 \subsection{Mekanisme \textit{Caching}}
 
@@ -151,15 +153,17 @@ Sistem mengklasifikasikan setiap kueri pengguna ke dalam dua dimensi: \textit{in
 
 \subsection{Algoritma Perhitungan Skor}
 
-Untuk setiap kueri, sistem menghitung skor kecocokan terhadap setiap \textit{intent} dengan mengiterasi daftar kata kunci. Jika sebuah kata kunci ditemukan dalam kueri (menggunakan fungsi \texttt{String.includes}), skor \textit{intent} tersebut ditambah sebesar nilai bobot. \textit{Intent} dengan skor tertinggi dipilih sebagai hasil klasifikasi, dengan nilai keyakinan (\textit{confidence}) dihitung sebagai $\min(100, \text{skor} \times 10)$\label{sym:min}. Jika seluruh skor bernilai nol, sistem mengembalikan \textit{intent} \texttt{general} sebagai \textit{fallback}.
+Dalam setiap kueri, sistem menghitung skor kecocokan terhadap setiap \textit{intent} dengan mengiterasi daftar kata kunci. Jika sebuah kata kunci ditemukan dalam kueri (menggunakan fungsi \texttt{String.includes}), skor \textit{intent} tersebut ditambah sebesar nilai bobot. \textit{Intent} dengan skor tertinggi dipilih sebagai hasil klasifikasi, dengan nilai keyakinan (\textit{confidence}) dihitung sebagai $\min(100, \text{skor} \times 10)$\label{sym:min}. Jika seluruh skor bernilai nol, sistem mengembalikan \textit{intent} \texttt{general} sebagai \textit{fallback}.
 
-Selain \textit{intent}, sistem juga mengklasifikasikan fokus analisis ke dalam delapan kategori: \textit{order}, \textit{revenue}, \textit{churn}, \textit{fulfillment}, \textit{subscriber}, \textit{bundling}, \textit{digital}, dan \textit{target}. Kombinasi \textit{intent} dan fokus digunakan oleh modul NLG untuk memilih templat respons yang paling sesuai. \textit{Listing}~\ref{lst:query-processor} menunjukkan implementasi inti proses pencocokan aturan pada \textit{query processor}.
+Selain \textit{intent}, sistem juga mengklasifikasikan fokus analisis ke dalam delapan kategori: \textit{order}, \textit{revenue}, \textit{churn}, \textit{fulfillment}, \textit{subscriber}, \textit{bundling}, \textit{digital}, dan \textit{target}. Kombinasi \textit{intent} dan fokus analisis ini digunakan secara sinergis oleh modul pembangkitan bahasa alami (NLG) untuk memilih templat respons yang paling sesuai dengan konteks percakapan. \textit{Listing}~\ref{lst:query-processor} menunjukkan secara nyata implementasi inti dari proses pencocokan aturan pada kelas \textit{query processor}.
 
 \input{listings/query-processor.tex}
 
-Algoritma~\ref{alg:intent-classification} mendeskripsikan prosedur lengkap klasifikasi maksud dan fokus secara formal.
+Dalam mengikat seluruh alur komputasi di atas, diperlukan sebuah algoritma sekuensial yang merangkum keseluruhan mekanisme klasifikasi. Algoritma~\ref{alg:intent-classification} mendeskripsikan prosedur tersebut secara formal, mulai dari penerimaan masukan, iterasi pencocokan pola, hingga penentuan maksud dan fokus akhir.
 
 \input{algorithms/intent-classification.tex}
+
+Dengan adanya algoritma yang terstruktur ini, modul pemroses kueri dapat membedakan berbagai bentuk pertanyaan pengguna dan memetakannya secara akurat ke dalam format yang dimengerti oleh sistem basis data dan mesin analitik.
 
 \section{Implementasi Pembangkitan Bahasa Alami (\textit{NLG})}
 \label{sec:impl-nlg}
@@ -181,7 +185,7 @@ Proses pembangkitan respons NLG mengikuti empat tahapan berurutan:
 
 Modul NLG mendefinisikan peta subjek (\texttt{RULE\_SUBJEK}) yang memetakan setiap \texttt{RULE\_ID} ke deskripsi subjek dalam bahasa Indonesia. Tabel~\ref{tab:rule-subjek} menyajikan sebagian contoh pemetaan subjek.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Contoh Pemetaan Subjek Aturan}
 \label{tab:rule-subjek}
@@ -204,6 +208,8 @@ Modul NLG mendefinisikan peta subjek (\texttt{RULE\_SUBJEK}) yang memetakan seti
 \end{tabular}
 \end{table}
 
+Kode templat di atas memastikan keseragaman penyajian laporan bisnis, di mana format respons telah dibakukan agar selaras dengan kebutuhan baca pengguna operasional di berbagai domain.
+
 \subsection{Format Keluaran}
 
 Respons NLG dihasilkan dalam format \textit{Markdown} yang mendukung:
@@ -216,13 +222,15 @@ Respons NLG dihasilkan dalam format \textit{Markdown} yang mendukung:
     \item Penanda sumber data, jumlah rekaman, dan waktu pemrosesan pada bagian akhir respons
 \end{enumerate}
 
-Akurasi faktual dijamin sebesar 100\% karena seluruh angka dalam respons berasal langsung dari hasil kueri Oracle Database tanpa proses generatif. \textit{Listing}~\ref{lst:nlg-generator} menyajikan implementasi fungsi utama pembangkitan respons NLG.
+Akurasi faktual dijamin sebesar 100\% karena seluruh angka dalam respons berasal langsung dari hasil kueri Oracle Database tanpa melalui proses halusinasi teks generatif. \textit{Listing}~\ref{lst:nlg-generator} secara teknis menyajikan implementasi kelas dan fungsi utama yang bertanggung jawab merajut data basis data menjadi laporan \textit{Markdown} yang komprehensif.
 
 \input{listings/nlg-generator.tex}
 
-Algoritma~\ref{alg:nlg-template} mendeskripsikan prosedur lengkap pembangkitan respons dari konteks terstruktur hingga narasi akhir.
+Dalam memberikan gambaran operasional yang holistik, prosedur dari pembentukan konteks hingga pemilihan frasa dijelaskan secara formal melalui sebuah algoritma deterministik. Algoritma~\ref{alg:nlg-template} mendeskripsikan prosedur lengkap pembangkitan respons mulai dari ekstraksi konteks terstruktur hingga produksi narasi akhir berbahasa Indonesia.
 
 \input{algorithms/nlg-template-selection.tex}
+
+Dengan penerapan algoritma tersebut, sistem terbukti mampu menyajikan narasi bisnis yang bervariasi tanpa mengorbankan akurasi data analitik maupun konsistensi format pelaporan.
 
 \section{Implementasi Layanan \textit{Machine Learning}}
 \label{sec:impl-ml}
@@ -233,11 +241,11 @@ Layanan \textit{machine learning} diimplementasikan sebagai layanan mikro (\text
 
 Tabel~\ref{tab:struktur-ml} menyajikan struktur direktori layanan \textit{machine learning}.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Struktur Direktori Layanan \textit{Machine Learning}}
 \label{tab:struktur-ml}
-\begin{tabular}{|p{4cm}|p{9cm}|}
+\begin{tabular}{|p{5.5cm}|p{8.5cm}|}
 \hline
 \textbf{Direktori/Berkas} & \textbf{Fungsi} \\
 \hline
@@ -264,6 +272,8 @@ Tabel~\ref{tab:struktur-ml} menyajikan struktur direktori layanan \textit{machin
 \end{tabular}
 \end{table}
 
+Struktur \textit{endpoints} yang tersusun rapi tersebut tidak hanya menjamin abstraksi layanan, tetapi juga memisahkan tanggung jawab antara lapisan aplikasi antarmuka dan lapisan komputasi analitik, sejalan dengan prinsip mikroservis.
+
 \subsection{Implementasi Model GRU dan LSTM}
 
 Model GRU dan LSTM diimplementasikan sebagai kelas Python yang mewarisi \texttt{torch.nn.Module}. Kedua model memiliki arsitektur yang serupa dengan perbedaan utama pada jenis sel berulang (\textit{recurrent cell}) yang digunakan. Arsitektur setiap model terdiri dari:
@@ -274,19 +284,17 @@ Model GRU dan LSTM diimplementasikan sebagai kelas Python yang mewarisi \texttt{
     \item \textbf{Lapisan Linear Keluaran}: Lapisan \texttt{nn.Linear} yang memetakan \textit{hidden state} terakhir ke dimensi horizon prediksi.
 \end{enumerate}
 
-Kedua model menerima masukan berukuran (\textit{batch}, \texttt{window\_size}, 1) dan menghasilkan keluaran berukuran (\textit{batch}, \textit{horizon}). \textit{Listing}~\ref{lst:gru-model} dan \textit{Listing}~\ref{lst:lstm-model} menyajikan implementasi lengkap kedua arsitektur model tersebut.
+Kedua model dirancang untuk menerima matriks masukan berdimensi (\textit{batch}, \texttt{window\_size}, 1) dan mereduksinya menjadi representasi peramalan berukuran (\textit{batch}, \textit{horizon}). Sebagai representasi pertama dari rancangan tersebut, \textit{Listing}~\ref{lst:gru-model} menyajikan implementasi kode dari arsitektur GRU. Komponen ini menitikberatkan pada efisiensi komputasi dengan memanfaatkan gerbang pembaruan (\textit{update gate}) dan gerbang atur ulang (\textit{reset gate}) secara terintegrasi untuk mengendalikan aliran memori sekuensial.
 
 \input{listings/gru-model.tex}
 
+Berbeda dengan kesederhanaan struktural yang ditawarkan oleh mekanisme pembaruan GRU, arsitektur LSTM menghadirkan tingkat kendali memori yang lebih presisi melalui tambahan status sel (\textit{cell state}) yang beroperasi secara berdampingan dengan status tersembunyi (\textit{hidden state}). Konstruksi lapisan ini secara spesifik diuraikan pada \textit{Listing}~\ref{lst:lstm-model}, menunjukkan inisialisasi memori ganda yang krusial untuk mitigasi peluruhan gradien (\textit{vanishing gradient}) pada deret waktu berdurasi panjang.
+
 \input{listings/lstm-model.tex}
 
-Konfigurasi \textit{hyperparameter} bawaan yang digunakan disajikan pada Tabel~\ref{tab:hyperparameter-impl}.
+Selain arsitektur dasar, kinerja model sangat dipengaruhi oleh konfigurasi \textit{hyperparameter} yang ditetapkan sebelum proses pelatihan dimulai. Konfigurasi bawaan yang diterapkan dalam layanan ini disajikan secara perinci pada Tabel~\ref{tab:hyperparameter-impl}. Pengaturan tersebut dirancang untuk mencapai keseimbangan optimal antara kapasitas pembelajaran model dan risiko terjadinya \textit{overfitting}.
 
-Algoritma~\ref{alg:early-stopping} mendeskripsikan prosedur pelatihan GRU dan LSTM secara formal, termasuk mekanisme \textit{early stopping} dan penjadwalan laju pembelajaran.
-
-\input{algorithms/early-stopping.tex}
-
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Konfigurasi \textit{Hyperparameter} Model Terimplementasi}
 \label{tab:hyperparameter-impl}
@@ -315,6 +323,12 @@ Algoritma~\ref{alg:early-stopping} mendeskripsikan prosedur pelatihan GRU dan LS
 \end{tabular}
 \end{table}
 
+Setelah seluruh konfigurasi ditetapkan, model dilatih menggunakan algoritma pembelajaran standar. Algoritma~\ref{alg:early-stopping} mendeskripsikan prosedur pelatihan GRU dan LSTM secara formal, termasuk integrasi mekanisme penghentian dini (\textit{early stopping}) dan penjadwalan laju pembelajaran (\textit{learning rate scheduling}). Langkah-langkah tersebut memastikan bahwa pelatihan akan dihentikan secara otomatis apabila model telah mencapai titik konvergensi.
+
+\input{algorithms/early-stopping.tex}
+
+Penerapan algoritma di atas secara efektif memastikan efisiensi komputasi, mencegah penggunaan sumber daya yang berlebihan, serta mengamankan model akhir agar memiliki tingkat generalisasi terbaik terhadap data validasi.
+
 \subsection{\textit{Pipeline} Pelatihan}
 \label{subsec:pipeline-pelatihan}
 
@@ -322,15 +336,19 @@ Algoritma~\ref{alg:early-stopping} mendeskripsikan prosedur pelatihan GRU dan LS
 
 \subsubsection{Penyesuaian Otomatis Ukuran Jendela (\textit{Auto-Tune Window Size})}
 
-Ketika pengguna tidak menentukan ukuran jendela (\texttt{window\_size = 0}), sistem secara otomatis mencoba beberapa kandidat ukuran jendela (3, 6, 9, 12) dan memilih yang menghasilkan \textit{validation loss} terendah. Kandidat dibatasi hingga maksimal 50\% dari jumlah data pra-pengujian. Algoritma~\ref{alg:auto-tune-window} mendeskripsikan prosedur pemilihan ukuran jendela optimal secara formal.
+Pemilihan ukuran jendela historis (\textit{window size}) merupakan faktor krusial dalam peramalan deret waktu. Ketika pengguna tidak menentukan ukuran jendela secara spesifik (\texttt{window\_size = 0}), sistem akan mengevaluasi sejumlah kandidat, yaitu 3, 6, 9, dan 12 bulan. Kandidat tersebut dibatasi hingga maksimal 50\% dari total data pra-pengujian untuk memastikan model memiliki cukup data observasi laten. Algoritma~\ref{alg:auto-tune-window} mendeskripsikan prosedur pemilihan ukuran jendela optimal tersebut secara formal.
 
 \input{algorithms/auto-tune-window.tex}
 
+Melalui pendekatan adaptif ini, sistem dapat mengakomodasi berbagai karakteristik deret waktu yang berbeda pada setiap wilayah atau layanan, sehingga tidak lagi memerlukan proses penyetelan parameter secara manual yang memakan waktu lama.
+
 \subsubsection{Validasi \textit{Walk-Forward}}
 
-Evaluasi model menggunakan protokol \textit{walk-forward validation} yang merupakan validasi silang khusus deret waktu. Pada setiap langkah, model dilatih pada seluruh data hingga bulan ke-$t$, kemudian memprediksi bulan ke-$t+1$. Proses ini diulang untuk $n$ bulan terakhir (minimum 3, maksimum 6 bulan) untuk menghasilkan metrik evaluasi yang realistis. Algoritma~\ref{alg:walk-forward} mendeskripsikan prosedur \textit{walk-forward validation} secara formal.
+Evaluasi kinerja model tidak dapat dilakukan menggunakan teknik \textit{k-fold cross-validation} standar karena teknik tersebut mengabaikan urutan temporal dari data deret waktu. Sebagai gantinya, evaluasi model ini menggunakan protokol \textit{walk-forward validation} yang merupakan validasi silang khusus deret waktu. Pada setiap tahapan iterasi, model dilatih secara kumulatif pada seluruh data historis hingga bulan ke-$t$, lalu digunakan untuk memprediksi data bulan ke-$t+1$. Proses pengujian ini diulang untuk $n$ bulan terakhir (minimum 3 bulan, maksimum 6 bulan) guna menghasilkan estimasi metrik evaluasi yang jauh lebih realistis dalam skenario produksi. Algoritma~\ref{alg:walk-forward} mendeskripsikan prosedur operasional dari \textit{walk-forward validation} tersebut secara formal.
 
 \input{algorithms/binary-search-alg.tex}
+
+Implementasi dari prosedur validasi tersebut menjamin bahwa metrik kesalahan seperti MAE, RMSE, sMAPE, MASE, dan \textit{Skill Score} tidak bias terhadap bocoran data masa depan (\textit{data leakage}), sehingga merepresentasikan ketangguhan model yang sebenarnya.
 
 \subsubsection{Mekanisme \textit{Benchmark} terhadap Model Sebelumnya}
 
@@ -343,7 +361,7 @@ Sistem mendeteksi apakah bulan terakhir dalam data berisi data parsial (belum le
 \subsubsection{Tata Kelola Reprodusibilitas}
 \label{subsubsec:reprodusibilitas}
 
-Untuk mendukung reprodusibilitas hasil eksperimen, sistem mengimplementasikan beberapa mekanisme berikut.
+Dalam mendukung reprodusibilitas hasil eksperimen, sistem mengimplementasikan beberapa mekanisme berikut.
 
 \begin{enumerate}
     \item \textbf{Penyimpanan artefak model}: Setiap model terbaik disimpan sebagai berkas \texttt{.pth} (PyTorch) atau \texttt{.pkl} (ARIMA/\textit{Prophet}) di direktori \texttt{saved\_models/}. Berkas \textit{checkpoint} menyimpan tidak hanya \texttt{state\_dict} model, tetapi juga seluruh \textit{hyperparameter} yang digunakan (\texttt{window\_size}, \texttt{hidden\_size}, \texttt{num\_layers}, \texttt{dropout}), jenis model, metrik, regional, dan \textit{witel}. Parameter normalisasi (\texttt{MinMaxScaler}) disimpan terpisah dalam berkas \texttt{.pkl} sehingga inferensi dapat menggunakan \textit{scaler} yang identik dengan saat pelatihan.
@@ -385,7 +403,7 @@ Model \textit{Prophet} dari Meta diimplementasikan menggunakan konfigurasi bawaa
 
 Modul \texttt{utils/metrics.py} mengimplementasikan seluruh metrik evaluasi yang dirancang pada Bab~\ref{chap:perancangan}. Fungsi \texttt{all\_metrics} menghitung seluruh metrik dalam satu pemanggilan dan menghasilkan status KPI (\textit{pass/fail}) untuk setiap target performa. Tabel~\ref{tab:metrik-kpi} menyajikan target KPI yang diimplementasikan.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Target KPI Metrik Evaluasi Terimplementasi}
 \label{tab:metrik-kpi}
@@ -402,12 +420,14 @@ sMAPE (jangka pendek) & $< 30\%$ & Kesalahan persentase simetris yang dapat dite
 \end{tabular}
 \end{table}
 
+Melalui definisi pustaka komprehensif ini, ketergantungan paket dapat diamankan pada versi spesifik, memastikan reproduktibilitas sistem ketika dipasang pada berbagai mesin pengujian dan produksi di kemudian hari.
+
 \section{Implementasi \textit{Frontend} (React.js)}
 \label{sec:impl-frontend}
 
 \textit{Frontend} sistem diimplementasikan menggunakan React.js 18 dengan Tailwind CSS untuk penataan gaya (\textit{styling}). Tabel~\ref{tab:komponen-frontend} menyajikan komponen utama yang diimplementasikan.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Komponen Utama \textit{Frontend}}
 \label{tab:komponen-frontend}
@@ -454,7 +474,7 @@ Validasi masukan pengguna diimplementasikan menggunakan pustaka \texttt{express-
 
 Implementasi sistem BrightAI telah berhasil mewujudkan seluruh komponen yang dirancang pada bab sebelumnya menjadi sistem yang terintegrasi dan fungsional. Tabel~\ref{tab:ringkasan-impl} merangkum komponen-komponen utama yang telah diimplementasikan beserta statusnya.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Ringkasan Komponen Sistem yang Terimplementasi}
 \label{tab:ringkasan-impl}
@@ -498,84 +518,98 @@ Bagian ini menyajikan antarmuka pengguna (\textit{user interface}) yang telah di
 
 Halaman masuk merupakan titik masuk pengguna ke dalam sistem BrightAI. Panel kiri menampilkan \textit{branding} perusahaan dengan latar foto gedung Telkom beserta deskripsi singkat tiga fitur utama sistem, sedangkan panel kanan menyajikan formulir masuk yang meminta kredensial berupa alamat surel dan kata sandi. Formulir dilengkapi validasi masukan secara \textit{real-time} serta umpan balik kesalahan apabila kredensial tidak valid. Gambar~\ref{fig:ui-login} menunjukkan tampilan halaman masuk.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{images/imagemockup1}
 \caption{Halaman Masuk (\textit{Login}) Sistem BrightAI}
 \label{fig:ui-login}
 \end{figure}
 
+Antarmuka ini dirancang secara minimalis dengan memusatkan form masukan di tengah layar untuk mengurangi disonansi kognitif, mengizinkan pengguna untuk langsung berfokus pada autentikasi dasar yang aman.
+
 \subsubsection{Halaman Registrasi}
 
 Halaman registrasi memungkinkan pengguna internal baru untuk membuat akun pada sistem BrightAI. Formulir registrasi meminta empat isian, yaitu \textit{username}, alamat surel, nama lengkap, dan kata sandi dengan persyaratan minimal enam karakter yang terdiri dari kombinasi huruf besar, huruf kecil, dan angka. Halaman ini dapat diakses melalui tautan ``Daftar sekarang'' pada halaman masuk, dan sebaliknya pengguna yang telah memiliki akun dapat kembali ke halaman masuk melalui tautan ``Masuk''. Gambar~\ref{fig:ui-register} menunjukkan tampilan halaman registrasi.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{images/imagemockup2}
 \caption{Halaman Registrasi Pengguna Baru}
 \label{fig:ui-register}
 \end{figure}
 
+Serupa dengan antarmuka \textit{login}, halaman registrasi memastikan konsistensi visual sekaligus menyediakan fungsionalitas pembuatan kredensial baru sebelum pengguna dapat mengakses kapabilitas kecerdasan buatan sistem.
+
 \subsubsection{Halaman Utama \textit{Chatbot}}
 
 Halaman utama \textit{chatbot} merupakan antarmuka inti sistem yang terdiri dari tiga area: (1)~bilah navigasi vertikal di sisi kiri yang menyediakan akses ke modul \textit{chatbot}, profil, dan pengaturan; (2)~panel riwayat percakapan yang memungkinkan pengguna mengelola sesi percakapan, termasuk pencarian, penggantian nama, penyematan (\textit{pin}), dan penghapusan sesi; serta (3)~area percakapan utama yang menampilkan pesan pengguna dan respons sistem. Di bagian bawah, alur terpandu (\textit{guided flow}) menyediakan mekanisme interaksi terstruktur melalui pemilihan jenis analisis, kategori domain, dan pertanyaan yang telah dikurasi. Bilah tajuk di bagian atas menampilkan status koneksi server, pengalih tema, dan informasi pengguna. Gambar~\ref{fig:ui-chat} menunjukkan tampilan halaman utama \textit{chatbot}.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{images/imagemockup3}
 \caption{Halaman Utama \textit{Chatbot} BrightAI}
 \label{fig:ui-chat}
 \end{figure}
 
+Sebagai pusat kendali utama (\textit{centerpiece}) aplikasi, halaman ini mendedikasikan sebagian besar area layar untuk riwayat percakapan. Susunan pesan yang asinkron menegaskan sifat percakapan berbalas di mana jawaban sistem dirender dengan membedakan warna kotak teks.
+
 \subsubsection{Halaman Profil}
 
 Halaman profil menampilkan informasi akun pengguna yang sedang masuk, meliputi nama lengkap, \textit{username}, alamat surel, dan peran (\textit{role}) dalam sistem. Halaman ini dapat diakses melalui ikon pengguna pada bilah navigasi vertikal. Gambar~\ref{fig:ui-profile} menunjukkan tampilan halaman profil.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{images/imagemockup4}
 \caption{Halaman Profil Pengguna}
 \label{fig:ui-profile}
 \end{figure}
 
+Halaman profil memungkinkan pengguna mempersonalisasikan konfigurasi pribadinya, yang pada saat ini menampilkan rangkuman data personal sebagai konfirmasi akses sesi pengguna yang sedang aktif.
+
 \subsubsection{Halaman Pengaturan}
 
 Halaman pengaturan menyediakan opsi konfigurasi antarmuka bagi pengguna, termasuk pengalihan tema tampilan dan preferensi notifikasi. Halaman ini dapat diakses melalui ikon pengaturan pada bilah navigasi vertikal. Gambar~\ref{fig:ui-settings} menunjukkan tampilan halaman pengaturan.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{images/imagemockup5}
 \caption{Halaman Pengaturan Sistem}
 \label{fig:ui-settings}
 \end{figure}
 
+Aksesibilitas sistem turut disematkan melalui preferensi tema antarmuka pada halaman ini, mengizinkan penyesuaian kontras demi kenyamanan pemakaian jangka panjang dalam kondisi iluminasi lingkungan yang berbeda-beda.
+
 \subsubsection{Tampilan Tema Terang (\textit{Light Mode})}
 
 Sistem mendukung dua tema tampilan, yaitu tema gelap (\textit{dark mode}) sebagai tema bawaan dan tema terang (\textit{light mode}). Pengguna dapat beralih antara kedua tema melalui tombol pengalih pada bilah tajuk. Seluruh komponen antarmuka, termasuk area percakapan, panel riwayat, dan alur terpandu, menyesuaikan skema warna secara konsisten sesuai tema yang dipilih. Gambar~\ref{fig:ui-light} menunjukkan tampilan sistem dalam tema terang.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{images/imagemockup6}
 \caption{Tampilan Antarmuka \textit{Chatbot} dalam Tema Terang (\textit{Light Mode})}
 \label{fig:ui-light}
 \end{figure}
 
+Penggunaan \textit{light mode} sangat cocok bagi pengguna yang lebih menyukai tata ruang dokumen putih standar, di mana seluruh komponen \textit{React} diwarnai ulang melalui kelas utilitas \textit{Tailwind} (\textit{dark mode inversion}).
+
 \subsubsection{Detail Respons \textit{Rule-Based Query}}
 
 Ketika pengguna mengajukan pertanyaan analitik melalui antarmuka percakapan, sistem mencocokkan kueri tersebut dengan salah satu dari 38 aturan bisnis yang tersedia, mengeksekusi kueri SQL terhadap \textit{Enterprise Data Warehouse}, dan menghasilkan respons naratif dalam bahasa Indonesia menggunakan modul NLG berbasis templat. Respons ditampilkan dalam format \textit{Markdown} yang mencakup judul analisis, tabel data dengan angka terformat sesuai konvensi Indonesia, poin-poin wawasan bisnis, serta metadata sumber data dan waktu pemrosesan. Gambar~\ref{fig:ui-rulebased} menunjukkan contoh respons sistem terhadap pertanyaan analitik berbasis aturan.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{images/imagemockup7}
 \caption{Contoh Respons \textit{Rule-Based Query} dengan Narasi NLG dan Tabel Data}
 \label{fig:ui-rulebased}
 \end{figure}
 
+Respons berbasis aturan dikemas secara terstruktur menggunakan fitur Markdown. Penyorotan tabel sintaks, ukuran fon hierarkis, serta pemformatan tebal (\textit{bolding}) menghasilkan kejelasan tingkat tinggi bagi pembaca analisis bisnis pada eksekutif regional.
+
 \subsubsection{Detail Respons Peramalan Deret Waktu}
 
 Fitur peramalan dapat diakses melalui panel peramalan pada alur terpandu, dengan pengguna memilih metrik yang hendak diramalkan, jenis model (GRU, LSTM, ARIMA, atau \textit{Prophet}), serta cakupan wilayah (nasional, regional, atau \textit{witel}). Hasil peramalan ditampilkan dalam format naratif yang mencakup nilai prediksi untuk periode berikutnya, perbandingan terhadap nilai aktual terakhir, serta metrik evaluasi model (MAE, RMSE, sMAPE, \textit{Skill Score}). Panel ini merupakan realisasi langsung dari tujuan integrasi dan pembandingan model peramalan deret waktu ke dalam antarmuka \textit{chatbot}. Gambar~\ref{fig:ui-forecast} menunjukkan contoh hasil peramalan.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{images/imagemockup8}
 \caption{Contoh Hasil Peramalan Deret Waktu melalui Panel \textit{Forecast}}
@@ -589,7 +623,7 @@ Sistem terhubung ke Oracle Database melalui dua skema: \texttt{DWH\_MOIS} untuk 
 
 Demi transparansi, bagian ini menyatakan secara eksplisit selisih antara komponen yang dirancang pada Bab~\ref{chap:perancangan} dan komponen yang berhasil diimplementasikan. Tabel~\ref{tab:selisih-impl} merangkum selisih tersebut.
 
-\begin{table}[h]
+\begin{table}[htbp]
 \centering
 \caption{Selisih antara Rancangan dan Implementasi}
 \label{tab:selisih-impl}

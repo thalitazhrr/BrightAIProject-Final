@@ -1,4 +1,3 @@
-\begin{minipage}{\textwidth}
 \begin{lstlisting}[caption={Implementasi Arsitektur Model LSTM}, label={lst:lstm-model}, style=pythonstyle]
 import torch
 import torch.nn as nn
@@ -28,4 +27,3 @@ class LSTMForecaster(nn.Module):
         out = self.dropout(out[:, -1, :])   # timestep terakhir
         return self.fc(out)                 # (batch, horizon)
 \end{lstlisting}
-\end{minipage}

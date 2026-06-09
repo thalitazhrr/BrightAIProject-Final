@@ -1,6 +1,6 @@
-\begin{algorithm}[H]
-\caption{Injeksi Filter Geografis ke dalam Kueri SQL}
-\label{alg:geo-filter}
+\begin{algorithm}[htbp]
+\caption{Injeksi Filter Geografis ke dalam Kueri SQL (Bagian 1)}
+\label{alg:geo-filter-1}
 \begin{algorithmic}[1]
 \Require Masukan pengguna $q$, kueri SQL $S$, basis data $D$, pemetaan kolom $\mathcal{C}$
 \Ensure Kueri SQL dengan filter geografis $S'$
@@ -39,6 +39,19 @@
 \State $\textit{colName} \gets \textit{cols}[\textit{scope}]$
 \State $\textit{filterClause} \gets \texttt{"AND "} \| \textit{colName} \| \texttt{" = '"} \| \textit{dbValue} \| \texttt{"'"}$
 
+\algstore{geofilter}
+\end{algorithmic}
+\end{algorithm}
+
+Bagian pertama algoritma di atas mendemonstrasikan proses deteksi cakupan geografis dari teks masukan pengguna. Sistem melakukan pencocokan terhadap daftar referensi regional dan \textit{witel} untuk mengonstruksi klausa filter secara dinamis. 
+
+Setelah klausa filter berhasil dibentuk, tahap berikutnya adalah mengimplementasikan penyisipan sintaks tersebut ke dalam badan SQL asli, yang diuraikan pada bagian kedua algoritma berikut ini.
+
+\begin{algorithm}[htbp]
+\caption{Injeksi Filter Geografis ke dalam Kueri SQL (Bagian 2)}
+\label{alg:geo-filter-2}
+\begin{algorithmic}[1]
+\algrestore{geofilter}
 \State \textbf{// Tahap 3: Injeksikan filter ke dalam SQL}
 \If{$S$ mengandung \texttt{/* :GEO\_FILTER: */}}
     \State $S' \gets S.\texttt{replace}(\texttt{"/* :GEO\_FILTER: */"}, \textit{filterClause})$

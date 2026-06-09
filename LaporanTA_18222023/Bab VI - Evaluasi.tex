@@ -16,7 +16,7 @@ Modul klasifikasi maksud dievaluasi berdasarkan kemampuannya dalam mengenali \te
 
 Sistem mengimplementasikan tujuh \textit{intent} utama dan satu \textit{intent} cadangan (\textit{fallback}). Setiap \textit{intent} didukung oleh sejumlah kata kunci berbobot yang digunakan untuk menghitung skor kecocokan. Tabel~\ref{tab:eval-intent-coverage} menyajikan ringkasan cakupan kata kunci per \textit{intent}.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{Cakupan Kata Kunci per \textit{Intent}}
 \label{tab:eval-intent-coverage}
@@ -43,6 +43,8 @@ Sistem mengimplementasikan tujuh \textit{intent} utama dan satu \textit{intent} 
 \end{tabular}
 \end{table}
 
+Tabel di atas mengilustrasikan berbagai kombinasi masukan kueri yang harus mampu ditangani oleh sistem, mencerminkan kompleksitas bahasa alami yang sering dijumpai di lingkungan operasional.
+
 \subsection{Metodologi Evaluasi Klasifikasi}
 
 Evaluasi kuantitatif dilakukan menggunakan 100 kueri uji berlabel yang mencakup seluruh tujuh \textit{intent} utama, satu kelas cadangan (\textit{general}), serta 38 aturan bisnis. Setiap kueri diberi label kebenaran dasar (\textit{ground truth}) berupa \textit{intent} yang diharapkan dan aturan yang diharapkan. Evaluasi dilakukan pada level pencocokan aturan, yaitu pencocokan kueri ke 38 aturan bisnis ditambah 1 kelas \textit{no\_match}. Metrik yang dihitung meliputi presisi, daya ingat, dan skor-F1 per kelas, serta agregasi makro (\textit{macro}), mikro (\textit{micro}), dan tertimbang (\textit{weighted}).
@@ -57,7 +59,7 @@ Tantangan sesungguhnya dalam sistem ini terletak pada level pencocokan aturan: s
 
 Tabel~\ref{tab:eval-rule-domain} menyajikan distribusi 38 aturan bisnis yang dievaluasi beserta jumlah aturan yang mencapai skor-F1 sempurna (1{,}0000) per domain basis data.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{Distribusi Aturan Bisnis per Domain Basis Data}
 \label{tab:eval-rule-domain}
@@ -84,7 +86,7 @@ Seluruh 38 aturan pada kelima domain mencapai skor-F1 sempurna (1{,}0000). Hasil
 
 Secara keseluruhan, evaluasi pada level pencocokan aturan (38 kelas + \textit{no\_match}) menghasilkan akurasi \textbf{100\%} (100 dari 100 kueri) dengan metrik agregasi yang disajikan pada Tabel~\ref{tab:eval-rule-summary}.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{Ringkasan Metrik Evaluasi Pencocokan Aturan}
 \label{tab:eval-rule-summary}
@@ -107,7 +109,7 @@ Seluruh 38 aturan yang dievaluasi mencapai skor-F1 sempurna (1{,}0000), menunjuk
 
 Analisis terhadap nilai keyakinan (\textit{confidence score}) dan tingkat cakupan memberikan perspektif tambahan terhadap kualitas klasifikasi. Tabel~\ref{tab:eval-confidence} menyajikan statistik keyakinan dan cakupan.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{Statistik Keyakinan dan Cakupan Klasifikasi}
 \label{tab:eval-confidence}
@@ -146,7 +148,7 @@ Evaluasi pencocokan aturan menghasilkan akurasi sempurna (100\%) berkat penerapa
 
 Tabel~\ref{tab:eval-intent-vs-target} membandingkan hasil evaluasi pencocokan aturan dengan target yang ditetapkan pada Bab~\ref{chap:perancangan}.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{Perbandingan Hasil Evaluasi Pencocokan Aturan dengan Target Performa}
 \label{tab:eval-intent-vs-target}
@@ -236,9 +238,9 @@ Pendekatan ini memastikan bahwa evaluasi bersifat realistis dan tidak menggunaka
 
 \subsection{Metrik Evaluasi}
 
-Metrik evaluasi yang digunakan sesuai dengan desain pada Bab~\ref{chap:perancangan}. Tabel~\ref{tab:metrik-eval-hasil} menyajikan metrik dan deskripsinya.
+Pengukuran performa akurasi model dilakukan dengan menggunakan sejumlah metrik kuantitatif baku untuk analisis deret waktu, yang sebelumnya telah dikonseptualisasi pada tahap perancangan (Bab~\ref{chap:perancangan}). Tabel~\ref{tab:metrik-eval-hasil} secara terstruktur menyajikan kelima metrik yang diimplementasikan beserta penjelasan formulasi matematis yang melandasinya. Kelima metrik ini dievaluasi secara serentak guna memberikan penilaian performa yang komprehensif, mulai dari skala kesalahan absolut, persentase deviasi, hingga tingkat performa relatif terhadap model basis (\textit{baseline}).
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{Metrik Evaluasi yang Digunakan}
 \label{tab:metrik-eval-hasil}
@@ -258,6 +260,8 @@ MASE & Kesalahan rata-rata yang diskalakan terhadap \textit{seasonal naive} ($m=
 \hline
 \end{tabular}
 \end{table}
+
+Implementasi metrik-metrik tersebut menjadi landasan objektif dalam menilai tingkat simpangan prediksi model (\textit{forecast errors}). Penilaian holistik atas metrik-metrik ini pada akhirnya bermuara pada keputusan deterministik pengklasifikasian kelayakan model ke dalam tiga tingkat status KPI: LULUS, Lulus Dengan Catatan (LDC), atau GAGAL.
 
 \subsection{Hasil Evaluasi per Metrik Bisnis}
 
@@ -331,9 +335,9 @@ GRU merupakan model yang paling \textit{robust} secara keseluruhan, menjadi mode
 
 \subsubsection{Catatan Metodologis: Sifat Perbandingan}
 
-Perbandingan antar-model pada evaluasi ini bersifat \textbf{deskriptif}, bukan inferensial. Uji signifikansi statistik seperti Diebold-Mariano \cite{diebold1995comparing} tidak diterapkan karena keterbatasan jumlah observasi pengujian. Protokol \textit{walk-forward validation} yang digunakan menghasilkan hanya 3--6 titik kesalahan peramalan (\textit{forecast errors}) per model per wilayah, yang tidak memenuhi syarat ukuran sampel minimum untuk uji hipotesis berpasangan yang bermakna secara statistik. Dengan jumlah titik uji yang sangat terbatas, uji signifikansi akan memiliki \textit{statistical power} yang terlalu rendah untuk menghasilkan kesimpulan yang dapat diandalkan.
+Perbandingan antar-model pada evaluasi ini bersifat \textbf{deskriptif}, bukan inferensial. Uji signifikansi statistik seperti Diebold-Mariano \cite{pypi2025diebold} tidak diterapkan karena keterbatasan jumlah observasi pengujian. Protokol \textit{walk-forward validation} yang digunakan menghasilkan hanya 3--6 titik kesalahan peramalan (\textit{forecast errors}) per model per wilayah, yang tidak memenuhi syarat ukuran sampel minimum untuk uji hipotesis berpasangan yang bermakna secara statistik. Dengan jumlah titik uji yang sangat terbatas, uji signifikansi akan memiliki \textit{statistical power} yang terlalu rendah untuk menghasilkan kesimpulan yang dapat diandalkan.
 
-Oleh karena itu, pemilihan model terbaik didasarkan pada kriteria KPI bertingkat (LULUS / Lulus Dengan Catatan / GAGAL) yang mengevaluasi setiap model secara independen terhadap ambang batas sMAPE dan \textit{Skill Score} yang telah ditetapkan sebelumnya, bukan pada perbandingan berpasangan antar-model. Pendekatan ini sesuai dengan konteks sistem produksi dengan keputusan utama adalah apakah suatu model memenuhi standar minimum performa bisnis, bukan apakah satu model secara statistik lebih unggul dari model lain pada tingkat signifikansi tertentu. Keterbatasan ini dapat dimitigasi pada pengembangan selanjutnya dengan mengakumulasi lebih banyak periode evaluasi seiring waktu, sehingga memungkinkan penerapan uji formal seperti Diebold-Mariano atau \textit{Model Confidence Set} \cite{hansen2011model}.
+Oleh karena itu, pemilihan model terbaik didasarkan pada kriteria KPI bertingkat (LULUS / Lulus Dengan Catatan / GAGAL) yang mengevaluasi setiap model secara independen terhadap ambang batas sMAPE dan \textit{Skill Score} yang telah ditetapkan sebelumnya, bukan pada perbandingan berpasangan antar-model. Pendekatan ini sesuai dengan konteks sistem produksi dengan keputusan utama adalah apakah suatu model memenuhi standar minimum performa bisnis, bukan apakah satu model secara statistik lebih unggul dari model lain pada tingkat signifikansi tertentu. Keterbatasan ini dapat dimitigasi pada pengembangan selanjutnya dengan mengakumulasi lebih banyak periode evaluasi seiring waktu, sehingga memungkinkan penerapan uji formal seperti Diebold-Mariano atau \textit{Model Confidence Set} \cite{arch2025mcs}.
 
 \subsection{Mekanisme Pembandingan Model}
 
@@ -366,7 +370,7 @@ Waktu respons sistem diukur dari penerimaan kueri oleh \textit{backend} hingga p
     \item Waktu inferensi model peramalan: $<$ 500 milidetik
 \end{enumerate}
 
-Untuk kueri analitik yang telah di-\textit{cache}, waktu respons dapat mencapai kurang dari 10 milidetik karena hasil kueri diambil langsung dari \textit{cache} memori.
+Dalam kueri analitik yang telah di-\textit{cache}, waktu respons dapat mencapai kurang dari 10 milidetik karena hasil kueri diambil langsung dari \textit{cache} memori.
 
 \subsection{Pengujian Manajemen Sesi dan Riwayat}
 
@@ -421,7 +425,7 @@ Penilaian dilakukan menggunakan skala Likert 1--5, dengan deskripsi sebagai beri
 
 Tabel~\ref{tab:skor-umpan-balik} menyajikan skor penilaian untuk setiap aspek kualitas sistem.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{Skor Penilaian Kualitas Sistem BrightAI oleh Pengguna Internal}
 \label{tab:skor-umpan-balik}
@@ -449,25 +453,29 @@ Rata-rata skor penilaian sebesar \textbf{4{,}75 dari 5{,}00} (95\%) menunjukkan 
 
 \subsection{Umpan Balik Kualitatif}
 
-Responden memberikan penjelasan naratif sebagai berikut:
+Responden memberikan penjelasan naratif dan umpan balik kualitatif secara menyeluruh terkait pengalaman interaksi dengan sistem, sebagaimana disarikan dalam kutipan otentik berikut:
 
 \begin{quote}
 \textit{``Secara umum semua sudah sesuai. Respons tepat sesuai data, narasi cukup jelas dan mudah dipahami, analisis relevan sesuai dengan konteks pertanyaan, layout menu dan button cukup intuitif sehingga mudah digunakan.''}
 \end{quote}
 
+Kutipan di atas mengonfirmasi bahwa aspek fungsionalitas utama, ketepatan penyajian data analitik, kejelasan narasi, serta keramahan antarmuka pengguna (\textit{user experience}) telah berhasil diwujudkan dengan sangat baik oleh sistem.
+
 \subsection{Masukan dan Saran Perbaikan}
 
-Responden memberikan masukan substansial terkait terminologi yang digunakan dalam sistem:
+Di sisi lain, responden juga memberikan evaluasi kritis dan masukan substansial spesifik terkait ketepatan leksikal terminologi operasional yang digunakan di dalam sistem:
 
 \begin{quote}
 \textit{``Sebagai masukan, terminologi `order' dalam konteks penjualan yang sudah complete disarankan untuk diganti dengan `sales'. Karena order adalah permintaan pelanggan terhadap layanan, jenis order sebenarnya ada banyak: AO/activation order (order untuk pasang layanan, ini dihitung sebagai sales), MO/modify order (order untuk modifikasi layanan eksisting), DO/disconnect order (order untuk cabut layanan atau churn), dsb sehingga penggunaan kata `sales' lebih tepat untuk menyatakan penjualan/pasang layanan.''}
 \end{quote}
 
-Masukan ini menunjukkan bahwa meskipun sistem telah berhasil menyajikan data secara akurat, terdapat peluang peningkatan pada aspek kesesuaian terminologi bisnis (\textit{business terminology alignment}) agar lebih selaras dengan konvensi yang digunakan di lingkungan operasional perusahaan.
+Masukan mendalam ini merefleksikan bahwa, meskipun sistem telah terbukti secara mutlak mampu menyajikan agregasi data yang akurat dan nirkekeliruan perhitungan, masih terbuka ruang perbaikan yang signifikan pada ranah kesesuaian leksikon bisnis (\textit{business terminology alignment}). Penyesuaian frasa tersebut sangat krusial agar hasil narasi dari sistem sepenuhnya selaras dengan dialek dan konvensi internal yang dipahami di tingkat operasional perusahaan secara harfiah.
 
 \subsection{Rekap Umpan Balik per Aspek}
 
-\begin{table}[H]
+Dalam memfasilitasi evaluasi yang terstruktur terhadap kualitas respons sistem, umpan balik kualitatif dari responden dikelompokkan ke dalam empat aspek utama: Ketepatan Respons, Kejelasan Narasi, Relevansi Analisis, dan Kemudahan Penggunaan. Setiap aspek dinilai menggunakan skala 1 hingga 5, disertai dengan pencatatan temuan positif maupun saran perbaikan. Tabel~\ref{tab:umpan-balik-pengguna} menyajikan rekapitulasi sintesis dari penilaian aspek-aspek kualitatif tersebut.
+
+\begin{table}[htbp]
 \centering
 \caption{Rekap Umpan Balik Kualitatif Pengguna Internal}
 \label{tab:umpan-balik-pengguna}
@@ -486,11 +494,13 @@ Kemudahan Penggunaan & 5/5 & \textit{Layout} menu dan tombol cukup intuitif sehi
 \end{tabular}
 \end{table}
 
+Berdasarkan rekapitulasi pada tabel di atas, terbukti bahwa sistem secara umum mampu menjawab ekspektasi pengguna secara fungsional. Peningkatan pada aspek-aspek rekomendasi, seperti penambahan visualisasi dan penyesuaian istilah, dapat diakomodasi pada iterasi pengembangan sistem selanjutnya untuk terus menyempurnakan pengalaman dan nilai analitik yang disajikan.
+
 \subsection{Contoh Kueri yang Diujikan}
 
 Tabel~\ref{tab:contoh-kueri} menyajikan contoh kueri analitik yang diajukan selama sesi validasi beserta kualitas respons yang dievaluasi.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{Contoh Kueri Uji dan Evaluasi Respons Sistem (Data Ilustratif)}
 \label{tab:contoh-kueri}
@@ -514,6 +524,8 @@ Tabel~\ref{tab:contoh-kueri} menyajikan contoh kueri analitik yang diajukan sela
 \footnotesize\textit{Catatan: Seluruh nilai numerik dalam tabel ini bersifat ilustratif dan tidak merepresentasikan data aktual perusahaan demi menjaga kerahasiaan informasi bisnis.}
 \end{flushleft}
 \end{table}
+
+Penyajian contoh kueri operasional di atas mengilustrasikan kemampuan \textit{end-to-end} dari sistem dalam menafsirkan permintaan pengguna, mengagregasi data sesuai parameter yang dikehendaki, serta memberikan ringkasan interpretatif yang bermanfaat untuk konteks pengambilan keputusan nyata di tingkat regional.
 
 \section{Pembahasan Hasil Evaluasi}
 \label{sec:pembahasan-eval}
