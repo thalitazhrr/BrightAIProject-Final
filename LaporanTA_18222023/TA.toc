@@ -625,53 +625,53 @@
 \contentsline {subsection}{\numberline {VI.1.3}Cakupan Evaluasi Klasifikasi}{160}{subsection.6.1.3}%
 \contentsline {subsection}{\numberline {VI.1.4}Hasil Evaluasi Pencocokan Aturan}{161}{subsection.6.1.4}%
 \contentsline {subsection}{\numberline {VI.1.5}Analisis Keyakinan dan Cakupan}{162}{subsection.6.1.5}%
-\contentsline {subsection}{\numberline {VI.1.6}Analisis Mekanisme Disambiguasi}{162}{subsection.6.1.6}%
+\contentsline {subsection}{\numberline {VI.1.6}Analisis Mekanisme Disambiguasi}{163}{subsection.6.1.6}%
 \contentsline {subsection}{\numberline {VI.1.7}Evaluasi terhadap Target Performa}{163}{subsection.6.1.7}%
-\contentsline {subsection}{\numberline {VI.1.8}Mekanisme \textit {Fallback}}{163}{subsection.6.1.8}%
-\contentsline {section}{\numberline {VI.2}Evaluasi Pembangkitan Bahasa Alami (\textit {NLG})}{163}{section.6.2}%
-\contentsline {subsection}{\numberline {VI.2.1}Akurasi Faktual}{163}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {VI.1.8}Mekanisme \textit {Fallback}}{164}{subsection.6.1.8}%
+\contentsline {section}{\numberline {VI.2}Evaluasi Pembangkitan Bahasa Alami (\textit {NLG})}{164}{section.6.2}%
+\contentsline {subsection}{\numberline {VI.2.1}Akurasi Faktual}{164}{subsection.6.2.1}%
 \contentsline {subsection}{\numberline {VI.2.2}Evaluasi Subjektif oleh Pengguna Internal}{164}{subsection.6.2.2}%
-\contentsline {subsection}{\numberline {VI.2.3}Karakteristik Teknis Modul NLG}{164}{subsection.6.2.3}%
-\contentsline {section}{\numberline {VI.3}Evaluasi Peramalan Deret Waktu (\textit {Time Series Forecasting})}{164}{section.6.3}%
-\contentsline {subsection}{\numberline {VI.3.1}Protokol Evaluasi}{165}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {VI.2.3}Karakteristik Teknis Modul NLG}{165}{subsection.6.2.3}%
+\contentsline {section}{\numberline {VI.3}Evaluasi Peramalan Deret Waktu (\textit {Time Series Forecasting})}{165}{section.6.3}%
+\contentsline {subsection}{\numberline {VI.3.1}Protokol Evaluasi}{166}{subsection.6.3.1}%
 \contentsline {subsection}{\numberline {VI.3.2}Metrik Evaluasi}{166}{subsection.6.3.2}%
-\contentsline {subsection}{\numberline {VI.3.3}Hasil Evaluasi per Metrik Bisnis}{166}{subsection.6.3.3}%
+\contentsline {subsection}{\numberline {VI.3.3}Hasil Evaluasi per Metrik Bisnis}{167}{subsection.6.3.3}%
 \contentsline {subsubsection}{\numberline {VI.3.3.1}Peramalan Rata-rata Hari Instalasi (\textit {Avg Install Days})}{167}{subsubsection.6.3.3.1}%
-\contentsline {subsubsection}{\numberline {VI.3.3.2}Peramalan Volume Pesanan (\textit {Order HSI})}{168}{subsubsection.6.3.3.2}%
-\contentsline {subsubsection}{\numberline {VI.3.3.3}Peramalan Volume \textit {Churn} (\textit {Churn HSI})}{169}{subsubsection.6.3.3.3}%
-\contentsline {subsubsection}{\numberline {VI.3.3.4}Peramalan Realisasi Target (\textit {Realisasi HSI})}{170}{subsubsection.6.3.3.4}%
-\contentsline {subsubsection}{\numberline {VI.3.3.5}Ringkasan Lintas Metrik}{170}{subsubsection.6.3.3.5}%
-\contentsline {subsection}{\numberline {VI.3.4}Analisis Komparatif Antar-Model}{172}{subsection.6.3.4}%
-\contentsline {subsubsection}{\numberline {VI.3.4.1}Kinerja Model GRU}{172}{subsubsection.6.3.4.1}%
-\contentsline {subsubsection}{\numberline {VI.3.4.2}Kinerja Model LSTM}{172}{subsubsection.6.3.4.2}%
-\contentsline {subsubsection}{\numberline {VI.3.4.3}Kinerja Model ARIMA}{172}{subsubsection.6.3.4.3}%
-\contentsline {subsubsection}{\numberline {VI.3.4.4}Kegagalan Model \textit {Prophet}}{173}{subsubsection.6.3.4.4}%
-\contentsline {subsubsection}{\numberline {VI.3.4.5}Kesimpulan Perbandingan Model}{173}{subsubsection.6.3.4.5}%
-\contentsline {subsubsection}{\numberline {VI.3.4.6}Catatan Metodologis: Sifat Perbandingan}{173}{subsubsection.6.3.4.6}%
+\contentsline {subsubsection}{\numberline {VI.3.3.2}Peramalan Volume Pesanan (\textit {Order HSI})}{169}{subsubsection.6.3.3.2}%
+\contentsline {subsubsection}{\numberline {VI.3.3.3}Peramalan Volume \textit {Churn} (\textit {Churn HSI})}{170}{subsubsection.6.3.3.3}%
+\contentsline {subsubsection}{\numberline {VI.3.3.4}Peramalan Realisasi Target (\textit {Realisasi HSI})}{171}{subsubsection.6.3.3.4}%
+\contentsline {subsubsection}{\numberline {VI.3.3.5}Ringkasan Lintas Metrik}{173}{subsubsection.6.3.3.5}%
+\contentsline {subsection}{\numberline {VI.3.4}Analisis Komparatif Antar-Model}{173}{subsection.6.3.4}%
+\contentsline {subsubsection}{\numberline {VI.3.4.1}Kinerja Model GRU}{174}{subsubsection.6.3.4.1}%
+\contentsline {subsubsection}{\numberline {VI.3.4.2}Kinerja Model LSTM}{174}{subsubsection.6.3.4.2}%
+\contentsline {subsubsection}{\numberline {VI.3.4.3}Kinerja Model ARIMA}{174}{subsubsection.6.3.4.3}%
+\contentsline {subsubsection}{\numberline {VI.3.4.4}Kegagalan Model \textit {Prophet}}{174}{subsubsection.6.3.4.4}%
+\contentsline {subsubsection}{\numberline {VI.3.4.5}Kesimpulan Perbandingan Model}{175}{subsubsection.6.3.4.5}%
+\contentsline {subsubsection}{\numberline {VI.3.4.6}Catatan Metodologis: Sifat Perbandingan}{175}{subsubsection.6.3.4.6}%
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
-\contentsline {subsection}{\numberline {VI.3.5}Mekanisme Pembandingan Model}{174}{subsection.6.3.5}%
-\contentsline {section}{\numberline {VI.4}Evaluasi Sistem Terintegrasi}{174}{section.6.4}%
-\contentsline {subsection}{\numberline {VI.4.1}Pengujian Alur Lengkap}{174}{subsection.6.4.1}%
-\contentsline {subsection}{\numberline {VI.4.2}Pengujian Waktu Respons}{175}{subsection.6.4.2}%
-\contentsline {subsection}{\numberline {VI.4.3}Pengujian Manajemen Sesi dan Riwayat}{175}{subsection.6.4.3}%
-\contentsline {section}{\numberline {VI.5}Validasi oleh Pengguna Internal}{175}{section.6.5}%
-\contentsline {subsection}{\numberline {VI.5.1}Ruang Lingkup Validasi}{175}{subsection.6.5.1}%
-\contentsline {subsection}{\numberline {VI.5.2}Temuan Validasi}{176}{subsection.6.5.2}%
-\contentsline {section}{\numberline {VI.6}Umpan Balik Pengguna Internal}{176}{section.6.6}%
-\contentsline {subsection}{\numberline {VI.6.1}Profil Responden dan Metodologi}{176}{subsection.6.6.1}%
-\contentsline {subsection}{\numberline {VI.6.2}Hasil Penilaian Kuantitatif}{176}{subsection.6.6.2}%
-\contentsline {subsection}{\numberline {VI.6.3}Umpan Balik Kualitatif}{177}{subsection.6.6.3}%
-\contentsline {subsection}{\numberline {VI.6.4}Masukan dan Saran Perbaikan}{177}{subsection.6.6.4}%
-\contentsline {subsection}{\numberline {VI.6.5}Rekap Umpan Balik per Aspek}{178}{subsection.6.6.5}%
-\contentsline {subsection}{\numberline {VI.6.6}Contoh Kueri yang Diujikan}{178}{subsection.6.6.6}%
-\contentsline {section}{\numberline {VI.7}Pembahasan Hasil Evaluasi}{180}{section.6.7}%
-\contentsline {subsection}{\numberline {VI.7.1}Ancaman terhadap Validitas}{181}{subsection.6.7.1}%
-\contentsline {chapter}{\numberline {VII}PENUTUP}{183}{chapter.7}%
-\contentsline {section}{\numberline {VII.1}Kesimpulan}{183}{section.7.1}%
-\contentsline {section}{\numberline {VII.2}Saran}{184}{section.7.2}%
+\contentsline {subsection}{\numberline {VI.3.5}Mekanisme Pembandingan Model}{176}{subsection.6.3.5}%
+\contentsline {section}{\numberline {VI.4}Evaluasi Sistem Terintegrasi}{176}{section.6.4}%
+\contentsline {subsection}{\numberline {VI.4.1}Pengujian Alur Lengkap}{176}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {VI.4.2}Pengujian Waktu Respons}{176}{subsection.6.4.2}%
+\contentsline {subsection}{\numberline {VI.4.3}Pengujian Manajemen Sesi dan Riwayat}{177}{subsection.6.4.3}%
+\contentsline {section}{\numberline {VI.5}Validasi oleh Pengguna Internal}{177}{section.6.5}%
+\contentsline {subsection}{\numberline {VI.5.1}Ruang Lingkup Validasi}{177}{subsection.6.5.1}%
+\contentsline {subsection}{\numberline {VI.5.2}Temuan Validasi}{177}{subsection.6.5.2}%
+\contentsline {section}{\numberline {VI.6}Umpan Balik Pengguna Internal}{178}{section.6.6}%
+\contentsline {subsection}{\numberline {VI.6.1}Profil Responden dan Metodologi}{178}{subsection.6.6.1}%
+\contentsline {subsection}{\numberline {VI.6.2}Hasil Penilaian Kuantitatif}{178}{subsection.6.6.2}%
+\contentsline {subsection}{\numberline {VI.6.3}Umpan Balik Kualitatif}{178}{subsection.6.6.3}%
+\contentsline {subsection}{\numberline {VI.6.4}Masukan dan Saran Perbaikan}{179}{subsection.6.6.4}%
+\contentsline {subsection}{\numberline {VI.6.5}Rekap Umpan Balik per Aspek}{180}{subsection.6.6.5}%
+\contentsline {subsection}{\numberline {VI.6.6}Contoh Kueri yang Diujikan}{180}{subsection.6.6.6}%
+\contentsline {section}{\numberline {VI.7}Pembahasan Hasil Evaluasi}{182}{section.6.7}%
+\contentsline {subsection}{\numberline {VI.7.1}Ancaman terhadap Validitas}{183}{subsection.6.7.1}%
+\contentsline {chapter}{\numberline {VII}PENUTUP}{185}{chapter.7}%
+\contentsline {section}{\numberline {VII.1}Kesimpulan}{185}{section.7.1}%
+\contentsline {section}{\numberline {VII.2}Saran}{186}{section.7.2}%
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
@@ -848,6 +848,6 @@
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
-\contentsline {chapter}{Lampiran \numberline {A}HASIL WAWANCARA}{197}{appendix.1.A}%
-\contentsline {chapter}{Lampiran \numberline {B}HASIL FORMULIR EVALUASI HASIL SISTEM BRIGHTAI (INTERNAL)}{201}{appendix.1.B}%
-\contentsline {chapter}{Lampiran \numberline {C}TAUTAN REPOSITORI KODE SUMBER}{203}{appendix.1.C}%
+\contentsline {chapter}{Lampiran \numberline {A}HASIL WAWANCARA}{199}{appendix.1.A}%
+\contentsline {chapter}{Lampiran \numberline {B}HASIL FORMULIR EVALUASI HASIL SISTEM BRIGHTAI (INTERNAL)}{203}{appendix.1.B}%
+\contentsline {chapter}{Lampiran \numberline {C}TAUTAN REPOSITORI KODE SUMBER}{205}{appendix.1.C}%

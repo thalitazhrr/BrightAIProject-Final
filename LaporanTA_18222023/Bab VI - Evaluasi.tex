@@ -43,7 +43,7 @@ Sistem mengimplementasikan tujuh \textit{intent} utama dan satu \textit{intent} 
 \end{tabular}
 \end{table}
 
-Tabel di atas mengilustrasikan berbagai kombinasi masukan kueri yang harus mampu ditangani oleh sistem, mencerminkan kompleksitas bahasa alami yang sering dijumpai di lingkungan operasional.
+Tabel di atas mengilustrasikan berbagai kombinasi masukan kueri yang harus mampu ditangani oleh sistem, mencerminkan kompleksitas bahasa alami yang sering dijumpai di lingkungan operasional. Dapat diamati bahwa setiap jenis \textit{intent} memiliki karakteristik leksikal yang unik, yang menuntut sistem klasifikasi untuk tidak sekadar melakukan pencocokan kata kunci dasar, melainkan juga mengurai \textit{part-of-speech} serta memahami konteks struktural dari kalimat pengguna. Tabel ini sekaligus menjadi landasan bagi penetapan \textit{ground truth} pada saat proses evaluasi tingkat akurasi model klasifikasi yang diimplementasikan.
 
 \subsection{Metodologi Evaluasi Klasifikasi}
 
@@ -57,7 +57,7 @@ Tantangan sesungguhnya dalam sistem ini terletak pada level pencocokan aturan: s
 
 \subsection{Hasil Evaluasi Pencocokan Aturan}
 
-Tabel~\ref{tab:eval-rule-domain} menyajikan distribusi 38 aturan bisnis yang dievaluasi beserta jumlah aturan yang mencapai skor-F1 sempurna (1{,}0000) per domain basis data.
+Tabel~\ref{tab:eval-rule-domain} menyajikan distribusi 38 aturan bisnis yang dievaluasi beserta jumlah aturan yang mencapai skor-F1 sempurna (1{,}0000) per domain basis data. Rekapitulasi ini penting untuk menyoroti seberapa merata tingkat keberhasilan model dalam mengklasifikasikan kueri ke berbagai penjuru domain analitik, dari area yang relatif lugas seperti data operasional hingga area yang kompleks secara semantik seperti kualitas performa (QoS/QoE). Pencapaian skor sempurna pada suatu domain secara spesifik merepresentasikan bahwa sistem tidak memiliki satu pun kesalahan dalam menginterpretasikan pola kalimat pada konteks domain terkait.
 
 \begin{table}[htbp]
 \centering
@@ -84,7 +84,7 @@ Target & \texttt{target} & 5 & 5 & Realisasi target, segmentasi, performa region
 
 Seluruh 38 aturan pada kelima domain mencapai skor-F1 sempurna (1{,}0000). Hasil ini dicapai melalui penerapan mekanisme \textit{penalty} kontekstual pada fungsi \textit{calculateConfidence}, yaitu pengurangan skor keyakinan ketika konteks kueri tidak sesuai dengan domain aturan. Sebagai contoh, aturan pada domain Proses Data Pelanggan mendapat \textit{penalty} ketika kueri mengandung kata kunci \textit{order}, \textit{target}, atau \textit{penetrasi} yang merupakan konteks domain lain, sehingga aturan dari domain yang lebih tepat dapat menang dalam kompetisi skor.
 
-Secara keseluruhan, evaluasi pada level pencocokan aturan (38 kelas + \textit{no\_match}) menghasilkan akurasi \textbf{100\%} (100 dari 100 kueri) dengan metrik agregasi yang disajikan pada Tabel~\ref{tab:eval-rule-summary}.
+Secara keseluruhan, evaluasi pada level pencocokan aturan (38 kelas + \textit{no\_match}) menghasilkan akurasi \textbf{100\%} (100 dari 100 kueri) dengan metrik agregasi yang disajikan pada Tabel~\ref{tab:eval-rule-summary}. Agregasi ini memberikan gambaran ringkas namun komprehensif mengenai stabilitas model, memastikan bahwa tidak ada satu pun kelas minoritas yang performanya tertutup oleh performa kelas mayoritas, sebagaimana ditunjukkan oleh keseimbangan sempurna antara presisi makro dan mikro.
 
 \begin{table}[htbp]
 \centering
@@ -107,7 +107,7 @@ Seluruh 38 aturan yang dievaluasi mencapai skor-F1 sempurna (1{,}0000), menunjuk
 
 \subsection{Analisis Keyakinan dan Cakupan}
 
-Analisis terhadap nilai keyakinan (\textit{confidence score}) dan tingkat cakupan memberikan perspektif tambahan terhadap kualitas klasifikasi. Tabel~\ref{tab:eval-confidence} menyajikan statistik keyakinan dan cakupan.
+Analisis terhadap nilai keyakinan (\textit{confidence score}) dan tingkat cakupan (\textit{coverage rate}) memberikan perspektif tambahan terhadap seberapa mantap dan efisien sistem dalam mengeksekusi proses klasifikasi. Tabel~\ref{tab:eval-confidence} menyajikan secara kuantitatif metrik-metrik tersebut, yang tidak hanya mengukur kebenaran prediksi, tetapi juga tingkat determinasi algoritma (\textit{degree of certainty}) dalam mengambil keputusan serta latensi waktu komputasinya. Analisis ini krusial untuk memastikan bahwa sistem beroperasi dengan performa *real-time* dan tidak sekadar menghasilkan tebakan acak.
 
 \begin{table}[htbp]
 \centering
@@ -291,11 +291,13 @@ Tabel~\ref{tab:hasil-forecasting-churn} menyajikan hasil evaluasi keempat model 
 
 Peramalan \textit{churn} merupakan tugas yang paling menantang di antara seluruh metrik yang dievaluasi. Pada tingkat nasional, GRU dan LSTM berhasil memenuhi KPI dengan sMAPE masing-masing $22{,}29\%$ dan $22{,}97\%$, sedangkan \textit{Prophet} gagal secara menyeluruh di seluruh wilayah. Pada REG-5 (Sulawesi--Papua--Maluku), GRU dan LSTM berhasil memenuhi ambang batas setelah dilakukan \textit{hyperparameter tuning} dengan sMAPE masing-masing $28{,}19\%$ dan $27{,}28\%$. GRU tetap menjadi model paling \textit{robust} dengan lima wilayah berstatus LULUS atau Lulus Dengan Catatan dari enam wilayah. ARIMA menunjukkan keunggulan pada REG-3 (LULUS vs.\ LDC pada GRU) dan REG-4 (LULUS dengan sMAPE sebanding).
 
+Kinerja \textit{Prophet} yang kurang memuaskan pada metrik \textit{churn} semakin menegaskan bahwa metode dekomposisi berbasis tren dan musiman klasik kesulitan menangkap sinyal-sinyal fluktuatif yang tidak linier. Pola pelanggan yang berhenti berlangganan sering kali tidak mengikuti kalender musiman yang ketat, melainkan lebih dipengaruhi oleh dinamika promosi kompetitor, kualitas layanan jaringan pada bulan tertentu, atau faktor makroekonomi regional. Sebaliknya, model \textit{deep learning} membuktikan kemampuannya dalam memodelkan interaksi kompleks antar variabel tanpa bergantung pada asumsi stasioneritas maupun periodisitas yang kaku. Hal ini sangat krusial mengingat data \textit{churn} pada industri telekomunikasi sering kali dipenuhi oleh lonjakan seketika (\textit{sudden spikes}) yang dapat menjerumuskan model statistik tradisional ke dalam kesalahan peramalan yang fatal.
+
 Tantangan utama terletak pada REG-1 (Sumatera) yang merupakan satu-satunya wilayah tanpa model yang memenuhi ambang batas sMAPE $30\%$ secara penuh. Model terbaik pada wilayah ini --- LSTM dengan sMAPE $30{,}83\%$ dan GRU dengan sMAPE $30{,}95\%$ --- memperoleh status Lulus Dengan Catatan (LDC) karena \textit{Skill Score} yang tetap positif ($0{,}008$ dan $0{,}013$) menunjukkan bahwa kedua model masih mengungguli \textit{naive forecast}. Kondisi marjinal ini disebabkan oleh tiga faktor: (1)~volatilitas tinggi pada data \textit{churn} REG-1 yang dipengaruhi oleh faktor nonperiodik seperti perubahan regulasi, program retensi ad-hoc, dan kondisi infrastruktur lokal di wilayah Sumatera; (2)~keterbatasan jumlah titik data (41 bulan) yang menyulitkan model untuk mempelajari pola jangka panjang; dan (3)~jumlah titik uji \textit{walk-forward} yang terbatas (5 bulan) sehingga satu titik kesalahan besar dapat menaikkan rata-rata sMAPE secara signifikan. Meskipun demikian, hasil prediksi pada REG-1 tetap dapat digunakan secara operasional dengan pemahaman bahwa ketidakpastian estimasi pada wilayah tersebut lebih tinggi dibandingkan wilayah lain.
 
 \subsubsection{Peramalan Realisasi Target (\textit{Realisasi HSI})}
 
-Tabel~\ref{tab:hasil-forecasting-realisasi} menyajikan hasil evaluasi keempat model pada metrik \texttt{realisasi\_hsi} yang merepresentasikan pencapaian target penjualan layanan internet.
+Tabel~\ref{tab:hasil-forecasting-realisasi} menyajikan hasil evaluasi keempat model pada metrik \texttt{realisasi\_hsi} yang merepresentasikan tingkat pencapaian target penjualan layanan internet secara agregat. Metrik ini sangat esensial secara bisnis karena merefleksikan performa komersial perusahaan dibandingkan dengan kuota yang dicanangkan. Oleh karena itu, kemampuan model untuk memprediksi metrik ini secara akurat akan sangat membantu jajaran manajemen dalam merumuskan manuver strategis di sisa periode berjalan.
 
 \input{tables/tabel-hasil-forecasting-realisasi.tex}
 
@@ -303,7 +305,7 @@ Metrik realisasi target menunjukkan hasil evaluasi terbaik di antara seluruh met
 
 \subsubsection{Ringkasan Lintas Metrik}
 
-Tabel~\ref{tab:ringkasan-forecasting} merangkum kinerja model terbaik untuk setiap metrik bisnis pada tingkat nasional.
+Untuk memberikan gambaran akhir yang utuh mengenai keunggulan kompetitif masing-masing algoritma, Tabel~\ref{tab:ringkasan-forecasting} merangkum kinerja model terbaik untuk setiap metrik bisnis pada tingkat agregasi nasional. Sintesis ini krusial sebagai landasan pemilihan model \textit{default} yang akan tertanam dalam layanan \textit{backend} untuk melayani kueri-kueri prediktif pengguna.
 
 \input{tables/tabel-ringkasan-forecasting.tex}
 
