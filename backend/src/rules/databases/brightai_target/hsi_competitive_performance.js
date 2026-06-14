@@ -81,7 +81,7 @@ module.exports = {
             
             CASE 
                 WHEN SUM(TARGET) > 0 THEN 
-                    ROUND((SUM(REALISASI) * 100.0 / SUM(TARGET)), 2)
+                    ROUND((SUM(REALISASI) * 100.0 / NULLIF(SUM(TARGET), 0)), 2)
                 ELSE 0 
             END as UNIT_ACHIEVEMENT_PCT,
             
@@ -191,7 +191,7 @@ module.exports = {
             -- Standard score (Z-score)
             CASE 
                 WHEN PEER_STDDEV_ACHIEVEMENT > 0 THEN 
-                    ROUND((UNIT_ACHIEVEMENT_PCT - PEER_AVG_ACHIEVEMENT) / PEER_STDDEV_ACHIEVEMENT, 2)
+                    ROUND((UNIT_ACHIEVEMENT_PCT - PEER_AVG_ACHIEVEMENT) / NULLIF(PEER_STDDEV_ACHIEVEMENT, 0), 2)
                 ELSE 0
             END as ACHIEVEMENT_ZSCORE,
             
@@ -675,8 +675,8 @@ module.exports = {
             fokus_benchmarking: competitive_advantage.unit_context.benchmarking_focus
           },
           metrik_performa: {
-            target: `${record.UNIT_TARGET.toLocaleString('id-ID')} ${record.SATUAN}`,
-            realisasi: `${record.UNIT_REALISASI.toLocaleString('id-ID')} ${record.SATUAN}`,
+            target: `${(record.UNIT_TARGET || 0).toLocaleString('id-ID')} ${record.SATUAN}`,
+            realisasi: `${(record.UNIT_REALISASI || 0).toLocaleString('id-ID')} ${record.SATUAN}`,
             pencapaian: `${record.UNIT_ACHIEVEMENT_PCT}%`,
             cakupan_telda: record.TELDA_COVERAGE
           },
@@ -734,7 +734,7 @@ module.exports = {
           bottom_performer: data.filter(d => d.COMPETITIVE_POSITION === 'BOTTOM_PERFORMER').length
         },
         market_leader: data.find(d => d.MARKET_POSITION === 'MARKET_LEADER')?.UNIT_IDENTIFIER || 'Tidak teridentifikasi',
-        rata_rata_competitive_strength: (data.reduce((sum, d) => sum + d.COMPETITIVE_STRENGTH_SCORE, 0) / data.length).toFixed(2),
+        rata_rata_competitive_strength: (data.reduce((sum, d) => sum + d.COMPETITIVE_STRENGTH_SCORE, 0) / (data.length || 1)).toFixed(2),
         satuan_dominan: data.reduce((prev, current) => 
           (data.filter(d => d.SATUAN === prev.SATUAN).length > 
            data.filter(d => d.SATUAN === current.SATUAN).length) ? prev : current

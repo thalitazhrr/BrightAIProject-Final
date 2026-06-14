@@ -67,10 +67,20 @@ module.exports = {
   SQL_QUERY: `
     WITH HSI_GEOGRAPHIC_BASE AS (
         SELECT 
-            NOTEL, NCLI, PLBLCL, REGIONAL, WITEL, STO, TELDA,
+            NOTEL, NCLI, PLBLCL, WITEL, STO, TELDA, CGEST, LGEST,
+            CASE 
+                WHEN TRIM(REGIONAL) IN ('REG-1', '1', '01') OR CGEST = 'R1' OR LGEST LIKE '%Regional 1%' THEN '1'
+                WHEN TRIM(REGIONAL) IN ('REG-2', '2', '02') OR CGEST = 'R2' OR LGEST LIKE '%Regional 2%' THEN '2'
+                WHEN TRIM(REGIONAL) IN ('REG-3', '3', '03') OR CGEST = 'R3' OR LGEST LIKE '%Regional 3%' THEN '3'
+                WHEN TRIM(REGIONAL) IN ('REG-4', '4', '04') OR CGEST = 'R4' OR LGEST LIKE '%Regional 4%' THEN '4'
+                WHEN TRIM(REGIONAL) IN ('REG-5', '5', '05') OR CGEST = 'R5' OR LGEST LIKE '%Regional 5%' THEN '5'
+                WHEN TRIM(REGIONAL) IN ('REG-6', '6', '06') OR CGEST = 'R6' OR LGEST LIKE '%Regional 6%' THEN '6'
+                WHEN TRIM(REGIONAL) IN ('REG-7', '7', '07') OR CGEST = 'R7' OR LGEST LIKE '%Regional 7%' THEN '7'
+                ELSE 'Tidak Diketahui'
+            END as REGIONAL, CGEST, LGEST,
             CAST(SPEED AS NUMBER) as SPEED_NUM,
             CAST(LOS AS NUMBER) as LOS_NUM,
-            NVL(TREMS_REV_REF, 0) as REV_HSI,
+            COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) as REV_HSI,
             NVL(TREMS_REV_P, 0) as REV_TOTAL,
             NVL(ADDON_TOTAL, 0) as ADDON_COUNT,
             NVL(ADDON_PRICE, 0) as ADDON_REV,
@@ -79,33 +89,30 @@ module.exports = {
             
             -- Regional classification
             CASE 
-                WHEN REGIONAL = 'REG-1' THEN 'REGIONAL_1_SUMATRA'
-                WHEN REGIONAL = 'REG-2' THEN 'REGIONAL_2_JAKARTA'
-                WHEN REGIONAL = 'REG-3' THEN 'REGIONAL_3_JAWA_BARAT'
-                WHEN REGIONAL = 'REG-4' THEN 'REGIONAL_4_JAWA_TENGAH'
-                WHEN REGIONAL = 'REG-5' THEN 'REGIONAL_5_JAWA_TIMUR'
-                WHEN REGIONAL = '1' THEN 'REGIONAL_1_SUMATRA'
-                WHEN REGIONAL = '2' THEN 'REGIONAL_2_JAKARTA' 
-                WHEN REGIONAL = '3' THEN 'REGIONAL_3_JAWA_BARAT'
-                WHEN REGIONAL = '4' THEN 'REGIONAL_4_JAWA_TENGAH'
-                WHEN REGIONAL = '5' THEN 'REGIONAL_5_JAWA_TIMUR'
+                WHEN TRIM(REGIONAL) IN ('REG-1', '1', '01') OR CGEST = 'R1' OR LGEST LIKE '%Regional 1%' THEN 'REGIONAL_1_SUMATRA'
+                WHEN TRIM(REGIONAL) IN ('REG-2', '2', '02') OR CGEST = 'R2' OR LGEST LIKE '%Regional 2%' THEN 'REGIONAL_2_JAKARTA'
+                WHEN TRIM(REGIONAL) IN ('REG-3', '3', '03') OR CGEST = 'R3' OR LGEST LIKE '%Regional 3%' THEN 'REGIONAL_3_JAWA_BARAT'
+                WHEN TRIM(REGIONAL) IN ('REG-4', '4', '04') OR CGEST = 'R4' OR LGEST LIKE '%Regional 4%' THEN 'REGIONAL_4_JAWA_TENGAH'
+                WHEN TRIM(REGIONAL) IN ('REG-5', '5', '05') OR CGEST = 'R5' OR LGEST LIKE '%Regional 5%' THEN 'REGIONAL_5_JAWA_TIMUR'
+                WHEN TRIM(REGIONAL) IN ('REG-6', '6', '06') OR CGEST = 'R6' OR LGEST LIKE '%Regional 6%' THEN 'REGIONAL_6_KALIMANTAN'
+                WHEN TRIM(REGIONAL) IN ('REG-7', '7', '07') OR CGEST = 'R7' OR LGEST LIKE '%Regional 7%' THEN 'REGIONAL_7_KTI'
                 ELSE 'REGIONAL_TIDAK_DIKETAHUI'
             END as REGIONAL_NAME,
             
             -- Market density classification
             CASE 
-                WHEN REGIONAL IN ('REG-2', 'REG-3', '2', '3') THEN 'PASAR_KEPADATAN_TINGGI'
-                WHEN REGIONAL IN ('REG-4', 'REG-5', '4', '5') THEN 'PASAR_KEPADATAN_SEDANG'
-                WHEN REGIONAL IN ('REG-1', '1') THEN 'PASAR_KEPADATAN_RENDAH'
+                WHEN TRIM(REGIONAL) IN ('REG-2', 'REG-3', '2', '3', '02', '03') OR CGEST IN ('R2', 'R3') OR LGEST LIKE '%Regional 2%' OR LGEST LIKE '%Regional 3%' THEN 'PASAR_KEPADATAN_TINGGI'
+                WHEN TRIM(REGIONAL) IN ('REG-4', 'REG-5', '4', '5', '04', '05') OR CGEST IN ('R4', 'R5') OR LGEST LIKE '%Regional 4%' OR LGEST LIKE '%Regional 5%' THEN 'PASAR_KEPADATAN_SEDANG'
+                WHEN TRIM(REGIONAL) IN ('REG-1', 'REG-6', 'REG-7', '1', '6', '7', '01', '06', '07') OR CGEST IN ('R1', 'R6', 'R7') OR LGEST LIKE '%Regional 1%' OR LGEST LIKE '%Regional 6%' OR LGEST LIKE '%Regional 7%' THEN 'PASAR_KEPADATAN_RENDAH'
                 ELSE 'PASAR_TIDAK_DIKETAHUI'
             END as MARKET_DENSITY,
             
             -- Customer segment per region
             CASE
                 WHEN IS_DINAS = '1' THEN 'SEGMEN_PEMERINTAH'
-                WHEN PLBLCL = 'BL' AND NVL(TREMS_REV_REF, 0) >= 500000 THEN 'SEGMEN_KORPORAT'
+                WHEN PLBLCL = 'BL' AND COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 500000 THEN 'SEGMEN_KORPORAT'
                 WHEN PLBLCL = 'BL' THEN 'SEGMEN_UKM'
-                WHEN PLBLCL = 'CL' AND NVL(TREMS_REV_REF, 0) >= 300000 THEN 'SEGMEN_KONSUMEN_PREMIUM'
+                WHEN PLBLCL = 'CL' AND COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 300000 THEN 'SEGMEN_KONSUMEN_PREMIUM'
                 ELSE 'SEGMEN_KONSUMEN_MASA'
             END as CUSTOMER_SEGMENT,
 
@@ -128,9 +135,9 @@ module.exports = {
 
             -- Revenue performance per geography
             CASE
-                WHEN NVL(TREMS_REV_REF, 0) >= 500000 THEN 'AREA_PENDAPATAN_TINGGI'
-                WHEN NVL(TREMS_REV_REF, 0) >= 300000 THEN 'AREA_PENDAPATAN_SEDANG'
-                WHEN NVL(TREMS_REV_REF, 0) >= 150000 THEN 'AREA_PENDAPATAN_STANDAR'
+                WHEN COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 500000 THEN 'AREA_PENDAPATAN_TINGGI'
+                WHEN COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 300000 THEN 'AREA_PENDAPATAN_SEDANG'
+                WHEN COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 150000 THEN 'AREA_PENDAPATAN_STANDAR'
                 ELSE 'AREA_PENDAPATAN_PEMULA'
             END as REVENUE_PERFORMANCE
             

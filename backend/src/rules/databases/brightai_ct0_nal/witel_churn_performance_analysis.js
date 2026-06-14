@@ -97,7 +97,7 @@ module.exports = {
             
         FROM DWH_MOIS.BRIGHTAI_CT0_NAL
         WHERE UPPER(PRODUK) = 'INTERNET'
-          AND (CITEM IS NULL OR NOT UPPER(CITEM) LIKE 'WM%')
+          AND (CITEM IS NULL OR NOT UPPER(CITEM) LIKE 'W%')
           AND PERIODE >= TO_CHAR(ADD_MONTHS(SYSDATE, -6), 'YYYYMM')
           AND WITEL IS NOT NULL
           AND REGIONAL IS NOT NULL
@@ -125,7 +125,7 @@ module.exports = {
             -- Early churn analysis (< 6 months)
             COUNT(CASE WHEN masa_layanan_bulan <= 6 THEN 1 END) as early_churn_count,
             ROUND(
-                (COUNT(CASE WHEN masa_layanan_bulan <= 6 THEN 1 END) * 100.0 / COUNT(*)), 2
+                (COUNT(CASE WHEN masa_layanan_bulan <= 6 THEN 1 END) * 100.0 / NULLIF(COUNT(*), 0)), 2
             ) as early_churn_rate,
             
             -- Bandwidth distribution
@@ -271,7 +271,7 @@ module.exports = {
         -- Change percentages
         CASE 
             WHEN prev_churn_count IS NOT NULL AND prev_churn_count > 0 THEN 
-                ROUND(((total_churn_ct0 - prev_churn_count) * 100.0 / prev_churn_count), 2)
+                ROUND(((total_churn_ct0 - prev_churn_count) * 100.0 / NULLIF(prev_churn_count, 0)), 2)
             ELSE NULL
         END as perubahan_churn_pct,
         
@@ -420,8 +420,8 @@ module.exports = {
             kategori_performa: record.KATEGORI_PERFORMA
           },
           metrik_churn: {
-            total_churn_ct0: record.TOTAL_CHURN_CT0.toLocaleString('id-ID'),
-            unique_customers_churn: record.UNIQUE_CUSTOMERS_CHURN.toLocaleString('id-ID'),
+            total_churn_ct0: (record.TOTAL_CHURN_CT0 || 0).toLocaleString('id-ID'),
+            unique_customers_churn: (record.UNIQUE_CUSTOMERS_CHURN || 0).toLocaleString('id-ID'),
             jumlah_sto_terdampak: record.JUMLAH_STO_TERDAMPAK,
             jumlah_divisi_terdampak: record.JUMLAH_DIVISI_TERDAMPAK,
             rata_masa_layanan: `${record.RATA_MASA_LAYANAN} bulan`

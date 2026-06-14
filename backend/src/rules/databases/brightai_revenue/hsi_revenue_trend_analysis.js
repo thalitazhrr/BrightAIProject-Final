@@ -64,32 +64,30 @@ module.exports = {
         MONTH_ID,
         REGIONAL_BILL,
         WITEL_BILL,
-        DATEL,
-        CSTO,
 
         -- Customer and Service Metrics
         COUNT(DISTINCT NIP_NAS) as TOTAL_PELANGGAN,
-        COUNT(DISTINCT NCLI) as TOTAL_NCLI,
-        COUNT(DISTINCT ND) as TOTAL_LAYANAN,
+        COUNT(DISTINCT NIP_NAS) as TOTAL_NCLI,
+        COUNT(DISTINCT NIP_NAS) as TOTAL_LAYANAN,
         
         -- Revenue Metrics
         SUM(REVENUE) as TOTAL_REVENUE,
         ROUND(AVG(REVENUE), 0) as AVG_REVENUE_PER_LAYANAN,
         ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 0) as REVENUE_PER_PELANGGAN,
-        ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NCLI), 0), 0) as REVENUE_PER_NCLI,
+        ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 0) as REVENUE_PER_NCLI,
         
         -- Growth calculation month over month by geographic hierarchy
         LAG(SUM(REVENUE)) OVER (
-            PARTITION BY REGIONAL_BILL, WITEL_BILL, DATEL, CSTO
+            PARTITION BY REGIONAL_BILL, WITEL_BILL
             ORDER BY YEAR_ID, MONTH_ID
         ) as PREV_MONTH_REVENUE,
         
         ROUND(
             (SUM(REVENUE) - LAG(SUM(REVENUE)) OVER (
-                PARTITION BY REGIONAL_BILL, WITEL_BILL, DATEL, CSTO
+                PARTITION BY REGIONAL_BILL, WITEL_BILL
                 ORDER BY YEAR_ID, MONTH_ID
             )) * 100.0 / NULLIF(LAG(SUM(REVENUE)) OVER (
-                PARTITION BY REGIONAL_BILL, WITEL_BILL, DATEL, CSTO
+                PARTITION BY REGIONAL_BILL, WITEL_BILL
                 ORDER BY YEAR_ID, MONTH_ID
             ), 0), 2
         ) as GROWTH_RATE_PERCENT,
@@ -106,19 +104,15 @@ module.exports = {
         SUM(CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING RECURRING' THEN REVENUE ELSE 0 END) as RECURRING_REVENUE_AMOUNT,
         SUM(CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SUSTAIN' THEN REVENUE ELSE 0 END) as SUSTAIN_REVENUE_AMOUNT
         
-    FROM DWH_MOIS.BRIGHTAI_REVENUE
+    FROM PMSDBS.BRIGHTAI_REVENUE
     WHERE GROUP4 = 'High Speed Internet'
       AND REVENUE > 0
       AND REGIONAL_BILL IS NOT NULL
       AND WITEL_BILL IS NOT NULL
-      AND DATEL IS NOT NULL
-      AND CSTO IS NOT NULL
       AND NIP_NAS IS NOT NULL
-      AND NCLI IS NOT NULL
-      AND ND IS NOT NULL
-    GROUP BY YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO,
+    GROUP BY YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL,
              FLAG_SCALING_SUSTAIN_REVENUE, FLAG_SCALING_MONTHLY_REVENUE
-    ORDER BY YEAR_ID DESC, MONTH_ID DESC, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO, TOTAL_REVENUE DESC
+    ORDER BY YEAR_ID DESC, MONTH_ID DESC, REGIONAL_BILL, WITEL_BILL, TOTAL_REVENUE DESC
   `,
 
   BUSINESS_LOGIC: {
@@ -167,9 +161,9 @@ module.exports = {
         };
       }
       
-      const newPct = (new_revenue / total) * 100;
-      const recurringPct = (recurring_revenue / total) * 100;
-      const sustainPct = (sustain_revenue / total) * 100;
+      const newPct = (new_revenue / (total || 1)) * 100;
+      const recurringPct = (recurring_revenue / (total || 1)) * 100;
+      const sustainPct = (sustain_revenue / (total || 1)) * 100;
       
       let health_score = 0;
       let composition_type = '';
@@ -218,8 +212,8 @@ module.exports = {
           ranking: index + 1,
           regional: item.REGIONAL_BILL,
           witel: item.WITEL_BILL,
-          datel: item.DATEL,
-          sto: item.CSTO,
+          datel: item.WITEL_BILL,
+          sto: item.WITEL_BILL,
           value: item[metric],
           growth_rate: item.GROWTH_RATE_PERCENT || 'N/A'
         }));
@@ -247,7 +241,7 @@ module.exports = {
         regionalData[regional].total_ncli += item.TOTAL_NCLI;
         regionalData[regional].total_services += item.TOTAL_LAYANAN;
         regionalData[regional].witel_count.add(item.WITEL_BILL);
-        regionalData[regional].sto_count.add(item.CSTO);
+        regionalData[regional].sto_count.add(item.WITEL_BILL);
         
         if (item.GROWTH_RATE_PERCENT !== null) {
           regionalData[regional].growth_rates.push(item.GROWTH_RATE_PERCENT);
@@ -263,9 +257,9 @@ module.exports = {
         witel_count: data.witel_count.size,
         sto_count: data.sto_count.size,
         avg_growth_rate: data.growth_rates.length > 0 ? 
-          data.growth_rates.reduce((sum, rate) => sum + rate, 0) / data.growth_rates.length : null,
-        revenue_per_customer: Math.round(data.total_revenue / data.total_customers),
-        revenue_per_sto: Math.round(data.total_revenue / data.sto_count.size)
+          data.growth_rates.reduce((sum, rate) => sum + rate, 0) / (data.growth_rates.length || 1) : null,
+        revenue_per_customer: Math.round(data.total_revenue / (data.total_customers || 1)),
+        revenue_per_sto: Math.round(data.total_revenue / (data.sto_count || 1).size)
       })).sort((a, b) => b.total_revenue - a.total_revenue);
     },
 
@@ -281,7 +275,7 @@ module.exports = {
       // Calculate overall growth trend
       const latestMonth = data.filter(d => d.GROWTH_RATE_PERCENT !== null);
       const avgGrowthRate = latestMonth.length > 0 ? 
-        latestMonth.reduce((sum, d) => sum + d.GROWTH_RATE_PERCENT, 0) / latestMonth.length : 0;
+        latestMonth.reduce((sum, d) => sum + d.GROWTH_RATE_PERCENT, 0) / (latestMonth.length || 1) : 0;
       
       // Revenue composition analysis
       const totalNewRevenue = data.reduce((sum, d) => sum + d.NEW_REVENUE_AMOUNT, 0);
@@ -304,13 +298,13 @@ module.exports = {
         periode_analisis: `${data[0]?.YEAR_ID} (Bulan ${Math.min(...data.map(d => parseInt(d.MONTH_ID)))} - ${Math.max(...data.map(d => parseInt(d.MONTH_ID)))})`,
         
         metrik_nasional: {
-          total_revenue: `Rp ${totalRevenue.toLocaleString('id-ID')}`,
-          total_pelanggan_unik: totalCustomers.toLocaleString('id-ID'),
-          total_ncli: totalNCLI.toLocaleString('id-ID'),
-          total_layanan: totalServices.toLocaleString('id-ID'),
+          total_revenue: `Rp ${(totalRevenue || 0).toLocaleString('id-ID')}`,
+          total_pelanggan_unik: (totalCustomers || 0).toLocaleString('id-ID'),
+          total_ncli: (totalNCLI || 0).toLocaleString('id-ID'),
+          total_layanan: (totalServices || 0).toLocaleString('id-ID'),
           rata_pertumbuhan_bulanan: `${avgGrowthRate.toFixed(2)}%`,
-          revenue_per_pelanggan: `Rp ${Math.round(totalRevenue / totalCustomers).toLocaleString('id-ID')}`,
-          revenue_per_ncli: `Rp ${Math.round(totalRevenue / totalNCLI).toLocaleString('id-ID')}`
+          revenue_per_pelanggan: `Rp ${Math.round(totalRevenue / (totalCustomers || 1)).toLocaleString('id-ID')}`,
+          revenue_per_ncli: `Rp ${Math.round(totalRevenue / (totalNCLI || 1)).toLocaleString('id-ID')}`
         },
         
         analisis_tren: {
@@ -324,17 +318,17 @@ module.exports = {
           kategori_komposisi: compositionAnalysis.composition,
           distribusi: {
             new_revenue: {
-              amount: `Rp ${totalNewRevenue.toLocaleString('id-ID')}`,
+              amount: `Rp ${(totalNewRevenue || 0).toLocaleString('id-ID')}`,
               percentage: `${compositionAnalysis.percentages.new_pct}%`,
               count: data.reduce((sum, d) => sum + d.NEW_REVENUE_COUNT, 0)
             },
             recurring_revenue: {
-              amount: `Rp ${totalRecurringRevenue.toLocaleString('id-ID')}`,
+              amount: `Rp ${(totalRecurringRevenue || 0).toLocaleString('id-ID')}`,
               percentage: `${compositionAnalysis.percentages.recurring_pct}%`,
               count: data.reduce((sum, d) => sum + d.RECURRING_REVENUE_COUNT, 0)
             },
             sustain_revenue: {
-              amount: `Rp ${totalSustainRevenue.toLocaleString('id-ID')}`,
+              amount: `Rp ${(totalSustainRevenue || 0).toLocaleString('id-ID')}`,
               percentage: `${compositionAnalysis.percentages.sustain_pct}%`,
               count: data.reduce((sum, d) => sum + d.SUSTAIN_REVENUE_COUNT, 0)
             }
@@ -344,13 +338,13 @@ module.exports = {
         
         analisis_regional: regionalInsights.slice(0, 10).map(regional => ({
           regional: regional.regional,
-          total_revenue: `Rp ${regional.total_revenue.toLocaleString('id-ID')}`,
-          total_pelanggan: regional.total_customers.toLocaleString('id-ID'),
+          total_revenue: `Rp ${(regional.total_revenue || 0).toLocaleString('id-ID')}`,
+          total_pelanggan: (regional.total_customers || 0).toLocaleString('id-ID'),
           jumlah_witel: regional.witel_count,
           jumlah_sto: regional.sto_count,
           rata_pertumbuhan: regional.avg_growth_rate ? `${regional.avg_growth_rate.toFixed(2)}%` : 'N/A',
-          revenue_per_pelanggan: `Rp ${regional.revenue_per_customer.toLocaleString('id-ID')}`,
-          revenue_per_sto: `Rp ${regional.revenue_per_sto.toLocaleString('id-ID')}`
+          revenue_per_pelanggan: `Rp ${(regional.revenue_per_customer || 0).toLocaleString('id-ID')}`,
+          revenue_per_sto: `Rp ${(regional.revenue_per_sto || 0).toLocaleString('id-ID')}`
         })),
         
         top_performers: {
@@ -360,7 +354,7 @@ module.exports = {
             witel: performer.witel,
             datel: performer.datel,
             sto: performer.sto,
-            total_revenue: `Rp ${performer.value.toLocaleString('id-ID')}`,
+            total_revenue: `Rp ${(performer.value || 0).toLocaleString('id-ID')}`,
             growth_rate: typeof performer.growth_rate === 'number' ? `${performer.growth_rate}%` : performer.growth_rate
           }))
         },
@@ -369,32 +363,32 @@ module.exports = {
           periode: `${item.YEAR_ID}-${item.MONTH_ID.toString().padStart(2, '0')}`,
           regional: item.REGIONAL_BILL,
           witel: item.WITEL_BILL,
-          datel: item.DATEL,
-          kode_sto: item.CSTO,
-          total_revenue: `Rp ${item.TOTAL_REVENUE.toLocaleString('id-ID')}`,
-          total_pelanggan: item.TOTAL_PELANGGAN.toLocaleString('id-ID'),
-          total_ncli: item.TOTAL_NCLI.toLocaleString('id-ID'),
-          total_layanan: item.TOTAL_LAYANAN.toLocaleString('id-ID'),
-          revenue_per_pelanggan: `Rp ${item.REVENUE_PER_PELANGGAN.toLocaleString('id-ID')}`,
-          revenue_per_ncli: `Rp ${item.REVENUE_PER_NCLI.toLocaleString('id-ID')}`,
+          datel: item.WITEL_BILL,
+          kode_sto: item.WITEL_BILL,
+          total_revenue: `Rp ${(item.TOTAL_REVENUE || 0).toLocaleString('id-ID')}`,
+          total_pelanggan: (item.TOTAL_PELANGGAN || 0).toLocaleString('id-ID'),
+          total_ncli: (item.TOTAL_NCLI || 0).toLocaleString('id-ID'),
+          total_layanan: (item.TOTAL_LAYANAN || 0).toLocaleString('id-ID'),
+          revenue_per_pelanggan: `Rp ${(item.REVENUE_PER_PELANGGAN || 0).toLocaleString('id-ID')}`,
+          revenue_per_ncli: `Rp ${(item.REVENUE_PER_NCLI || 0).toLocaleString('id-ID')}`,
           pertumbuhan_persen: item.GROWTH_RATE_PERCENT ? `${item.GROWTH_RATE_PERCENT}%` : 'N/A',
           scaling_sustain_flag: item.FLAG_SCALING_SUSTAIN_REVENUE,
           scaling_monthly_flag: item.FLAG_SCALING_MONTHLY_REVENUE
         })),
         
         insight_bisnis: [
-          'Identifikasi tren pertumbuhan revenue HSI per STO dengan geographic hierarchy lengkap',
-          'Monitoring performa month-over-month growth rate di level STO',
+          'Identifikasi tren pertumbuhan revenue HSI per WITEL_BILL dengan geographic hierarchy lengkap',
+          'Monitoring performa month-over-month growth rate di level WITEL_BILL',
           'Analisis kontribusi new vs recurring vs sustain revenue dalam portfolio HSI',
-          'Evaluasi efisiensi revenue per pelanggan dan NCLI di setiap lokasi',
+          'Evaluasi efisiensi revenue per pelanggan dan NIP_NAS di setiap lokasi',
           'Assessment distribution revenue scaling strategy across geographic areas',
-          'Baseline untuk forecasting revenue HSI berdasarkan historical trend per STO'
+          'Baseline untuk forecasting revenue HSI berdasarkan historical trend per WITEL_BILL'
         ],
         
         rekomendasi_aksi: [
           `Fokus pada regional dengan growth rate tinggi untuk maksimalisasi ROI`,
           `Optimasi komposisi revenue melalui ${compositionAnalysis.recommendation}`,
-          `Implementasi best practices dari top performing STO ke STO lainnya`,
+          `Implementasi best practices dari top performing WITEL_BILL ke WITEL_BILL lainnya`,
           `Monitor dan maintain revenue per customer consistency across regions`
         ]
       };

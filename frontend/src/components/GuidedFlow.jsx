@@ -12,43 +12,48 @@ export const GUIDED_QUESTIONS = {
     'Bagaimana distribusi order HSI per regional dan witel?',
     'Analisis order HSI berdasarkan kategori bandwidth',
     'Tingkat penetrasi HSI di wilayah mana paling tinggi?',
-    'Performa channel penjualan HSI yang paling efektif',
-    'Tren pertumbuhan order HSI bulanan dan tahunan',
+    'Bagaimana coverage dan performa STO untuk layanan HSI?',
     'Bagaimana tingkat keberhasilan fulfillment order HSI?',
     'Analisis waktu instalasi HSI per wilayah',
+    'Analisis revenue HSI berdasarkan kategori bandwidth',
+    'Performa channel penjualan HSI yang paling efektif',
+    'Bagaimana penetrasi produk digital bersama layanan HSI?',
+    'Bagaimana pola musiman order HSI sepanjang tahun?',
+    'Tren pertumbuhan order HSI bulanan dan tahunan',
   ],
   dapros: [
     'Segmentasi pelanggan HSI berdasarkan speed dan revenue',
-    'Distribusi geografis pelanggan HSI per wilayah',
-    'Analisis loyalitas pelanggan HSI dan tenure layanan',
-    'Profil revenue pelanggan HSI per segmen',
-    'Distribusi kecepatan layanan HSI per customer',
-    'Penetrasi produk digital bundling HSI',
     'Analisis bundle layanan HSI dan produk tambahan',
+    'Profil digital dan transformasi teknologi pelanggan HSI',
+    'Profil revenue pelanggan HSI per segmen',
+    'Distribusi geografis pelanggan HSI per wilayah',
+    'Distribusi kecepatan layanan HSI per customer',
+    'Analisis loyalitas pelanggan HSI dan tenure layanan',
   ],
   target: [
-    'Berapa achievement rate target realisasi HSI per regional?',
-    'Tren pertumbuhan HSI target vs realisasi bulanan',
-    'Performa HSI regional berdasarkan target pencapaian',
-    'Performa segmentasi HSI bisnis dan basic vs target',
-    'Performa kompetitif HSI vs target market share',
+    'Performa pencapaian target hsi dan realisasi',
+    'Analisis segmen hsi dan target per segmen',
+    'Performa target regional hsi',
+    'Pola pertumbuhan dan trend target hsi',
+    'Analisis benchmark hsi dan kompetitif target',
   ],
   revenue: [
-    'Tren revenue HSI bulanan dan pertumbuhannya',
-    'Performa revenue HSI per regional kontribusi terbesar',
-    'Analisis customer lifecycle revenue HSI',
-    'Klasifikasi revenue HSI per GL account',
-    'Analisis revenue cross geographic regional witel',
-    'Strategi scaling revenue HSI growth dan portfolio',
-    'Pola perilaku pelanggan HSI terhadap revenue',
+    'Tren revenue hsi bulanan dan pertumbuhannya',
+    'Performa regional hsi dan revenue internet',
+    'Analisis lifecycle pelanggan hsi dan retensi',
+    'Strategi scaling revenue hsi dan new recurring',
+    'Klasifikasi gl account hsi',
+    'Portofolio dan hierarki layanan hsi',
+    'Analisis behavior pelanggan hsi',
+    'Analisis cross geographic hsi multi lokasi',
   ],
   churn: [
-    'Analisis tingkat churn pelanggan internet per regional',
-    'Perbandingan churn rate antar divisi HSI',
-    'Pola churn berdasarkan bandwidth dan masa layanan',
-    'Performa churn per witel dan timeline risiko',
-    'Pola CT0 pelanggan berdasarkan masa layanan HSI',
-    'Analisis churn pattern monthly dan quarterly HSI',
+    'Analisis tingkat churn rate regional',
+    'Pola ct0 berdasarkan masa layanan',
+    'Pola bandwidth churn dan cabut layanan',
+    'Performa witel churn dan analisisnya',
+    'Pola bulanan dan kuartalan monthly churn',
+    'Perbandingan divisi churn antar layanan',
   ],
 };
 
@@ -63,9 +68,10 @@ export const CATEGORIES = [
     detailedDescription:
       'Kategori Sales menyajikan analisis menyeluruh terhadap aktivitas penjualan layanan HSI (High Speed Internet). ' +
       'Cakupan analisis meliputi jumlah total order HSI Bisnis dan HSI Basic, distribusi order berdasarkan wilayah regional dan witel, ' +
-      'serta segmentasi berdasarkan kategori bandwidth. Selain itu, kategori ini juga mencakup analisis tingkat penetrasi HSI di setiap wilayah, ' +
-      'evaluasi efektivitas saluran penjualan, tren pertumbuhan order secara bulanan maupun tahunan, ' +
-      'tingkat keberhasilan proses fulfillment, serta rata-rata waktu instalasi layanan per wilayah.',
+      'segmentasi berdasarkan kategori bandwidth, serta tingkat penetrasi HSI di setiap wilayah. ' +
+      'Kategori ini juga mencakup analisis coverage dan performa STO, tingkat keberhasilan fulfillment, waktu instalasi per wilayah, ' +
+      'revenue per bandwidth, efektivitas saluran penjualan, penetrasi produk digital bundling HSI, ' +
+      'pola musiman order, serta tren pertumbuhan order secara bulanan maupun tahunan.',
   },
   {
     id: 'dapros',

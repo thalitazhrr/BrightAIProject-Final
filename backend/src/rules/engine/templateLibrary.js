@@ -44,6 +44,11 @@ function kat(ctx) {
   return ctx.kategori ? ` Kondisi ini dikategorikan sebagai **${ctx.kategori}**.` : '';
 }
 
+/** Format periode safely — returns "periode terkini" when empty instead of bold empty ** ** */
+function fp(ctx) {
+  return ctx.periode ? ('**' + ctx.periode + '**') : 'periode terkini';
+}
+
 function growthParagraf(ctx) {
   const parts = [];
   if (ctx.momValue && ctx.momValue !== 'N/A' && ctx.momValue !== 'Belum tersedia') {
@@ -107,7 +112,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Pada **${ctx.periode}**${ctx.geoLabelPhrase}, ${ctx.subjek} yang berhasil tercatat mencapai ${fv(ctx)}.` +
+        `Pada ${fp(ctx)}${ctx.geoLabelPhrase}, ${ctx.subjek} yang berhasil tercatat mencapai ${fv(ctx)}.` +
         kat(ctx)
       );
       const gp = growthParagraf(ctx);
@@ -129,7 +134,7 @@ const TEMPLATES = {
       const paragraf = [];
       paragraf.push(
         `Data **${ctx.database}** mencatat sebanyak ${fv(ctx)} untuk ${ctx.subjek}` +
-        `${ctx.geoLabelPhrase} pada periode **${ctx.periode}**.` + kat(ctx)
+        `${ctx.geoLabelPhrase} pada periode ${fp(ctx)}.` + kat(ctx)
       );
       const bp = breakdownParagraf(ctx);
       if (bp) paragraf.push(bp);
@@ -149,7 +154,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Sebagai gambaran kinerja **${ctx.periode}**${ctx.geoLabelPhrase}, sebanyak ${fv(ctx)} ` +
+        `Sebagai gambaran kinerja ${fp(ctx)}${ctx.geoLabelPhrase}, sebanyak ${fv(ctx)} ` +
         `${ctx.subjek} berhasil terealisasi.` + kat(ctx)
       );
       const gp = growthParagraf(ctx);
@@ -175,7 +180,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Tren ${ctx.subjek} pada **${ctx.periode}**${ctx.geoLabelPhrase} menunjukkan nilai sebesar ${fv(ctx)}.` +
+        `Tren ${ctx.subjek} pada ${fp(ctx)}${ctx.geoLabelPhrase} menunjukkan nilai sebesar ${fv(ctx)}.` +
         kat(ctx)
       );
       const gp = growthParagraf(ctx);
@@ -193,7 +198,7 @@ const TEMPLATES = {
       const paragraf = [];
       paragraf.push(
         `Perkembangan ${ctx.subjek}${ctx.geoLabelPhrase} selama periode pengamatan menempatkan angka pada ${fv(ctx)} ` +
-        `di **${ctx.periode}**.` + kat(ctx)
+        `di ${fp(ctx)}.` + kat(ctx)
       );
       const gp = growthParagraf(ctx);
       if (gp) paragraf.push(gp);
@@ -210,7 +215,7 @@ const TEMPLATES = {
       const paragraf = [];
       const gp = growthParagraf(ctx);
       paragraf.push(
-        `Analisis pertumbuhan ${ctx.subjek} pada **${ctx.periode}**${ctx.geoLabelPhrase} — yang mencapai ${fv(ctx)} — ` +
+        `Analisis pertumbuhan ${ctx.subjek} pada ${fp(ctx)}${ctx.geoLabelPhrase} — yang mencapai ${fv(ctx)} — ` +
         `memberikan gambaran dinamika berikut ini.` + kat(ctx)
       );
       if (gp) paragraf.push(gp);
@@ -232,12 +237,12 @@ const TEMPLATES = {
       const paragraf = [];
       if (ctx.hasBreakdown) {
         paragraf.push(
-          `Perbandingan segmen layanan HSI pada **${ctx.periode}**${ctx.geoLabelPhrase} menghasilkan total ${fv(ctx)}.`
+          `Perbandingan segmen layanan HSI pada ${fp(ctx)}${ctx.geoLabelPhrase} menghasilkan total ${fv(ctx)}.`
         );
         paragraf.push(breakdownParagraf(ctx));
       } else {
         paragraf.push(
-          `Perbandingan ${ctx.subjek} pada **${ctx.periode}**${ctx.geoLabelPhrase} menunjukkan angka agregat sebesar ${fv(ctx)}.` +
+          `Perbandingan ${ctx.subjek} pada ${fp(ctx)}${ctx.geoLabelPhrase} menunjukkan angka agregat sebesar ${fv(ctx)}.` +
           kat(ctx)
         );
       }
@@ -253,7 +258,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Dari total ${fv(ctx)} ${ctx.subjek} yang tercatat pada **${ctx.periode}**${ctx.geoLabelPhrase}, ` +
+        `Dari total ${fv(ctx)} ${ctx.subjek} yang tercatat pada ${fp(ctx)}${ctx.geoLabelPhrase}, ` +
         (ctx.hasBreakdown
           ? `distribusinya adalah sebagai berikut.`
           : `data menggambarkan komposisi layanan secara keseluruhan.` + kat(ctx))
@@ -273,12 +278,12 @@ const TEMPLATES = {
       const paragraf = [];
       if (ctx.hasBreakdown) {
         paragraf.push(
-          `Perbandingan segmen-segmen ${ctx.subjek} pada **${ctx.periode}**${ctx.geoLabelPhrase} dari total keseluruhan sebesar ${fv(ctx)} adalah sebagai berikut.`
+          `Perbandingan segmen-segmen ${ctx.subjek} pada ${fp(ctx)}${ctx.geoLabelPhrase} dari total keseluruhan sebesar ${fv(ctx)} adalah sebagai berikut.`
         );
         paragraf.push(breakdownParagraf(ctx));
       } else {
         paragraf.push(
-          `${ctx.mainLabel} pada **${ctx.periode}** mencapai ${fv(ctx)}.` + kat(ctx)
+          `${ctx.mainLabel} pada ${fp(ctx)} mencapai ${fv(ctx)}.` + kat(ctx)
         );
       }
       const gp = growthParagraf(ctx);
@@ -298,7 +303,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Analisis distribusi wilayah ${ctx.subjek} pada **${ctx.periode}**${ctx.geoLabelPhrase} menunjukkan angka agregat ` +
+        `Analisis distribusi wilayah ${ctx.subjek} pada ${fp(ctx)}${ctx.geoLabelPhrase} menunjukkan angka agregat ` +
         `sebesar ${fv(ctx)}.` + kat(ctx)
       );
       const bp = breakdownParagraf(ctx);
@@ -313,7 +318,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Pemetaan ${ctx.subjek} secara geografis pada **${ctx.periode}** menampilkan total ` +
+        `Pemetaan ${ctx.subjek} secara geografis pada ${fp(ctx)} menampilkan total ` +
         `${fv(ctx)} ${ctx.geoScopeWord}.` + kat(ctx)
       );
       const bp = breakdownParagraf(ctx);
@@ -328,7 +333,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Data sebaran wilayah untuk ${ctx.subjek} pada **${ctx.periode}** mencatatkan total ` +
+        `Data sebaran wilayah untuk ${ctx.subjek} pada ${fp(ctx)} mencatatkan total ` +
         `${fv(ctx)} ${ctx.geoScopeWord}.` + kat(ctx)
       );
       const bp = breakdownParagraf(ctx);
@@ -348,7 +353,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Evaluasi kinerja ${ctx.subjek} pada **${ctx.periode}**${ctx.geoLabelPhrase} menunjukkan capaian sebesar ` +
+        `Evaluasi kinerja ${ctx.subjek} pada ${fp(ctx)}${ctx.geoLabelPhrase} menunjukkan capaian sebesar ` +
         `${fv(ctx)}.` + kat(ctx)
       );
       const gp = growthParagraf(ctx);
@@ -363,7 +368,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Performa ${ctx.subjek} pada **${ctx.periode}**${ctx.geoLabelPhrase} berada pada level ${fv(ctx)}.` +
+        `Performa ${ctx.subjek} pada ${fp(ctx)}${ctx.geoLabelPhrase} berada pada level ${fv(ctx)}.` +
         kat(ctx)
       );
       const gp = growthParagraf(ctx);
@@ -380,7 +385,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Dari perspektif kinerja operasional, ${ctx.subjek} pada **${ctx.periode}**${ctx.geoLabelPhrase} ` +
+        `Dari perspektif kinerja operasional, ${ctx.subjek} pada ${fp(ctx)}${ctx.geoLabelPhrase} ` +
         `mencatatkan angka ${fv(ctx)}.` + kat(ctx)
       );
       const bp = breakdownParagraf(ctx);
@@ -402,7 +407,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Berikut adalah rincian lengkap ${ctx.subjek} pada **${ctx.periode}**${ctx.geoLabelPhrase} ` +
+        `Berikut adalah rincian lengkap ${ctx.subjek} pada ${fp(ctx)}${ctx.geoLabelPhrase} ` +
         `dengan total sebesar ${fv(ctx)}.` + kat(ctx)
       );
       const bp = breakdownParagraf(ctx);
@@ -421,7 +426,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Analisis mendalam ${ctx.subjek} pada **${ctx.periode}**${ctx.geoLabelPhrase} mengungkap komposisi berikut, ` +
+        `Analisis mendalam ${ctx.subjek} pada ${fp(ctx)}${ctx.geoLabelPhrase} mengungkap komposisi berikut, ` +
         `dengan total agregat mencapai ${fv(ctx)}.` + kat(ctx)
       );
       const bp = breakdownParagraf(ctx);
@@ -438,7 +443,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Distribusi ${ctx.subjek} secara terperinci pada **${ctx.periode}**${ctx.geoLabelPhrase} ` +
+        `Distribusi ${ctx.subjek} secara terperinci pada ${fp(ctx)}${ctx.geoLabelPhrase} ` +
         `memperlihatkan total ${fv(ctx)}.` + kat(ctx)
       );
       const bp = breakdownParagraf(ctx);
@@ -462,7 +467,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Berdasarkan data yang tersedia, kondisi ${ctx.subjek} pada **${ctx.periode}**${ctx.geoLabelPhrase} ` +
+        `Berdasarkan data yang tersedia, kondisi ${ctx.subjek} pada ${fp(ctx)}${ctx.geoLabelPhrase} ` +
         `— yang mencapai ${fv(ctx)} — dipengaruhi oleh sejumlah faktor berikut.` +
         kat(ctx)
       );
@@ -481,7 +486,7 @@ const TEMPLATES = {
       const paragraf = [];
       paragraf.push(
         `Untuk memahami dinamika ${ctx.subjek}${ctx.geoLabelPhrase} yang berada pada ${fv(ctx)} ` +
-        `di **${ctx.periode}**, perlu ditelaah sejumlah indikator kunci berikut ini.` + kat(ctx)
+        `di ${fp(ctx)}, perlu ditelaah sejumlah indikator kunci berikut ini.` + kat(ctx)
       );
       const gp = growthParagraf(ctx);
       if (gp) paragraf.push(gp);
@@ -496,7 +501,7 @@ const TEMPLATES = {
       const paragraf = [];
       paragraf.push(
         `Data **${ctx.database}** memberikan beberapa petunjuk mengenai faktor-faktor yang memengaruhi ` +
-        `${ctx.subjek}${ctx.geoLabelPhrase} pada **${ctx.periode}**, yang tercatat sebesar ${fv(ctx)}.`
+        `${ctx.subjek}${ctx.geoLabelPhrase} pada ${fp(ctx)}, yang tercatat sebesar ${fv(ctx)}.`
       );
       const gp = growthParagraf(ctx);
       if (gp) paragraf.push(gp);
@@ -517,7 +522,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Hasil analisis ${ctx.subjek} pada **${ctx.periode}**${ctx.geoLabelPhrase} menunjukkan angka sebesar ` +
+        `Hasil analisis ${ctx.subjek} pada ${fp(ctx)}${ctx.geoLabelPhrase} menunjukkan angka sebesar ` +
         `${fv(ctx)}.` + kat(ctx)
       );
       const gp = growthParagraf(ctx);
@@ -538,7 +543,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `${ctx.mainLabel} pada **${ctx.periode}**${ctx.geoLabelPhrase} mencapai ${fv(ctx)}.` +
+        `${ctx.mainLabel} pada ${fp(ctx)}${ctx.geoLabelPhrase} mencapai ${fv(ctx)}.` +
         kat(ctx)
       );
       const bp = breakdownParagraf(ctx);
@@ -555,7 +560,7 @@ const TEMPLATES = {
     (ctx) => {
       const paragraf = [];
       paragraf.push(
-        `Berdasarkan data **${ctx.database}**, ${ctx.subjek} pada **${ctx.periode}**${ctx.geoLabelPhrase} ` +
+        `Berdasarkan data **${ctx.database}**, ${ctx.subjek} pada ${fp(ctx)}${ctx.geoLabelPhrase} ` +
         `tercatat sebesar ${fv(ctx)}.` + kat(ctx)
       );
       const gp = growthParagraf(ctx);

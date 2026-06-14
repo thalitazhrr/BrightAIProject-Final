@@ -187,7 +187,7 @@
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
-\contentsline {section}{\numberline {II.4}\textit {Template-Based Natural Language Generation}}{24}{section.2.4}%
+\contentsline {section}{\numberline {II.4}\textit {Template-Based Natural Language Generation}}{23}{section.2.4}%
 \contentsline {subsection}{\numberline {II.4.1}Konsep \textit {Natural Language Generation}}{24}{subsection.2.4.1}%
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
@@ -208,7 +208,7 @@
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
 \contentsline {subsection}{\numberline {II.4.4}Keamanan dan Privasi Data dalam NLG Internal}{25}{subsection.2.4.4}%
-\contentsline {subsubsection}{\numberline {II.4.4.1}\textit {Differential Privacy} untuk NLG}{26}{subsubsection.2.4.4.1}%
+\contentsline {subsubsection}{\numberline {II.4.4.1}\textit {Differential Privacy} untuk NLG}{25}{subsubsection.2.4.4.1}%
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
@@ -305,11 +305,11 @@
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
-\contentsline {section}{\numberline {II.5}\textit {Time Series Forecasting}}{30}{section.2.5}%
+\contentsline {section}{\numberline {II.5}\textit {Time Series Forecasting}}{31}{section.2.5}%
 \contentsline {subsection}{\numberline {II.5.1}Konsep \textit {Time Series} dan Peramalan}{31}{subsection.2.5.1}%
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
-\contentsline {subsection}{\numberline {II.5.2}Model Peramalan Statistik Klasik sebagai \textit {Baseline}}{32}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {II.5.2}Model Peramalan Statistik Klasik sebagai \textit {Baseline}}{31}{subsection.2.5.2}%
 \contentsline {subsubsection}{\numberline {II.5.2.1}ARIMA dan SARIMA}{32}{subsubsection.2.5.2.1}%
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
@@ -341,7 +341,7 @@
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
-\contentsline {subsection}{\numberline {II.5.3}Model Peramalan Deret Waktu Berbasis \textit {Deep Learning}}{34}{subsection.2.5.3}%
+\contentsline {subsection}{\numberline {II.5.3}Model Peramalan Deret Waktu Berbasis \textit {Deep Learning}}{33}{subsection.2.5.3}%
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
@@ -394,7 +394,7 @@
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
-\contentsline {subsubsection}{\numberline {II.5.3.5}Perbandingan Karakteristik Model Peramalan \textit {Deep Learning}}{37}{subsubsection.2.5.3.5}%
+\contentsline {subsubsection}{\numberline {II.5.3.5}Perbandingan Karakteristik Model Peramalan \textit {Deep Learning}}{36}{subsubsection.2.5.3.5}%
 \babel@toc {english}{}\relax 
 \babel@toc {indonesian}{}\relax 
 \babel@toc {english}{}\relax 
@@ -501,10 +501,10 @@
 \contentsline {section}{\numberline {III.3}Analisis Pemilihan Solusi}{67}{section.3.3}%
 \contentsline {subsection}{\numberline {III.3.1}Alternatif Solusi}{68}{subsection.3.3.1}%
 \contentsline {subsection}{\numberline {III.3.2}Analisis Penentuan Solusi}{74}{subsection.3.3.2}%
-\contentsline {subsubsection}{\numberline {III.3.2.1}Solusi 1: \textit {Chatbot} Berbasis Aturan Sederhana}{74}{subsubsection.3.3.2.1}%
+\contentsline {subsubsection}{\numberline {III.3.2.1}Solusi 1: \textit {Chatbot} Berbasis Aturan Sederhana}{75}{subsubsection.3.3.2.1}%
 \contentsline {subsubsection}{\numberline {III.3.2.2}Solusi 2: \textit {Chatbot} BI dengan Klasifikasi Maksud Berbasis Pola, Pembangkitan Bahasa Alami Berbasis Templat, dan Peramalan Deret Waktu}{76}{subsubsection.3.3.2.2}%
 \contentsline {subsubsection}{\numberline {III.3.2.3}Solusi 3: Dasbor BI Interaktif Tradisional dengan Peningkatan}{80}{subsubsection.3.3.2.3}%
-\contentsline {subsubsection}{\numberline {III.3.2.4}Solusi 4: Chatbot BI Berbasis Model Bahasa Besar (\textit {Large Language Model})}{82}{subsubsection.3.3.2.4}%
+\contentsline {subsubsection}{\numberline {III.3.2.4}Solusi 4: Chatbot BI Berbasis Model Bahasa Besar (\textit {Large Language Model})}{83}{subsubsection.3.3.2.4}%
 \contentsline {subsubsection}{\numberline {III.3.2.5}Matriks Perbandingan \textit {Balanced Scorecard}}{86}{subsubsection.3.3.2.5}%
 \contentsline {subsubsection}{\numberline {III.3.2.6}Kesimpulan Pemilihan Solusi}{88}{subsubsection.3.3.2.6}%
 \babel@toc {english}{}\relax 

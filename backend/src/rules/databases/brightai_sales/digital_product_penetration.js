@@ -5,7 +5,7 @@ module.exports = {
   RULE_META: {
     RULE_ID: 'ps_010',
     RULE_NAME: 'digital_product_penetration',
-    DESCRIPTION: 'Analisis penetrasi produk digital bersama HSI dengan klasifikasi produk yang tepat menggunakan ORDER_ID, NCLI, dan ND_HSI',
+    DESCRIPTION: 'Analisis penetrasi produk digital bersama layanan HSI',
     DATABASE: 'BRIGHTAI_SALES',
     CATEGORY: 'DIGITAL_PENETRATION',
     COMPLEXITY: 'HIGH',
@@ -86,7 +86,7 @@ module.exports = {
             EKOSISTEM,
             PROVIDER,
             ND_VOICE,
-            
+
             -- HSI Bisnis Classification
             CASE 
                 WHEN UPPER(PRODUCT) = 'WMS' THEN 0
@@ -166,9 +166,9 @@ module.exports = {
             END as CUSTOMER_JOURNEY_TYPE,
             
             -- Target Ecosystem Classification (from EKOSISTEM)
-            CASE 
+            CASE
                 WHEN UPPER(EKOSISTEM) IN ('EDUCATION', 'SEKOLAH', 'PESANTREN') THEN 'PENDIDIKAN'
-                WHEN UPPER(EKOSISTEM) IN ('GOVERNMENT') THEN 'PEMERINTAHAN' 
+                WHEN UPPER(EKOSISTEM) IN ('GOVERNMENT') THEN 'PEMERINTAHAN'
                 WHEN UPPER(EKOSISTEM) IN ('HEALTH', 'KLINIK', 'HEALTY') THEN 'KESEHATAN'
                 WHEN UPPER(EKOSISTEM) IN ('HOTEL', 'PROPERTY', 'APARTEMEN') THEN 'HOSPITALITAS'
                 WHEN UPPER(EKOSISTEM) IN ('AGRI', 'AGRICULTURE') THEN 'PERTANIAN'
@@ -178,7 +178,7 @@ module.exports = {
             END as TARGET_ECOSYSTEM,
             
             -- Sales Division Classification (from PROVIDER)
-            CASE 
+            CASE
                 WHEN PROVIDER LIKE 'DES%' THEN 'Solusi Enterprise Digital'
                 WHEN PROVIDER LIKE 'DGS%' THEN 'Solusi Pemerintahan Digital'
                 WHEN PROVIDER LIKE 'DBS%' THEN 'Solusi Bisnis Digital'
@@ -192,9 +192,6 @@ module.exports = {
             
         FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD')
-          AND ORDER_ID IS NOT NULL
-          AND NCLI IS NOT NULL
-          AND ND_HSI IS NOT NULL
     ),
     
     DIGITAL_PENETRATION_ANALYSIS AS (
@@ -227,7 +224,7 @@ module.exports = {
             COUNT(DISTINCT CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND IS_PIJAR_SEKOLAH = 1 AND BUNDLING_TYPE = 'Hard Bundling' THEN ORDER_ID END) as hard_bundling_orders,
             
             -- Technical metrics
-            AVG(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND IS_PIJAR_SEKOLAH = 1 
+            AVG(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1)
                      AND CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) > 0
                 THEN CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) END) as avg_bandwidth_kbps,
             
@@ -277,7 +274,7 @@ module.exports = {
             COUNT(DISTINCT CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND IS_OCA_INTERACTION = 1 AND BUNDLING_TYPE = 'Hard Bundling' THEN ORDER_ID END) as hard_bundling_orders,
             
             -- Technical metrics
-            AVG(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND IS_OCA_INTERACTION = 1 
+            AVG(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1)
                      AND CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) > 0
                 THEN CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) END) as avg_bandwidth_kbps,
             
@@ -327,7 +324,7 @@ module.exports = {
             COUNT(DISTINCT CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND IS_OCA_BLAST = 1 AND BUNDLING_TYPE = 'Hard Bundling' THEN ORDER_ID END) as hard_bundling_orders,
             
             -- Technical metrics
-            AVG(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND IS_OCA_BLAST = 1 
+            AVG(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1)
                      AND CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) > 0
                 THEN CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) END) as avg_bandwidth_kbps,
             
@@ -377,7 +374,7 @@ module.exports = {
             COUNT(DISTINCT CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND IS_NETMONK = 1 AND BUNDLING_TYPE = 'Hard Bundling' THEN ORDER_ID END) as hard_bundling_orders,
             
             -- Technical metrics
-            AVG(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND IS_NETMONK = 1 
+            AVG(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1)
                      AND CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) > 0
                 THEN CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) END) as avg_bandwidth_kbps,
             
@@ -723,9 +720,9 @@ module.exports = {
         product: d.DIGITAL_PRODUCT_NAME,
         penetrasi_customer: `${d.PENETRATION_RATE_CUSTOMERS}%`,
         penetrasi_order: `${d.PENETRATION_RATE_ORDERS}%`,
-        customers: d.DIGITAL_CUSTOMERS.toLocaleString('id-ID'),
-        orders: d.DIGITAL_ORDERS.toLocaleString('id-ID'),
-        services: d.DIGITAL_SERVICES.toLocaleString('id-ID'),
+        customers: (d.DIGITAL_CUSTOMERS || 0).toLocaleString('id-ID'),
+        orders: (d.DIGITAL_ORDERS || 0).toLocaleString('id-ID'),
+        services: (d.DIGITAL_SERVICES || 0).toLocaleString('id-ID'),
         revenue_impact: `Rp ${d.TOTAL_REVENUE_IMPACT_MILLIONS}M`,
         kategori: d.KATEGORI_ADOPSI,
         avg_services_per_customer: d.AVG_SERVICES_PER_CUSTOMER,
@@ -736,17 +733,17 @@ module.exports = {
       
       // Generate enhanced insights berdasarkan metrik baru
       const avg_penetration_customers = data.reduce((sum, d) => sum + d.PENETRATION_RATE_CUSTOMERS, 0) / data.length;
-      analysis.insights.push(`Rata-rata penetrasi customer produk digital adalah ${avg_penetration_customers.toFixed(1)}%`);
+      analysis.insights.push(`Rata-rata penetrasi customer produk digital adalah ${(avg_penetration_customers || 0).toFixed(1)}%`);
       
       const avg_penetration_orders = data.reduce((sum, d) => sum + d.PENETRATION_RATE_ORDERS, 0) / data.length;
-      analysis.insights.push(`Rata-rata penetrasi order produk digital adalah ${avg_penetration_orders.toFixed(1)}%`);
+      analysis.insights.push(`Rata-rata penetrasi order produk digital adalah ${(avg_penetration_orders || 0).toFixed(1)}%`);
       
-      analysis.insights.push(`Rata-rata ${analysis.avg_services_per_customer.toFixed(2)} layanan digital per customer`);
+      analysis.insights.push(`Rata-rata ${(analysis.avg_services_per_customer || 0).toFixed(2)} layanan digital per customer`);
       
       const premium_products = data.filter(d => d.ESTIMATED_ADDITIONAL_ARPU >= 100000);
       if (premium_products.length > 0) {
         const premium_revenue = premium_products.reduce((sum, d) => sum + d.TOTAL_REVENUE_IMPACT_MILLIONS, 0);
-        analysis.insights.push(`Produk premium berkontribusi Rp ${premium_revenue.toFixed(1)}M dari total revenue digital`);
+        analysis.insights.push(`Produk premium berkontribusi Rp ${(premium_revenue || 0).toFixed(1)}M dari total revenue digital`);
       }
       
       const business_focused = data.filter(d => d.PENETRATION_RATE_BISNIS_CUSTOMERS > d.PENETRATION_RATE_BASIC_CUSTOMERS);
@@ -762,9 +759,9 @@ module.exports = {
       }
       
       if (analysis.ecosystem_insights.avg_ecosystem_alignment >= 70) {
-        analysis.insights.push(`Produk digital menunjukkan alignment baik dengan target ecosystem (rata-rata ${analysis.ecosystem_insights.avg_ecosystem_alignment.toFixed(1)}%)`);
+        analysis.insights.push(`Produk digital menunjukkan alignment baik dengan target ecosystem (rata-rata ${(analysis.ecosystem_insights.avg_ecosystem_alignment || 0).toFixed(1)}%)`);
       } else {
-        analysis.insights.push(`Peluang improvement dalam ecosystem targeting (rata-rata alignment ${analysis.ecosystem_insights.avg_ecosystem_alignment.toFixed(1)}%)`);
+        analysis.insights.push(`Peluang improvement dalam ecosystem targeting (rata-rata alignment ${(analysis.ecosystem_insights.avg_ecosystem_alignment || 0).toFixed(1)}%)`);
       }
       
       return analysis;
@@ -809,9 +806,9 @@ module.exports = {
             kategori_adopsi: product.KATEGORI_ADOPSI
           },
           metrik_fundamental: {
-            total_order_digital: product.DIGITAL_ORDERS.toLocaleString('id-ID'),
-            total_customer_digital: product.DIGITAL_CUSTOMERS.toLocaleString('id-ID'),
-            total_layanan_digital: product.DIGITAL_SERVICES.toLocaleString('id-ID'),
+            total_order_digital: (product.DIGITAL_ORDERS || 0).toLocaleString('id-ID'),
+            total_customer_digital: (product.DIGITAL_CUSTOMERS || 0).toLocaleString('id-ID'),
+            total_layanan_digital: (product.DIGITAL_SERVICES || 0).toLocaleString('id-ID'),
             rata_rata_order_per_customer: product.AVG_ORDERS_PER_CUSTOMER,
             rata_rata_layanan_per_customer: product.AVG_SERVICES_PER_CUSTOMER
           },
@@ -825,31 +822,31 @@ module.exports = {
             penetrasi_basic_order: `${product.PENETRATION_RATE_BASIC_ORDERS}%`
           },
           breakdown_hsi: {
-            order_hsi_bisnis: product.HSI_BISNIS_ORDERS.toLocaleString('id-ID'),
-            order_hsi_basic: product.HSI_BASIC_ORDERS.toLocaleString('id-ID'),
-            customer_hsi_bisnis: product.HSI_BISNIS_CUSTOMERS.toLocaleString('id-ID'),
-            customer_hsi_basic: product.HSI_BASIC_CUSTOMERS.toLocaleString('id-ID'),
-            layanan_hsi_bisnis: product.HSI_BISNIS_SERVICES.toLocaleString('id-ID'),
-            layanan_hsi_basic: product.HSI_BASIC_SERVICES.toLocaleString('id-ID'),
+            order_hsi_bisnis: (product.HSI_BISNIS_ORDERS || 0).toLocaleString('id-ID'),
+            order_hsi_basic: (product.HSI_BASIC_ORDERS || 0).toLocaleString('id-ID'),
+            customer_hsi_bisnis: (product.HSI_BISNIS_CUSTOMERS || 0).toLocaleString('id-ID'),
+            customer_hsi_basic: (product.HSI_BASIC_CUSTOMERS || 0).toLocaleString('id-ID'),
+            layanan_hsi_bisnis: (product.HSI_BISNIS_SERVICES || 0).toLocaleString('id-ID'),
+            layanan_hsi_basic: (product.HSI_BASIC_SERVICES || 0).toLocaleString('id-ID'),
             dominasi_segmen: product.HSI_BISNIS_CUSTOMERS > product.HSI_BASIC_CUSTOMERS ? 'Bisnis' : 'Basic'
           },
           metrik_customer_journey: {
-            order_customer_baru: product.NEW_CUSTOMER_ORDERS.toLocaleString('id-ID'),
-            order_upsell: product.UPSELL_ORDERS.toLocaleString('id-ID'),
+            order_customer_baru: (product.NEW_CUSTOMER_ORDERS || 0).toLocaleString('id-ID'),
+            order_upsell: (product.UPSELL_ORDERS || 0).toLocaleString('id-ID'),
             tingkat_customer_baru: `${product.NEW_CUSTOMER_RATE}%`,
             tingkat_upsell: `${product.UPSELL_RATE}%`,
             strategi_dominan: product.NEW_CUSTOMER_RATE > product.UPSELL_RATE ? 'Fokus Akuisisi' : 'Fokus Upsell'
           },
           metrik_ecosystem_alignment: {
-            order_target_ecosystem: product.TARGET_ECOSYSTEM_ORDERS.toLocaleString('id-ID'),
+            order_target_ecosystem: (product.TARGET_ECOSYSTEM_ORDERS || 0).toLocaleString('id-ID'),
             tingkat_alignment_ecosystem: `${product.ECOSYSTEM_ALIGNMENT_RATE}%`,
             keragaman_sales_division: product.SALES_DIVISION_DIVERSITY,
             status_alignment: product.ECOSYSTEM_ALIGNMENT_RATE >= 70 ? 'Alignment Baik' : 'Perlu Perbaikan'
           },
           metrik_layanan: {
-            order_triple_play: product.TRIPLE_PLAY_ORDERS.toLocaleString('id-ID'),
+            order_triple_play: (product.TRIPLE_PLAY_ORDERS || 0).toLocaleString('id-ID'),
             tingkat_triple_play: `${product.TRIPLE_PLAY_RATE}%`,
-            order_hard_bundling: product.HARD_BUNDLING_ORDERS.toLocaleString('id-ID'),
+            order_hard_bundling: (product.HARD_BUNDLING_ORDERS || 0).toLocaleString('id-ID'),
             tingkat_hard_bundling: `${product.HARD_BUNDLING_RATE}%`,
             rata_rata_bandwidth_mbps: product.AVG_BANDWIDTH_MBPS
           },
@@ -859,9 +856,9 @@ module.exports = {
             tingkat_sebaran: product.REGIONAL_COVERAGE >= 5 ? 'Nasional' : product.REGIONAL_COVERAGE >= 3 ? 'Multi Regional' : 'Terbatas'
           },
           metrik_revenue: {
-            estimasi_arpu_tambahan: `Rp ${product.ESTIMATED_ADDITIONAL_ARPU.toLocaleString('id-ID')}`,
+            estimasi_arpu_tambahan: `Rp ${(product.ESTIMATED_ADDITIONAL_ARPU || 0).toLocaleString('id-ID')}`,
             total_dampak_revenue: `Rp ${product.TOTAL_REVENUE_IMPACT_MILLIONS}M`,
-            potensi_pasar_tersisa: product.MARKET_POTENTIAL_REMAINING_CUSTOMERS.toLocaleString('id-ID'),
+            potensi_pasar_tersisa: (product.MARKET_POTENTIAL_REMAINING_CUSTOMERS || 0).toLocaleString('id-ID'),
             tier_revenue: product.ESTIMATED_ADDITIONAL_ARPU >= 120000 ? 'Premium' : product.ESTIMATED_ADDITIONAL_ARPU >= 80000 ? 'Nilai Tinggi' : 'Standar'
           },
           ranking_performance: {
@@ -899,13 +896,13 @@ module.exports = {
         ringkasan_eksekutif: {
           periode_analisis: 'Tahun 2025 (Januari hingga saat ini)',
           total_produk_digital: ecosystem.total_products,
-          total_order_digital: ecosystem.total_digital_orders.toLocaleString('id-ID'),
-          total_customer_digital: ecosystem.total_digital_customers.toLocaleString('id-ID'),
-          total_layanan_digital: ecosystem.total_digital_services.toLocaleString('id-ID'),
-          total_dampak_revenue: `Rp ${ecosystem.total_revenue_impact.toFixed(1)}M`,
-          rata_rata_penetrasi_customer: `${(data.reduce((sum, d) => sum + d.PENETRATION_RATE_CUSTOMERS, 0) / data.length).toFixed(1)}%`,
-          rata_rata_penetrasi_order: `${(data.reduce((sum, d) => sum + d.PENETRATION_RATE_ORDERS, 0) / data.length).toFixed(1)}%`,
-          rata_rata_layanan_per_customer: ecosystem.avg_services_per_customer.toFixed(2),
+          total_order_digital: (ecosystem.total_digital_orders || 0).toLocaleString('id-ID'),
+          total_customer_digital: (ecosystem.total_digital_customers || 0).toLocaleString('id-ID'),
+          total_layanan_digital: (ecosystem.total_digital_services || 0).toLocaleString('id-ID'),
+          total_dampak_revenue: `Rp ${(ecosystem.total_revenue_impact || 0).toFixed(1)}M`,
+          rata_rata_penetrasi_customer: `${(data.reduce((sum, d) => sum + (d.PENETRATION_RATE_CUSTOMERS || 0), 0) / data.length).toFixed(1)}%`,
+          rata_rata_penetrasi_order: `${(data.reduce((sum, d) => sum + (d.PENETRATION_RATE_ORDERS || 0), 0) / data.length).toFixed(1)}%`,
+          rata_rata_layanan_per_customer: (ecosystem.avg_services_per_customer || 0).toFixed(2),
           distribusi_adopsi: ecosystem.product_performance,
           overview_customer_journey: ecosystem.customer_journey_insights,
           overview_ecosystem_alignment: ecosystem.ecosystem_insights

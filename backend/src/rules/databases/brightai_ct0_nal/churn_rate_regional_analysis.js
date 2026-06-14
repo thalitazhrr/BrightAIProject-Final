@@ -129,7 +129,7 @@ module.exports = {
             
         FROM DWH_MOIS.BRIGHTAI_CT0_NAL
         WHERE UPPER(PRODUK) = 'INTERNET'
-          AND (CITEM IS NULL OR NOT UPPER(CITEM) LIKE 'WM%')
+          AND (CITEM IS NULL OR NOT UPPER(CITEM) LIKE 'W%')
           AND PERIODE >= TO_CHAR(ADD_MONTHS(SYSDATE, -6), 'YYYYMM')
           AND REGIONAL IS NOT NULL
           AND WITEL IS NOT NULL
@@ -220,7 +220,7 @@ module.exports = {
         -- Change percentage
         CASE 
             WHEN prev_churn_count IS NOT NULL AND prev_churn_count > 0 THEN 
-                ROUND(((total_churn_ct0 - prev_churn_count) * 100.0 / prev_churn_count), 2)
+                ROUND(((total_churn_ct0 - prev_churn_count) * 100.0 / NULLIF(prev_churn_count, 0)), 2)
             ELSE NULL
         END as perubahan_churn_pct
         
@@ -334,8 +334,8 @@ module.exports = {
             divisi: record.DIVISI
           },
           metrik_churn: {
-            total_churn_ct0: record.TOTAL_CHURN_CT0.toLocaleString('id-ID'),
-            pelanggan_unik_churn: record.UNIQUE_CUSTOMER_CHURN.toLocaleString('id-ID'),
+            total_churn_ct0: (record.TOTAL_CHURN_CT0 || 0).toLocaleString('id-ID'),
+            pelanggan_unik_churn: (record.UNIQUE_CUSTOMER_CHURN || 0).toLocaleString('id-ID'),
             rata_masa_layanan: `${record.RATA_RATA_MASA_LAYANAN_BULAN} bulan`,
             bandwidth_churn_terbanyak: record.BANDWIDTH_CHURN_TERBANYAK,
             kategori_tingkat_churn: record.KATEGORI_CHURN

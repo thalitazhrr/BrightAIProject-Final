@@ -250,9 +250,9 @@ function computeMetrics(yTrue, yPred, labels) {
 
   // Weighted
   const totalSupport = activeCls.reduce((a, c) => a + c.support, 0);
-  const weightedP  = activeCls.reduce((a, c) => a + c.precision * c.support, 0) / totalSupport;
-  const weightedR  = activeCls.reduce((a, c) => a + c.recall * c.support, 0) / totalSupport;
-  const weightedF1 = activeCls.reduce((a, c) => a + c.f1 * c.support, 0) / totalSupport;
+  const weightedP  = activeCls.reduce((a, c) => a + c.precision * c.support, 0) / (total || 1)Support;
+  const weightedR  = activeCls.reduce((a, c) => a + c.recall * c.support, 0) / (total || 1)Support;
+  const weightedF1 = activeCls.reduce((a, c) => a + c.f1 * c.support, 0) / (total || 1)Support;
 
   // Micro
   const microTP = perClass.reduce((a, c) => a + c.tp, 0);

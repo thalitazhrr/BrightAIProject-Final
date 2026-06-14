@@ -25,7 +25,7 @@ class RuleRegistry {
       },
       BRIGHTAI_REVENUE: {
         connection: 'DADBS',
-        schema: 'DWH_MOIS.BRIGHTAI_REVENUE',
+        schema: 'PMSDBS.BRIGHTAI_REVENUE',
         table: 'BRIGHTAI_REVENUE',
         rules_count: 8,
         rule_prefix: 'mart_rev'

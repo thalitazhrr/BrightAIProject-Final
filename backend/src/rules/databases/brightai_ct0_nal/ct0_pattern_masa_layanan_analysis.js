@@ -109,7 +109,7 @@ module.exports = {
             
         FROM DWH_MOIS.BRIGHTAI_CT0_NAL
         WHERE UPPER(PRODUK) = 'INTERNET'
-          AND (CITEM IS NULL OR NOT UPPER(CITEM) LIKE 'WM%')
+          AND (CITEM IS NULL OR NOT UPPER(CITEM) LIKE 'W%')
           AND PERIODE >= TO_CHAR(ADD_MONTHS(SYSDATE, -6), 'YYYYMM')
           AND TGL_PSB IS NOT NULL 
           AND TGL_PS IS NOT NULL
@@ -339,7 +339,7 @@ module.exports = {
             kategori_masa_layanan: record.KATEGORI_MASA_LAYANAN
           },
           metrik_ct0: {
-            jumlah_ct0: record.JUMLAH_CT0.toLocaleString('id-ID'),
+            jumlah_ct0: (record.JUMLAH_CT0 || 0).toLocaleString('id-ID'),
             rata_masa_layanan: `${record.RATA_MASA_LAYANAN} bulan`,
             masa_layanan_minimum: `${record.MASA_LAYANAN_MINIMUM} bulan`,
             masa_layanan_maksimum: `${record.MASA_LAYANAN_MAKSIMUM} bulan`,

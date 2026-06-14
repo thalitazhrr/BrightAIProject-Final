@@ -86,7 +86,7 @@ module.exports = {
                 ELSE 'TIER_5_OTHERS'
             END as SERVICE_TIER
             
-        FROM (SELECT DISTINCT GL_ACC FROM DWH_MOIS.BRIGHTAI_REVENUE WHERE GROUP4 = 'High Speed Internet') gl_src
+        FROM (SELECT DISTINCT GL_ACC FROM PMSDBS.BRIGHTAI_REVENUE WHERE GROUP4 = 'High Speed Internet') gl_src
     )
     
     SELECT 
@@ -94,8 +94,6 @@ module.exports = {
         p.MONTH_ID,
         p.REGIONAL_BILL,
         p.WITEL_BILL,
-        p.DATEL,
-        p.CSTO,
         p.GL_ACC,
         g.GL_CATEGORY,
         g.REVENUE_TYPE,
@@ -103,14 +101,14 @@ module.exports = {
         
         -- Customer and Service Metrics
         COUNT(DISTINCT p.NIP_NAS) as TOTAL_PELANGGAN,
-        COUNT(DISTINCT p.NCLI) as TOTAL_NCLI,
-        COUNT(DISTINCT p.ND) as TOTAL_LAYANAN,
+        COUNT(DISTINCT p.NIP_NAS) as TOTAL_NCLI,
+        COUNT(DISTINCT p.NIP_NAS) as TOTAL_LAYANAN,
         
         -- Revenue Metrics
         SUM(p.REVENUE) as TOTAL_REVENUE,
         ROUND(AVG(p.REVENUE), 0) as AVG_REVENUE_PER_LAYANAN,
         ROUND(SUM(p.REVENUE) / NULLIF(COUNT(DISTINCT p.NIP_NAS), 0), 0) as REVENUE_PER_PELANGGAN,
-        ROUND(SUM(p.REVENUE) / NULLIF(COUNT(DISTINCT p.NCLI), 0), 0) as REVENUE_PER_NCLI,
+        ROUND(SUM(p.REVENUE) / NULLIF(COUNT(DISTINCT p.NIP_NAS), 0), 0) as REVENUE_PER_NCLI,
         
         -- Revenue scaling distribution for this GL Account
         SUM(CASE WHEN p.FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING NEW' THEN p.REVENUE ELSE 0 END) as NEW_REVENUE,
@@ -123,28 +121,24 @@ module.exports = {
         COUNT(CASE WHEN p.REVENUE < 100000 THEN 1 END) as LOW_VALUE_SERVICES,
         
         -- Customer concentration per GL Account
-        ROUND(COUNT(DISTINCT p.ND) / NULLIF(COUNT(DISTINCT p.NIP_NAS), 0), 2) as SERVICES_PER_CUSTOMER,
-        ROUND(COUNT(DISTINCT p.ND) / NULLIF(COUNT(DISTINCT p.NCLI), 0), 2) as SERVICES_PER_NCLI,
+        ROUND(COUNT(DISTINCT p.NIP_NAS) / NULLIF(COUNT(DISTINCT p.NIP_NAS), 0), 2) as SERVICES_PER_CUSTOMER,
+        ROUND(COUNT(DISTINCT p.NIP_NAS) / NULLIF(COUNT(DISTINCT p.NIP_NAS), 0), 2) as SERVICES_PER_NCLI,
         
         -- Revenue efficiency
-        ROUND(SUM(p.REVENUE) / NULLIF(COUNT(DISTINCT p.ND), 0), 0) as REVENUE_EFFICIENCY_PER_SERVICE,
+        ROUND(SUM(p.REVENUE) / NULLIF(COUNT(DISTINCT p.NIP_NAS), 0), 0) as REVENUE_EFFICIENCY_PER_SERVICE,
         
         -- Geographic coverage for this GL Account
         COUNT(DISTINCT p.WITEL_BILL) as WITEL_COVERAGE,
-        COUNT(DISTINCT p.DATEL) as DATEL_COVERAGE
+        COUNT(DISTINCT p.WITEL_BILL) as DATEL_COVERAGE
         
-    FROM DWH_MOIS.BRIGHTAI_REVENUE p
+    FROM PMSDBS.BRIGHTAI_REVENUE p
     JOIN GL_ACCOUNT_CLASSIFICATION g ON p.GL_ACC = g.GL_ACC
     WHERE p.GROUP4 = 'High Speed Internet'
       AND p.REVENUE > 0
       AND p.REGIONAL_BILL IS NOT NULL
       AND p.WITEL_BILL IS NOT NULL
-      AND p.DATEL IS NOT NULL
-      AND p.CSTO IS NOT NULL
       AND p.NIP_NAS IS NOT NULL
-      AND p.NCLI IS NOT NULL
-      AND p.ND IS NOT NULL
-    GROUP BY p.YEAR_ID, p.MONTH_ID, p.REGIONAL_BILL, p.WITEL_BILL, p.DATEL, p.CSTO,
+    GROUP BY p.YEAR_ID, p.MONTH_ID, p.REGIONAL_BILL, p.WITEL_BILL,
              p.GL_ACC, g.GL_CATEGORY, g.REVENUE_TYPE, g.SERVICE_TIER
     ORDER BY p.YEAR_ID DESC, p.MONTH_ID DESC, TOTAL_REVENUE DESC
   `,
@@ -340,10 +334,10 @@ module.exports = {
       const top_category = Object.entries(category_distribution)
         .sort(([,a], [,b]) => b.revenue - a.revenue)[0];
       
-      if (top_category && (top_category[1].revenue / total_revenue) > 0.6) {
+      if (top_category && (top_category[1].revenue / (total_revenue || 1)) > 0.6) {
         insights.push({
           type: 'CONCENTRATION_RISK',
-          message: `Over-concentration pada ${top_category[0]} (${((top_category[1].revenue / total_revenue) * 100).toFixed(1)}%)`,
+          message: `Over-concentration pada ${top_category[0]} (${((top_category[1].revenue / (total_revenue || 1)) * 100).toFixed(1)}%)`,
           recommendation: 'Diversifikasi portfolio untuk risk mitigation'
         });
       }
@@ -353,7 +347,7 @@ module.exports = {
       const enterprise_revenue = enterprise_categories.reduce((sum, cat) => 
         sum + (category_distribution[cat]?.revenue || 0), 0);
       
-      if ((enterprise_revenue / total_revenue) < 0.3) {
+      if ((enterprise_revenue / (total_revenue || 1)) < 0.3) {
         insights.push({
           type: 'ENTERPRISE_OPPORTUNITY',
           message: 'Enterprise segment under-represented dalam portfolio',
@@ -405,7 +399,7 @@ module.exports = {
         acc[category].ncli += item.TOTAL_NCLI;
         acc[category].services += item.TOTAL_LAYANAN;
         acc[category].gl_accounts.add(item.GL_ACC);
-        acc[category].sto_count.add(item.CSTO);
+        acc[category].sto_count.add(item.WITEL_BILL);
         return acc;
       }, {});
       
@@ -450,10 +444,10 @@ module.exports = {
         periode_analisis: data.length > 0 ? `${data[0].YEAR_ID}` : 'Data tidak tersedia',
         
         metrik_nasional: {
-          total_revenue: `Rp ${totalRevenue.toLocaleString('id-ID')}`,
-          total_pelanggan: totalCustomers.toLocaleString('id-ID'),
-          total_ncli: totalNCLI.toLocaleString('id-ID'),
-          total_layanan: totalServices.toLocaleString('id-ID'),
+          total_revenue: `Rp ${(totalRevenue || 0).toLocaleString('id-ID')}`,
+          total_pelanggan: (totalCustomers || 0).toLocaleString('id-ID'),
+          total_ncli: (totalNCLI || 0).toLocaleString('id-ID'),
+          total_layanan: (totalServices || 0).toLocaleString('id-ID'),
           jumlah_gl_account_unik: uniqueGLAccounts,
           total_lokasi_analyzed: data.length
         },
@@ -468,14 +462,14 @@ module.exports = {
           .sort(([,a], [,b]) => b.revenue - a.revenue)
           .map(([category, stats]) => ({
             kategori_gl: category,
-            total_revenue: `Rp ${stats.revenue.toLocaleString('id-ID')}`,
-            kontribusi_revenue: `${((stats.revenue / totalRevenue) * 100).toFixed(2)}%`,
-            total_pelanggan: stats.customers.toLocaleString('id-ID'),
-            total_ncli: stats.ncli.toLocaleString('id-ID'),
-            total_layanan: stats.services.toLocaleString('id-ID'),
+            total_revenue: `Rp ${(stats.revenue || 0).toLocaleString('id-ID')}`,
+            kontribusi_revenue: `${((stats.revenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
+            total_pelanggan: (stats.customers || 0).toLocaleString('id-ID'),
+            total_ncli: (stats.ncli || 0).toLocaleString('id-ID'),
+            total_layanan: (stats.services || 0).toLocaleString('id-ID'),
             jumlah_gl_account: stats.gl_accounts.size,
             coverage_sto: stats.sto_count.size,
-            rata_revenue_per_pelanggan: `Rp ${Math.round(stats.revenue / stats.customers).toLocaleString('id-ID')}`
+            rata_revenue_per_pelanggan: `Rp ${Math.round(stats.revenue / (stats.customers || 1)).toLocaleString('id-ID')}`
           })),
         
         analisis_service_tier: serviceTierAnalysis.map(tier => ({
@@ -485,10 +479,10 @@ module.exports = {
           target_customers: tier.strategy_profile.target_customers,
           ekspektasi_revenue: tier.strategy_profile.revenue_expectation,
           performance_metrics: {
-            total_revenue: `Rp ${tier.performance_metrics.revenue.toLocaleString('id-ID')}`,
-            kontribusi_revenue: `${((tier.performance_metrics.revenue / totalRevenue) * 100).toFixed(2)}%`,
-            total_pelanggan: tier.performance_metrics.customers.toLocaleString('id-ID'),
-            total_layanan: tier.performance_metrics.services.toLocaleString('id-ID'),
+            total_revenue: `Rp ${(tier.performance_metrics.revenue || 0).toLocaleString('id-ID')}`,
+            kontribusi_revenue: `${((tier.performance_metrics.revenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
+            total_pelanggan: (tier.performance_metrics.customers || 0).toLocaleString('id-ID'),
+            total_layanan: (tier.performance_metrics.services || 0).toLocaleString('id-ID'),
             rata_revenue_per_pelanggan: `Rp ${Math.round(tier.performance_metrics.revenue / tier.performance_metrics.customers).toLocaleString('id-ID')}`
           }
         })),
@@ -504,28 +498,28 @@ module.exports = {
           periode: `${item.YEAR_ID}-${item.MONTH_ID.toString().padStart(2, '0')}`,
           regional: item.REGIONAL_BILL,
           witel: item.WITEL_BILL,
-          datel: item.DATEL,
-          kode_sto: item.CSTO,
+          datel: item.WITEL_BILL,
+          kode_sto: item.WITEL_BILL,
           gl_account: item.GL_ACC,
           kategori_gl: item.GL_CATEGORY,
           revenue_type: item.REVENUE_TYPE,
           service_tier: item.SERVICE_TIER,
-          total_revenue: `Rp ${item.TOTAL_REVENUE.toLocaleString('id-ID')}`,
-          total_pelanggan: item.TOTAL_PELANGGAN.toLocaleString('id-ID'),
-          total_ncli: item.TOTAL_NCLI.toLocaleString('id-ID'),
-          total_layanan: item.TOTAL_LAYANAN.toLocaleString('id-ID'),
-          revenue_per_pelanggan: `Rp ${item.REVENUE_PER_PELANGGAN.toLocaleString('id-ID')}`,
-          revenue_per_ncli: `Rp ${item.REVENUE_PER_NCLI.toLocaleString('id-ID')}`,
-          avg_revenue_per_layanan: `Rp ${item.AVG_REVENUE_PER_LAYANAN.toLocaleString('id-ID')}`,
+          total_revenue: `Rp ${(item.TOTAL_REVENUE || 0).toLocaleString('id-ID')}`,
+          total_pelanggan: (item.TOTAL_PELANGGAN || 0).toLocaleString('id-ID'),
+          total_ncli: (item.TOTAL_NCLI || 0).toLocaleString('id-ID'),
+          total_layanan: (item.TOTAL_LAYANAN || 0).toLocaleString('id-ID'),
+          revenue_per_pelanggan: `Rp ${(item.REVENUE_PER_PELANGGAN || 0).toLocaleString('id-ID')}`,
+          revenue_per_ncli: `Rp ${(item.REVENUE_PER_NCLI || 0).toLocaleString('id-ID')}`,
+          avg_revenue_per_layanan: `Rp ${(item.AVG_REVENUE_PER_LAYANAN || 0).toLocaleString('id-ID')}`,
           services_per_customer: item.SERVICES_PER_CUSTOMER,
           services_per_ncli: item.SERVICES_PER_NCLI,
-          revenue_efficiency: `Rp ${item.REVENUE_EFFICIENCY_PER_SERVICE.toLocaleString('id-ID')}`,
+          revenue_efficiency: `Rp ${(item.REVENUE_EFFICIENCY_PER_SERVICE || 0).toLocaleString('id-ID')}`,
           high_value_services: item.HIGH_VALUE_SERVICES,
           medium_value_services: item.MEDIUM_VALUE_SERVICES,
           low_value_services: item.LOW_VALUE_SERVICES,
-          new_revenue: `Rp ${item.NEW_REVENUE.toLocaleString('id-ID')}`,
-          recurring_revenue: `Rp ${item.RECURRING_REVENUE.toLocaleString('id-ID')}`,
-          sustain_revenue: `Rp ${item.SUSTAIN_REVENUE.toLocaleString('id-ID')}`,
+          new_revenue: `Rp ${(item.NEW_REVENUE || 0).toLocaleString('id-ID')}`,
+          recurring_revenue: `Rp ${(item.RECURRING_REVENUE || 0).toLocaleString('id-ID')}`,
+          sustain_revenue: `Rp ${(item.SUSTAIN_REVENUE || 0).toLocaleString('id-ID')}`,
           witel_coverage: item.WITEL_COVERAGE,
           datel_coverage: item.DATEL_COVERAGE,
           performance_assessment: {
@@ -540,7 +534,7 @@ module.exports = {
         insight_bisnis: [
           'Identifikasi kontribusi setiap kategori GL Account terhadap total revenue HSI per lokasi',
           'Analisis performa revenue berdasarkan service tier dan revenue type classification',
-          'Evaluasi efisiensi revenue per customer dan NCLI untuk setiap GL Account category',
+          'Evaluasi efisiensi revenue per customer dan NIP_NAS untuk setiap GL Account category',
           'Monitoring distribusi service value dan customer concentration per GL classification',
           'Assessment geographic coverage dan penetrasi setiap GL Account category',
           'Optimization pricing strategy dan service portfolio berdasarkan GL Account performance'

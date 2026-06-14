@@ -7,7 +7,7 @@ module.exports = {
   RULE_META: {
     RULE_ID: 'mart_007',
     RULE_NAME: 'hsi_customer_behavior_pattern_analysis',
-    DESCRIPTION: 'Analisis pola behavior pelanggan HSI berdasarkan NCLI, service adoption, dan geographic mobility',
+    DESCRIPTION: 'Analisis pola behavior pelanggan HSI berdasarkan NIP_NAS, service adoption, dan geographic mobility',
     DATABASE: 'BRIGHTAI_REVENUE',
     CATEGORY: 'customer_analytics',
     COMPLEXITY: 'HIGH',
@@ -57,14 +57,12 @@ module.exports = {
     WITH CUSTOMER_BEHAVIOR_BASE AS (
         SELECT 
             NIP_NAS,
-            NCLI,
+            NIP_NAS,
             REGIONAL_BILL,
             WITEL_BILL,
-            DATEL,
-            CSTO,
 
             -- Service adoption metrics
-            COUNT(DISTINCT ND) as TOTAL_SERVICES_PER_CUSTOMER,
+            COUNT(DISTINCT NIP_NAS) as TOTAL_SERVICES_PER_CUSTOMER,
             COUNT(DISTINCT YEAR_ID || MONTH_ID) as ACTIVE_MONTHS,
             SUM(REVENUE) as TOTAL_CUSTOMER_REVENUE,
             ROUND(AVG(REVENUE), 0) as AVG_REVENUE_PER_SERVICE,
@@ -81,8 +79,8 @@ module.exports = {
             -- Geographic behavior
             COUNT(DISTINCT REGIONAL_BILL) as MULTI_REGIONAL_PRESENCE,
             COUNT(DISTINCT WITEL_BILL) as MULTI_WITEL_PRESENCE,
-            COUNT(DISTINCT DATEL) as MULTI_DATEL_PRESENCE,
-            COUNT(DISTINCT CSTO) as MULTI_STO_PRESENCE,
+            COUNT(DISTINCT WITEL_BILL) as MULTI_DATEL_PRESENCE,
+            COUNT(DISTINCT WITEL_BILL) as MULTI_STO_PRESENCE,
             
             -- Revenue scaling behavior
             SUM(CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING NEW' THEN REVENUE ELSE 0 END) as TOTAL_NEW_REVENUE,
@@ -107,10 +105,10 @@ module.exports = {
             
             -- Service usage pattern
             CASE 
-                WHEN COUNT(DISTINCT ND) >= 10 THEN 'HEAVY_MULTI_SERVICE'
-                WHEN COUNT(DISTINCT ND) >= 5 THEN 'MULTI_SERVICE_MEDIUM'
-                WHEN COUNT(DISTINCT ND) >= 3 THEN 'MULTI_SERVICE_LIGHT'
-                WHEN COUNT(DISTINCT ND) = 2 THEN 'DUAL_SERVICE'
+                WHEN COUNT(DISTINCT NIP_NAS) >= 10 THEN 'HEAVY_MULTI_SERVICE'
+                WHEN COUNT(DISTINCT NIP_NAS) >= 5 THEN 'MULTI_SERVICE_MEDIUM'
+                WHEN COUNT(DISTINCT NIP_NAS) >= 3 THEN 'MULTI_SERVICE_LIGHT'
+                WHEN COUNT(DISTINCT NIP_NAS) = 2 THEN 'DUAL_SERVICE'
                 ELSE 'SINGLE_SERVICE'
             END as SERVICE_USAGE_PATTERN,
             
@@ -118,39 +116,33 @@ module.exports = {
             CASE 
                 WHEN COUNT(DISTINCT REGIONAL_BILL) > 1 THEN 'MULTI_REGIONAL_CUSTOMER'
                 WHEN COUNT(DISTINCT WITEL_BILL) > 1 THEN 'MULTI_WITEL_CUSTOMER'
-                WHEN COUNT(DISTINCT DATEL) > 1 THEN 'MULTI_DATEL_CUSTOMER'
-                WHEN COUNT(DISTINCT CSTO) > 1 THEN 'MULTI_STO_CUSTOMER'
+                WHEN COUNT(DISTINCT WITEL_BILL) > 1 THEN 'MULTI_DATEL_CUSTOMER'
+                WHEN COUNT(DISTINCT WITEL_BILL) > 1 THEN 'MULTI_STO_CUSTOMER'
                 ELSE 'SINGLE_LOCATION_CUSTOMER'
             END as GEOGRAPHIC_MOBILITY_PATTERN
             
-        FROM DWH_MOIS.BRIGHTAI_REVENUE
+        FROM PMSDBS.BRIGHTAI_REVENUE
         WHERE GROUP4 = 'High Speed Internet'
           AND REVENUE > 0
           AND REGIONAL_BILL IS NOT NULL
           AND WITEL_BILL IS NOT NULL
-          AND DATEL IS NOT NULL
-          AND CSTO IS NOT NULL
           AND NIP_NAS IS NOT NULL
-          AND NCLI IS NOT NULL
-          AND ND IS NOT NULL
-        GROUP BY NIP_NAS, NCLI, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO
+        GROUP BY NIP_NAS, NIP_NAS, REGIONAL_BILL, WITEL_BILL
     ),
     
     CUSTOMER_BEHAVIOR_AGGREGATED AS (
         SELECT 
             NIP_NAS,
-            NCLI,
+            NIP_NAS,
             REGIONAL_BILL,
             WITEL_BILL,
-            DATEL,
-            CSTO,
             CUSTOMER_VALUE_SEGMENT,
             SERVICE_USAGE_PATTERN,
             GEOGRAPHIC_MOBILITY_PATTERN,
             
             -- Aggregated customer metrics
             COUNT(DISTINCT NIP_NAS) as TOTAL_CUSTOMERS,
-            COUNT(DISTINCT NCLI) as TOTAL_NCLI,
+            COUNT(DISTINCT NIP_NAS) as TOTAL_NCLI,
             SUM(TOTAL_CUSTOMER_REVENUE) as SEGMENT_TOTAL_REVENUE,
             ROUND(AVG(TOTAL_CUSTOMER_REVENUE), 0) as AVG_CUSTOMER_REVENUE,
             ROUND(AVG(TOTAL_SERVICES_PER_CUSTOMER), 1) as AVG_SERVICES_PER_CUSTOMER,
@@ -183,7 +175,7 @@ module.exports = {
             
             -- Performance metrics
             ROUND(SUM(TOTAL_CUSTOMER_REVENUE) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 0) as REVENUE_PER_CUSTOMER,
-            ROUND(SUM(TOTAL_CUSTOMER_REVENUE) / NULLIF(COUNT(DISTINCT NCLI), 0), 0) as REVENUE_PER_NCLI,
+            ROUND(SUM(TOTAL_CUSTOMER_REVENUE) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 0) as REVENUE_PER_NCLI,
             
             -- Loyalty indicators
             CASE 
@@ -201,7 +193,7 @@ module.exports = {
             END as REVENUE_STABILITY_INDICATOR
             
         FROM CUSTOMER_BEHAVIOR_BASE
-        GROUP BY REGIONAL_BILL, WITEL_BILL, DATEL, CSTO,
+        GROUP BY REGIONAL_BILL, WITEL_BILL,
                  CUSTOMER_VALUE_SEGMENT, SERVICE_USAGE_PATTERN, GEOGRAPHIC_MOBILITY_PATTERN
         ORDER BY SEGMENT_TOTAL_REVENUE DESC
     )
@@ -232,7 +224,7 @@ module.exports = {
         acc[segment].customers += item.TOTAL_CUSTOMERS;
         acc[segment].ncli += item.TOTAL_NCLI;
         acc[segment].revenue += item.SEGMENT_TOTAL_REVENUE;
-        acc[segment].locations.add(item.CSTO);
+        acc[segment].locations.add(item.WITEL_BILL);
         return acc;
       }, {});
       
@@ -281,15 +273,15 @@ module.exports = {
       });
       
       return {
-        ringkasan: 'Analisis pola behavior pelanggan HSI berdasarkan NCLI, service adoption, dan geographic mobility',
+        ringkasan: 'Analisis pola behavior pelanggan HSI berdasarkan NIP_NAS, service adoption, dan geographic mobility',
         periode_analisis: 'Data historical pelanggan HSI dengan geographic breakdown',
         
         metrik_nasional: {
-          total_pelanggan_analyzed: totalCustomers.toLocaleString('id-ID'),
-          total_ncli_analyzed: totalNCLI.toLocaleString('id-ID'),
-          total_revenue_analyzed: `Rp ${totalRevenue.toLocaleString('id-ID')}`,
-          rata_revenue_per_pelanggan: `Rp ${Math.round(totalRevenue / totalCustomers).toLocaleString('id-ID')}`,
-          rata_revenue_per_ncli: `Rp ${Math.round(totalRevenue / totalNCLI).toLocaleString('id-ID')}`,
+          total_pelanggan_analyzed: (totalCustomers || 0).toLocaleString('id-ID'),
+          total_ncli_analyzed: (totalNCLI || 0).toLocaleString('id-ID'),
+          total_revenue_analyzed: `Rp ${(totalRevenue || 0).toLocaleString('id-ID')}`,
+          rata_revenue_per_pelanggan: `Rp ${Math.round(totalRevenue / (totalCustomers || 1)).toLocaleString('id-ID')}`,
+          rata_revenue_per_ncli: `Rp ${Math.round(totalRevenue / (totalNCLI || 1)).toLocaleString('id-ID')}`,
           total_segment_behavior_unik: data.length
         },
         
@@ -297,12 +289,12 @@ module.exports = {
           .sort(([,a], [,b]) => b.revenue - a.revenue)
           .map(([segment, stats]) => ({
             customer_segment: segment,
-            jumlah_pelanggan: stats.customers.toLocaleString('id-ID'),
-            jumlah_ncli: stats.ncli.toLocaleString('id-ID'),
-            persentase_pelanggan: `${((stats.customers / totalCustomers) * 100).toFixed(2)}%`,
-            total_revenue: `Rp ${stats.revenue.toLocaleString('id-ID')}`,
-            kontribusi_revenue: `${((stats.revenue / totalRevenue) * 100).toFixed(2)}%`,
-            rata_revenue_per_pelanggan: `Rp ${Math.round(stats.revenue / stats.customers).toLocaleString('id-ID')}`,
+            jumlah_pelanggan: (stats.customers || 0).toLocaleString('id-ID'),
+            jumlah_ncli: (stats.ncli || 0).toLocaleString('id-ID'),
+            persentase_pelanggan: `${((stats.customers / (totalCustomers || 1)) * 100).toFixed(2)}%`,
+            total_revenue: `Rp ${(stats.revenue || 0).toLocaleString('id-ID')}`,
+            kontribusi_revenue: `${((stats.revenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
+            rata_revenue_per_pelanggan: `Rp ${Math.round(stats.revenue / (stats.customers || 1)).toLocaleString('id-ID')}`,
             rata_revenue_per_ncli: `Rp ${Math.round(stats.revenue / stats.ncli).toLocaleString('id-ID')}`,
             coverage_lokasi: stats.locations.size
           })),
@@ -311,41 +303,41 @@ module.exports = {
           .sort(([,a], [,b]) => b.revenue - a.revenue)
           .map(([pattern, stats]) => ({
             service_usage_pattern: pattern,
-            jumlah_pelanggan: stats.customers.toLocaleString('id-ID'),
-            jumlah_ncli: stats.ncli.toLocaleString('id-ID'),
-            persentase_pelanggan: `${((stats.customers / totalCustomers) * 100).toFixed(2)}%`,
-            total_revenue: `Rp ${stats.revenue.toLocaleString('id-ID')}`,
-            kontribusi_revenue: `${((stats.revenue / totalRevenue) * 100).toFixed(2)}%`,
+            jumlah_pelanggan: (stats.customers || 0).toLocaleString('id-ID'),
+            jumlah_ncli: (stats.ncli || 0).toLocaleString('id-ID'),
+            persentase_pelanggan: `${((stats.customers / (totalCustomers || 1)) * 100).toFixed(2)}%`,
+            total_revenue: `Rp ${(stats.revenue || 0).toLocaleString('id-ID')}`,
+            kontribusi_revenue: `${((stats.revenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
             rata_services_per_customer: stats.avg_services.toFixed(1),
-            rata_revenue_per_pelanggan: `Rp ${Math.round(stats.revenue / stats.customers).toLocaleString('id-ID')}`
+            rata_revenue_per_pelanggan: `Rp ${Math.round(stats.revenue / (stats.customers || 1)).toLocaleString('id-ID')}`
           })),
         
         distribusi_mobility_pattern: Object.entries(mobilityPatternDistribution)
           .sort(([,a], [,b]) => b.revenue - a.revenue)
           .map(([pattern, stats]) => ({
             geographic_mobility_pattern: pattern,
-            jumlah_pelanggan: stats.customers.toLocaleString('id-ID'),
-            jumlah_ncli: stats.ncli.toLocaleString('id-ID'),
-            persentase_pelanggan: `${((stats.customers / totalCustomers) * 100).toFixed(2)}%`,
-            total_revenue: `Rp ${stats.revenue.toLocaleString('id-ID')}`,
-            kontribusi_revenue: `${((stats.revenue / totalRevenue) * 100).toFixed(2)}%`,
-            rata_revenue_per_pelanggan: `Rp ${Math.round(stats.revenue / stats.customers).toLocaleString('id-ID')}`
+            jumlah_pelanggan: (stats.customers || 0).toLocaleString('id-ID'),
+            jumlah_ncli: (stats.ncli || 0).toLocaleString('id-ID'),
+            persentase_pelanggan: `${((stats.customers / (totalCustomers || 1)) * 100).toFixed(2)}%`,
+            total_revenue: `Rp ${(stats.revenue || 0).toLocaleString('id-ID')}`,
+            kontribusi_revenue: `${((stats.revenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
+            rata_revenue_per_pelanggan: `Rp ${Math.round(stats.revenue / (stats.customers || 1)).toLocaleString('id-ID')}`
           })),
         
         detail_behavior_per_lokasi: data.slice(0, 20).map(item => ({
           regional: item.REGIONAL_BILL,
           witel: item.WITEL_BILL,
-          datel: item.DATEL,
-          kode_sto: item.CSTO,
+          datel: item.WITEL_BILL,
+          kode_sto: item.WITEL_BILL,
           customer_value_segment: item.CUSTOMER_VALUE_SEGMENT,
           service_usage_pattern: item.SERVICE_USAGE_PATTERN,
           geographic_mobility_pattern: item.GEOGRAPHIC_MOBILITY_PATTERN,
-          jumlah_pelanggan: item.TOTAL_CUSTOMERS.toLocaleString('id-ID'),
-          jumlah_ncli: item.TOTAL_NCLI.toLocaleString('id-ID'),
-          total_revenue: `Rp ${item.SEGMENT_TOTAL_REVENUE.toLocaleString('id-ID')}`,
-          avg_customer_revenue: `Rp ${item.AVG_CUSTOMER_REVENUE.toLocaleString('id-ID')}`,
-          revenue_per_pelanggan: `Rp ${item.REVENUE_PER_CUSTOMER.toLocaleString('id-ID')}`,
-          revenue_per_ncli: `Rp ${item.REVENUE_PER_NCLI.toLocaleString('id-ID')}`,
+          jumlah_pelanggan: (item.TOTAL_CUSTOMERS || 0).toLocaleString('id-ID'),
+          jumlah_ncli: (item.TOTAL_NCLI || 0).toLocaleString('id-ID'),
+          total_revenue: `Rp ${(item.SEGMENT_TOTAL_REVENUE || 0).toLocaleString('id-ID')}`,
+          avg_customer_revenue: `Rp ${(item.AVG_CUSTOMER_REVENUE || 0).toLocaleString('id-ID')}`,
+          revenue_per_pelanggan: `Rp ${(item.REVENUE_PER_CUSTOMER || 0).toLocaleString('id-ID')}`,
+          revenue_per_ncli: `Rp ${(item.REVENUE_PER_NCLI || 0).toLocaleString('id-ID')}`,
           avg_services_per_customer: item.AVG_SERVICES_PER_CUSTOMER,
           avg_active_months: item.AVG_ACTIVE_MONTHS,
           avg_gl_diversity: item.AVG_GL_DIVERSITY,
@@ -356,9 +348,9 @@ module.exports = {
           avg_sto_presence: item.AVG_STO_PRESENCE,
           loyalty_indicator: item.LOYALTY_INDICATOR,
           revenue_stability: item.REVENUE_STABILITY_INDICATOR,
-          new_revenue: `Rp ${item.SEGMENT_NEW_REVENUE.toLocaleString('id-ID')}`,
-          recurring_revenue: `Rp ${item.SEGMENT_RECURRING_REVENUE.toLocaleString('id-ID')}`,
-          sustain_revenue: `Rp ${item.SEGMENT_SUSTAIN_REVENUE.toLocaleString('id-ID')}`
+          new_revenue: `Rp ${(item.SEGMENT_NEW_REVENUE || 0).toLocaleString('id-ID')}`,
+          recurring_revenue: `Rp ${(item.SEGMENT_RECURRING_REVENUE || 0).toLocaleString('id-ID')}`,
+          sustain_revenue: `Rp ${(item.SEGMENT_SUSTAIN_REVENUE || 0).toLocaleString('id-ID')}`
         })),
         
         insight_bisnis: [
@@ -367,7 +359,7 @@ module.exports = {
           'Evaluasi customer loyalty dan revenue stability indicators per area geographic',
           'Monitoring service diversity adoption dan cross-selling opportunities per customer segment',
           'Assessment customer lifetime value berdasarkan behavior patterns dan geographic presence',
-          'Optimization customer engagement strategy berdasarkan behavior segmentation per STO'
+          'Optimization customer engagement strategy berdasarkan behavior segmentation per WITEL_BILL'
         ]
       };
     }

@@ -104,7 +104,7 @@ module.exports = {
             
         FROM DWH_MOIS.BRIGHTAI_CT0_NAL
         WHERE UPPER(PRODUK) = 'INTERNET'
-          AND (CITEM IS NULL OR NOT UPPER(CITEM) LIKE 'WM%')
+          AND (CITEM IS NULL OR NOT UPPER(CITEM) LIKE 'W%')
           AND PERIODE >= TO_CHAR(ADD_MONTHS(SYSDATE, -6), 'YYYYMM')
           AND BW IS NOT NULL
           AND TO_NUMBER(BW) > 0
@@ -238,7 +238,7 @@ module.exports = {
         -- Change percentage
         CASE 
             WHEN prev_churn_count IS NOT NULL AND prev_churn_count > 0 THEN 
-                ROUND(((total_churn_ct0 - prev_churn_count) * 100.0 / prev_churn_count), 2)
+                ROUND(((total_churn_ct0 - prev_churn_count) * 100.0 / NULLIF(prev_churn_count, 0)), 2)
             ELSE NULL
         END as perubahan_churn_pct
         
@@ -357,8 +357,8 @@ module.exports = {
             kategori_bandwidth: record.KATEGORI_BANDWIDTH
           },
           metrik_bandwidth: {
-            total_churn_ct0: record.TOTAL_CHURN_CT0.toLocaleString('id-ID'),
-            unique_customers_churn: record.UNIQUE_CUSTOMERS_CHURN.toLocaleString('id-ID'),
+            total_churn_ct0: (record.TOTAL_CHURN_CT0 || 0).toLocaleString('id-ID'),
+            unique_customers_churn: (record.UNIQUE_CUSTOMERS_CHURN || 0).toLocaleString('id-ID'),
             rata_bandwidth_mbps: `${record.RATA_BANDWIDTH_MBPS} Mbps`,
             range_bandwidth: `${record.MIN_BANDWIDTH_MBPS} - ${record.MAX_BANDWIDTH_MBPS} Mbps`,
             bandwidth_terpopuler: `${record.BANDWIDTH_MODE_MBPS} Mbps`,

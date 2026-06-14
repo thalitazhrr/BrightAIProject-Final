@@ -77,10 +77,20 @@ module.exports = {
   SQL_QUERY: `
     WITH HSI_REVENUE_BASE AS (
         SELECT 
-            NOTEL, NCLI, PLBLCL, REGIONAL, WITEL, STO, TELDA,
+            NOTEL, NCLI, PLBLCL, WITEL, STO, TELDA, CGEST, LGEST,
+            CASE 
+                WHEN TRIM(REGIONAL) IN ('REG-1', '1', '01') OR CGEST = 'R1' OR LGEST LIKE '%Regional 1%' THEN '1'
+                WHEN TRIM(REGIONAL) IN ('REG-2', '2', '02') OR CGEST = 'R2' OR LGEST LIKE '%Regional 2%' THEN '2'
+                WHEN TRIM(REGIONAL) IN ('REG-3', '3', '03') OR CGEST = 'R3' OR LGEST LIKE '%Regional 3%' THEN '3'
+                WHEN TRIM(REGIONAL) IN ('REG-4', '4', '04') OR CGEST = 'R4' OR LGEST LIKE '%Regional 4%' THEN '4'
+                WHEN TRIM(REGIONAL) IN ('REG-5', '5', '05') OR CGEST = 'R5' OR LGEST LIKE '%Regional 5%' THEN '5'
+                WHEN TRIM(REGIONAL) IN ('REG-6', '6', '06') OR CGEST = 'R6' OR LGEST LIKE '%Regional 6%' THEN '6'
+                WHEN TRIM(REGIONAL) IN ('REG-7', '7', '07') OR CGEST = 'R7' OR LGEST LIKE '%Regional 7%' THEN '7'
+                ELSE 'Tidak Diketahui'
+            END as REGIONAL,
             CAST(SPEED AS NUMBER) as SPEED_NUM,
             CAST(LOS AS NUMBER) as LOS_NUM,
-            NVL(TREMS_REV_REF, 0) as REV_HSI,
+            COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) as REV_HSI,
             NVL(TREMS_REV_P, 0) as REV_TOTAL,
             NVL(ADDON_TOTAL, 0) as ADDON_COUNT,
             NVL(ADDON_PRICE, 0) as ADDON_REV,
@@ -89,11 +99,11 @@ module.exports = {
             
             -- Revenue tier berdasarkan HSI
             CASE
-                WHEN NVL(TREMS_REV_REF, 0) >= 800000 THEN 'ULTRA_HIGH_VALUE'
-                WHEN NVL(TREMS_REV_REF, 0) >= 500000 THEN 'HIGH_VALUE'
-                WHEN NVL(TREMS_REV_REF, 0) >= 300000 THEN 'MEDIUM_VALUE'
-                WHEN NVL(TREMS_REV_REF, 0) >= 150000 THEN 'STANDARD_VALUE'
-                WHEN NVL(TREMS_REV_REF, 0) >= 50000 THEN 'ENTRY_VALUE'
+                WHEN COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 800000 THEN 'ULTRA_HIGH_VALUE'
+                WHEN COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 500000 THEN 'HIGH_VALUE'
+                WHEN COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 300000 THEN 'MEDIUM_VALUE'
+                WHEN COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 150000 THEN 'STANDARD_VALUE'
+                WHEN COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 50000 THEN 'ENTRY_VALUE'
                 ELSE 'LOW_VALUE'
             END as HSI_REVENUE_TIER,
 
@@ -117,9 +127,9 @@ module.exports = {
             CASE
                 WHEN CAST(SPEED AS NUMBER) > 0 THEN
                     CASE
-                        WHEN (NVL(TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 20000 THEN 'HIGH_EFFICIENCY'
-                        WHEN (NVL(TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 10000 THEN 'MEDIUM_EFFICIENCY'
-                        WHEN (NVL(TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 5000 THEN 'STANDARD_EFFICIENCY'
+                        WHEN (COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 20000 THEN 'HIGH_EFFICIENCY'
+                        WHEN (COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 10000 THEN 'MEDIUM_EFFICIENCY'
+                        WHEN (COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 5000 THEN 'STANDARD_EFFICIENCY'
                         ELSE 'LOW_EFFICIENCY'
                     END
                 ELSE 'UNDEFINED_EFFICIENCY'
@@ -127,17 +137,17 @@ module.exports = {
 
             -- Customer lifetime value indicator
             CASE
-                WHEN CAST(LOS AS NUMBER) >= 60 AND NVL(TREMS_REV_REF, 0) >= 400000 THEN 'HIGH_LTV'
-                WHEN CAST(LOS AS NUMBER) >= 36 AND NVL(TREMS_REV_REF, 0) >= 250000 THEN 'MEDIUM_LTV'
-                WHEN CAST(LOS AS NUMBER) >= 24 AND NVL(TREMS_REV_REF, 0) >= 150000 THEN 'STANDARD_LTV'
+                WHEN CAST(LOS AS NUMBER) >= 60 AND COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 400000 THEN 'HIGH_LTV'
+                WHEN CAST(LOS AS NUMBER) >= 36 AND COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 250000 THEN 'MEDIUM_LTV'
+                WHEN CAST(LOS AS NUMBER) >= 24 AND COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 150000 THEN 'STANDARD_LTV'
                 WHEN CAST(LOS AS NUMBER) >= 12 THEN 'DEVELOPING_LTV'
                 ELSE 'NEW_LTV'
             END as LTV_CATEGORY,
 
             -- Billing activity profile
             CASE
-                WHEN KW_IH = '4' AND NVL(TREMS_REV_REF, 0) >= 300000 THEN 'ACTIVE_HIGH_SPENDER'
-                WHEN KW_IH = '4' AND NVL(TREMS_REV_REF, 0) >= 150000 THEN 'ACTIVE_MEDIUM_SPENDER'
+                WHEN KW_IH = '4' AND COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 300000 THEN 'ACTIVE_HIGH_SPENDER'
+                WHEN KW_IH = '4' AND COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 150000 THEN 'ACTIVE_MEDIUM_SPENDER'
                 WHEN KW_IH = '4' THEN 'ACTIVE_STANDARD_SPENDER'
                 WHEN KW_IH = '3' THEN 'USAGE_ONLY_CUSTOMER'
                 WHEN KW_IH = '2' THEN 'BILLING_ONLY_CUSTOMER'

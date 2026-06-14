@@ -96,7 +96,7 @@ module.exports = {
             
             CASE 
                 WHEN SUM(TARGET) > 0 THEN 
-                    ROUND((SUM(REALISASI) * 100.0 / SUM(TARGET)), 2)
+                    ROUND((SUM(REALISASI) * 100.0 / NULLIF(SUM(TARGET), 0)), 2)
                 ELSE 0 
             END as MONTHLY_ACHIEVEMENT_PCT,
             
@@ -184,14 +184,14 @@ module.exports = {
             -- Month-over-month growth
             CASE 
                 WHEN PREV_MONTH_REALISASI IS NOT NULL AND PREV_MONTH_REALISASI > 0 THEN 
-                    ROUND(((MONTHLY_REALISASI - PREV_MONTH_REALISASI) * 100.0 / PREV_MONTH_REALISASI), 2)
+                    ROUND(((MONTHLY_REALISASI - PREV_MONTH_REALISASI) * 100.0 / NULLIF(PREV_MONTH_REALISASI, 0)), 2)
                 ELSE NULL
             END as MOM_GROWTH_PCT,
             
             -- Year-over-year growth
             CASE 
                 WHEN YOY_REALISASI IS NOT NULL AND YOY_REALISASI > 0 THEN 
-                    ROUND(((MONTHLY_REALISASI - YOY_REALISASI) * 100.0 / YOY_REALISASI), 2)
+                    ROUND(((MONTHLY_REALISASI - YOY_REALISASI) * 100.0 / NULLIF(YOY_REALISASI, 0)), 2)
                 ELSE NULL
             END as YOY_GROWTH_PCT,
             
@@ -639,10 +639,10 @@ module.exports = {
             fokus_forecasting: trend_strength.unit_context.forecasting_focus
           },
           metrik_bulanan: {
-            target: `${record.MONTHLY_TARGET.toLocaleString('id-ID')} ${record.SATUAN}`,
-            realisasi: `${record.MONTHLY_REALISASI.toLocaleString('id-ID')} ${record.SATUAN}`,
+            target: `${(record.MONTHLY_TARGET || 0).toLocaleString('id-ID')} ${record.SATUAN}`,
+            realisasi: `${(record.MONTHLY_REALISASI || 0).toLocaleString('id-ID')} ${record.SATUAN}`,
             pencapaian: `${record.MONTHLY_ACHIEVEMENT_PCT}%`,
-            moving_average_3bulan: `${record.MA3_REALISASI.toLocaleString('id-ID')} ${record.SATUAN}`
+            moving_average_3bulan: `${(record.MA3_REALISASI || 0).toLocaleString('id-ID')} ${record.SATUAN}`
           },
           analisis_pertumbuhan: {
             pertumbuhan_mom: record.MOM_GROWTH_PCT ? `${record.MOM_GROWTH_PCT}%` : 'N/A',
@@ -664,7 +664,7 @@ module.exports = {
             konteks_spesifik_unit: seasonal_insight.unit_specific || 'Tidak ada konteks khusus'
           },
           proyeksi_periode_depan: {
-            nilai_proyeksi: `${forecast.projected_value.toLocaleString('id-ID')} ${record.SATUAN}`,
+            nilai_proyeksi: `${(forecast.projected_value || 0).toLocaleString('id-ID')} ${record.SATUAN}`,
             tingkat_confidence: forecast.confidence_level,
             ekspektasi_pertumbuhan: forecast.growth_expected ? 'POSITIF' : 'NEGATIF',
             kategori_forecast: forecast.forecast_category

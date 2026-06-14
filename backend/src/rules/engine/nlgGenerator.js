@@ -98,6 +98,36 @@ function arrayToTable(arr, maxRows = 12) {
   return [header, sep, ...rows].join('\n') + extra;
 }
 
+function formatItem(item, defaultLabel) {
+  if (typeof item === 'string') {
+    // Jika sudah ada bold, jangan diubah
+    if (item.includes('**')) return `- ${item}`;
+    
+    // Ambil 2-3 kata pertama untuk dijadikan label (maksimal 3 kata)
+    const words = item.split(' ');
+    if (words.length <= 4) {
+      return `- **${item}**`;
+    }
+    
+    // Bikin Capitalized label
+    const labelWords = words.slice(0, 2).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+    const label = labelWords.join(' ');
+    
+    // Return format bold label tanpa mengulang kata di isinya
+    // Tapi lebih aman kita kasih format: **Label**: text
+    // Namun untuk menghindari pengulangan, kita bold saja beberapa kata pertama di kalimatnya
+    const boldPart = words.slice(0, 2).join(' ');
+    const restPart = words.slice(2).join(' ');
+    return `- **${boldPart}** ${restPart}`;
+  }
+  
+  if (defaultLabel === 'Insight') {
+    return `- **${item.kategori || item.area || defaultLabel}**: ${item.nilai || item.insight || item.rekomendasi || item.deskripsi || '-'}`;
+  } else {
+    return `- **${item.area || item.kategori || defaultLabel}**: ${item.rekomendasi || item.nilai || item.insight || item.deskripsi || '-'}`;
+  }
+}
+
 // ── Ekstrak context dari processed_data ───────────────────────────────────────
 
 function ambil(obj, ...keys) {
@@ -486,6 +516,46 @@ function generate(rule, executionResult, userInput, geoContext) {
     return generatePs002(data, judul, recordCount, execTime, meta);
   }
 
+  if (ruleId === 'ps_003' && data && typeof data === 'object' && !Array.isArray(data)) {
+    return generatePs003(data, judul, recordCount, execTime, meta);
+  }
+
+  if (ruleId === 'ps_004' && data && typeof data === 'object' && !Array.isArray(data)) {
+    return generatePs004(data, judul, recordCount, execTime, meta);
+  }
+
+  if (ruleId === 'ps_005' && data && typeof data === 'object' && !Array.isArray(data)) {
+    return generatePs005(data, judul, recordCount, execTime, meta);
+  }
+
+  if (ruleId === 'ps_006' && data && typeof data === 'object' && !Array.isArray(data)) {
+    return generatePs006(data, judul, recordCount, execTime, meta);
+  }
+
+  if (ruleId === 'ps_007' && data && typeof data === 'object' && !Array.isArray(data)) {
+    return generatePs007(data, judul, recordCount, execTime, meta);
+  }
+
+  if (ruleId === 'ps_008' && data && typeof data === 'object' && !Array.isArray(data)) {
+    return generatePs008(data, judul, recordCount, execTime, meta);
+  }
+
+  if (ruleId === 'ps_009' && data && typeof data === 'object' && !Array.isArray(data)) {
+    return generatePs009(data, judul, recordCount, execTime, meta);
+  }
+
+  if (ruleId === 'ps_010' && data && typeof data === 'object' && !Array.isArray(data)) {
+    return generatePs010(data, judul, recordCount, execTime, meta);
+  }
+
+  if (ruleId === 'ps_011' && data && typeof data === 'object' && !Array.isArray(data)) {
+    return generatePs011(data, judul, recordCount, execTime, meta);
+  }
+
+  if (ruleId === 'ps_012' && data && typeof data === 'object' && !Array.isArray(data)) {
+    return generatePs012(data, judul, recordCount, execTime, meta);
+  }
+
   // Data terstruktur → extract ctx → select template → generate
   const ctx      = extractCtx(data, rule, recordCount, execTime, geoLabel);
   const { intent } = classify(userInput || '');
@@ -595,6 +665,692 @@ function generatePs002(data, judul, recordCount, execTime, meta) {
       .map(r => `- **${r.area}** _(${r.priority})_: ${r.rekomendasi}`)
       .join('\n');
     sections.push(`### Rekomendasi Strategis\n${bullets}`);
+  }
+
+  return sections.filter(Boolean).join('\n\n') + footer;
+}
+
+// ── ps_003 : Distribusi Order HSI per Kategori Bandwidth ─────────────────────
+
+function generatePs003(data, judul, recordCount, execTime, meta) {
+  const reks   = data.ringkasan_eksekutif || {};
+  const trend  = data.trend_pasar || {};
+  const highl  = data.highlights || {};
+  const detail = data.distribusi_detail || [];
+  const footer = `\n\n---\n_Sumber: ${meta.DATABASE} · ${recordCount.toLocaleString('id-ID')} rekaman · ${execTime}\u00A0ms_`;
+
+  const sections = [judul];
+
+  // ── Ringkasan Eksekutif ───────────────────────────────────────────────────
+  const periode   = reks.periode || '-';
+  const totalOrd  = reks.total_order_analyzed || '-';
+  const totalSvc  = reks.total_layanan_hsi || '-';
+  const jmlKat    = reks.jumlah_kategori || '-';
+  sections.push(
+    `Pada **${periode}**, terdapat **${totalOrd} order HSI** yang dianalisis ` +
+    `dari **${totalSvc} layanan unik** yang tersebar di **${jmlKat} kategori bandwidth**. ` +
+    `Komposisi: HSI Bisnis **${reks.total_hsi_bisnis || '-'}** · HSI Basic **${reks.total_hsi_basic || '-'}**.`
+  );
+
+  // ── Karakteristik Pasar ───────────────────────────────────────────────────
+  if (trend.bandwidth_rata_rata_tertimbang) {
+    sections.push(
+      `### Karakteristik Pasar\n` +
+      `- Bandwidth rata-rata tertimbang: **${trend.bandwidth_rata_rata_tertimbang}**\n` +
+      `- Arah pasar: **${trend.karakteristik_pasar || '-'}**\n` +
+      `- Penetrasi premium: **${trend.penetrasi_premium || '-'}**\n` +
+      `- Dominasi HSI Bisnis: **${trend.dominasi_hsi_bisnis || '-'}**`
+    );
+  }
+
+  // ── Highlights ────────────────────────────────────────────────────────────
+  const pop = highl.kategori_terpopuler;
+  const bun = highl.kategori_bundling_terbaik;
+  if (pop || bun) {
+    const parts = [];
+    if (pop) {
+      parts.push(
+        `- **Kategori Terpopuler**: ${pop.nama} — pangsa pasar **${pop.pangsa_pasar}** ` +
+        `(${pop.total_order} order, ${pop.total_layanan || '-'} layanan) · ${pop.product_mix}`
+      );
+    }
+    if (bun) {
+      parts.push(
+        `- **Bundling Terbaik**: ${bun.nama} — bundling rate **${bun.bundling_rate}** · digital **${bun.digital_bundling}**`
+      );
+    }
+    const eff = highl.kategori_paling_efisien;
+    if (eff) {
+      parts.push(
+        `- **Paling Efisien**: ${eff.nama} — ${eff.efisiensi} · ${eff.penetrasi} layanan/customer`
+      );
+    }
+    sections.push(`### Highlights\n${parts.join('\n')}`);
+  }
+
+  // ── Distribusi per Bandwidth Tier ─────────────────────────────────────────
+  if (detail.length > 0) {
+    sections.push('### Distribusi per Kategori Bandwidth');
+    const rows = detail.map(d => {
+      const kat = d.kategori || {};
+      const ord = d.metrik_order || {};
+      const bw  = d.karakteristik_bandwidth || {};
+      const bdl = d.bundling_performance || {};
+      return {
+        'Kategori': kat.nama || '-',
+        'Total Order': ord.total_hsi || '-',
+        'Pangsa Pasar': ord.pangsa_pasar || '-',
+        'HSI Bisnis': ord.hsi_bisnis || '-',
+        'HSI Basic': ord.hsi_basic || '-',
+        'Avg BW': bw.rata_rata || '-',
+        'Bundling Rate': bdl.bundling_rate || '-',
+        'Digital': bdl.digital_bundling_rate || '-',
+      };
+    });
+    sections.push(arrayToTable(rows, detail.length));
+  }
+
+  // ── Rekomendasi Strategis ─────────────────────────────────────────────────
+  const reko = data.rekomendasi_strategis || [];
+  if (reko.length > 0) {
+    const bullets = reko
+      .map(r => `- **${r.area}** _(${r.priority})_: ${r.rekomendasi}`)
+      .join('\n');
+    sections.push(`### Rekomendasi Strategis\n${bullets}`);
+  }
+
+  return sections.filter(Boolean).join('\n\n') + footer;
+}
+
+// ── ps_004 : Penetrasi HSI per Wilayah ───────────────────────────────────────
+
+function generatePs004(data, judul, recordCount, execTime, meta) {
+  const footer = `\n\n---\n_Sumber: ${meta.DATABASE} · ${recordCount.toLocaleString('id-ID')} rekaman · ${execTime}\u00A0ms_`;
+  const sections = [judul];
+
+  // ── Ringkasan ─────────────────────────────────────────────────────────────
+  const periode = data.periode_analisis || {};
+  const tahun   = (periode.tahun_tersedia || []).join(', ') || '-';
+  const bulan   = (periode.bulan_tersedia || []).join(', ') || '-';
+  sections.push(
+    `Analisis penetrasi HSI mencakup **${(data.total_wilayah_analisis || 0).toLocaleString('id-ID')} wilayah (STO)** ` +
+    `pada tahun ${tahun} (bulan ${bulan}).`
+  );
+
+  // ── Top 5 Regional ────────────────────────────────────────────────────────
+  const topNas = (data.top_performers || {}).nasional || {};
+  const topReg = topNas.top_5_regional || [];
+  if (topReg.length > 0) {
+    sections.push('### Top Regional berdasarkan Penetrasi');
+    const rows = topReg.map(r => ({
+      'Regional': r.regional,
+      'Avg Penetrasi': `${r.rata_rata_penetrasi}%`,
+      'Total Order HSI': (r.total_volume || 0).toLocaleString('id-ID'),
+      'Pelanggan Unik': (r.total_pelanggan_unik || 0).toLocaleString('id-ID'),
+      'Layanan HSI': (r.total_layanan_hsi || 0).toLocaleString('id-ID'),
+      'STO Terbaik': r.sto_terbaik || '-',
+      'Penetrasi STO': `${r.penetrasi_sto_terbaik}%`,
+    }));
+    sections.push(arrayToTable(rows, topReg.length));
+  }
+
+  // ── Top 10 STO Penetrasi Tertinggi ────────────────────────────────────────
+  const top10 = data.top_10_penetrasi_terkini || [];
+  if (top10.length > 0) {
+    sections.push('### Top 10 STO Penetrasi Tertinggi');
+    const rows = top10.map(d => {
+      const id = d.identitas_wilayah || {};
+      const mp = d.metrik_penetrasi || {};
+      const mf = d.metrik_fundamental || {};
+      return {
+        'STO': id.sto || '-',
+        'Witel': id.witel || '-',
+        'Regional': id.regional || '-',
+        'Penetrasi Order': mp.penetrasi_hsi_order || '-',
+        'Penetrasi Plg': mp.penetrasi_hsi_pelanggan || '-',
+        'Total Order HSI': mp.pesanan_hsi_total || '-',
+        'Pelanggan Unik': mf.total_pelanggan_unik || '-',
+      };
+    });
+    sections.push(arrayToTable(rows, top10.length));
+  }
+
+  // ── Wilayah Potensial ─────────────────────────────────────────────────────
+  const potensial = data.wilayah_potensial || [];
+  if (potensial.length > 0) {
+    sections.push(`### Wilayah Potensial (${potensial.length} STO)`);
+    const rows = potensial.slice(0, 5).map(d => {
+      const id = d.identitas_wilayah || {};
+      const mp = d.metrik_penetrasi || {};
+      const ap = d.analisis_pasar || {};
+      return {
+        'STO': id.sto || '-',
+        'Witel': id.witel || '-',
+        'Penetrasi': mp.penetrasi_hsi_order || '-',
+        'Peluang': ap.peluang_pasar || '-',
+        'Fase Pasar': ap.kematangan_pasar || '-',
+      };
+    });
+    sections.push(arrayToTable(rows, rows.length));
+  }
+
+  // ── Rekomendasi ───────────────────────────────────────────────────────────
+  const reko = data.rekomendasi_strategis || [];
+  if (reko.length > 0) {
+    const bullets = reko.map(r => formatItem(r, 'Rekomendasi')).join('\n');
+    sections.push(`### Rekomendasi Strategis\n${bullets}`);
+  }
+
+  return sections.filter(Boolean).join('\n\n') + footer;
+}
+
+// ── ps_005 : Coverage & Performa STO ──────────────────────────────────────────
+
+function generatePs005(data, judul, recordCount, execTime, meta) {
+  const footer = `\n\n---\n_Sumber: ${meta.DATABASE} · ${recordCount.toLocaleString('id-ID')} rekaman · ${execTime}\u00A0ms_`;
+  const sections = [judul];
+
+  // Ringkasan
+  const periode = data.periode_analisis || '3 bulan terakhir';
+  const totalSTO = data.total_sto_dianalisis || '-';
+  sections.push(
+    `Analisis cakupan dan performa **${totalSTO} STO** pada periode **${periode}**.`
+  );
+
+  // Distribusi performa
+  const distPerf = (data.distribusi_performa || {}).kategori_performa;
+  if (distPerf && typeof distPerf === 'object') {
+    const entries = Object.entries(distPerf).filter(([, v]) => v > 0);
+    if (entries.length > 0) {
+      sections.push('### Distribusi Performa STO');
+      sections.push(entries.map(([k, v]) => `- **${k.replace(/_/g, ' ')}**: ${v} STO`).join('\n'));
+    }
+  }
+
+  // STO Unggulan
+  const unggulan = (data.sto_unggulan || {}).performa_terbaik || [];
+  if (unggulan.length > 0) {
+    sections.push('### STO dengan Performa Terbaik');
+    const rows = unggulan.map(s => ({
+      'STO': s.sto || '-',
+      'Witel': s.witel || '-',
+      'Penetrasi Order': s.penetrasi_order_hsi || '-',
+      'Success Rate': s.tingkat_keberhasilan || '-',
+      'Skor Efisiensi': s.skor_efisiensi || '-',
+    }));
+    sections.push(arrayToTable(rows, 5));
+  }
+
+  // STO perlu perbaikan
+  const bottom = data.sto_perlu_perbaikan || [];
+  if (bottom.length > 0) {
+    sections.push('### STO Perlu Perbaikan');
+    const rows = bottom.map(s => ({
+      'STO': s.sto || '-',
+      'Witel': s.witel || '-',
+      'Penetrasi Order': s.penetrasi_order_hsi || '-',
+      'Success Rate': s.tingkat_keberhasilan || '-',
+      'Skor Efisiensi': s.skor_efisiensi || '-',
+    }));
+    sections.push(arrayToTable(rows, 5));
+  }
+
+  // Insight utama
+  const insights = data.insight_utama || [];
+  if (insights.length > 0) {
+    sections.push('### Wawasan Utama');
+    sections.push(insights.map(w => formatItem(w, 'Insight')).join('\n'));
+  }
+
+  // Rekomendasi
+  const reko = data.rekomendasi_strategis || [];
+  if (reko.length > 0) {
+    sections.push('### Rekomendasi Strategis');
+    sections.push(reko.map(r => formatItem(r, 'Rekomendasi')).join('\n'));
+  }
+
+  return sections.filter(Boolean).join('\n\n') + footer;
+}
+
+// ── ps_006 : Tingkat Keberhasilan Fulfillment ─────────────────────────────────
+
+function generatePs006(data, judul, recordCount, execTime, meta) {
+  const footer = `\n\n---\n_Sumber: ${meta.DATABASE} · ${recordCount.toLocaleString('id-ID')} rekaman · ${execTime}\u00A0ms_`;
+  const sections = [judul];
+
+  const periode = data.periode_analisis || '-';
+  const totalUnit = data.total_unit_dianalisis || '-';
+  sections.push(
+    `Analisis fulfillment multi-dimensi mencakup **${totalUnit} unit** pada periode **${periode || '-'}**.`
+  );
+
+  // Distribusi performa
+  const distPerf = data.distribusi_performa;
+  if (distPerf && typeof distPerf === 'object') {
+    const entries = Object.entries(distPerf).filter(([, v]) => v > 0);
+    if (entries.length > 0) {
+      sections.push('### Distribusi Kategori Performa');
+      sections.push(entries.map(([k, v]) => `- **${k.replace(/_/g, ' ')}**: ${v} unit`).join('\n'));
+    }
+  }
+
+  // Unit unggulan
+  const unggulan = (data.unit_unggulan || {}).performa_terbaik || [];
+  if (unggulan.length > 0) {
+    sections.push('### Unit dengan Performa Terbaik');
+    const rows = unggulan.map(u => ({
+      'Regional': u.regional || '-',
+      'Witel': u.witel || '-',
+      'Success Rate': u.success_rate || '-',
+      'Avg Fulfillment': u.avg_time || '-',
+    }));
+    sections.push(arrayToTable(rows, 5));
+  }
+
+  // Unit perlu perhatian
+  const bottom = data.unit_perlu_perhatian || [];
+  if (bottom.length > 0) {
+    sections.push('### Unit Perlu Perhatian');
+    const rows = bottom.map(u => ({
+      'Regional': u.regional || '-',
+      'Witel': u.witel || '-',
+      'Success Rate': u.success_rate || '-',
+      'Avg Fulfillment': u.avg_time || '-',
+    }));
+    sections.push(arrayToTable(rows, 5));
+  }
+
+  // Target KPI
+  const kpi = data.target_kpi;
+  if (kpi && typeof kpi === 'object') {
+    sections.push('### Target KPI');
+    sections.push(Object.entries(kpi).map(([k, v]) =>
+      `- **${k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}**: ${v || '-'}`
+    ).join('\n'));
+  }
+
+  // Insight utama
+  const insights = data.insight_utama || [];
+  if (insights.length > 0) {
+    sections.push('### Wawasan Utama');
+    sections.push(insights.map(w => formatItem(w, 'Insight')).join('\n'));
+  }
+
+  // Rekomendasi
+  const reko = data.rekomendasi_strategis || [];
+  if (reko.length > 0) {
+    sections.push('### Rekomendasi Strategis');
+    sections.push(reko.map(r => formatItem(r, 'Rekomendasi')).join('\n'));
+  }
+
+  return sections.filter(Boolean).join('\n\n') + footer;
+}
+
+// ── ps_007 : Analisis Waktu Instalasi ─────────────────────────────────────────
+
+function generatePs007(data, judul, recordCount, execTime, meta) {
+  const footer = `\n\n---\n_Sumber: ${meta.DATABASE} · ${recordCount.toLocaleString('id-ID')} rekaman · ${execTime}\u00A0ms_`;
+  const sections = [judul];
+
+  const totalSTO = data.total_sto_dianalisis || '-';
+  sections.push(
+    `Analisis waktu instalasi HSI multi-dimensional mencakup **${totalSTO} STO**.`
+  );
+
+  // Distribusi performa
+  const distPerf = data.distribusi_performa;
+  if (distPerf && typeof distPerf === 'object') {
+    const entries = Object.entries(distPerf).filter(([, v]) => v > 0);
+    if (entries.length > 0) {
+      sections.push('### Distribusi Kategori Performa');
+      sections.push(entries.map(([k, v]) => `- **${k.replace(/_/g, ' ')}**: ${v} STO`).join('\n'));
+    }
+  }
+
+  // STO unggulan
+  const tercepat = (data.sto_unggulan || {}).sto_tercepat || [];
+  if (tercepat.length > 0) {
+    sections.push('### STO dengan Instalasi Tercepat');
+    const rows = tercepat.map(s => ({
+      'STO': s.sto || '-',
+      'Witel': s.witel || '-',
+      'Avg Instalasi': s.rata_rata_waktu || '-',
+      'Kepatuhan SLA': s.kepatuhan_sla || '-',
+      'Customer SLA': s.customer_sla || '-',
+      'Efisiensi': s.efisiensi || '-',
+    }));
+    sections.push(arrayToTable(rows, 5));
+  }
+
+  // STO terlambat
+  const terlambat = data.sto_terlambat || [];
+  if (terlambat.length > 0) {
+    sections.push('### STO dengan Instalasi Terlambat');
+    const rows = terlambat.map(s => ({
+      'STO': s.sto || '-',
+      'Witel': s.witel || '-',
+      'Avg Instalasi': s.rata_rata_waktu || '-',
+      'Kepatuhan SLA': s.kepatuhan_sla || '-',
+      'Customer SLA': s.customer_sla || '-',
+      'Efisiensi': s.efisiensi || '-',
+    }));
+    sections.push(arrayToTable(rows, 5));
+  }
+
+  // Target SLA
+  const sla = data.target_sla;
+  if (sla && typeof sla === 'object') {
+    sections.push('### Target SLA');
+    sections.push(Object.entries(sla).map(([k, v]) =>
+      `- **${k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}**: ${v || '-'}`
+    ).join('\n'));
+  }
+
+  // Wawasan utama
+  const insights = data.wawasan_utama || [];
+  if (insights.length > 0) {
+    sections.push('### Wawasan Utama');
+    sections.push(insights.map(w => formatItem(w, 'Insight')).join('\n'));
+  }
+
+  // Rekomendasi
+  const reko = data.rekomendasi_strategis || [];
+  if (reko.length > 0) {
+    sections.push('### Rekomendasi Strategis');
+    sections.push(reko.map(r => formatItem(r, 'Rekomendasi')).join('\n'));
+  }
+
+  return sections.filter(Boolean).join('\n\n') + footer;
+}
+
+// ── ps_008 : Revenue HSI per Kategori Bandwidth ──────────────────────────────
+
+function generatePs008(data, judul, recordCount, execTime, meta) {
+  const footer = `\n\n---\n_Sumber: ${meta.DATABASE} · ${recordCount.toLocaleString('id-ID')} rekaman · ${execTime}\u00A0ms_`;
+  const sections = [judul];
+
+  const periode = data.periode_data || '-';
+  const totalKat = data.total_kategori_bandwidth || '-';
+  const mk = data.metrik_keseluruhan || {};
+  sections.push(
+    `Analisis revenue HSI mencakup **${totalKat} kategori bandwidth** pada periode **${periode || '-'}**. ` +
+    `Total estimasi revenue bulanan: **${mk.total_estimasi_revenue_bulanan || '-'}** · ` +
+    `Order HSI: **${mk.total_order_hsi || '-'}** · Pelanggan HSI: **${mk.total_pelanggan_hsi || '-'}**.`
+  );
+
+  // Kategori revenue teratas
+  const topKat = data.kategori_revenue_teratas || [];
+  if (topKat.length > 0) {
+    sections.push('### Kategori Revenue Teratas');
+    const rows = topKat.map(k => ({
+      'Kategori': k.kategori || '-',
+      'Kontribusi Revenue': k.kontribusi_revenue || '-',
+      'ARPU Estimasi': k.arpu_estimasi || '-',
+      'Total Pelanggan': k.total_pelanggan || '-',
+      'Total Order': k.total_order || '-',
+      'Total Layanan': k.total_layanan || '-',
+    }));
+    sections.push(arrayToTable(rows, 8));
+  }
+
+  // Detail kategori (table of all)
+  const detail = data.detail_kategori || [];
+  if (detail.length > 0 && topKat.length === 0) {
+    sections.push('### Detail per Kategori Bandwidth');
+    const rows = detail.map(d => ({
+      'Kategori': d.kategori_bandwidth || '-',
+      'Revenue': (d.metrik_revenue || {}).total_revenue_bulanan_estimasi || '-',
+      'ARPU': (d.metrik_revenue || {}).arpu_final_estimasi || '-',
+      'Kontribusi': (d.metrik_revenue || {}).kontribusi_revenue || '-',
+      'Order HSI': (d.metrik_hsi || {}).total_order_hsi || '-',
+    }));
+    sections.push(arrayToTable(rows, 10));
+  }
+
+  // Insight utama
+  const insights = data.insight_utama || [];
+  if (insights.length > 0) {
+    sections.push('### Wawasan Utama');
+    sections.push(insights.map(w => formatItem(w, 'Insight')).join('\n'));
+  }
+
+  // Rekomendasi
+  const reko = data.rekomendasi_strategis || [];
+  if (reko.length > 0) {
+    sections.push('### Rekomendasi Strategis');
+    sections.push(reko.map(r => formatItem(r, 'Rekomendasi')).join('\n'));
+  }
+
+  return sections.filter(Boolean).join('\n\n') + footer;
+}
+
+// ── ps_009 : Performa Channel Penjualan HSI ──────────────────────────────────
+
+function generatePs009(data, judul, recordCount, execTime, meta) {
+  const footer = `\n\n---\n_Sumber: ${meta.DATABASE} · ${recordCount.toLocaleString('id-ID')} rekaman · ${execTime}\u00A0ms_`;
+  const sections = [judul];
+
+  const periode = data.periode_analisis || '-';
+  const totalCh = data.total_channel_aktif || '-';
+  const totalOrd = data.total_order_hsi || '-';
+  sections.push(
+    `Analisis performa **${totalCh} channel** penjualan HSI pada periode **${periode || '-'}** ` +
+    `dengan total **${totalOrd} order HSI**.`
+  );
+
+  // Top 5 performers
+  const top5 = data.top_5_performers || [];
+  if (top5.length > 0) {
+    sections.push('### Top 5 Channel Performers');
+    const rows = top5.map(ch => ({
+      'Channel': ch.channel || '-',
+      'Kategori': ch.kategori || '-',
+      'Pangsa Pasar': ch.market_share || '-',
+      'Konversi': ch.conversion_rate || '-',
+      'Skor Efektivitas': ch.effectiveness_score || '-',
+    }));
+    sections.push(arrayToTable(rows, 5));
+  }
+
+  // Benchmark KPI
+  const bench = data.benchmark_kpi;
+  if (bench && typeof bench === 'object') {
+    sections.push('### Benchmark KPI');
+    sections.push(Object.entries(bench).map(([k, v]) =>
+      `- **${k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}**: ${v || '-'}`
+    ).join('\n'));
+  }
+
+  // Insight utama
+  const insights = data.insight_utama || [];
+  if (insights.length > 0) {
+    sections.push('### Wawasan Utama');
+    sections.push(insights.map(w => formatItem(w, 'Insight')).join('\n'));
+  }
+
+  // Rekomendasi
+  const reko = data.rekomendasi_strategis || [];
+  if (reko.length > 0) {
+    sections.push('### Rekomendasi Strategis');
+    sections.push(reko.map(r => formatItem(r, 'Rekomendasi')).join('\n'));
+  }
+
+  return sections.filter(Boolean).join('\n\n') + footer;
+}
+
+// ── ps_010 : Penetrasi Produk Digital ─────────────────────────────────────────
+
+function generatePs010(data, judul, recordCount, execTime, meta) {
+  const footer = `\n\n---\n_Sumber: ${meta.DATABASE} · ${recordCount.toLocaleString('id-ID')} rekaman · ${execTime}\u00A0ms_`;
+  const sections = [judul];
+
+  const reks = data.ringkasan_eksekutif || {};
+  const periode = reks.periode_analisis || '-';
+  sections.push(
+    `Analisis penetrasi **${reks.total_produk_digital || '-'} produk digital** pada periode **${periode || '-'}**. ` +
+    `Total order digital: **${reks.total_order_digital || '-'}** · Customer digital: **${reks.total_customer_digital || '-'}** · ` +
+    `Dampak revenue: **${reks.total_dampak_revenue || '-'}**.`
+  );
+
+  // Distribusi adopsi
+  const distAdopsi = reks.distribusi_adopsi;
+  if (distAdopsi && typeof distAdopsi === 'object') {
+    const entries = Object.entries(distAdopsi).filter(([, v]) => v > 0);
+    if (entries.length > 0) {
+      sections.push('### Distribusi Kategori Adopsi');
+      sections.push(entries.map(([k, v]) => `- **${k.replace(/_/g, ' ')}**: ${v} produk`).join('\n'));
+    }
+  }
+
+  // Top performers
+  const topPerf = data.top_performers || [];
+  if (topPerf.length > 0) {
+    sections.push('### Produk Digital dengan Performa Terbaik');
+    const rows = topPerf.map(p => ({
+      'Produk': p.product || '-',
+      'Kategori': p.kategori || '-',
+      'Penetrasi Customer': p.penetrasi_customer || '-',
+      'Order Digital': p.orders || '-',
+      'Dampak Revenue': p.revenue_impact || '-',
+    }));
+    sections.push(arrayToTable(rows, 5));
+  }
+
+  // Insights strategis
+  const insights = data.insights_strategis || [];
+  if (insights.length > 0) {
+    sections.push('### Wawasan Strategis');
+    sections.push(insights.map(w => formatItem(w, 'Insight')).join('\n'));
+  }
+
+  // Rekomendasi prioritas
+  const reko = data.rekomendasi_prioritas || [];
+  if (reko.length > 0) {
+    sections.push('### Rekomendasi Prioritas');
+    sections.push(reko.map(r => formatItem(r, 'Rekomendasi')).join('\n'));
+  }
+
+  return sections.filter(Boolean).join('\n\n') + footer;
+}
+
+// ── ps_011 : Pola Musiman Order HSI ──────────────────────────────────────────
+
+function generatePs011(data, judul, recordCount, execTime, meta) {
+  const footer = `\n\n---\n_Sumber: ${meta.DATABASE} · ${recordCount.toLocaleString('id-ID')} rekaman · ${execTime}\u00A0ms_`;
+  const sections = [judul];
+
+  const reks = data.ringkasan_eksekutif || {};
+  const periode = reks.periode_analisis || '-';
+  sections.push(
+    `Analisis pola musiman mencakup **${reks.total_bulan_analisis || '-'} bulan** pada periode **${periode || '-'}**. ` +
+    `Bulan puncak: **${reks.bulan_puncak || '-'}** · Bulan rendah: **${reks.bulan_rendah || '-'}**.`
+  );
+
+  // Pola musiman: puncak & lembah
+  const pola = data.pola_musiman || {};
+  const puncak = pola.puncak_aktivitas || [];
+  const lembah = pola.lembah_aktivitas || [];
+  if (puncak.length > 0 || lembah.length > 0) {
+    sections.push('### Pola Musiman');
+    if (puncak.length > 0) sections.push(`- **Puncak aktivitas**: ${puncak.join(', ')}`);
+    if (lembah.length > 0) sections.push(`- **Lembah aktivitas**: ${lembah.join(', ')}`);
+  }
+
+  // Insights pola
+  const polaInsights = pola.insights_pola || [];
+  if (polaInsights.length > 0) {
+    sections.push('### Wawasan Pola');
+    sections.push(polaInsights.map(w => formatItem(w, 'Insight')).join('\n'));
+  }
+
+  // Detail bulanan (table of monthly data)
+  const detail = data.detail_bulanan || [];
+  if (detail.length > 0) {
+    sections.push('### Ringkasan Bulanan');
+    const rows = detail.map(d => ({
+      'Bulan': (d.identitas_bulan || {}).nama_bulan || '-',
+      'Kategori': (d.identitas_bulan || {}).kategori_musiman || '-',
+      'Avg Order HSI': (d.metrik_hsi || {}).rata_rata_order_hsi || '-',
+      'Success Rate': (d.metrik_performa || {}).tingkat_keberhasilan || '-',
+      'Bundling': (d.metrik_performa || {}).tingkat_bundling || '-',
+      'Indeks Volume': (d.indeks_musiman || {}).indeks_volume_order || '-',
+    }));
+    sections.push(arrayToTable(rows, 12));
+  }
+
+  // Rekomendasi
+  const reko = data.rekomendasi_strategis || [];
+  if (reko.length > 0) {
+    sections.push('### Rekomendasi Strategis');
+    sections.push(reko.map(r => formatItem(r, 'Rekomendasi')).join('\n'));
+  }
+
+  return sections.filter(Boolean).join('\n\n') + footer;
+}
+
+// ── ps_012 : Tren Pertumbuhan Order HSI ──────────────────────────────────────
+
+function generatePs012(data, judul, recordCount, execTime, meta) {
+  const footer = `\n\n---\n_Sumber: ${meta.DATABASE} · ${recordCount.toLocaleString('id-ID')} rekaman · ${execTime}\u00A0ms_`;
+  const sections = [judul];
+
+  const totalPeriode = data.total_periode_dianalisis || '-';
+  sections.push(
+    `Analisis tren pertumbuhan HSI mencakup **${totalPeriode} periode** dengan multiple timeframes.`
+  );
+
+  // Tren terkini
+  const terkini = data.tren_terkini || [];
+  if (terkini.length > 0) {
+    sections.push('### Tren Terkini');
+    const rows = terkini.map(t => ({
+      'Timeframe': (t.identitas_periode || {}).timeframe || '-',
+      'Periode': (t.identitas_periode || {}).periode || '-',
+      'Order HSI': (t.metrik_volume_hsi || {}).total_pesanan_hsi || '-',
+      'Customer HSI': (t.metrik_volume_hsi || {}).total_customer_hsi || '-',
+      'Growth Order': (t.analisis_pertumbuhan || {}).pertumbuhan_order_periode || '-',
+      'Momentum': (t.analisis_pertumbuhan || {}).momentum_order || '-',
+      'Kategori': (t.analisis_pertumbuhan || {}).kategori_tren || '-',
+    }));
+    sections.push(arrayToTable(rows, 8));
+  }
+
+  // Perbandingan timeframe
+  const compare = data.perbandingan_timeframe;
+  if (compare && typeof compare === 'object') {
+    const entries = Object.entries(compare);
+    if (entries.length > 0) {
+      sections.push('### Perbandingan Timeframe');
+      sections.push(entries.map(([k, v]) =>
+        `- **${k.replace(/_/g, ' ')}**: ${typeof v === 'object' ? JSON.stringify(v) : (v || '-')}`
+      ).join('\n'));
+    }
+  }
+
+  // Pola pertumbuhan
+  const pola = data.pola_pertumbuhan;
+  if (pola && typeof pola === 'object') {
+    const entries = Object.entries(pola);
+    if (entries.length > 0) {
+      sections.push('### Pola Pertumbuhan');
+      sections.push(entries.map(([k, v]) =>
+        `- **${k.replace(/_/g, ' ')}**: ${typeof v === 'object' ? JSON.stringify(v) : (v || '-')}`
+      ).join('\n'));
+    }
+  }
+
+  // Wawasan utama
+  const insights = data.wawasan_utama || [];
+  if (insights.length > 0) {
+    sections.push('### Wawasan Utama');
+    sections.push(insights.map(w => formatItem(w, 'Insight')).join('\n'));
+  }
+
+  // Rekomendasi
+  const reko = data.rekomendasi_strategis || [];
+  if (reko.length > 0) {
+    sections.push('### Rekomendasi Strategis');
+    sections.push(reko.map(r => formatItem(r, 'Rekomendasi')).join('\n'));
   }
 
   return sections.filter(Boolean).join('\n\n') + footer;

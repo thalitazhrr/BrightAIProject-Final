@@ -150,6 +150,7 @@ module.exports = {
             PACKAGE_NAME,
             PRODUCT,
             BW,
+
             -- HSI Product identification
             CASE 
                 WHEN PRODUCT = 'WMS' THEN 0
@@ -208,7 +209,6 @@ module.exports = {
           AND WITEL IS NOT NULL  
           AND DATEL IS NOT NULL
           AND STO IS NOT NULL
-          AND ND_HSI IS NOT NULL  -- ADDED: Pastikan hanya record dengan HSI yang valid
           AND ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD')
     ),
     GEOGRAPHIC_METRICS AS (
@@ -244,9 +244,13 @@ module.exports = {
                      (HAS_PIJAR = 1 OR HAS_NETMONK = 1 OR HAS_OCA_INT = 1 OR HAS_OCA_BLAST = 1)
                 THEN ORDER_ID END) as digital_bundling_orders,
             -- Bandwidth analysis
-            AVG(CASE 
-                WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND BW IS NOT NULL AND BW != '0' 
-                THEN CAST(BW AS NUMBER)/1024 END) as avg_bandwidth_mbps,
+            AVG(CASE
+                WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) THEN
+                COALESCE(
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), '(\d+)\s*Mbps', 1, 1, 'i', 1)),
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'HSIE[F]?(\d+)M', 1, 1, 'i', 1)),
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'INETF?(\d+)M', 1, 1, 'i', 1))
+                ) END) as avg_bandwidth_mbps,
             -- Installation performance
             AVG(CASE 
                 WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND TGL_PS IS NOT NULL 
@@ -274,8 +278,8 @@ module.exports = {
             COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1 THEN ND_HSI END) AS unique_hsi_services,
             ROUND(COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1 THEN ORDER_ID END) * 1.0 / 
                   NULLIF(COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1 THEN ND_HSI END), 0), 2) AS avg_orders_per_hsi_service,
-            AVG(CASE 
-                WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND BW IS NOT NULL AND BW != '0' 
+            AVG(CASE
+                WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND BW IS NOT NULL AND BW != '0'
                 THEN CAST(BW AS NUMBER)/1024 END) AS avg_bandwidth_mbps,
             AVG(CASE 
                 WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND TGL_PS IS NOT NULL 
@@ -446,11 +450,11 @@ module.exports = {
           judul: 'Analisis Distribusi Order HSI per Struktur Geografis',
           periode: `${this.getMonthName(currentMonth)} ${currentYear}`,
           total_sto_aktif: currentData.length,
-          total_order_hsi: currentData.reduce((sum, d) => sum + d.total_order_hsi, 0).toLocaleString('id-ID'),
-          total_layanan_hsi: currentData.reduce((sum, d) => sum + d.unique_hsi_services, 0).toLocaleString('id-ID'), // ADDED
+          total_order_hsi: currentData.reduce((sum, d) => sum + (d.total_order_hsi || 0), 0).toLocaleString('id-ID'),
+          total_layanan_hsi: currentData.reduce((sum, d) => sum + (d.unique_hsi_services || 0), 0).toLocaleString('id-ID'), // ADDED
           komposisi_produk: {
-            total_hsi_bisnis: currentData.reduce((sum, d) => sum + d.order_hsi_bisnis, 0).toLocaleString('id-ID'),
-            total_hsi_basic: currentData.reduce((sum, d) => sum + d.order_hsi_basic, 0).toLocaleString('id-ID')
+            total_hsi_bisnis: currentData.reduce((sum, d) => sum + (d.order_hsi_bisnis || 0), 0).toLocaleString('id-ID'),
+            total_hsi_basic: currentData.reduce((sum, d) => sum + (d.order_hsi_basic || 0), 0).toLocaleString('id-ID')
           }
         },
         
@@ -473,16 +477,16 @@ module.exports = {
           identitas: `${sto.STO} (${sto.DATEL}, ${sto.WITEL}, Regional ${sto.REGIONAL})`,
           
           metrik_order: {
-            total_hsi: sto.total_order_hsi.toLocaleString('id-ID'),
-            hsi_bisnis: `${sto.order_hsi_bisnis.toLocaleString('id-ID')} (${sto.pct_hsi_bisnis}%)`,
-            hsi_basic: `${sto.order_hsi_basic.toLocaleString('id-ID')} (${sto.pct_hsi_basic}%)`,
-            unique_customers: sto.unique_customers.toLocaleString('id-ID'),
-            unique_hsi_services: sto.unique_hsi_services.toLocaleString('id-ID')  // ADDED
+            total_hsi: (sto.total_order_hsi || 0).toLocaleString('id-ID'),
+            hsi_bisnis: `${(sto.order_hsi_bisnis || 0).toLocaleString('id-ID')} (${sto.pct_hsi_bisnis || 0}%)`,
+            hsi_basic: `${(sto.order_hsi_basic || 0).toLocaleString('id-ID')} (${sto.pct_hsi_basic || 0}%)`,
+            unique_customers: (sto.unique_customers || 0).toLocaleString('id-ID'),
+            unique_hsi_services: (sto.unique_hsi_services || 0).toLocaleString('id-ID')  // ADDED
           },
           
           efisiensi_layanan: {  // ADDED
-            rata_rata_order_per_layanan: sto.avg_orders_per_hsi_service,
-            rata_rata_layanan_per_pelanggan: (sto.unique_hsi_services / sto.unique_customers).toFixed(2)
+            rata_rata_order_per_layanan: sto.avg_orders_per_hsi_service || 0,
+            rata_rata_layanan_per_pelanggan: ((sto.unique_hsi_services || 0) / (sto.unique_customers || 1)).toFixed(2)
           },
           
           pertumbuhan: {
@@ -496,9 +500,9 @@ module.exports = {
           },
           
           bundling_performance: {
-            bundling_rate: `${sto.bundling_rate}%`,
+            bundling_rate: `${sto.bundling_rate || 0}%`,
             hard_bundling_dominance: `${sto.hard_bundling_pct || 0}%`,
-            digital_bundling_rate: `${sto.digital_bundling_rate}%`
+            digital_bundling_rate: `${sto.digital_bundling_rate || 0}%`
           },
           
           operational_metrics: {
@@ -507,9 +511,9 @@ module.exports = {
           },
           
           market_position: {
-            share_nasional: `${sto.share_nasional}%`,
-            share_in_regional: `${sto.share_in_regional}%`,
-            share_in_witel: `${sto.share_in_witel}%`,
+            share_nasional: `${sto.share_nasional || 0}%`,
+            share_in_regional: `${sto.share_in_regional || 0}%`,
+            share_in_witel: `${sto.share_in_witel || 0}%`,
             rank_in_regional: sto.rank_in_regional,
             rank_in_witel: sto.rank_in_witel
           },
@@ -541,14 +545,14 @@ module.exports = {
         order_bulanan: {
           sto_pertumbuhan_positif: positiveGrowth,
           sto_pertumbuhan_negatif: negativeGrowth,
-          rata_rata_mom: `${avgMoM.toFixed(1)}%`,
+          rata_rata_mom: `${(avgMoM || 0).toFixed(1)}%`,
           status: avgMoM > 5 ? 'Pertumbuhan Kuat' : 
                   avgMoM > 0 ? 'Pertumbuhan Moderat' : 
                   'Perlu Perhatian'
         },
         layanan_hsi_bulanan: {  // ADDED
           sto_pertumbuhan_positif: positiveHSIGrowth,
-          rata_rata_mom_hsi: `${avgMoMHSI.toFixed(1)}%`,
+          rata_rata_mom_hsi: `${(avgMoMHSI || 0).toFixed(1)}%`,
           status: avgMoMHSI > 5 ? 'Ekspansi Layanan Aktif' : 
                   avgMoMHSI > 0 ? 'Pertumbuhan Layanan Moderat' : 
                   'Konsolidasi Layanan'
@@ -569,14 +573,14 @@ module.exports = {
         order_tahunan: {
           sto_pertumbuhan_positif: positiveGrowth,
           sto_pertumbuhan_negatif: negativeGrowth,
-          rata_rata_yoy: `${avgYoY.toFixed(1)}%`,
+          rata_rata_yoy: `${(avgYoY || 0).toFixed(1)}%`,
           status: avgYoY > 10 ? 'Pertumbuhan YoY Sangat Baik' : 
                   avgYoY > 0 ? 'Pertumbuhan YoY Positif' : 
                   'YoY Negatif - Evaluasi Diperlukan'
         },
         layanan_hsi_tahunan: {  // ADDED
           sto_pertumbuhan_positif: positiveHSIGrowth,
-          rata_rata_yoy_hsi: `${avgYoYHSI.toFixed(1)}%`,
+          rata_rata_yoy_hsi: `${(avgYoYHSI || 0).toFixed(1)}%`,
           status: avgYoYHSI > 10 ? 'Ekspansi Layanan YoY Sangat Baik' : 
                   avgYoYHSI > 0 ? 'Pertumbuhan Layanan YoY Positif' : 
                   'Konsolidasi/Optimisasi Layanan'
@@ -594,22 +598,22 @@ module.exports = {
           mom_growth: `${d.mom_growth}%`,
           yoy_growth: `${d.yoy_growth}%`,
           mom_hsi_services_growth: d.mom_hsi_services_growth !== null ? `${d.mom_hsi_services_growth}%` : 'N/A',  // ADDED
-          total_order: d.total_order_hsi.toLocaleString('id-ID'),
-          total_layanan_hsi: d.unique_hsi_services.toLocaleString('id-ID')  // ADDED
+          total_order: (d.total_order_hsi || 0).toLocaleString('id-ID'),
+          total_layanan_hsi: (d.unique_hsi_services || 0).toLocaleString('id-ID')  // ADDED
         }));
     },
-    
+
     getDecliningAreas: function(data) {
       return data
         .filter(d => d.mom_growth < -5 || d.yoy_growth < -10)
-        .sort((a, b) => (a.mom_growth + a.yoy_growth) - (b.mom_growth + b.yoy_growth))
+        .sort((a, b) => ((a.mom_growth || 0) + (a.yoy_growth || 0)) - ((b.mom_growth || 0) + (b.yoy_growth || 0)))
         .slice(0, 5)
         .map(d => ({
           sto: `${d.STO} (${d.WITEL})`,
-          mom_growth: `${d.mom_growth}%`,
-          yoy_growth: `${d.yoy_growth}%`,
+          mom_growth: `${d.mom_growth || 0}%`,
+          yoy_growth: `${d.yoy_growth || 0}%`,
           mom_hsi_services_growth: d.mom_hsi_services_growth !== null ? `${d.mom_hsi_services_growth}%` : 'N/A',  // ADDED
-          total_order: d.total_order_hsi.toLocaleString('id-ID'),
+          total_order: (d.total_order_hsi || 0).toLocaleString('id-ID'),
           action_needed: 'Evaluasi dan Program Intervensi'
         }));
     },
@@ -623,8 +627,8 @@ module.exports = {
           sto: `${d.STO} (${d.WITEL})`,
           mom_growth: `${d.mom_growth}%`,
           yoy_growth: `${d.yoy_growth}%`,
-          efisiensi_layanan: `${d.avg_orders_per_hsi_service} order/layanan`,  // ADDED
-          total_order: d.total_order_hsi.toLocaleString('id-ID'),
+          efisiensi_layanan: `${d.avg_orders_per_hsi_service || 0} order/layanan`,  // ADDED
+          total_order: (d.total_order_hsi || 0).toLocaleString('id-ID'),
           growth_category: this.translateGrowthTrend(
             this.analyzeGrowthTrend(d.mom_growth, d.yoy_growth)
           )
@@ -662,10 +666,10 @@ module.exports = {
       
       return sortedMonths.map(month => ({
         periode: `${this.getMonthName(month.bulan)} ${month.tahun}`,
-        total_order: month.total_order.toLocaleString('id-ID'),
-        total_layanan_hsi: month.total_hsi_services.toLocaleString('id-ID'),  // ADDED
-        efisiensi_rata_rata: `${(month.total_order/month.total_hsi_services).toFixed(2)} order/layanan`,  // ADDED
-        bisnis_basic_ratio: `${((month.total_bisnis / month.total_order) * 100).toFixed(0)}:${((month.total_basic / month.total_order) * 100).toFixed(0)}`,
+        total_order: (month.total_order || 0).toLocaleString('id-ID'),
+        total_layanan_hsi: (month.total_hsi_services || 0).toLocaleString('id-ID'),  // ADDED
+        efisiensi_rata_rata: `${((month.total_order || 0) / (month.total_hsi_services || 1)).toFixed(2)} order/layanan`,  // ADDED
+        bisnis_basic_ratio: `${(((month.total_bisnis || 0) / (month.total_order || 1)) * 100).toFixed(0)}:${(((month.total_basic || 0) / (month.total_order || 1)) * 100).toFixed(0)}`,
         active_sto: month.sto_count
       }));
     },
@@ -676,24 +680,24 @@ module.exports = {
       ['1', '2', '3', '4', '5'].forEach(reg => {
         const reg_data = data.filter(d => d.REGIONAL === reg);
         if (reg_data.length > 0) {
-          const total_hsi = reg_data.reduce((sum, d) => sum + d.total_order_hsi, 0);
-          const total_hsi_services = reg_data.reduce((sum, d) => sum + d.unique_hsi_services, 0);  // ADDED
+          const total_hsi = reg_data.reduce((sum, d) => sum + (d.total_order_hsi || 0), 0);
+          const total_hsi_services = reg_data.reduce((sum, d) => sum + (d.unique_hsi_services || 0), 0);  // ADDED
           const avg_mom = reg_data.reduce((sum, d) => sum + (d.mom_growth || 0), 0) / reg_data.length;
           const avg_yoy = reg_data.reduce((sum, d) => sum + (d.yoy_growth || 0), 0) / reg_data.length;
-          const avg_bundling_rate = reg_data.reduce((sum, d) => sum + d.bundling_rate, 0) / reg_data.length;
-          const avg_efficiency = total_hsi_services > 0 ? (total_hsi / total_hsi_services).toFixed(2) : '0';  // ADDED
+          const avg_bundling_rate = reg_data.reduce((sum, d) => sum + (d.bundling_rate || 0), 0) / reg_data.length;
+          const avg_efficiency = total_hsi_services > 0 ? ((total_hsi || 0) / total_hsi_services).toFixed(2) : '0';  // ADDED
           
           regional_summary[`regional_${reg}`] = {
             nama: `Regional ${reg}`,
             jumlah_sto_aktif: reg_data.length,
-            total_order_hsi: total_hsi.toLocaleString('id-ID'),
-            total_layanan_hsi: total_hsi_services.toLocaleString('id-ID'),  // ADDED
+            total_order_hsi: (total_hsi || 0).toLocaleString('id-ID'),
+            total_layanan_hsi: (total_hsi_services || 0).toLocaleString('id-ID'),  // ADDED
             efisiensi_regional: `${avg_efficiency} order/layanan`,  // ADDED
-            pertumbuhan_mom: `${avg_mom.toFixed(1)}%`,
-            pertumbuhan_yoy: `${avg_yoy.toFixed(1)}%`,
-            rata_rata_bundling: `${avg_bundling_rate.toFixed(1)}%`,
+            pertumbuhan_mom: `${(avg_mom || 0).toFixed(1)}%`,
+            pertumbuhan_yoy: `${(avg_yoy || 0).toFixed(1)}%`,
+            rata_rata_bundling: `${(avg_bundling_rate || 0).toFixed(1)}%`,
             sto_terbaik: reg_data[0] ? `${reg_data[0].STO} (${reg_data[0].total_order_hsi} order)` : '-',
-            kontribusi_nasional: `${(total_hsi * 100 / data.reduce((s, d) => s + d.total_order_hsi, 0)).toFixed(1)}%`
+            kontribusi_nasional: `${((total_hsi * 100 / (data.reduce((s, d) => s + (d.total_order_hsi || 0), 0) || 1)) || 0).toFixed(1)}%`
           };
         }
       });
@@ -743,13 +747,13 @@ module.exports = {
           ranking: idx + 1,
           nama_witel: w.witel,
           regional: w.regional,
-          total_order_hsi: w.total_hsi.toLocaleString('id-ID'),
-          total_layanan_hsi: w.total_hsi_services.toLocaleString('id-ID'),  // ADDED
-          efisiensi_witel: `${(w.total_hsi/w.total_hsi_services).toFixed(2)} order/layanan`,  // ADDED
-          mix_produk: `Bisnis: ${((w.total_bisnis/w.total_hsi)*100).toFixed(0)}% | Basic: ${((w.total_basic/w.total_hsi)*100).toFixed(0)}%`,
-          bundling_rate: `${((w.total_bundling/w.total_hsi)*100).toFixed(1)}%`,
-          avg_mom_growth: w.count_growth > 0 ? `${(w.sum_mom/w.count_growth).toFixed(1)}%` : 'N/A',
-          avg_yoy_growth: w.count_growth > 0 ? `${(w.sum_yoy/w.count_growth).toFixed(1)}%` : 'N/A',
+          total_order_hsi: (w.total_hsi || 0).toLocaleString('id-ID'),
+          total_layanan_hsi: (w.total_hsi_services || 0).toLocaleString('id-ID'),  // ADDED
+          efisiensi_witel: `${((w.total_hsi || 0) / (w.total_hsi_services || 1)).toFixed(2)} order/layanan`,  // ADDED
+          mix_produk: `Bisnis: ${(((w.total_bisnis || 0) / (w.total_hsi || 1))*100).toFixed(0)}% | Basic: ${(((w.total_basic || 0) / (w.total_hsi || 1))*100).toFixed(0)}%`,
+          bundling_rate: `${(((w.total_bundling || 0) / (w.total_hsi || 1))*100).toFixed(1)}%`,
+          avg_mom_growth: w.count_growth > 0 ? `${((w.sum_mom/w.count_growth) || 0).toFixed(1)}%` : 'N/A',
+          avg_yoy_growth: w.count_growth > 0 ? `${((w.sum_yoy/w.count_growth) || 0).toFixed(1)}%` : 'N/A',
           jumlah_sto: w.sto_count
         }));
     },
@@ -761,21 +765,21 @@ module.exports = {
         .slice(0, limit)
         .map(d => ({
           sto: `${d.STO} (${d.WITEL})`,
-          bundling_rate: `${d.bundling_rate}%`,
-          digital_bundling: `${d.digital_bundling_rate}%`,
-          total_order: d.total_order_hsi.toLocaleString('id-ID'),
-          efisiensi_layanan: `${d.avg_orders_per_hsi_service} order/layanan`,  // ADDED
+          bundling_rate: `${d.bundling_rate || 0}%`,
+          digital_bundling: `${d.digital_bundling_rate || 0}%`,
+          total_order: (d.total_order_hsi || 0).toLocaleString('id-ID'),
+          efisiensi_layanan: `${d.avg_orders_per_hsi_service || 0} order/layanan`,  // ADDED
           growth_status: d.mom_growth > 0 ? 'Bertumbuh' : 'Menurun'
         }));
     },
     
     generateBundlingInsights: function(data) {
-      const avg_bundling = data.reduce((sum, d) => sum + d.bundling_rate, 0) / data.length;
-      const high_bundling_sto = data.filter(d => d.bundling_rate > 50).length;
-      const digital_adoption = data.filter(d => d.digital_bundling_rate > 20).length;
-      
+      const avg_bundling = data.reduce((sum, d) => sum + (d.bundling_rate || 0), 0) / data.length;
+      const high_bundling_sto = data.filter(d => (d.bundling_rate || 0) > 50).length;
+      const digital_adoption = data.filter(d => (d.digital_bundling_rate || 0) > 20).length;
+
       // ADDED: Service efficiency insights
-      const avg_service_efficiency = data.reduce((sum, d) => sum + d.avg_orders_per_hsi_service, 0) / data.length;
+      const avg_service_efficiency = data.reduce((sum, d) => sum + (d.avg_orders_per_hsi_service || 0), 0) / data.length;
       const high_efficiency_sto = data.filter(d => d.avg_orders_per_hsi_service > 1.5).length;
       
       // Bundling vs Growth correlation
@@ -784,14 +788,14 @@ module.exports = {
         (high_bundling_growing / high_bundling_sto) * 100 : 0;
       
       return {
-        rata_rata_bundling_nasional: `${avg_bundling.toFixed(1)}%`,
+        rata_rata_bundling_nasional: `${(avg_bundling || 0).toFixed(1)}%`,
         sto_dengan_bundling_tinggi: `${high_bundling_sto} STO (bundling >50%)`,
         sto_dengan_digital_bundling: `${digital_adoption} STO (digital bundling >20%)`,
         efisiensi_layanan: {  // ADDED
-          rata_rata_nasional: `${avg_service_efficiency.toFixed(2)} order/layanan`,
+          rata_rata_nasional: `${(avg_service_efficiency || 0).toFixed(2)} order/layanan`,
           sto_efisiensi_tinggi: `${high_efficiency_sto} STO (>1.5 order/layanan)`
         },
-        korelasi_bundling_growth: `${bundling_growth_correlation.toFixed(0)}% STO high bundling juga bertumbuh`,
+        korelasi_bundling_growth: `${(bundling_growth_correlation || 0).toFixed(0)}% STO high bundling juga bertumbuh`,
         peluang: avg_bundling < 30 ? 
           'Peluang besar untuk meningkatkan bundling secara nasional' : 
           'Bundling sudah cukup baik, fokus pada peningkatan digital bundling dan efisiensi layanan'
@@ -860,12 +864,12 @@ module.exports = {
       }
       
       // Geographic concentration with growth consideration
-      const top10_share = data.slice(0, 10).reduce((sum, d) => sum + d.share_nasional, 0);
+      const top10_share = data.slice(0, 10).reduce((sum, d) => sum + (d.share_nasional || 0), 0);
       const top10_avg_growth = data.slice(0, 10).reduce((sum, d) => sum + (d.mom_growth || 0), 0) / 10;
       if (top10_share > 30 && top10_avg_growth < 5) {
         recommendations.push({
           area: 'Diversifikasi Geografis',
-          rekomendasi: `Top 10 STO menguasai ${top10_share.toFixed(1)}% tapi growth rendah - diversifikasi ke STO potensial`,
+          rekomendasi: `Top 10 STO menguasai ${(top10_share || 0).toFixed(1)}% tapi growth rendah - diversifikasi ke STO potensial`,
           priority: 'HIGH'
         });
       }

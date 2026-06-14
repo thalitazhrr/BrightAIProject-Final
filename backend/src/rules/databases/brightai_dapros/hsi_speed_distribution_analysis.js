@@ -53,6 +53,11 @@ module.exports = {
         score = 68 + (supportingMatches * 4);
       }
 
+      // Boost if query is specifically asking about customer/layanan (DAPROS context)
+      if (lowerInput.includes('pelanggan') || lowerInput.includes('customer') || lowerInput.includes('layanan') || lowerInput.includes('profil')) {
+        score += 15;
+      }
+
       return Math.min(score, 100);
     }
   },
@@ -60,10 +65,20 @@ module.exports = {
   SQL_QUERY: `
     WITH HSI_SPEED_BASE AS (
         SELECT 
-            NOTEL, NCLI, PLBLCL, REGIONAL, WITEL, STO, TELDA,
+            NOTEL, NCLI, PLBLCL, WITEL, STO, TELDA, CGEST, LGEST,
+            CASE 
+                WHEN TRIM(REGIONAL) IN ('REG-1', '1', '01') OR CGEST = 'R1' OR LGEST LIKE '%Regional 1%' THEN '1'
+                WHEN TRIM(REGIONAL) IN ('REG-2', '2', '02') OR CGEST = 'R2' OR LGEST LIKE '%Regional 2%' THEN '2'
+                WHEN TRIM(REGIONAL) IN ('REG-3', '3', '03') OR CGEST = 'R3' OR LGEST LIKE '%Regional 3%' THEN '3'
+                WHEN TRIM(REGIONAL) IN ('REG-4', '4', '04') OR CGEST = 'R4' OR LGEST LIKE '%Regional 4%' THEN '4'
+                WHEN TRIM(REGIONAL) IN ('REG-5', '5', '05') OR CGEST = 'R5' OR LGEST LIKE '%Regional 5%' THEN '5'
+                WHEN TRIM(REGIONAL) IN ('REG-6', '6', '06') OR CGEST = 'R6' OR LGEST LIKE '%Regional 6%' THEN '6'
+                WHEN TRIM(REGIONAL) IN ('REG-7', '7', '07') OR CGEST = 'R7' OR LGEST LIKE '%Regional 7%' THEN '7'
+                ELSE 'Tidak Diketahui'
+            END as REGIONAL,
             CAST(SPEED AS NUMBER) as SPEED_NUM,
             CAST(LOS AS NUMBER) as LOS_NUM,
-            NVL(TREMS_REV_REF, 0) as REV_HSI,
+            COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) as REV_HSI,
             NVL(TREMS_REV_P, 0) as REV_TOTAL,
             NVL(ADDON_TOTAL, 0) as ADDON_COUNT,
             NVL(ADDON_PRICE, 0) as ADDON_REV,
@@ -104,9 +119,9 @@ module.exports = {
             CASE
                 WHEN CAST(SPEED AS NUMBER) > 0 THEN
                     CASE
-                        WHEN (NVL(TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 25000 THEN 'HIGH_REVENUE_EFFICIENCY'
-                        WHEN (NVL(TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 15000 THEN 'MEDIUM_REVENUE_EFFICIENCY'
-                        WHEN (NVL(TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 8000 THEN 'STANDARD_REVENUE_EFFICIENCY'
+                        WHEN (COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 25000 THEN 'HIGH_REVENUE_EFFICIENCY'
+                        WHEN (COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 15000 THEN 'MEDIUM_REVENUE_EFFICIENCY'
+                        WHEN (COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) / (CAST(SPEED AS NUMBER)/1000)) >= 8000 THEN 'STANDARD_REVENUE_EFFICIENCY'
                         ELSE 'LOW_REVENUE_EFFICIENCY'
                     END
                 ELSE 'UNDEFINED_EFFICIENCY'

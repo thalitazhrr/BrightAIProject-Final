@@ -59,10 +59,20 @@ module.exports = {
       ).length;
 
       if (primaryMatches > 0) {
-        score = 60 + (primaryMatches * 20) + (supportingMatches * 5);
+        score = 65 + (primaryMatches * 20) + (supportingMatches * 5);
       } else {
         // 'sto' alone without primary keyword gives lower base score
         score = 40 + (supportingMatches * 5);
+      }
+
+      // Strong signal: "coverage" is unique to this rule
+      if (lowerInput.includes('coverage') || lowerInput.includes('cakupan') || lowerInput.includes('jangkauan')) {
+        score += 15;
+      }
+
+      // "performa sto" or "kinerja sto" is core to this rule
+      if (lowerInput.includes('performa sto') || lowerInput.includes('kinerja sto')) {
+        score += 10;
       }
 
       return Math.min(score, 100);
@@ -86,7 +96,7 @@ module.exports = {
             PACKAGE_NAME,
             PRODUCT,
             BW,
-            
+
             -- HSI Bisnis Classification
             CASE
                 WHEN UPPER(PRODUCT) = 'WMS' THEN 0
@@ -155,12 +165,10 @@ module.exports = {
             CASE WHEN UPPER(PACKAGE_NAME) LIKE '%NETMONK%' THEN 1 ELSE 0 END as IS_NETMONK
 
         FROM DWH_MOIS.BRIGHTAI_SALES
-        WHERE ORDER_DATE >= ADD_MONTHS(SYSDATE, -3)
+        WHERE STATUS_RESUME IN ('FULFILL BILLING COMPLETED', 'Completed (PS)')
+          AND ORDER_DATE >= DATE '2025-01-01'
           AND STO IS NOT NULL
-          AND TRIM(STO) != ''
-          AND ORDER_ID IS NOT NULL  -- ADDED: Pastikan ada order ID
-          AND NCLI IS NOT NULL       -- ADDED: Pastikan ada customer identifier
-          AND ND_HSI IS NOT NULL     -- ADDED: Pastikan ada HSI service identifier
+          AND TRIM(STO) IS NOT NULL
     ),
 
     STO_PERFORMANCE AS (
@@ -196,12 +204,12 @@ module.exports = {
             COUNT(DISTINCT CASE WHEN IS_HSI_BASIC = 1 THEN NCLI END) as hsi_basic_customers,
 
             -- Penetration rates (multi-dimensional)
-            COUNT(DISTINCT CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) THEN ORDER_ID END) * 100.0 / COUNT(DISTINCT ORDER_ID) as hsi_order_penetration,
-            COUNT(DISTINCT CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) THEN NCLI END) * 100.0 / COUNT(DISTINCT NCLI) as hsi_customer_penetration,
-            COUNT(DISTINCT CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) THEN ND_HSI END) * 100.0 / COUNT(DISTINCT ND_HSI) as hsi_service_penetration,
-            
-            COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 THEN ORDER_ID END) * 100.0 / COUNT(DISTINCT ORDER_ID) as hsi_bisnis_penetration,
-            COUNT(DISTINCT CASE WHEN IS_HSI_BASIC = 1 THEN ORDER_ID END) * 100.0 / COUNT(DISTINCT ORDER_ID) as hsi_basic_penetration,
+            COUNT(DISTINCT CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) THEN ORDER_ID END) * 100.0 / NULLIF(COUNT(DISTINCT ORDER_ID), 0) as hsi_order_penetration,
+            COUNT(DISTINCT CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) THEN NCLI END) * 100.0 / NULLIF(COUNT(DISTINCT NCLI), 0) as hsi_customer_penetration,
+            COUNT(DISTINCT CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) THEN ND_HSI END) * 100.0 / NULLIF(COUNT(DISTINCT ND_HSI), 0) as hsi_service_penetration,
+
+            COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 THEN ORDER_ID END) * 100.0 / NULLIF(COUNT(DISTINCT ORDER_ID), 0) as hsi_bisnis_penetration,
+            COUNT(DISTINCT CASE WHEN IS_HSI_BASIC = 1 THEN ORDER_ID END) * 100.0 / NULLIF(COUNT(DISTINCT ORDER_ID), 0) as hsi_basic_penetration,
 
             -- Success rate calculation
             COUNT(DISTINCT CASE WHEN STATUS_RESUME IN ('FULFILL BILLING COMPLETED', 'Completed (PS)')
@@ -225,9 +233,12 @@ module.exports = {
                 THEN TGL_PS - ORDER_DATE END) as avg_install_days,
 
             -- Bandwidth analysis
-            AVG(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1)
-                     AND CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) > 0
-                THEN CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) END) as avg_bandwidth
+            AVG(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) THEN
+                COALESCE(
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), '(\d+)\s*Mbps', 1, 1, 'i', 1)),
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'HSIE[F]?(\d+)M', 1, 1, 'i', 1)),
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'INETF?(\d+)M', 1, 1, 'i', 1))
+                ) END) as avg_bandwidth
 
         FROM HSI_CLASSIFICATION
         GROUP BY STO, DATEL, WITEL, REGIONAL
@@ -300,11 +311,11 @@ module.exports = {
 
             -- Enhanced efficiency score dengan customer-service relationship
             ROUND(
-                (hsi_order_penetration * 0.25) +
-                (hsi_customer_penetration * 0.25) +
-                (hsi_success_rate * 0.25) +
-                (CASE WHEN avg_install_days <= 14 THEN 25 ELSE GREATEST(0, 25 - (avg_install_days - 14)) END * 0.15) +
-                (CASE WHEN avg_orders_per_service >= 1.5 THEN 10 ELSE avg_orders_per_service * 6.67 END * 0.1)
+                (NVL(hsi_order_penetration, 0) * 0.25) +
+                (NVL(hsi_customer_penetration, 0) * 0.25) +
+                (NVL(hsi_success_rate, 0) * 0.25) +
+                (CASE WHEN NVL(avg_install_days, 999) <= 14 THEN 25 ELSE GREATEST(0, 25 - (NVL(avg_install_days, 999) - 14)) END * 0.15) +
+                (CASE WHEN NVL(avg_orders_per_service, 0) >= 1.5 THEN 10 ELSE NVL(avg_orders_per_service, 0) * 6.67 END * 0.1)
             , 1) as skor_efisiensi
 
         FROM STO_PERFORMANCE t
@@ -314,6 +325,10 @@ module.exports = {
   `,
 
   BUSINESS_LOGIC: {
+    // Safe helpers for null values from DB
+    _sf: function(v, d) { return (v != null ? v : 0).toFixed(d != null ? d : 1); },
+    _sl: function(v) { return (v != null ? v : 0).toLocaleString('id-ID'); },
+
     assessSTOPerformance: function(order_penetration, customer_penetration, success_rate, install_days, efficiency_score, avg_orders_per_service, avg_services_per_customer) {
       const assessment = {
         kategori: '',
@@ -428,9 +443,9 @@ module.exports = {
         .map(d => ({
           sto: d.STO,
           witel: d.WITEL,
-          penetrasi_order_hsi: `${d.hsi_order_penetration.toFixed(1)}%`,
-          penetrasi_customer_hsi: `${d.hsi_customer_penetration.toFixed(1)}%`,  // ADDED
-          tingkat_keberhasilan: `${d.hsi_success_rate.toFixed(1)}%`,
+          penetrasi_order_hsi: `${(d.hsi_order_penetration || 0).toFixed(1)}%`,
+          penetrasi_customer_hsi: `${(d.hsi_customer_penetration || 0).toFixed(1)}%`,  // ADDED
+          tingkat_keberhasilan: `${(d.hsi_success_rate || 0).toFixed(1)}%`,
           skor_efisiensi: d.skor_efisiensi
         }));
 
@@ -440,9 +455,9 @@ module.exports = {
         .map(d => ({
           sto: d.STO,
           witel: d.WITEL,
-          penetrasi_order_hsi: `${d.hsi_order_penetration.toFixed(1)}%`,
-          penetrasi_customer_hsi: `${d.hsi_customer_penetration.toFixed(1)}%`,  // ADDED
-          tingkat_keberhasilan: `${d.hsi_success_rate.toFixed(1)}%`,
+          penetrasi_order_hsi: `${(d.hsi_order_penetration || 0).toFixed(1)}%`,
+          penetrasi_customer_hsi: `${(d.hsi_customer_penetration || 0).toFixed(1)}%`,  // ADDED
+          tingkat_keberhasilan: `${(d.hsi_success_rate || 0).toFixed(1)}%`,
           skor_efisiensi: d.skor_efisiensi
         }));
         
@@ -471,15 +486,15 @@ module.exports = {
         }));
 
       // Generate insights
-      const avg_order_penetration = data.reduce((sum, d) => sum + d.hsi_order_penetration, 0) / data.length;
-      const avg_customer_penetration = data.reduce((sum, d) => sum + d.hsi_customer_penetration, 0) / data.length;
-      const avg_success = data.reduce((sum, d) => sum + d.hsi_success_rate, 0) / data.length;
-      const avg_efficiency = data.reduce((sum, d) => sum + d.avg_orders_per_service, 0) / data.length;
+      const avg_order_penetration = data.reduce((sum, d) => sum + (d.hsi_order_penetration || 0), 0) / data.length;
+      const avg_customer_penetration = data.reduce((sum, d) => sum + (d.hsi_customer_penetration || 0), 0) / data.length;
+      const avg_success = data.reduce((sum, d) => sum + (d.hsi_success_rate || 0), 0) / data.length;
+      const avg_efficiency = data.reduce((sum, d) => sum + (d.avg_orders_per_service || 0), 0) / data.length;
 
-      analysis.insights.push(`Rata-rata penetrasi order HSI di seluruh STO adalah ${avg_order_penetration.toFixed(1)}%`);
-      analysis.insights.push(`Rata-rata penetrasi customer HSI di seluruh STO adalah ${avg_customer_penetration.toFixed(1)}%`);
-      analysis.insights.push(`Rata-rata tingkat keberhasilan instalasi adalah ${avg_success.toFixed(1)}%`);
-      analysis.insights.push(`Rata-rata efisiensi layanan adalah ${avg_efficiency.toFixed(2)} order per layanan HSI`);
+      analysis.insights.push(`Rata-rata penetrasi order HSI di seluruh STO adalah ${(avg_order_penetration || 0).toFixed(1)}%`);
+      analysis.insights.push(`Rata-rata penetrasi customer HSI di seluruh STO adalah ${(avg_customer_penetration || 0).toFixed(1)}%`);
+      analysis.insights.push(`Rata-rata tingkat keberhasilan instalasi adalah ${(avg_success || 0).toFixed(1)}%`);
+      analysis.insights.push(`Rata-rata efisiensi layanan adalah ${(avg_efficiency || 0).toFixed(2)} order per layanan HSI`);
 
       if (analysis.distribusi_performa.perlu_perbaikan > analysis.distribusi_performa.sangat_baik) {
         analysis.insights.push('Lebih banyak STO yang memerlukan perbaikan dibanding yang berkinerja sangat baik');
@@ -522,21 +537,21 @@ module.exports = {
           },
           
           metrik_volume: {
-            total_order: sto.total_orders.toLocaleString('id-ID'),
-            total_customer: sto.total_customers.toLocaleString('id-ID'),     // ADDED
-            total_layanan_hsi: sto.total_hsi_services.toLocaleString('id-ID'), // ADDED
-            order_hsi_total: sto.total_hsi_orders.toLocaleString('id-ID'),
-            customer_hsi_total: sto.total_hsi_customers.toLocaleString('id-ID'), // ADDED
-            layanan_hsi_aktif: sto.total_hsi_services_active.toLocaleString('id-ID') // ADDED
+            total_order: (sto.total_orders || 0).toLocaleString('id-ID'),
+            total_customer: (sto.total_customers || 0).toLocaleString('id-ID'),     // ADDED
+            total_layanan_hsi: (sto.total_hsi_services || 0).toLocaleString('id-ID'), // ADDED
+            order_hsi_total: (sto.total_hsi_orders || 0).toLocaleString('id-ID'),
+            customer_hsi_total: (sto.total_hsi_customers || 0).toLocaleString('id-ID'), // ADDED
+            layanan_hsi_aktif: (sto.total_hsi_services_active || 0).toLocaleString('id-ID') // ADDED
           },
           
           metrik_performa: {
-            penetrasi_order_hsi: `${sto.hsi_order_penetration.toFixed(1)}%`,
-            penetrasi_customer_hsi: `${sto.hsi_customer_penetration.toFixed(1)}%`, // ADDED
-            penetrasi_layanan_hsi: `${sto.hsi_service_penetration.toFixed(1)}%`,   // ADDED
-            tingkat_keberhasilan: `${sto.hsi_success_rate.toFixed(1)}%`,
+            penetrasi_order_hsi: `${(sto.hsi_order_penetration || 0).toFixed(1)}%`,
+            penetrasi_customer_hsi: `${(sto.hsi_customer_penetration || 0).toFixed(1)}%`, // ADDED
+            penetrasi_layanan_hsi: `${(sto.hsi_service_penetration || 0).toFixed(1)}%`,   // ADDED
+            tingkat_keberhasilan: `${(sto.hsi_success_rate || 0).toFixed(1)}%`,
             rata_rata_instalasi: `${(sto.avg_install_days || 0).toFixed(1)} hari`,
-            rata_rata_bandwidth: `${Math.round(sto.avg_bandwidth || 0)} Kbps`
+            rata_rata_bandwidth: `${Math.round(sto.avg_bandwidth || 0)} Mbps`
           },
           
           efisiensi_customer_service: {  // ADDED
@@ -549,16 +564,16 @@ module.exports = {
           
           breakdown_produk: {
             hsi_bisnis: {
-              order: sto.hsi_bisnis_orders.toLocaleString('id-ID'),
-              customer: sto.hsi_bisnis_customers.toLocaleString('id-ID'),  // ADDED
-              layanan: sto.hsi_bisnis_services.toLocaleString('id-ID'),   // ADDED
-              penetrasi: `${sto.hsi_bisnis_penetration.toFixed(1)}%`
+              order: (sto.hsi_bisnis_orders || 0).toLocaleString('id-ID'),
+              customer: (sto.hsi_bisnis_customers || 0).toLocaleString('id-ID'),  // ADDED
+              layanan: (sto.hsi_bisnis_services || 0).toLocaleString('id-ID'),   // ADDED
+              penetrasi: `${(sto.hsi_bisnis_penetration || 0).toFixed(1)}%`
             },
             hsi_basic: {
-              order: sto.hsi_basic_orders.toLocaleString('id-ID'),
-              customer: sto.hsi_basic_customers.toLocaleString('id-ID'),   // ADDED
-              layanan: sto.hsi_basic_services.toLocaleString('id-ID'),    // ADDED
-              penetrasi: `${sto.hsi_basic_penetration.toFixed(1)}%`
+              order: (sto.hsi_basic_orders || 0).toLocaleString('id-ID'),
+              customer: (sto.hsi_basic_customers || 0).toLocaleString('id-ID'),   // ADDED
+              layanan: (sto.hsi_basic_services || 0).toLocaleString('id-ID'),    // ADDED
+              penetrasi: `${(sto.hsi_basic_penetration || 0).toFixed(1)}%`
             }
           },
           
@@ -698,11 +713,11 @@ module.exports = {
       const top_quartile = data.sort((a, b) => b.skor_efisiensi - a.skor_efisiensi).slice(0, Math.ceil(data.length * 0.25));
       
       return {
-        penetrasi_order_benchmark: `${(top_quartile.reduce((sum, d) => sum + d.hsi_order_penetration, 0) / top_quartile.length).toFixed(1)}%`,
-        penetrasi_customer_benchmark: `${(top_quartile.reduce((sum, d) => sum + d.hsi_customer_penetration, 0) / top_quartile.length).toFixed(1)}%`,
-        success_rate_benchmark: `${(top_quartile.reduce((sum, d) => sum + d.hsi_success_rate, 0) / top_quartile.length).toFixed(1)}%`,
-        efisiensi_layanan_benchmark: `${(top_quartile.reduce((sum, d) => sum + d.avg_orders_per_service, 0) / top_quartile.length).toFixed(2)} order/layanan`,
-        layanan_per_customer_benchmark: `${(top_quartile.reduce((sum, d) => sum + d.avg_services_per_customer, 0) / top_quartile.length).toFixed(2)} layanan/customer`,
+        penetrasi_order_benchmark: `${(top_quartile.reduce((sum, d) => sum + (d.hsi_order_penetration || 0), 0) / top_quartile.length).toFixed(1)}%`,
+        penetrasi_customer_benchmark: `${(top_quartile.reduce((sum, d) => sum + (d.hsi_customer_penetration || 0), 0) / top_quartile.length).toFixed(1)}%`,
+        success_rate_benchmark: `${(top_quartile.reduce((sum, d) => sum + (d.hsi_success_rate || 0), 0) / top_quartile.length).toFixed(1)}%`,
+        efisiensi_layanan_benchmark: `${(top_quartile.reduce((sum, d) => sum + (d.avg_orders_per_service || 0), 0) / top_quartile.length).toFixed(2)} order/layanan`,
+        layanan_per_customer_benchmark: `${(top_quartile.reduce((sum, d) => sum + (d.avg_services_per_customer || 0), 0) / top_quartile.length).toFixed(2)} layanan/customer`,
         install_time_benchmark: `${(top_quartile.reduce((sum, d) => sum + (d.avg_install_days || 0), 0) / top_quartile.length).toFixed(1)} hari`
       };
     },

@@ -57184,5 +57184,44 @@
     },
     "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_order_hsi_reg1_aceh.pth",
     "trained_at": "2026-06-08 14:39:23"
+  },
+  {
+    "status": "success",
+    "model_type": "gru",
+    "metric": "order_hsi",
+    "regional": "REG-1",
+    "witel": "ACEH",
+    "data_points": 43,
+    "window_size": 12,
+    "n_test": 6,
+    "auto_tuned": true,
+    "epochs_run": 39,
+    "eval_method": "walk-forward",
+    "last_period": "2026-05",
+    "last_actual": 599.0,
+    "forecast_period": "2026-06",
+    "prediction": 572.25,
+    "change_pct": -4.47,
+    "val_metrics": {
+      "mae": 144.2758,
+      "rmse": 168.7913,
+      "mape": 22.9245,
+      "smape": 25.3733,
+      "mase": 0.8498,
+      "skill_score": 0.1048,
+      "kpi": {
+        "mase_ok": true,
+        "smape_short_ok": true,
+        "skill_ok": true
+      }
+    },
+    "is_best": false,
+    "benchmark": {
+      "prev_smape": 22.1307,
+      "prev_skill_score": 0.3542,
+      "prev_trained_at": "2026-05-01 22:54:49"
+    },
+    "model_path": "/Users/thalitazhr/Documents/Thalita's Academics/STI ITB/Semester 7/KP/BrightAIProject-Final/ml-service/saved_models/gru_order_hsi_reg1_aceh.pth",
+    "trained_at": "2026-06-14 12:09:01"
   }
 ]

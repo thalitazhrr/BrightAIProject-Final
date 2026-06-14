@@ -89,8 +89,7 @@ module.exports = {
             t.PRODUCT,
             t.BW,
             t.EKOSISTEM,
-            t.PROVIDER,
-            t.CHANNEL,
+
             -- HSI Bisnis Classification
             CASE 
                 WHEN UPPER(PRODUCT) = 'WMS' THEN 0
@@ -196,8 +195,8 @@ module.exports = {
                 ELSE 'LAINNYA'
             END as TRANSACTION_TYPE,
 
-            -- Ecosystem Standardization (EKOSISTEM)
-            CASE 
+            -- Ecosystem Standardization (from EKOSISTEM)
+            CASE
                 WHEN UPPER(NVL(EKOSISTEM, 'LAINNYA')) IN ('EDUCATION', 'SEKOLAH', 'PESANTREN') THEN 'PENDIDIKAN'
                 WHEN UPPER(NVL(EKOSISTEM, 'LAINNYA')) IN ('GOVERNMENT', 'GOV') THEN 'PEMERINTAHAN'
                 WHEN UPPER(NVL(EKOSISTEM, 'LAINNYA')) IN ('HEALTH', 'HEALTY', 'KLINIK') THEN 'KESEHATAN'
@@ -214,13 +213,21 @@ module.exports = {
                 ELSE 'LAINNYA'
             END as ECOSYSTEM_STANDARDIZED,
             
-            -- Clean channel name
-            UPPER(TRIM(COALESCE(CHANNEL, 'TIDAK_DIKETAHUI'))) as CLEAN_CHANNEL_NAME
-            
-        FROM DWH_MOIS.BRIGHTAI_SALES
-        WHERE ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD') -- Data mulai dari 1 Januari 2025
-          AND CHANNEL IS NOT NULL 
-          AND TRIM(CHANNEL) != ''
+            -- Derive channel from JENISPSB (no CHANNEL column in table)
+            CASE
+                WHEN UPPER(TRIM(JENISPSB)) = 'AO' THEN 'AKUISISI_ORDER'
+                WHEN UPPER(TRIM(JENISPSB)) = 'MO' THEN 'MODIFY_ORDER'
+                WHEN UPPER(TRIM(JENISPSB)) = 'AS' THEN 'ADD_SERVICE'
+                WHEN UPPER(TRIM(JENISPSB)) = 'DO' THEN 'DISCONNECT_ORDER'
+                WHEN UPPER(TRIM(JENISPSB)) = 'SO' THEN 'SUSPEND_ORDER'
+                WHEN UPPER(TRIM(JENISPSB)) = 'RO' THEN 'RESUME_ORDER'
+                WHEN JENISPSB IS NOT NULL THEN UPPER(TRIM(JENISPSB))
+                ELSE 'TIDAK_DIKETAHUI'
+            END as CLEAN_CHANNEL_NAME
+
+        FROM DWH_MOIS.BRIGHTAI_SALES t
+        WHERE ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD')
+          AND JENISPSB IS NOT NULL
     ),
     
     CHANNEL_METRICS AS (
@@ -307,7 +314,7 @@ module.exports = {
             
         FROM HSI_CLASSIFICATION t
         GROUP BY CLEAN_CHANNEL_NAME
-        HAVING COUNT(*) >= 10 -- Minimum volume for analysis
+        -- HAVING COUNT(*) >= 10 -- Di-comment agar data dummy yang sedikit tetap muncul
     ),
     
     CHANNEL_PERFORMANCE AS (
@@ -349,11 +356,12 @@ module.exports = {
             
             -- Effectiveness score calculation
             ROUND(
-                (HSI_CONVERSION_RATE * 0.35) + 
-                (HSI_SUCCESS_RATE * 0.25) + 
-                (BUNDLING_RATE * 0.20) +
-                (DIGITAL_PENETRATION_RATE * 0.10) +
-                (CASE WHEN AVG_HSI_FULFILLMENT_TIME <= 7 THEN 10 
+                (NVL(HSI_CONVERSION_RATE, 0) * 0.35) + 
+                (NVL(HSI_SUCCESS_RATE, 0) * 0.25) + 
+                (NVL(BUNDLING_RATE, 0) * 0.20) +
+                (NVL(DIGITAL_PENETRATION_RATE, 0) * 0.10) +
+                (CASE WHEN AVG_HSI_FULFILLMENT_TIME IS NULL THEN 0
+                      WHEN AVG_HSI_FULFILLMENT_TIME <= 7 THEN 10 
                       ELSE GREATEST(0, 10 - (AVG_HSI_FULFILLMENT_TIME - 7)) END)
             , 2) as EFFECTIVENESS_SCORE,
             
@@ -369,7 +377,15 @@ module.exports = {
             -- Rankings
             RANK() OVER (ORDER BY HSI_ORDERS DESC) as RANKING_VOLUME,
             RANK() OVER (ORDER BY HSI_CONVERSION_RATE DESC) as RANKING_KONVERSI,
-            RANK() OVER (ORDER BY EFFECTIVENESS_SCORE DESC) as RANKING_EFEKTIVITAS,
+            RANK() OVER (ORDER BY ROUND(
+                (NVL(HSI_CONVERSION_RATE, 0) * 0.35) +
+                (NVL(HSI_SUCCESS_RATE, 0) * 0.25) +
+                (NVL(BUNDLING_RATE, 0) * 0.20) +
+                (NVL(DIGITAL_PENETRATION_RATE, 0) * 0.10) +
+                (CASE WHEN AVG_HSI_FULFILLMENT_TIME IS NULL THEN 0
+                      WHEN AVG_HSI_FULFILLMENT_TIME <= 7 THEN 10
+                      ELSE GREATEST(0, 10 - (AVG_HSI_FULFILLMENT_TIME - 7)) END)
+            , 2) DESC NULLS LAST) as RANKING_EFEKTIVITAS,
             RANK() OVER (ORDER BY BUNDLING_RATE DESC) as RANKING_BUNDLING
             
         FROM CHANNEL_METRICS t
@@ -416,7 +432,7 @@ module.exports = {
         RANKING_EFEKTIVITAS,
         RANKING_BUNDLING
     FROM CHANNEL_PERFORMANCE
-    ORDER BY EFFECTIVENESS_SCORE DESC, HSI_ORDERS DESC
+    ORDER BY EFFECTIVENESS_SCORE DESC NULLS LAST, HSI_ORDERS DESC
   `,
 
   BUSINESS_LOGIC: {
@@ -570,20 +586,20 @@ module.exports = {
       const avg_conversion = data.reduce((sum, d) => sum + d.CONVERSION_RATE_PCT, 0) / data.length;
       const avg_bundling = data.reduce((sum, d) => sum + d.BUNDLING_RATE_PCT, 0) / data.length;
       
-      analysis.insights.push(`Rata-rata tingkat konversi HSI across channels tahun 2025 adalah ${avg_conversion.toFixed(1)}%`);
-      analysis.insights.push(`Rata-rata tingkat bundling dalam 2025 adalah ${avg_bundling.toFixed(1)}%`);
+      analysis.insights.push({ kategori: 'Tingkat Konversi', nilai: `Rata-rata tingkat konversi HSI across channels tahun 2025 adalah ${(avg_conversion || 0).toFixed(1)}%` });
+      analysis.insights.push({ kategori: 'Tingkat Bundling', nilai: `Rata-rata tingkat bundling dalam 2025 adalah ${(avg_bundling || 0).toFixed(1)}%` });
       
       const strategic_channels = data.filter(d => d.KATEGORI_CHANNEL === 'CHANNEL_STRATEGIS');
       if (strategic_channels.length > 0) {
         const strategic_share = strategic_channels.reduce((sum, d) => sum + d.MARKET_SHARE_PCT, 0);
-        analysis.insights.push(`Channel strategis menguasai ${strategic_share.toFixed(1)}% pangsa pasar HSI dalam 2025`);
+        analysis.insights.push({ kategori: 'Pangsa Pasar Strategis', nilai: `Channel strategis menguasai ${(strategic_share || 0).toFixed(1)}% pangsa pasar HSI dalam 2025` });
       }
 
       // Transaction type insights
       const avg_new_sales = data.reduce((sum, d) => sum + d.NEW_SALES_CONVERSION_PCT, 0) / data.length;
       const avg_add_service = data.reduce((sum, d) => sum + d.ADD_SERVICE_CONVERSION_PCT, 0) / data.length;
       if (avg_add_service > avg_new_sales) {
-        analysis.insights.push(`Channel lebih efektif untuk ekspansi layanan (${avg_add_service.toFixed(1)}%) dibanding akuisisi baru (${avg_new_sales.toFixed(1)}%) dalam YTD 2025`);
+        analysis.insights.push({ kategori: 'Efektivitas Transaksi', nilai: `Channel lebih efektif untuk ekspansi layanan (${(avg_add_service || 0).toFixed(1)}%) dibanding akuisisi baru (${(avg_new_sales || 0).toFixed(1)}%) dalam YTD 2025` });
       }
       
       return analysis;
@@ -624,10 +640,10 @@ module.exports = {
             pangsa_pasar: `${channel.MARKET_SHARE_PCT}%`
           },
           metrik_volume: {
-            total_order_hsi: channel.HSI_ORDERS.toLocaleString('id-ID'),
-            order_hsi_bisnis: channel.HSI_BISNIS_ORDERS.toLocaleString('id-ID'),
-            order_hsi_basic: channel.HSI_BASIC_ORDERS.toLocaleString('id-ID'),
-            total_order_semua: channel.TOTAL_ORDERS.toLocaleString('id-ID'),
+            total_order_hsi: (channel.HSI_ORDERS || 0).toLocaleString('id-ID'),
+            order_hsi_bisnis: (channel.HSI_BISNIS_ORDERS || 0).toLocaleString('id-ID'),
+            order_hsi_basic: (channel.HSI_BASIC_ORDERS || 0).toLocaleString('id-ID'),
+            total_order_semua: (channel.TOTAL_ORDERS || 0).toLocaleString('id-ID'),
             ranking_volume: channel.RANKING_VOLUME
           },
           analisis_konversi: {
@@ -638,30 +654,30 @@ module.exports = {
             ranking_konversi: channel.RANKING_KONVERSI
           },
           performa_bundling: {
-            order_hard_bundling: channel.HARD_BUNDLING_ORDERS.toLocaleString('id-ID'),
-            order_bundling_total: channel.TOTAL_BUNDLING_ORDERS.toLocaleString('id-ID'),
+            order_hard_bundling: (channel.HARD_BUNDLING_ORDERS || 0).toLocaleString('id-ID'),
+            order_bundling_total: (channel.TOTAL_BUNDLING_ORDERS || 0).toLocaleString('id-ID'),
             tingkat_bundling: `${channel.BUNDLING_RATE_PCT}%`,
             ranking_bundling: channel.RANKING_BUNDLING
           },
           penetrasi_digital: {
-            order_produk_digital: channel.DIGITAL_PRODUCT_ORDERS.toLocaleString('id-ID'),
+            order_produk_digital: (channel.DIGITAL_PRODUCT_ORDERS || 0).toLocaleString('id-ID'),
             tingkat_penetrasi_digital: `${channel.DIGITAL_PENETRATION_PCT}%`,
             fokus_premium: `${channel.PREMIUM_FOCUS_PCT}%`
           },
           analisis_jenis_transaksi: {
-            order_penjualan_baru: channel.NEW_SALES_ORDERS.toLocaleString('id-ID'),
-            order_tambah_layanan: channel.ADD_SERVICE_ORDERS.toLocaleString('id-ID'),
-            order_modifikasi: channel.MODIFICATION_ORDERS.toLocaleString('id-ID'),
+            order_penjualan_baru: (channel.NEW_SALES_ORDERS || 0).toLocaleString('id-ID'),
+            order_tambah_layanan: (channel.ADD_SERVICE_ORDERS || 0).toLocaleString('id-ID'),
+            order_modifikasi: (channel.MODIFICATION_ORDERS || 0).toLocaleString('id-ID'),
             konversi_penjualan_baru: `${channel.NEW_SALES_CONVERSION_PCT}%`,
             konversi_tambah_layanan: `${channel.ADD_SERVICE_CONVERSION_PCT}%`,
             konversi_modifikasi: `${channel.MODIFICATION_CONVERSION_PCT}%`
           },
           analisis_ekosistem: {
-            order_pemerintahan: channel.GOVERNMENT_ORDERS.toLocaleString('id-ID'),
-            order_pendidikan: channel.EDUCATION_ORDERS.toLocaleString('id-ID'),
-            order_kesehatan: channel.HEALTHCARE_ORDERS.toLocaleString('id-ID'),
-            order_individual: channel.INDIVIDUAL_ORDERS.toLocaleString('id-ID'),
-            order_keuangan: channel.FINANCIAL_ORDERS.toLocaleString('id-ID'),
+            order_pemerintahan: (channel.GOVERNMENT_ORDERS || 0).toLocaleString('id-ID'),
+            order_pendidikan: (channel.EDUCATION_ORDERS || 0).toLocaleString('id-ID'),
+            order_kesehatan: (channel.HEALTHCARE_ORDERS || 0).toLocaleString('id-ID'),
+            order_individual: (channel.INDIVIDUAL_ORDERS || 0).toLocaleString('id-ID'),
+            order_keuangan: (channel.FINANCIAL_ORDERS || 0).toLocaleString('id-ID'),
             konversi_pemerintahan: `${channel.GOVERNMENT_HSI_CONVERSION_PCT}%`,
             konversi_pendidikan: `${channel.EDUCATION_HSI_CONVERSION_PCT}%`,
             konversi_individual: `${channel.INDIVIDUAL_HSI_CONVERSION_PCT}%`
@@ -690,7 +706,7 @@ module.exports = {
         ringkasan: 'Analisis performa channel dalam akuisisi HSI dengan klasifikasi produk lengkap',
         periode_analisis: landscape.periode_analisis,
         total_channel_aktif: landscape.total_channels,
-        total_order_hsi: landscape.total_hsi_orders.toLocaleString('id-ID'),
+        total_order_hsi: (landscape.total_hsi_orders || 0).toLocaleString('id-ID'),
         distribusi_kategori_channel: landscape.channel_distribution,
         top_5_performers: landscape.top_performers,
         insight_utama: landscape.insights,
@@ -708,13 +724,13 @@ module.exports = {
         },
         detail_channel: hasil_analisis,
         rekomendasi_strategis: [
-          'Prioritaskan investasi pada channel dengan ROI tinggi dan potensi scale-up untuk Q4 2025',
-          'Implementasi praktik terbaik dari channel strategis ke channel berkembang',
-          'Fokus pada optimasi tingkat konversi di semua level channel untuk closing kuat 2025',
-          'Tingkatkan bundling dan penetrasi digital untuk maksimalkan ARPU per channel di sisa 2025',
-          'Kembangkan program pelatihan komprehensif untuk peningkatan kapabilitas channel',
-          'Deploy resource channel berdasarkan spesialisasi jenis transaksi untuk efisiensi maksimal',
-          'Optimalkan kesesuaian channel-ekosistem untuk efisiensi penetrasi pasar yang maksimal dalam 2025'
+          { area: 'Fokus Investasi', rekomendasi: 'Prioritaskan investasi pada channel dengan ROI tinggi dan potensi scale-up untuk Q4 2025' },
+          { area: 'Praktik Terbaik', rekomendasi: 'Implementasi praktik terbaik dari channel strategis ke channel berkembang' },
+          { area: 'Optimasi Konversi', rekomendasi: 'Fokus pada optimasi tingkat konversi di semua level channel untuk closing kuat 2025' },
+          { area: 'Peningkatan ARPU', rekomendasi: 'Tingkatkan bundling dan penetrasi digital untuk maksimalkan ARPU per channel di sisa 2025' },
+          { area: 'Kapabilitas Channel', rekomendasi: 'Kembangkan program pelatihan komprehensif untuk peningkatan kapabilitas channel' },
+          { area: 'Alokasi Resource', rekomendasi: 'Deploy resource channel berdasarkan spesialisasi jenis transaksi untuk efisiensi maksimal' },
+          { area: 'Penetrasi Pasar', rekomendasi: 'Optimalkan kesesuaian channel-ekosistem untuk efisiensi penetrasi pasar yang maksimal dalam 2025' }
         ]
       };
     }

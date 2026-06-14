@@ -369,21 +369,21 @@ module.exports = {
         periode: `${bulan_nama} ${latest.tahun}`,
         
         ringkasan_utama: {
-          total_order_hsi: latest.total_order_hsi.toLocaleString('id-ID'),
+          total_order_hsi: (latest.total_order_hsi || 0).toLocaleString('id-ID'),
           deskripsi: `Total order HSI (Bisnis + Basic) pada ${bulan_nama} ${latest.tahun}`,
           kategori_volume: this.translateVolumeCategory(volume_category)
         },
         
         breakdown_produk: {
           hsi_bisnis: {
-            jumlah_order: latest.order_hsi_bisnis.toLocaleString('id-ID'),
-            jumlah_pelanggan: latest.unique_bisnis_customers.toLocaleString('id-ID'),
-            persentase: `${latest.pct_hsi_bisnis}%`
+            jumlah_order: (latest.order_hsi_bisnis || 0).toLocaleString('id-ID'),
+            jumlah_pelanggan: (latest.unique_bisnis_customers || 0).toLocaleString('id-ID'),
+            persentase: `${latest.pct_hsi_bisnis || 0}%`
           },
           hsi_basic: {
-            jumlah_order: latest.order_hsi_basic.toLocaleString('id-ID'),
-            jumlah_pelanggan: latest.unique_basic_customers.toLocaleString('id-ID'),
-            persentase: `${latest.pct_hsi_basic}%`
+            jumlah_order: (latest.order_hsi_basic || 0).toLocaleString('id-ID'),
+            jumlah_pelanggan: (latest.unique_basic_customers || 0).toLocaleString('id-ID'),
+            persentase: `${latest.pct_hsi_basic || 0}%`
           }
         },
         
@@ -392,11 +392,11 @@ module.exports = {
             persentase: latest.mom_growth !== null ? `${latest.mom_growth}%` : 'N/A',
             kategori: this.translateGrowthCategory(growth_category),
             selisih_order: latest.prev_month_order !== null ? 
-              (latest.total_order_hsi - latest.prev_month_order).toLocaleString('id-ID') : 'N/A'
+              ((latest.total_order_hsi || 0) - (latest.prev_month_order || 0)).toLocaleString('id-ID') : 'N/A'
           },
           tahunan: hasValidYoY ? {
-            persentase: `${latest.yoy_growth}%`,
-            selisih_order: (latest.total_order_hsi - latest.prev_year_order).toLocaleString('id-ID')
+            persentase: `${latest.yoy_growth || 0}%`,
+            selisih_order: ((latest.total_order_hsi || 0) - (latest.prev_year_order || 0)).toLocaleString('id-ID')
           } : {
             persentase: 'Belum tersedia',
             selisih_order: 'Data belum cukup untuk YoY'
@@ -405,25 +405,25 @@ module.exports = {
         
         analisis_bundling: {
           total_bundling: {
-            jumlah: latest.total_bundling.toLocaleString('id-ID'),
-            persentase: `${latest.bundling_rate}%`
+            jumlah: (latest.total_bundling || 0).toLocaleString('id-ID'),
+            persentase: `${latest.bundling_rate || 0}%`
           },
-          hard_bundling: latest.hard_bundling.toLocaleString('id-ID'),
-          ala_carte_bundling: latest.ala_carte_bundling.toLocaleString('id-ID'),
+          hard_bundling: (latest.hard_bundling || 0).toLocaleString('id-ID'),
+          ala_carte_bundling: (latest.ala_carte_bundling || 0).toLocaleString('id-ID'),
           digital_bundling: {
-            total: latest.any_digital_bundling.toLocaleString('id-ID'),
-            persentase: `${latest.digital_bundling_rate}%`,
+            total: (latest.any_digital_bundling || 0).toLocaleString('id-ID'),
+            persentase: `${latest.digital_bundling_rate || 0}%`,
             breakdown: {
-              pijar_sekolah: latest.bundling_pijar.toLocaleString('id-ID'),
-              netmonk: latest.bundling_netmonk.toLocaleString('id-ID'),
-              oca_interaction: latest.bundling_oca_int.toLocaleString('id-ID'),
-              oca_blast: latest.bundling_oca_blast.toLocaleString('id-ID')
+              pijar_sekolah: (latest.bundling_pijar || 0).toLocaleString('id-ID'),
+              netmonk: (latest.bundling_netmonk || 0).toLocaleString('id-ID'),
+              oca_interaction: (latest.bundling_oca_int || 0).toLocaleString('id-ID'),
+              oca_blast: (latest.bundling_oca_blast || 0).toLocaleString('id-ID')
             }
           }
         },
         
         metrik_pelanggan: {
-          total_pelanggan_unik: latest.unique_customers.toLocaleString('id-ID'),
+          total_pelanggan_unik: (latest.unique_customers || 0).toLocaleString('id-ID'),
           rata_rata_order_per_pelanggan: latest.avg_orders_per_customer
         },
         

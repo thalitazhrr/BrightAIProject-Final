@@ -61,60 +61,54 @@ module.exports = {
     WITH CUSTOMER_GEOGRAPHIC_FOOTPRINT AS (
         SELECT 
             NIP_NAS,
-            NCLI,
+            NIP_NAS,
             COUNT(DISTINCT REGIONAL_BILL) as REGIONAL_COUNT,
             COUNT(DISTINCT WITEL_BILL) as WITEL_COUNT,
-            COUNT(DISTINCT DATEL) as DATEL_COUNT,
-            COUNT(DISTINCT CSTO) as STO_COUNT,
-            COUNT(DISTINCT ND) as TOTAL_SERVICES,
+            COUNT(DISTINCT WITEL_BILL) as DATEL_COUNT,
+            COUNT(DISTINCT WITEL_BILL) as STO_COUNT,
+            COUNT(DISTINCT NIP_NAS) as TOTAL_SERVICES,
             SUM(REVENUE) as TOTAL_CUSTOMER_REVENUE,
             
             -- Geographic presence classification
             CASE 
                 WHEN COUNT(DISTINCT REGIONAL_BILL) > 1 THEN 'MULTI_REGIONAL_CUSTOMER'
                 WHEN COUNT(DISTINCT WITEL_BILL) > 1 THEN 'MULTI_WITEL_CUSTOMER'
-                WHEN COUNT(DISTINCT DATEL) > 1 THEN 'MULTI_DATEL_CUSTOMER'
-                WHEN COUNT(DISTINCT CSTO) > 1 THEN 'MULTI_STO_CUSTOMER'
+                WHEN COUNT(DISTINCT WITEL_BILL) > 1 THEN 'MULTI_DATEL_CUSTOMER'
+                WHEN COUNT(DISTINCT WITEL_BILL) > 1 THEN 'MULTI_STO_CUSTOMER'
                 ELSE 'SINGLE_LOCATION_CUSTOMER'
             END as GEOGRAPHIC_PRESENCE_TYPE,
             
             -- Collect geographic details
             LISTAGG(DISTINCT REGIONAL_BILL, ',') WITHIN GROUP (ORDER BY REGIONAL_BILL) as REGIONAL_LIST,
             LISTAGG(DISTINCT WITEL_BILL, ',') WITHIN GROUP (ORDER BY WITEL_BILL) as WITEL_LIST,
-            LISTAGG(DISTINCT DATEL, ',') WITHIN GROUP (ORDER BY DATEL) as DATEL_LIST,
-            LISTAGG(DISTINCT CSTO, ',') WITHIN GROUP (ORDER BY CSTO) as STO_LIST
+            LISTAGG(DISTINCT WITEL_BILL, ',') WITHIN GROUP (ORDER BY WITEL_BILL) as DATEL_LIST,
+            LISTAGG(DISTINCT WITEL_BILL, ',') WITHIN GROUP (ORDER BY WITEL_BILL) as STO_LIST
             
-        FROM DWH_MOIS.BRIGHTAI_REVENUE
+        FROM PMSDBS.BRIGHTAI_REVENUE
         WHERE GROUP4 = 'High Speed Internet'
           AND REVENUE > 0
           AND REGIONAL_BILL IS NOT NULL
           AND WITEL_BILL IS NOT NULL
-          AND DATEL IS NOT NULL
-          AND CSTO IS NOT NULL
           AND NIP_NAS IS NOT NULL
-          AND NCLI IS NOT NULL
-          AND ND IS NOT NULL
-        GROUP BY NIP_NAS, NCLI
+        GROUP BY NIP_NAS, NIP_NAS
     ),
     
     GEOGRAPHIC_REVENUE_MATRIX AS (
         SELECT 
             p.REGIONAL_BILL,
             p.WITEL_BILL,
-            p.DATEL,
-            p.CSTO,
             cgf.GEOGRAPHIC_PRESENCE_TYPE,
             
             -- Customer and service metrics
             COUNT(DISTINCT p.NIP_NAS) as TOTAL_CUSTOMERS,
-            COUNT(DISTINCT p.NCLI) as TOTAL_NCLI,
-            COUNT(DISTINCT p.ND) as TOTAL_SERVICES,
+            COUNT(DISTINCT p.NIP_NAS) as TOTAL_NCLI,
+            COUNT(DISTINCT p.NIP_NAS) as TOTAL_SERVICES,
             
             -- Revenue metrics
             SUM(p.REVENUE) as TOTAL_REVENUE,
             ROUND(AVG(p.REVENUE), 0) as AVG_REVENUE_PER_SERVICE,
             ROUND(SUM(p.REVENUE) / NULLIF(COUNT(DISTINCT p.NIP_NAS), 0), 0) as REVENUE_PER_CUSTOMER,
-            ROUND(SUM(p.REVENUE) / NULLIF(COUNT(DISTINCT p.NCLI), 0), 0) as REVENUE_PER_NCLI,
+            ROUND(SUM(p.REVENUE) / NULLIF(COUNT(DISTINCT p.NIP_NAS), 0), 0) as REVENUE_PER_NCLI,
             
             -- Multi-location customer metrics
             COUNT(DISTINCT CASE WHEN cgf.GEOGRAPHIC_PRESENCE_TYPE = 'MULTI_REGIONAL_CUSTOMER' THEN p.NIP_NAS END) as MULTI_REGIONAL_CUSTOMERS,
@@ -145,18 +139,16 @@ module.exports = {
             
             ROUND((SUM(CASE WHEN cgf.GEOGRAPHIC_PRESENCE_TYPE != 'SINGLE_LOCATION_CUSTOMER' THEN p.REVENUE ELSE 0 END) * 100.0) / NULLIF(SUM(p.REVENUE), 0), 2) as MULTI_LOCATION_REVENUE_SHARE
             
-        FROM DWH_MOIS.BRIGHTAI_REVENUE p
-        JOIN CUSTOMER_GEOGRAPHIC_FOOTPRINT cgf ON p.NIP_NAS = cgf.NIP_NAS AND p.NCLI = cgf.NCLI
+        FROM PMSDBS.BRIGHTAI_REVENUE p
+        JOIN CUSTOMER_GEOGRAPHIC_FOOTPRINT cgf ON p.NIP_NAS = cgf.NIP_NAS AND p.NIP_NAS = cgf.NIP_NAS
         WHERE p.GROUP4 = 'High Speed Internet'
           AND p.REVENUE > 0
-        GROUP BY p.REGIONAL_BILL, p.WITEL_BILL, p.DATEL, p.CSTO, cgf.GEOGRAPHIC_PRESENCE_TYPE
+        GROUP BY p.REGIONAL_BILL, p.WITEL_BILL, cgf.GEOGRAPHIC_PRESENCE_TYPE
     )
     
     SELECT 
         REGIONAL_BILL,
         WITEL_BILL,
-        DATEL,
-        CSTO,
         GEOGRAPHIC_PRESENCE_TYPE,
         TOTAL_CUSTOMERS,
         TOTAL_NCLI,
@@ -245,48 +237,48 @@ module.exports = {
         periode_analisis: 'Data cross-geographic customer analysis',
         
         metrik_nasional: {
-          total_revenue: `Rp ${totalRevenue.toLocaleString('id-ID')}`,
-          total_pelanggan: totalCustomers.toLocaleString('id-ID'),
-          total_ncli: totalNCLI.toLocaleString('id-ID'),
-          total_layanan: totalServices.toLocaleString('id-ID'),
-          total_lokasi_analyzed: data.length.toLocaleString('id-ID')
+          total_revenue: `Rp ${(totalRevenue || 0).toLocaleString('id-ID')}`,
+          total_pelanggan: (totalCustomers || 0).toLocaleString('id-ID'),
+          total_ncli: (totalNCLI || 0).toLocaleString('id-ID'),
+          total_layanan: (totalServices || 0).toLocaleString('id-ID'),
+          total_lokasi_analyzed: (data.length || 0).toLocaleString('id-ID')
         },
         
         distribusi_multi_location_customers: {
           multi_regional: {
-            jumlah_pelanggan: totalMultiRegional.toLocaleString('id-ID'),
-            persentase_dari_total: `${((totalMultiRegional / totalCustomers) * 100).toFixed(2)}%`,
-            total_revenue: `Rp ${totalMultiRegionalRevenue.toLocaleString('id-ID')}`,
-            kontribusi_revenue: `${((totalMultiRegionalRevenue / totalRevenue) * 100).toFixed(2)}%`,
-            rata_revenue_per_pelanggan: totalMultiRegional > 0 ? `Rp ${Math.round(totalMultiRegionalRevenue / totalMultiRegional).toLocaleString('id-ID')}` : 'N/A'
+            jumlah_pelanggan: (totalMultiRegional || 0).toLocaleString('id-ID'),
+            persentase_dari_total: `${((totalMultiRegional / (totalCustomers || 1)) * 100).toFixed(2)}%`,
+            total_revenue: `Rp ${(totalMultiRegionalRevenue || 0).toLocaleString('id-ID')}`,
+            kontribusi_revenue: `${((totalMultiRegionalRevenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
+            rata_revenue_per_pelanggan: totalMultiRegional > 0 ? `Rp ${Math.round(totalMultiRegionalRevenue / (totalMultiRegional || 1)).toLocaleString('id-ID')}` : 'N/A'
           },
           multi_witel: {
-            jumlah_pelanggan: totalMultiWitel.toLocaleString('id-ID'),
-            persentase_dari_total: `${((totalMultiWitel / totalCustomers) * 100).toFixed(2)}%`,
-            total_revenue: `Rp ${totalMultiWitelRevenue.toLocaleString('id-ID')}`,
-            kontribusi_revenue: `${((totalMultiWitelRevenue / totalRevenue) * 100).toFixed(2)}%`,
-            rata_revenue_per_pelanggan: totalMultiWitel > 0 ? `Rp ${Math.round(totalMultiWitelRevenue / totalMultiWitel).toLocaleString('id-ID')}` : 'N/A'
+            jumlah_pelanggan: (totalMultiWitel || 0).toLocaleString('id-ID'),
+            persentase_dari_total: `${((totalMultiWitel / (totalCustomers || 1)) * 100).toFixed(2)}%`,
+            total_revenue: `Rp ${(totalMultiWitelRevenue || 0).toLocaleString('id-ID')}`,
+            kontribusi_revenue: `${((totalMultiWitelRevenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
+            rata_revenue_per_pelanggan: totalMultiWitel > 0 ? `Rp ${Math.round(totalMultiWitelRevenue / (totalMultiWitel || 1)).toLocaleString('id-ID')}` : 'N/A'
           },
           multi_datel: {
-            jumlah_pelanggan: totalMultiDatel.toLocaleString('id-ID'),
-            persentase_dari_total: `${((totalMultiDatel / totalCustomers) * 100).toFixed(2)}%`,
-            total_revenue: `Rp ${totalMultiDatelRevenue.toLocaleString('id-ID')}`,
-            kontribusi_revenue: `${((totalMultiDatelRevenue / totalRevenue) * 100).toFixed(2)}%`,
-            rata_revenue_per_pelanggan: totalMultiDatel > 0 ? `Rp ${Math.round(totalMultiDatelRevenue / totalMultiDatel).toLocaleString('id-ID')}` : 'N/A'
+            jumlah_pelanggan: (totalMultiDatel || 0).toLocaleString('id-ID'),
+            persentase_dari_total: `${((totalMultiDatel / (totalCustomers || 1)) * 100).toFixed(2)}%`,
+            total_revenue: `Rp ${(totalMultiDatelRevenue || 0).toLocaleString('id-ID')}`,
+            kontribusi_revenue: `${((totalMultiDatelRevenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
+            rata_revenue_per_pelanggan: totalMultiDatel > 0 ? `Rp ${Math.round(totalMultiDatelRevenue / (totalMultiDatel || 1)).toLocaleString('id-ID')}` : 'N/A'
           },
           multi_sto: {
-            jumlah_pelanggan: totalMultiSTO.toLocaleString('id-ID'),
-            persentase_dari_total: `${((totalMultiSTO / totalCustomers) * 100).toFixed(2)}%`,
-            total_revenue: `Rp ${totalMultiSTORevenue.toLocaleString('id-ID')}`,
-            kontribusi_revenue: `${((totalMultiSTORevenue / totalRevenue) * 100).toFixed(2)}%`,
-            rata_revenue_per_pelanggan: totalMultiSTO > 0 ? `Rp ${Math.round(totalMultiSTORevenue / totalMultiSTO).toLocaleString('id-ID')}` : 'N/A'
+            jumlah_pelanggan: (totalMultiSTO || 0).toLocaleString('id-ID'),
+            persentase_dari_total: `${((totalMultiSTO / (totalCustomers || 1)) * 100).toFixed(2)}%`,
+            total_revenue: `Rp ${(totalMultiSTORevenue || 0).toLocaleString('id-ID')}`,
+            kontribusi_revenue: `${((totalMultiSTORevenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
+            rata_revenue_per_pelanggan: totalMultiSTO > 0 ? `Rp ${Math.round(totalMultiSTORevenue / (totalMultiSTO || 1)).toLocaleString('id-ID')}` : 'N/A'
           },
           single_location: {
-            jumlah_pelanggan: totalSingleLocation.toLocaleString('id-ID'),
-            persentase_dari_total: `${((totalSingleLocation / totalCustomers) * 100).toFixed(2)}%`,
-            total_revenue: `Rp ${totalSingleLocationRevenue.toLocaleString('id-ID')}`,
-            kontribusi_revenue: `${((totalSingleLocationRevenue / totalRevenue) * 100).toFixed(2)}%`,
-            rata_revenue_per_pelanggan: totalSingleLocation > 0 ? `Rp ${Math.round(totalSingleLocationRevenue / totalSingleLocation).toLocaleString('id-ID')}` : 'N/A'
+            jumlah_pelanggan: (totalSingleLocation || 0).toLocaleString('id-ID'),
+            persentase_dari_total: `${((totalSingleLocation / (totalCustomers || 1)) * 100).toFixed(2)}%`,
+            total_revenue: `Rp ${(totalSingleLocationRevenue || 0).toLocaleString('id-ID')}`,
+            kontribusi_revenue: `${((totalSingleLocationRevenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
+            rata_revenue_per_pelanggan: totalSingleLocation > 0 ? `Rp ${Math.round(totalSingleLocationRevenue / (totalSingleLocation || 1)).toLocaleString('id-ID')}` : 'N/A'
           }
         },
         
@@ -295,9 +287,9 @@ module.exports = {
           .map(([level, stats]) => ({
             opportunity_level: level,
             jumlah_lokasi: stats.locations,
-            total_revenue: `Rp ${stats.revenue.toLocaleString('id-ID')}`,
-            total_pelanggan: stats.customers.toLocaleString('id-ID'),
-            kontribusi_revenue: `${((stats.revenue / totalRevenue) * 100).toFixed(2)}%`,
+            total_revenue: `Rp ${(stats.revenue || 0).toLocaleString('id-ID')}`,
+            total_pelanggan: (stats.customers || 0).toLocaleString('id-ID'),
+            kontribusi_revenue: `${((stats.revenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
             rata_revenue_per_lokasi: `Rp ${Math.round(stats.revenue / stats.locations).toLocaleString('id-ID')}`
           })),
         
@@ -307,19 +299,19 @@ module.exports = {
           .map(item => ({
             regional: item.REGIONAL_BILL,
             witel: item.WITEL_BILL,
-            datel: item.DATEL,
-            kode_sto: item.CSTO,
+            datel: item.WITEL_BILL,
+            kode_sto: item.WITEL_BILL,
             opportunity_level: item.EXPANSION_OPPORTUNITY_LEVEL,
-            total_revenue: `Rp ${item.TOTAL_REVENUE.toLocaleString('id-ID')}`,
-            total_pelanggan: item.TOTAL_CUSTOMERS.toLocaleString('id-ID'),
+            total_revenue: `Rp ${(item.TOTAL_REVENUE || 0).toLocaleString('id-ID')}`,
+            total_pelanggan: (item.TOTAL_CUSTOMERS || 0).toLocaleString('id-ID'),
             multi_location_penetration: `${item.MULTI_LOC_PENETRATION_RATE}%`,
             multi_location_revenue_share: `${item.MULTI_LOCATION_REVENUE_SHARE}%`,
-            multi_regional_customers: item.MULTI_REGIONAL_CUSTOMERS.toLocaleString('id-ID'),
-            multi_witel_customers: item.MULTI_WITEL_CUSTOMERS.toLocaleString('id-ID'),
-            multi_datel_customers: item.MULTI_DATEL_CUSTOMERS.toLocaleString('id-ID'),
-            multi_sto_customers: item.MULTI_STO_CUSTOMERS.toLocaleString('id-ID'),
-            high_value_multi_location: item.HIGH_VALUE_MULTI_LOCATION.toLocaleString('id-ID'),
-            medium_value_multi_location: item.MEDIUM_VALUE_MULTI_LOCATION.toLocaleString('id-ID'),
+            multi_regional_customers: (item.MULTI_REGIONAL_CUSTOMERS || 0).toLocaleString('id-ID'),
+            multi_witel_customers: (item.MULTI_WITEL_CUSTOMERS || 0).toLocaleString('id-ID'),
+            multi_datel_customers: (item.MULTI_DATEL_CUSTOMERS || 0).toLocaleString('id-ID'),
+            multi_sto_customers: (item.MULTI_STO_CUSTOMERS || 0).toLocaleString('id-ID'),
+            high_value_multi_location: (item.HIGH_VALUE_MULTI_LOCATION || 0).toLocaleString('id-ID'),
+            medium_value_multi_location: (item.MEDIUM_VALUE_MULTI_LOCATION || 0).toLocaleString('id-ID'),
             avg_regional_presence: item.AVG_REGIONAL_PRESENCE_PER_CUST,
             avg_witel_presence: item.AVG_WITEL_PRESENCE_PER_CUST,
             avg_datel_presence: item.AVG_DATEL_PRESENCE_PER_CUST,
@@ -331,23 +323,23 @@ module.exports = {
         detail_per_lokasi: data.slice(0, 20).map(item => ({
           regional: item.REGIONAL_BILL,
           witel: item.WITEL_BILL,
-          datel: item.DATEL,
-          kode_sto: item.CSTO,
+          datel: item.WITEL_BILL,
+          kode_sto: item.WITEL_BILL,
           geographic_presence_type: item.GEOGRAPHIC_PRESENCE_TYPE,
           expansion_opportunity: item.EXPANSION_OPPORTUNITY_LEVEL,
-          total_revenue: `Rp ${item.TOTAL_REVENUE.toLocaleString('id-ID')}`,
-          total_pelanggan: item.TOTAL_CUSTOMERS.toLocaleString('id-ID'),
-          total_ncli: item.TOTAL_NCLI.toLocaleString('id-ID'),
-          total_layanan: item.TOTAL_SERVICES.toLocaleString('id-ID'),
-          revenue_per_pelanggan: `Rp ${item.REVENUE_PER_CUSTOMER.toLocaleString('id-ID')}`,
-          revenue_per_ncli: `Rp ${item.REVENUE_PER_NCLI.toLocaleString('id-ID')}`,
+          total_revenue: `Rp ${(item.TOTAL_REVENUE || 0).toLocaleString('id-ID')}`,
+          total_pelanggan: (item.TOTAL_CUSTOMERS || 0).toLocaleString('id-ID'),
+          total_ncli: (item.TOTAL_NCLI || 0).toLocaleString('id-ID'),
+          total_layanan: (item.TOTAL_SERVICES || 0).toLocaleString('id-ID'),
+          revenue_per_pelanggan: `Rp ${(item.REVENUE_PER_CUSTOMER || 0).toLocaleString('id-ID')}`,
+          revenue_per_ncli: `Rp ${(item.REVENUE_PER_NCLI || 0).toLocaleString('id-ID')}`,
           multi_location_penetration: `${item.MULTI_LOCATION_PENETRATION_RATE}%`,
           multi_location_revenue_share: `${item.MULTI_LOCATION_REVENUE_SHARE}%`,
-          multi_regional_revenue: `Rp ${item.MULTI_REGIONAL_REVENUE.toLocaleString('id-ID')}`,
-          multi_witel_revenue: `Rp ${item.MULTI_WITEL_REVENUE.toLocaleString('id-ID')}`,
-          multi_datel_revenue: `Rp ${item.MULTI_DATEL_REVENUE.toLocaleString('id-ID')}`,
-          multi_sto_revenue: `Rp ${item.MULTI_STO_REVENUE.toLocaleString('id-ID')}`,
-          single_location_revenue: `Rp ${item.SINGLE_LOCATION_REVENUE.toLocaleString('id-ID')}`
+          multi_regional_revenue: `Rp ${(item.MULTI_REGIONAL_REVENUE || 0).toLocaleString('id-ID')}`,
+          multi_witel_revenue: `Rp ${(item.MULTI_WITEL_REVENUE || 0).toLocaleString('id-ID')}`,
+          multi_datel_revenue: `Rp ${(item.MULTI_DATEL_REVENUE || 0).toLocaleString('id-ID')}`,
+          multi_sto_revenue: `Rp ${(item.MULTI_STO_REVENUE || 0).toLocaleString('id-ID')}`,
+          single_location_revenue: `Rp ${(item.SINGLE_LOCATION_REVENUE || 0).toLocaleString('id-ID')}`
         })),
         
         insight_bisnis: [

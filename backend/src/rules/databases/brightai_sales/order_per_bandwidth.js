@@ -117,9 +117,21 @@ module.exports = {
         });
       }
 
+      // Penalize if query is about REVENUE per bandwidth (belongs to ps_008)
+      if ((input.includes('revenue') || input.includes('pendapatan') || input.includes('arpu'))
+          && !input.includes('order')) {
+        confidence = Math.max(confidence - 40, 0);
+      }
+      
+      // Penalize if query is about CUSTOMER or LAYANAN distribution (belongs to dapros_006)
+      if ((input.includes('pelanggan') || input.includes('customer') || input.includes('layanan') || input.includes('profil'))
+          && !input.includes('order') && !input.includes('penjualan')) {
+        confidence = Math.max(confidence - 40, 0);
+      }
+
       return Math.min(confidence, 100);
     },
-    
+
     detectUserInterest: function(input) {
       if (input.includes('premium') || input.includes('high') || input.includes('tinggi')) {
         return 'HIGH_SPEED_FOCUS';
@@ -136,10 +148,10 @@ module.exports = {
 
   SQL_QUERY: `
     WITH HSI_BANDWIDTH_ANALYSIS AS (
-        SELECT 
+        SELECT
             ORDER_ID,
             NCLI,
-            ND_HSI,  -- ADDED: Identifier untuk layanan HSI
+            ND_HSI,
             REGIONAL,
             WITEL,
             ORDER_DATE,
@@ -148,29 +160,33 @@ module.exports = {
             JENISPSB,
             PACKAGE_NAME,
             PRODUCT,
-            CAST(NULLIF(BW, '0') AS NUMBER) as bandwidth_kbps,
-            CAST(NULLIF(BW, '0') AS NUMBER) / 1024 as bandwidth_mbps,
+            -- Extract bandwidth (Mbps) from PACKAGE_NAME patterns like HSIE50M, HSIEF20M, 50 Mbps, etc.
+            COALESCE(
+                TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), '([0-9]+)[[:space:]]*MBPS', 1, 1, 'i', 1)),
+                TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'HSIE[F]?([0-9]+)M', 1, 1, 'i', 1)),
+                TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'INETF?([0-9]+)M', 1, 1, 'i', 1))
+            ) as bandwidth_mbps,
             -- HSI Product identification
-            CASE 
+            CASE
                 WHEN PRODUCT = 'WMS' THEN 0
                 WHEN (
-                    UPPER(PACKAGE_NAME) LIKE '%HSIE%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%HSIE%' OR
                     UPPER(PACKAGE_NAME) LIKE '%HSI BISNIS%' OR
-                    UPPER(PACKAGE_NAME) LIKE '%PAKET INDIBIZ %' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%PAKET INDIBIZ %' OR
                     UPPER(PACKAGE_NAME) LIKE '%PAKET HSI B2B %' OR
                     UPPER(PACKAGE_NAME) LIKE '%HSI INDIBIZ B2B%'
                 ) AND NOT (
-                    UPPER(PACKAGE_NAME) LIKE '%HSIEF%' OR 
-                    UPPER(PACKAGE_NAME) LIKE '%BASIC%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%HSIEF%' OR
+                    UPPER(PACKAGE_NAME) LIKE '%BASIC%' OR
                     UPPER(PACKAGE_NAME) LIKE '%INETF%'
                 ) THEN 1
                 ELSE 0
             END as IS_HSI_BISNIS,
-            CASE 
+            CASE
                 WHEN PRODUCT = 'WMS' THEN 0
                 WHEN (
-                    UPPER(PACKAGE_NAME) LIKE '%HSIEF%' OR 
-                    UPPER(PACKAGE_NAME) LIKE '%BASIC%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%HSIEF%' OR
+                    UPPER(PACKAGE_NAME) LIKE '%BASIC%' OR
                     UPPER(PACKAGE_NAME) LIKE '%INETF%'
                 ) THEN 1
                 ELSE 0
@@ -178,20 +194,20 @@ module.exports = {
             -- Bundling type
             CASE
                 WHEN JENISPSB = 'AO' AND (
-                    UPPER(PACKAGE_NAME) LIKE '%HSI Bisnis Bundling %' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%HSI Bisnis Bundling %' OR
                     UPPER(PACKAGE_NAME) LIKE '%HSI Bisnis Basic Bundling %' OR
                     UPPER(PACKAGE_NAME) LIKE '%Paket Indibiz 2S %'
-                ) AND NOT (UPPER(PACKAGE_NAME) LIKE '%Non%') AND NOT (UPPER(PACKAGE_NAME) LIKE '%Add-on%') 
+                ) AND NOT (UPPER(PACKAGE_NAME) LIKE '%Non%') AND NOT (UPPER(PACKAGE_NAME) LIKE '%Add-on%')
                 THEN 'Hard Bundling'
                 WHEN JENISPSB = 'AO' AND NOT (UPPER(PACKAGE_NAME) LIKE '%Non%') AND (
-                    UPPER(PACKAGE_NAME) LIKE '%HSIE%' OR 
-                    UPPER(PACKAGE_NAME) LIKE '%BUNDLING%' OR 
+                    UPPER(PACKAGE_NAME) LIKE '%HSIE%' OR
+                    UPPER(PACKAGE_NAME) LIKE '%BUNDLING%' OR
                     UPPER(PACKAGE_NAME) LIKE '%;%'
                 ) THEN 'Bundling A La Carte'
                 ELSE 'Non Bundling'
             END as BUNDLING_TYPE,
             -- Digital products detection
-            CASE 
+            CASE
                 WHEN UPPER(PACKAGE_NAME) LIKE '%SEKOLAH%' OR
                      UPPER(PACKAGE_NAME) LIKE '%NETMONK%' OR
                      UPPER(PACKAGE_NAME) LIKE '%OCAINT%' OR
@@ -200,12 +216,10 @@ module.exports = {
                 THEN 1 ELSE 0
             END as HAS_DIGITAL_PRODUCT
         FROM DWH_MOIS.BRIGHTAI_SALES
-        WHERE STATUS_RESUME IN ('FULFILL BILLING COMPLETED', 'Completed (PS)')
-          AND BW IS NOT NULL 
-          AND BW != '0'
-          AND REGEXP_LIKE(BW, '^[0-9]+$')
-          AND ND_HSI IS NOT NULL  -- ADDED: Pastikan hanya record dengan HSI yang valid
-          AND ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD')
+        WHERE ORDER_DATE >= DATE '2025-01-01'
+          AND ORDER_ID IS NOT NULL
+          AND NCLI IS NOT NULL
+          AND NCLI IS NOT NULL
     ),
     BANDWIDTH_CATEGORIZED AS (
         SELECT
@@ -220,7 +234,6 @@ module.exports = {
             JENISPSB,
             PACKAGE_NAME,
             PRODUCT,
-            bandwidth_kbps,
             bandwidth_mbps,
             IS_HSI_BISNIS,
             IS_HSI_BASIC,
@@ -234,97 +247,84 @@ module.exports = {
                 WHEN bandwidth_mbps >= 10 THEN '5. Basic Speed (10-19 Mbps)'
                 ELSE '6. Entry Level (<10 Mbps)'
             END as bandwidth_tier,
-            CASE 
+            CASE
                 WHEN bandwidth_mbps >= 100 THEN 'PREMIUM'
                 WHEN bandwidth_mbps >= 50 THEN 'STANDARD'
                 ELSE 'BASIC'
             END as service_class
         FROM HSI_BANDWIDTH_ANALYSIS
-        WHERE IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1
+        WHERE (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1)
+          AND bandwidth_mbps IS NOT NULL
+          AND bandwidth_mbps > 0
     ),
     BANDWIDTH_METRICS AS (
-        SELECT 
+        SELECT
             bandwidth_tier,
             service_class,
-            -- Order metrics
             COUNT(DISTINCT ORDER_ID) as total_orders_hsi,
             COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 THEN ORDER_ID END) as orders_hsi_bisnis,
             COUNT(DISTINCT CASE WHEN IS_HSI_BASIC = 1 THEN ORDER_ID END) as orders_hsi_basic,
             COUNT(DISTINCT NCLI) as unique_customers,
-            -- ADDED: HSI service metrics berdasarkan ND_HSI
             COUNT(DISTINCT ND_HSI) as unique_hsi_services,
             COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 THEN ND_HSI END) as unique_hsi_bisnis_services,
             COUNT(DISTINCT CASE WHEN IS_HSI_BASIC = 1 THEN ND_HSI END) as unique_hsi_basic_services,
-            -- ADDED: Efficiency metrics
             ROUND(COUNT(DISTINCT ORDER_ID) * 1.0 / NULLIF(COUNT(DISTINCT ND_HSI), 0), 2) as avg_orders_per_hsi_service,
             ROUND(COUNT(DISTINCT ND_HSI) * 1.0 / NULLIF(COUNT(DISTINCT NCLI), 0), 2) as avg_hsi_services_per_customer,
-            -- Bandwidth statistics
             ROUND(AVG(bandwidth_mbps), 1) as avg_mbps,
             MIN(bandwidth_mbps) as min_mbps,
             MAX(bandwidth_mbps) as max_mbps,
             PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY bandwidth_mbps) as median_mbps,
-            -- Product mix
-            ROUND(COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 THEN ORDER_ID END) * 100.0 / 
+            ROUND(COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 THEN ORDER_ID END) * 100.0 /
                   COUNT(DISTINCT ORDER_ID), 2) as pct_hsi_bisnis,
-            ROUND(COUNT(DISTINCT CASE WHEN IS_HSI_BASIC = 1 THEN ORDER_ID END) * 100.0 / 
+            ROUND(COUNT(DISTINCT CASE WHEN IS_HSI_BASIC = 1 THEN ORDER_ID END) * 100.0 /
                   COUNT(DISTINCT ORDER_ID), 2) as pct_hsi_basic,
-            -- Bundling analysis
             COUNT(DISTINCT CASE WHEN BUNDLING_TYPE != 'Non Bundling' THEN ORDER_ID END) as bundling_orders,
             COUNT(DISTINCT CASE WHEN BUNDLING_TYPE = 'Hard Bundling' THEN ORDER_ID END) as hard_bundling_orders,
             COUNT(DISTINCT CASE WHEN HAS_DIGITAL_PRODUCT = 1 THEN ORDER_ID END) as digital_bundling_orders,
-            -- Geographic spread
             COUNT(DISTINCT REGIONAL) as regional_coverage,
             COUNT(DISTINCT WITEL) as witel_coverage,
-            -- Installation performance
             AVG(TGL_PS - ORDER_DATE) as avg_installation_days
         FROM BANDWIDTH_CATEGORIZED
         GROUP BY bandwidth_tier, service_class
     ),
     FINAL_BANDWIDTH_ANALYSIS AS (
-        SELECT 
+        SELECT
             bandwidth_tier,
             service_class,
             total_orders_hsi,
             orders_hsi_bisnis,
             orders_hsi_basic,
             unique_customers,
-            unique_hsi_services,  -- ADDED
-            unique_hsi_bisnis_services,  -- ADDED
-            unique_hsi_basic_services,  -- ADDED
-            avg_orders_per_hsi_service,  -- ADDED
-            avg_hsi_services_per_customer,  -- ADDED
-            -- Market share
+            unique_hsi_services,
+            unique_hsi_bisnis_services,
+            unique_hsi_basic_services,
+            avg_orders_per_hsi_service,
+            avg_hsi_services_per_customer,
             ROUND(total_orders_hsi * 100.0 / NULLIF(SUM(total_orders_hsi) OVER(), 0), 2) as market_share_pct,
-            ROUND(unique_hsi_services * 100.0 / NULLIF(SUM(unique_hsi_services) OVER(), 0), 2) as service_share_pct,  -- ADDED
-            -- Customer metrics
+            ROUND(unique_hsi_services * 100.0 / NULLIF(SUM(unique_hsi_services) OVER(), 0), 2) as service_share_pct,
             ROUND(unique_customers * 100.0 / total_orders_hsi, 2) as customer_order_ratio,
-            -- Bandwidth stats
             avg_mbps,
             min_mbps,
             max_mbps,
             median_mbps,
-            -- Product mix
             pct_hsi_bisnis,
             pct_hsi_basic,
-            -- Bundling rates
             ROUND(bundling_orders * 100.0 / NULLIF(total_orders_hsi, 0), 2) as bundling_rate,
             ROUND(hard_bundling_orders * 100.0 / NULLIF(bundling_orders, 0), 2) as hard_bundling_dominance,
             ROUND(digital_bundling_orders * 100.0 / NULLIF(total_orders_hsi, 0), 2) as digital_bundling_rate,
-            -- Other metrics
             regional_coverage,
             witel_coverage,
             ROUND(avg_installation_days, 1) as avg_installation_days,
-            -- Rankings
             DENSE_RANK() OVER (ORDER BY total_orders_hsi DESC) as popularity_rank,
-            DENSE_RANK() OVER (ORDER BY unique_hsi_services DESC) as service_volume_rank,  -- ADDED
+            DENSE_RANK() OVER (ORDER BY unique_hsi_services DESC) as service_volume_rank,
             DENSE_RANK() OVER (ORDER BY avg_mbps DESC) as speed_rank,
             DENSE_RANK() OVER (ORDER BY ROUND(bundling_orders * 100.0 / NULLIF(total_orders_hsi, 0), 2) DESC) as bundling_rank,
-            DENSE_RANK() OVER (ORDER BY avg_orders_per_hsi_service DESC) as efficiency_rank  -- ADDED
+            DENSE_RANK() OVER (ORDER BY avg_orders_per_hsi_service DESC) as efficiency_rank
         FROM BANDWIDTH_METRICS
     )
     SELECT * FROM FINAL_BANDWIDTH_ANALYSIS
-    ORDER BY 
-        CASE 
+    ORDER BY
+        CASE
             WHEN bandwidth_tier LIKE '1.%' THEN 1
             WHEN bandwidth_tier LIKE '2.%' THEN 2
             WHEN bandwidth_tier LIKE '3.%' THEN 3
@@ -460,39 +460,39 @@ module.exports = {
         },
         
         metrik_order: {
-          total_hsi: tier.total_orders_hsi.toLocaleString('id-ID'),
-          hsi_bisnis: `${tier.orders_hsi_bisnis.toLocaleString('id-ID')} (${tier.pct_hsi_bisnis}%)`,
-          hsi_basic: `${tier.orders_hsi_basic.toLocaleString('id-ID')} (${tier.pct_hsi_basic}%)`,
-          pelanggan_unik: tier.unique_customers.toLocaleString('id-ID'),
-          pangsa_pasar: `${tier.market_share_pct}%`
+          total_hsi: (tier.total_orders_hsi || 0).toLocaleString('id-ID'),
+          hsi_bisnis: `${(tier.orders_hsi_bisnis || 0).toLocaleString('id-ID')} (${tier.pct_hsi_bisnis || 0}%)`,
+          hsi_basic: `${(tier.orders_hsi_basic || 0).toLocaleString('id-ID')} (${tier.pct_hsi_basic || 0}%)`,
+          pelanggan_unik: (tier.unique_customers || 0).toLocaleString('id-ID'),
+          pangsa_pasar: `${tier.market_share_pct || 0}%`
         },
         
         metrik_layanan: {  // ADDED
-          total_layanan_hsi: tier.unique_hsi_services.toLocaleString('id-ID'),
-          layanan_hsi_bisnis: tier.unique_hsi_bisnis_services.toLocaleString('id-ID'),
-          layanan_hsi_basic: tier.unique_hsi_basic_services.toLocaleString('id-ID'),
-          pangsa_layanan: `${tier.service_share_pct}%`,
+          total_layanan_hsi: (tier.unique_hsi_services || 0).toLocaleString('id-ID'),
+          layanan_hsi_bisnis: (tier.unique_hsi_bisnis_services || 0).toLocaleString('id-ID'),
+          layanan_hsi_basic: (tier.unique_hsi_basic_services || 0).toLocaleString('id-ID'),
+          pangsa_layanan: `${tier.service_share_pct || 0}%`,
           efisiensi_layanan: `${tier.avg_orders_per_hsi_service} order/layanan`,
           penetrasi_customer: `${tier.avg_hsi_services_per_customer} layanan/customer`
         },
         
         karakteristik_bandwidth: {
-          rata_rata: `${tier.avg_mbps} Mbps`,
-          median: `${tier.median_mbps} Mbps`,
-          minimum: `${tier.min_mbps} Mbps`,
-          maksimum: `${tier.max_mbps} Mbps`
+          rata_rata: `${tier.avg_mbps || 0} Mbps`,
+          median: `${tier.median_mbps || 0} Mbps`,
+          minimum: `${tier.min_mbps || 0} Mbps`,
+          maksimum: `${tier.max_mbps || 0} Mbps`
         },
         
         bundling_performance: {
-          bundling_rate: `${tier.bundling_rate}%`,
+          bundling_rate: `${tier.bundling_rate || 0}%`,
           hard_bundling_dominance: `${tier.hard_bundling_dominance || 0}%`,
-          digital_bundling_rate: `${tier.digital_bundling_rate}%`
+          digital_bundling_rate: `${tier.digital_bundling_rate || 0}%`
         },
         
         jangkauan_operasional: {
           cakupan_regional: tier.regional_coverage,
           cakupan_witel: tier.witel_coverage,
-          rata_rata_instalasi: `${tier.avg_installation_days} hari`
+          rata_rata_instalasi: `${tier.avg_installation_days || 0} hari`
         },
         
         posisi_pasar: this.translateMarketPosition(
@@ -513,35 +513,35 @@ module.exports = {
         ringkasan_eksekutif: {
           judul: 'Analisis Distribusi Order HSI Berdasarkan Kategori Bandwidth',
           periode: this.getPeriodFromData(data),  
-          total_order_analyzed: total_orders.toLocaleString('id-ID'),
-          total_layanan_hsi: total_services.toLocaleString('id-ID'),  // ADDED
-          efisiensi_keseluruhan: `${trend_analysis.efisiensi_layanan_keseluruhan.toFixed(2)} order/layanan`,  // ADDED
-          total_hsi_bisnis: data.reduce((sum, d) => sum + d.orders_hsi_bisnis, 0).toLocaleString('id-ID'),
-          total_hsi_basic: data.reduce((sum, d) => sum + d.orders_hsi_basic, 0).toLocaleString('id-ID'),
+          total_order_analyzed: (total_orders || 0).toLocaleString('id-ID'),
+          total_layanan_hsi: (total_services || 0).toLocaleString('id-ID'),  // ADDED
+          efisiensi_keseluruhan: `${(trend_analysis.efisiensi_layanan_keseluruhan || 0).toFixed(2)} order/layanan`,  // ADDED
+          total_hsi_bisnis: data.reduce((sum, d) => sum + (d.orders_hsi_bisnis || 0), 0).toLocaleString('id-ID'),
+          total_hsi_basic: data.reduce((sum, d) => sum + (d.orders_hsi_basic || 0), 0).toLocaleString('id-ID'),
           jumlah_kategori: data.length
         },
         
         trend_pasar: {
           bandwidth_rata_rata_tertimbang: `${trend_analysis.rata_rata_tertimbang} Mbps`,
           karakteristik_pasar: this.translateMarketDirection(trend_analysis.arah_pasar),
-          penetrasi_premium: `${trend_analysis.premium_penetration.toFixed(1)}%`,
-          dominasi_hsi_bisnis: `${trend_analysis.bisnis_product_dominance.toFixed(1)}%`,
+          penetrasi_premium: `${(trend_analysis.premium_penetration || 0).toFixed(1)}%`,
+          dominasi_hsi_bisnis: `${(trend_analysis.bisnis_product_dominance || 0).toFixed(1)}%`,
           tier_efisiensi_tinggi: `${trend_analysis.tier_efisiensi_tinggi} dari ${data.length} tier`  // ADDED
         },
         
         highlights: {
           kategori_terpopuler: most_popular ? {
             nama: this.translateBandwidthTier(most_popular.bandwidth_tier),
-            pangsa_pasar: `${most_popular.market_share_pct}%`,
-            total_order: most_popular.total_orders_hsi.toLocaleString('id-ID'),
-            total_layanan: most_popular.unique_hsi_services.toLocaleString('id-ID'),  // ADDED
-            product_mix: `Bisnis: ${most_popular.pct_hsi_bisnis}% | Basic: ${most_popular.pct_hsi_basic}%`
+            pangsa_pasar: `${most_popular.market_share_pct || 0}%`,
+            total_order: (most_popular.total_orders_hsi || 0).toLocaleString('id-ID'),
+            total_layanan: (most_popular.unique_hsi_services || 0).toLocaleString('id-ID'),  // ADDED
+            product_mix: `Bisnis: ${most_popular.pct_hsi_bisnis || 0}% | Basic: ${most_popular.pct_hsi_basic || 0}%`
           } : null,
           
           kategori_bundling_terbaik: best_bundling ? {
             nama: this.translateBandwidthTier(best_bundling.bandwidth_tier),
-            bundling_rate: `${best_bundling.bundling_rate}%`,
-            digital_bundling: `${best_bundling.digital_bundling_rate}%`
+            bundling_rate: `${best_bundling.bundling_rate || 0}%`,
+            digital_bundling: `${best_bundling.digital_bundling_rate || 0}%`
           } : null,
           
           kategori_paling_efisien: most_efficient ? {  // ADDED

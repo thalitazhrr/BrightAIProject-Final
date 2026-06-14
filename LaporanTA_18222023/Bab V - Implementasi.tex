@@ -13,12 +13,12 @@ Bab ini menyajikan implementasi sistem \textit{Business Intelligence} berbasis \
 Sistem BrightAI diimplementasikan dengan arsitektur tiga lapis (\textit{three-tier architecture}) yang memisahkan tanggung jawab setiap komponen secara jelas. Ketiga lapis tersebut adalah sebagai berikut.
 
 \begin{enumerate}
-    \item \textbf{\textit{Frontend} (React.js)}: Antarmuka pengguna berbasis web yang menyediakan fitur percakapan \textit{chatbot}, panel peramalan, dan manajemen profil pengguna. \textit{Frontend} berjalan pada porta 3000 dan berkomunikasi dengan \textit{backend} melalui \textit{RESTful API}.
-    \item \textbf{\textit{Backend} (Node.js/Express)}: Peladen utama yang menangani autentikasi, manajemen sesi, eksekusi mesin aturan (\textit{rule engine}), klasifikasi maksud (\textit{intent classification}), pembangkitan bahasa alami (NLG), serta komunikasi dengan basis data Oracle. \textit{Backend} berjalan pada porta 3001.
-    \item \textbf{Layanan \textit{Machine Learning} (FastAPI/PyTorch)}: Layanan terpisah yang menangani pelatihan dan inferensi model peramalan deret waktu berbasis GRU dan LSTM. Layanan ini berjalan pada porta 8000 dan diakses oleh \textit{backend} melalui permintaan HTTP internal.
+    \item \textit{Frontend (React.js)}: Antarmuka pengguna berbasis web yang menyediakan fitur percakapan \textit{chatbot}, panel peramalan, dan manajemen profil pengguna. \textit{Frontend} berjalan pada porta 3000 dan berkomunikasi dengan \textit{backend} melalui \textit{RESTful API}.
+    \item \textit{Backend (Node.js/Express)}: Peladen utama yang menangani autentikasi, manajemen sesi, eksekusi mesin aturan (\textit{rule engine}), klasifikasi maksud (\textit{intent classification}), pembangkitan bahasa alami (NLG), serta komunikasi dengan basis data Oracle. \textit{Backend} berjalan pada porta 3001.
+    \item Layanan \textit{Machine Learning (FastAPI/PyTorch)}: Layanan terpisah yang menangani pelatihan dan inferensi model peramalan deret waktu berbasis GRU dan LSTM. Layanan ini berjalan pada porta 8000 dan diakses oleh \textit{backend} melalui permintaan HTTP internal.
 \end{enumerate}
 
-Ketiga lapis terhubung ke Oracle Database yang berfungsi ganda melalui dua skema terpisah: (1) skema \texttt{DWH\_MOIS} sebagai \textit{Enterprise Data Warehouse} (DWH)\label{abbr:DWH} yang menyimpan lima tabel domain analitik dengan prefiks \texttt{BRIGHTAI\_} (\texttt{BRIGHTAI\_SALES}, \texttt{BRIGHTAI\_REVENUE}, \texttt{BRIGHTAI\_TARGET}, \texttt{BRIGHTAI\_DAPROS}, \texttt{BRIGHTAI\_CT0\_NAL}); dan (2) skema \texttt{USR\_RPT} yang menyimpan data operasional sistem, meliputi tabel pengguna (\texttt{BRIGHTAI\_USER}), riwayat percakapan (\texttt{BRIGHTAI\_CHAT}), dan sesi (\texttt{BRIGHTAI\_SESSION}).
+{\sloppy Ketiga lapis terhubung ke Oracle Database yang berfungsi ganda melalui dua skema terpisah: (1) skema \texttt{DWH\_MOIS} sebagai \textit{Enterprise Data Warehouse} (DWH)\label{abbr:DWH} yang menyimpan lima tabel domain analitik dengan prefiks \texttt{BRIGHTAI\_} (\texttt{BRIGHTAI\_}\allowbreak\texttt{SALES}, \allowbreak\texttt{BRIGHTAI\_}\allowbreak\texttt{REVENUE}, \allowbreak\texttt{BRIGHTAI\_}\allowbreak\texttt{TARGET}, \allowbreak\texttt{BRIGHTAI\_}\allowbreak\texttt{DAPROS}, \allowbreak\texttt{BRIGHTAI\_}\allowbreak\texttt{CT0\_}\allowbreak\texttt{NAL}); dan (2) skema \texttt{USR\_RPT} yang menyimpan data operasional sistem, meliputi tabel pengguna (\texttt{BRIGHTAI\_}\allowbreak\texttt{USER}), riwayat percakapan (\texttt{BRIGHTAI\_}\allowbreak\texttt{CHAT}), dan sesi (\texttt{BRIGHTAI\_}\allowbreak\texttt{SESSION}).\par}
 
 \section{Implementasi \textit{Backend} (Node.js/Express)}
 \label{sec:impl-backend}
@@ -27,7 +27,7 @@ Ketiga lapis terhubung ke Oracle Database yang berfungsi ganda melalui dua skema
 
 \subsection{Struktur Proyek \textit{Backend}}
 
-Proyek \textit{backend} diorganisasi menggunakan pola arsitektur MVC (\textit{Model-View-Controller}) yang dimodifikasi menjadi struktur berlapis. Tabel~\ref{tab:struktur-backend} menyajikan struktur direktori utama.
+Proyek \textit{backend} diorganisasi menggunakan pola arsitektur MVC (\textit{Model-View- Controller}) yang dimodifikasi menjadi struktur berlapis. Tabel~\ref{tab:struktur-backend} menyajikan struktur direktori utama.
 
 \input{tables/tabel-struktur-backend.tex}
 
@@ -36,10 +36,10 @@ Proyek \textit{backend} diorganisasi menggunakan pola arsitektur MVC (\textit{Mo
 Sistem mengimplementasikan beberapa lapisan \textit{middleware} keamanan pada Express.js untuk melindungi API dari ancaman umum. Konfigurasi \textit{middleware} yang diterapkan mencakup:
 
 \begin{enumerate}
-    \item \textbf{Helmet}: Mengatur tajuk HTTP keamanan (\textit{security headers}) untuk mencegah serangan seperti \textit{Cross-Site Scripting} (XSS) dan \textit{clickjacking}.
-    \item \textbf{CORS\label{abbr:CORS} (\textit{Cross-Origin Resource Sharing})}: Mengizinkan permintaan lintas-asal dari \textit{frontend} yang berjalan pada domain berbeda.
-    \item \textbf{\textit{Rate Limiter}}: Membatasi jumlah permintaan per alamat IP menjadi maksimal 100 permintaan per 15 menit untuk mencegah serangan \textit{brute force} dan \textit{Denial of Service} (DoS).
-    \item \textbf{Pembatasan Ukuran \textit{Payload}}: Membatasi ukuran badan permintaan JSON menjadi maksimal 10 MB.
+    \item Helmet: Mengatur tajuk HTTP keamanan (\textit{security headers}) untuk mencegah serangan seperti \textit{Cross-Site Scripting} (XSS) dan \textit{clickjacking}.
+    \item CORS\label{abbr:CORS} (\textit{Cross-Origin Resource Sharing}): Mengizinkan permintaan lintas-asal dari \textit{frontend} yang berjalan pada domain berbeda.
+    \item \textit{Rate Limiter}: Membatasi jumlah permintaan per alamat IP menjadi maksimal 100 permintaan per 15 menit untuk mencegah serangan \textit{brute force} dan \textit{Denial of Service} (DoS).
+    \item Pembatasan Ukuran \textit{Payload}: Membatasi ukuran badan permintaan JSON menjadi maksimal 10 MB.
 \end{enumerate}
 
 \subsection{Koneksi Oracle Database}
@@ -84,10 +84,10 @@ Mesin aturan merupakan komponen inti yang menghubungkan pertanyaan pengguna deng
 Alur pemrosesan kueri dalam mesin aturan mengikuti tahapan sebagai berikut.
 
 \begin{enumerate}
-    \item \textbf{Penerimaan Kueri}: Modul \texttt{chatController.js} menerima pesan pengguna dan memeriksa apakah pesan tersebut merupakan sapaan, permintaan bantuan, atau kueri analitik.
-    \item \textbf{Pencocokan Aturan}: Modul \texttt{queryProcessor.js} mencocokkan kueri pengguna dengan aturan yang tersedia menggunakan pencocokan pola kata kunci.
-    \item \textbf{Eksekusi Aturan}: Modul \texttt{ruleEngine.js} mengeksekusi kueri SQL yang terkait dengan aturan yang cocok terhadap Oracle Database, dengan injeksi filter geografis secara dinamis.
-    \item \textbf{Pembangunan Respons}: Modul \texttt{responseBuilder.js} dan \texttt{nlgGenerator.js} mengonversi hasil kueri menjadi narasi dalam bahasa Indonesia.
+    \item Penerimaan Kueri: Modul \texttt{chatController.js} menerima pesan pengguna dan memeriksa apakah pesan tersebut merupakan sapaan, permintaan bantuan, atau kueri analitik.
+    \item Pencocokan Aturan: Modul \texttt{queryProcessor.js} mencocokkan kueri pengguna dengan aturan yang tersedia menggunakan pencocokan pola kata kunci.
+    \item Eksekusi Aturan: Modul \texttt{ruleEngine.js} mengeksekusi kueri SQL yang terkait dengan aturan yang cocok terhadap Oracle Database, dengan injeksi filter geografis secara dinamis.
+    \item Pembangunan Respons: Modul \texttt{responseBuilder.js} dan \texttt{nlgGenerator.js} mengonversi hasil kueri menjadi narasi dalam bahasa Indonesia.
 \end{enumerate}
 
 \subsection{Struktur Definisi Aturan}
@@ -117,7 +117,7 @@ Setiap aturan didefinisikan sebagai objek JavaScript yang memiliki struktur ters
 \end{tabular}
 \end{table}
 
-Sistem mendukung 38 aturan analitik yang tersebar di lima tabel domain pada skema \texttt{DWH\_MOIS}, yaitu \texttt{BRIGHTAI\_SALES}, \texttt{BRIGHTAI\_REVENUE}, \texttt{BRIGHTAI\_TARGET}, \texttt{BRIGHTAI\_DAPROS}, dan \texttt{BRIGHTAI\_CT0\_NAL}. \textit{Listing}~\ref{lst:rule-definition} menyajikan contoh implementasi struktur definisi aturan secara lengkap.
+Sistem mendukung 38 aturan analitik yang tersebar di lima tabel domain pada skema \texttt{DWH\_MOIS}, yaitu \texttt{BRIGHTAI\_}\allowbreak\texttt{SALES}, \allowbreak\texttt{BRIGHTAI\_}\allowbreak\texttt{REVENUE}, \allowbreak\texttt{BRIGHTAI\_}\allowbreak\texttt{TARGET}, \allowbreak\texttt{BRIGHTAI\_}\allowbreak\texttt{DAPROS}, dan \allowbreak\texttt{BRIGHTAI\_}\allowbreak\texttt{CT0\_}\allowbreak\texttt{NAL}. \textit{Listing}~\ref{lst:rule-definition} menyajikan contoh implementasi struktur definisi aturan secara lengkap.
 
 \input{listings/rule-definition.tex}
 
@@ -126,8 +126,8 @@ Sistem mendukung 38 aturan analitik yang tersebar di lima tabel domain pada skem
 Mesin aturan mengimplementasikan fitur injeksi filter geografis secara dinamis ke dalam kueri SQL pada saat eksekusi. Fitur ini memungkinkan pengguna menyaring data berdasarkan regional atau wilayah telekomunikasi (\textit{witel}) tanpa memerlukan aturan terpisah untuk setiap wilayah. Mekanisme injeksi mendukung dua mode:
 
 \begin{enumerate}
-    \item \textbf{Mode Penampung (\textit{placeholder})}: Jika kueri SQL mengandung penanda \texttt{/* :GEO\_FILTER: */}, penanda tersebut diganti dengan klausa filter yang sesuai.
-    \item \textbf{Mode Injeksi Otomatis}: Jika tidak ada penanda, sistem melakukan pemindaian baris demi baris untuk menemukan blok \texttt{FROM DWH\_MOIS} dan menyisipkan klausa filter pada posisi yang tepat sebelum \texttt{GROUP BY} atau penutup subkueri.
+    \item Mode Penampung (\textit{placeholder)}: Jika kueri SQL mengandung penanda \texttt{/* :GEO\_FILTER: */}, penanda tersebut diganti dengan klausa filter yang sesuai.
+    \item Mode Injeksi Otomatis: Jika tidak ada penanda, sistem melakukan pemindaian baris demi baris untuk menemukan blok \texttt{FROM DWH\_MOIS} dan menyisipkan klausa filter pada posisi yang tepat sebelum \texttt{GROUP BY} atau penutup subkueri.
 \end{enumerate}
 
 Dalam membedah mekanisme tersebut, Algoritma~\ref{alg:geo-filter-1} merinci prosedur tahap awal yang mengekstraksi intensi cakupan geografis dari pertanyaan pengguna. Proses ini diawali dengan pengecekan hierarkis mulai dari kata kunci tingkat nasional hingga pencocokan struktur \textit{witel}.
@@ -175,10 +175,10 @@ Modul pembangkitan bahasa alami (NLG) diimplementasikan dalam dua berkas utama: 
 Proses pembangkitan respons NLG mengikuti empat tahapan berurutan:
 
 \begin{enumerate}
-    \item \textbf{Ekstraksi Konteks}: Fungsi \texttt{extractCtx} mengekstraksi informasi kontekstual dari data terstruktur hasil kueri, meliputi periode analisis, nilai utama, pertumbuhan MoM/YoY, distribusi produk, metrik pelanggan, dan wawasan bisnis.
-    \item \textbf{Klasifikasi \textit{Intent}}: Modul \texttt{intentClassifier} mengklasifikasikan \textit{intent} dan fokus dari pertanyaan asli pengguna.
-    \item \textbf{Pemilihan Templat}: Fungsi \texttt{getTemplate} dari \texttt{templateLibrary} memilih templat yang sesuai berdasarkan \textit{intent} yang teridentifikasi. Setiap \textit{intent} memiliki minimal tiga variasi templat.
-    \item \textbf{Pengisian Data}: Templat yang terpilih diisi dengan data faktual dari konteks. Seluruh angka diformat menggunakan \textit{locale} Indonesia (\texttt{id-ID}).
+    \item Ekstraksi Konteks: Fungsi \texttt{extractCtx} mengekstraksi informasi kontekstual dari data terstruktur hasil kueri, meliputi periode analisis, nilai utama, pertumbuhan MoM/YoY, distribusi produk, metrik pelanggan, dan wawasan bisnis.
+    \item Klasifikasi \textit{Intent}: Modul \texttt{intentClassifier} mengklasifikasikan \textit{intent} dan fokus dari pertanyaan asli pengguna.
+    \item Pemilihan Templat: Fungsi \texttt{getTemplate} dari \texttt{templateLibrary} memilih templat yang sesuai berdasarkan \textit{intent} yang teridentifikasi. Setiap \textit{intent} memiliki minimal tiga variasi templat.
+    \item Pengisian Data: Templat yang terpilih diisi dengan data faktual dari konteks. Seluruh angka diformat menggunakan \textit{locale} Indonesia (\texttt{id-ID}).
 \end{enumerate}
 
 \subsection{Peta Subjek Aturan}
@@ -208,7 +208,7 @@ Modul NLG mendefinisikan peta subjek (\texttt{RULE\_SUBJEK}) yang memetakan seti
 \end{tabular}
 \end{table}
 
-Kode templat di atas memastikan keseragaman penyajian laporan bisnis, di mana format respons telah dibakukan agar selaras dengan kebutuhan baca pengguna operasional di berbagai domain.
+Kode templat di atas memastikan keseragaman penyajian laporan bisnis, dengan format respons telah dibakukan agar selaras dengan kebutuhan baca pengguna operasional di berbagai domain.
 
 \subsection{Format Keluaran}
 
@@ -279,12 +279,12 @@ Struktur \textit{endpoints} yang tersusun rapi tersebut tidak hanya menjamin abs
 Model GRU dan LSTM diimplementasikan sebagai kelas Python yang mewarisi \texttt{torch.nn.Module}. Kedua model memiliki arsitektur yang serupa dengan perbedaan utama pada jenis sel berulang (\textit{recurrent cell}) yang digunakan. Arsitektur setiap model terdiri dari:
 
 \begin{enumerate}
-    \item \textbf{Lapisan Berulang}: GRU menggunakan \texttt{nn.GRU} dan LSTM menggunakan \texttt{nn.LSTM}, masing-masing dengan 2 lapisan bertumpuk (\textit{stacked layers}) dan ukuran \textit{hidden state} sebesar 64 unit.
-    \item \textbf{Lapisan \textit{Dropout}}: Regularisasi dengan tingkat \textit{dropout} 0,2 diterapkan setelah lapisan berulang untuk mencegah \textit{overfitting}.
-    \item \textbf{Lapisan Linear Keluaran}: Lapisan \texttt{nn.Linear} yang memetakan \textit{hidden state} terakhir ke dimensi horizon prediksi.
+    \item Lapisan Berulang: GRU menggunakan \texttt{nn.GRU} dan LSTM menggunakan \texttt{nn.LSTM}, masing-masing dengan 2 lapisan bertumpuk (\textit{stacked layers}) dan ukuran \textit{hidden state} sebesar 64 unit.
+    \item Lapisan \textit{Dropout}: Regularisasi dengan tingkat \textit{dropout} 0,2 diterapkan setelah lapisan berulang untuk mencegah \textit{overfitting}.
+    \item Lapisan Linear Keluaran: Lapisan \texttt{nn.Linear} yang memetakan \textit{hidden state} terakhir ke dimensi horizon prediksi.
 \end{enumerate}
 
-Kedua model dirancang untuk menerima matriks masukan berdimensi (\textit{batch}, \texttt{window\_size}, 1) dan mereduksinya menjadi representasi peramalan berukuran (\textit{batch}, \textit{horizon}). Sebagai representasi pertama dari rancangan tersebut, \textit{Listing}~\ref{lst:gru-model} menyajikan implementasi kode dari arsitektur GRU. Komponen ini menitikberatkan pada efisiensi komputasi dengan memanfaatkan gerbang pembaruan (\textit{update gate}) dan gerbang atur ulang (\textit{reset gate}) secara terintegrasi untuk mengendalikan aliran memori sekuensial.
+Kedua model dirancang untuk menerima matriks masukan berdimensi (\textit{batch}, \texttt{window\_}\allowbreak\texttt{size}, 1) dan mereduksinya menjadi representasi peramalan berukuran (\textit{batch}, \textit{horizon}). Sebagai representasi pertama dari rancangan tersebut, \textit{Listing}~\ref{lst:gru-model} menyajikan implementasi kode dari arsitektur GRU. Komponen ini menitikberatkan pada efisiensi komputasi dengan memanfaatkan gerbang pembaruan (\textit{update gate}) dan gerbang atur ulang (\textit{reset gate}) secara terintegrasi untuk mengendalikan aliran memori sekuensial.
 
 \input{listings/gru-model.tex}
 
@@ -340,15 +340,15 @@ Pemilihan ukuran jendela historis (\textit{window size}) merupakan faktor krusia
 
 \input{algorithms/auto-tune-window.tex}
 
-Melalui pendekatan adaptif ini, sistem dapat mengakomodasi berbagai karakteristik deret waktu yang berbeda pada setiap wilayah atau layanan, sehingga tidak lagi memerlukan proses penyetelan parameter secara manual yang memakan waktu lama.
+Melalui pendekatan adaptif ini, sistem dapat mengakomodasi berbagai karakteristik deret waktu yang berbeda pada setiap wilayah atau layanan sehingga proses penyetelan parameter secara manual yang memakan waktu lama tidak lagi diperlukan.
 
 \subsubsection{Validasi \textit{Walk-Forward}}
 
-Evaluasi kinerja model tidak dapat dilakukan menggunakan teknik \textit{k-fold cross-validation} standar karena teknik tersebut mengabaikan urutan temporal dari data deret waktu. Sebagai gantinya, evaluasi model ini menggunakan protokol \textit{walk-forward validation} yang merupakan validasi silang khusus deret waktu. Pada setiap tahapan iterasi, model dilatih secara kumulatif pada seluruh data historis hingga bulan ke-$t$, lalu digunakan untuk memprediksi data bulan ke-$t+1$. Proses pengujian ini diulang untuk $n$ bulan terakhir (minimum 3 bulan, maksimum 6 bulan) guna menghasilkan estimasi metrik evaluasi yang jauh lebih realistis dalam skenario produksi. Algoritma~\ref{alg:walk-forward} mendeskripsikan prosedur operasional dari \textit{walk-forward validation} tersebut secara formal.
+Teknik \textit{k-fold cross-validation} standar tidak dapat digunakan untuk evaluasi kinerja model karena teknik tersebut mengabaikan urutan temporal dari data deret waktu. Sebagai gantinya, evaluasi model ini menggunakan protokol \textit{walk-forward va\-li\-da\-tion} yang merupakan validasi silang khusus deret waktu. Pada setiap tahapan iterasi, model dilatih secara kumulatif pada seluruh data historis hingga bulan ke-$t$, lalu digunakan untuk memprediksi data bulan ke-$t+1$. Proses pengujian ini diulang untuk $n$ bulan terakhir (minimum 3 bulan, maksimum 6 bulan) guna menghasilkan estimasi metrik evaluasi yang jauh lebih realistis dalam skenario produksi. Algoritma~\ref{alg:walk-forward} mendeskripsikan prosedur operasional dari \textit{walk-forward va\-li\-da\-tion} tersebut secara formal.
 
 \input{algorithms/binary-search-alg.tex}
 
-Implementasi dari prosedur validasi tersebut menjamin bahwa metrik kesalahan seperti MAE, RMSE, sMAPE, MASE, dan \textit{Skill Score} tidak bias terhadap bocoran data masa depan (\textit{data leakage}), sehingga merepresentasikan ketangguhan model yang sebenarnya.
+Implementasi dari prosedur validasi tersebut menjamin bahwa metrik kesalahan seperti MAE, RMSE, sMAPE, MASE, dan \textit{Skill Score} tidak bias terhadap bocoran data masa depan (\textit{data leakage}) sehingga merepresentasikan ketangguhan model yang sebenarnya.
 
 \subsubsection{Mekanisme \textit{Benchmark} terhadap Model Sebelumnya}
 
@@ -364,26 +364,26 @@ Sistem mendeteksi apakah bulan terakhir dalam data berisi data parsial (belum le
 Dalam mendukung reprodusibilitas hasil eksperimen, sistem mengimplementasikan beberapa mekanisme berikut.
 
 \begin{enumerate}
-    \item \textbf{Penyimpanan artefak model}: Setiap model terbaik disimpan sebagai berkas \texttt{.pth} (PyTorch) atau \texttt{.pkl} (ARIMA/\textit{Prophet}) di direktori \texttt{saved\_models/}. Berkas \textit{checkpoint} menyimpan tidak hanya \texttt{state\_dict} model, tetapi juga seluruh \textit{hyperparameter} yang digunakan (\texttt{window\_size}, \texttt{hidden\_size}, \texttt{num\_layers}, \texttt{dropout}), jenis model, metrik, regional, dan \textit{witel}. Parameter normalisasi (\texttt{MinMaxScaler}) disimpan terpisah dalam berkas \texttt{.pkl} sehingga inferensi dapat menggunakan \textit{scaler} yang identik dengan saat pelatihan.
+    \item Penyimpanan artefak model: Setiap model terbaik disimpan sebagai berkas \texttt{.pth} (PyTorch) atau \texttt{.pkl} (ARIMA/\textit{Prophet}) di direktori \texttt{saved\_models/}. Berkas \textit{checkpoint} menyimpan tidak hanya \texttt{state\_dict} model, tetapi juga seluruh \textit{hyperparameter} yang digunakan (\texttt{window\_}\allowbreak\texttt{size}, \allowbreak\texttt{hidden\_}\allowbreak\texttt{size}, \allowbreak\texttt{num\_}\allowbreak\texttt{layers}, \allowbreak\texttt{dropout}), jenis model, metrik, regional, dan \textit{witel}. Parameter normalisasi (\texttt{MinMaxScaler}) disimpan terpisah dalam berkas \texttt{.pkl} sehingga inferensi dapat menggunakan \textit{scaler} yang identik dengan saat pelatihan.
 
-    \item \textbf{Pelacakan riwayat pelatihan}: Seluruh hasil pelatihan dicatat dalam berkas \texttt{training\_history.json} yang menyimpan metadata lengkap setiap eksperimen, meliputi tipe model, metrik target, cakupan geografis, jumlah titik data, ukuran jendela, metode evaluasi (\textit{walk-forward}), seluruh metrik evaluasi (MAE, RMSE, sMAPE, MASE, \textit{Skill Score}), hasil \textit{benchmark} terhadap model sebelumnya, serta stempel waktu pelatihan.
+    \item Pelacakan riwayat pelatihan: Seluruh hasil pelatihan dicatat dalam berkas \texttt{training\_history.json} yang menyimpan metadata lengkap setiap eksperimen, meliputi tipe model, metrik target, cakupan geografis, jumlah titik data, ukuran jendela, metode evaluasi (\textit{walk-forward}), seluruh metrik evaluasi (MAE, RMSE, sMAPE, MASE, \textit{Skill Score}), hasil \textit{benchmark} terhadap model sebelumnya, serta stempel waktu pelatihan.
 
-    \item \textbf{Versi pustaka terkunci}: Berkas \texttt{requirements.txt} menetapkan versi eksak untuk setiap dependensi (misalnya \texttt{torch==2.1.1}, \texttt{fastapi==0.104.1}, \texttt{scikit-learn==1.3.2}) sehingga lingkungan pelatihan dapat direkonstruksi secara konsisten.
+    \item Versi pustaka terkunci: Berkas \texttt{requirements.txt} menetapkan versi eksak untuk setiap dependensi (misalnya \texttt{torch==2.1.1}, \allowbreak\texttt{fastapi==0.104.1}, \allowbreak\texttt{scikit-}\allowbreak\texttt{learn==1.3.2}) sehingga lingkungan pelatihan dapat direkonstruksi secara konsisten.
 
-    \item \textbf{Pencegahan regresi}: Mekanisme \textit{benchmark} (Subbab~\ref{subsec:pipeline-pelatihan}) memastikan bahwa model baru hanya menggantikan model lama jika memiliki sMAPE lebih rendah atau \textit{Skill Score} lebih tinggi, sehingga setiap artefak yang tersimpan merupakan model terbaik yang pernah dilatih untuk kombinasi metrik dan wilayah tertentu.
+    \item Pencegahan regresi: Mekanisme \textit{benchmark} (Subbab~\ref{subsec:pipeline-pelatihan}) memastikan bahwa model baru hanya menggantikan model lama jika memiliki sMAPE lebih rendah atau \textit{Skill Score} lebih tinggi sehingga setiap artefak yang tersimpan merupakan model terbaik yang pernah dilatih untuk kombinasi metrik dan wilayah tertentu.
 \end{enumerate}
 
-\paragraph{Keterbatasan.} Implementasi saat ini belum menetapkan \textit{random seed} secara eksplisit (misalnya \texttt{torch.manual\_seed}) sehingga hasil pelatihan tidak dapat direproduksi secara numerik identik di antara dua sesi pelatihan berbeda. Namun, reprodusibilitas fungsional tetap terjaga melalui penyimpanan artefak model terbaik dan riwayat pelatihan yang lengkap, sehingga model terlatih dapat dimuat ulang dan menghasilkan inferensi yang deterministik.
+\paragraph{Keterbatasan.} Implementasi saat ini belum menetapkan \textit{random seed} secara eksplisit (misalnya \texttt{torch.}\allowbreak\texttt{manual\_}\allowbreak\texttt{seed}) sehingga hasil pelatihan tidak dapat direproduksi secara numerik identik di antara dua sesi pelatihan berbeda. Namun, reprodusibilitas fungsional tetap terjaga melalui penyimpanan artefak model terbaik dan riwayat pelatihan yang lengkap sehingga model terlatih dapat dimuat ulang dan menghasilkan inferensi yang deterministik.
 
 \subsection{Praolah Data}
 \label{subsec:praolah-data}
 
-Praolah data diimplementasikan dalam modul \texttt{utils/preprocessing.py} dengan tahapan berikut.
+Praolah data diimplementasikan dalam modul \texttt{utils/}\allowbreak\texttt{preprocessing.py} dengan tahapan berikut.
 
 \begin{enumerate}
-    \item \textbf{Normalisasi}: Data dinormalisasi menggunakan \texttt{MinMaxScaler} dari Scikit-learn ke rentang [0, 1]. Parameter \textit{scaler} disimpan ke berkas \texttt{.pkl} untuk digunakan kembali saat inferensi.
-    \item \textbf{Pembuatan \textit{Sliding Window}}: Data yang telah dinormalisasi diubah menjadi pasangan masukan-keluaran (\textit{X}, \textit{y}) menggunakan jendela geser (\textit{sliding window}). Masukan \textit{X} berukuran (\texttt{n\_samples}, \texttt{window\_size}, 1) dan keluaran \textit{y} berukuran (\texttt{n\_samples}, \textit{horizon}).
-    \item \textbf{Pembagian Data}: Data dibagi menjadi \textit{training set} (80\%) dan \textit{validation set} (20\%) secara kronologis tanpa pengacakan untuk mempertahankan urutan temporal.
+    \item Normalisasi: Data dinormalisasi menggunakan \texttt{MinMaxScaler} dari Scikit-learn ke rentang [0, 1]. Parameter \textit{scaler} disimpan ke berkas \texttt{.pkl} untuk digunakan kembali saat inferensi.
+    \item Pembuatan \textit{Sliding Window}: Data yang telah dinormalisasi diubah menjadi pasangan masukan-keluaran (\textit{X}, \textit{y}) menggunakan jendela geser (\textit{sliding window}). Masukan \textit{X} berukuran (\texttt{n\_samples}, \texttt{window\_size}, 1) dan keluaran \textit{y} berukuran (\texttt{n\_samples}, \textit{horizon}).
+    \item Pembagian Data: Data dibagi menjadi \textit{training set} (80\%) dan \textit{validation set} (20\%) secara kronologis tanpa pengacakan untuk mempertahankan urutan temporal.
 \end{enumerate}
 
 \subsection{Implementasi Model \textit{Baseline} Statistik (ARIMA dan \textit{Prophet})}
@@ -441,7 +441,7 @@ Implementasi metrik dengan konfigurasi *threshold* KPI secara langsung pada taha
 \hline
 \texttt{ChatHistory.jsx} & Panel riwayat percakapan: daftar sesi, pencarian, dan penghapusan \\
 \hline
-\texttt{ForecastPanel.jsx} & Panel peramalan: pemilihan metrik, model, cakupan wilayah, dan visualisasi hasil prediksi \\
+\texttt{ForecastPanel.jsx} & Panel peramalan: pemilihan metrik, model, cakupan wilayah, dan penjelasan hasil prediksi \\
 \hline
 \texttt{GuidedFlow.jsx} & Alur terpandu yang memandu pengguna memilih domain analisis, wilayah, dan metrik secara bertahap \\
 \hline
@@ -460,14 +460,14 @@ Sistem mengimplementasikan mekanisme autentikasi dan keamanan berbasis standar i
 Autentikasi pengguna menggunakan \textit{JSON Web Token} (JWT)\label{abbr:JWT} dengan konfigurasi berikut.
 
 \begin{enumerate}
-    \item \textbf{Registrasi}: Kata sandi pengguna di-\textit{hash} menggunakan algoritma \textit{bcrypt} dengan 10 putaran \textit{salt} sebelum disimpan ke basis data.
-    \item \textbf{Masuk (\textit{Login})}: Kredensial divalidasi terhadap basis data. Jika valid, peladen menerbitkan token JWT dengan masa berlaku 24 jam dan penerbit (\textit{issuer}) ``brightai-backend''.
-    \item \textbf{Otorisasi}: Setiap permintaan ke rute yang dilindungi harus menyertakan token JWT pada tajuk \texttt{Authorization}. \textit{Middleware} autentikasi memverifikasi dan mendekode token untuk mengidentifikasi pengguna.
+    \item Registrasi: Kata sandi pengguna di-\textit{hash} menggunakan algoritma \textit{bcrypt} dengan 10 putaran \textit{salt} sebelum disimpan ke basis data.
+    \item Masuk (\textit{Login)}: Kredensial divalidasi terhadap basis data. Jika valid, peladen menerbitkan token JWT dengan masa berlaku 24 jam dan penerbit (\textit{issuer}) ``brightai-backend''.
+    \item Otorisasi: Setiap permintaan ke rute yang dilindungi harus menyertakan token JWT pada tajuk \texttt{Authorization}. \textit{Middleware} autentikasi memverifikasi dan mendekode token untuk mengidentifikasi pengguna.
 \end{enumerate}
 
 \subsection{Validasi Masukan}
 
-Validasi masukan pengguna diimplementasikan menggunakan pustaka \texttt{express-validator} dengan aturan yang mencakup validasi format surel, panjang minimal kata sandi (6 karakter), keharusan kombinasi huruf besar, huruf kecil, dan angka pada kata sandi, serta sanitasi terhadap serangan injeksi.
+Validasi masukan pengguna diimplementasikan menggunakan pustaka \texttt{express-}\allowbreak\texttt{validator} dengan aturan yang mencakup validasi format surel, panjang minimal kata sandi (6 karakter), keharusan kombinasi huruf besar, huruf kecil, dan angka pada kata sandi, serta sanitasi terhadap serangan injeksi.
 
 \section{Ringkasan Implementasi}
 \label{sec:ringkasan-implementasi}
@@ -551,7 +551,7 @@ Halaman utama \textit{chatbot} merupakan antarmuka inti sistem yang terdiri dari
 \label{fig:ui-chat}
 \end{figure}
 
-Sebagai pusat kendali utama (\textit{centerpiece}) aplikasi, halaman ini mendedikasikan sebagian besar area layar untuk riwayat percakapan. Susunan pesan yang asinkron menegaskan sifat percakapan berbalas di mana jawaban sistem dirender dengan membedakan warna kotak teks.
+Sebagai pusat kendali utama (\textit{centerpiece}) aplikasi, halaman ini mendedikasikan sebagian besar area layar untuk riwayat percakapan. Susunan pesan yang asinkron menegaskan sifat percakapan berbalas dengan jawaban sistem dirender dengan membedakan warna kotak teks.
 
 \subsubsection{Halaman Profil}
 
@@ -590,7 +590,7 @@ Sistem mendukung dua tema tampilan, yaitu tema gelap (\textit{dark mode}) sebaga
 \label{fig:ui-light}
 \end{figure}
 
-Penggunaan \textit{light mode} sangat cocok bagi pengguna yang lebih menyukai tata ruang dokumen putih standar, di mana seluruh komponen \textit{React} diwarnai ulang melalui kelas utilitas \textit{Tailwind} (\textit{dark mode inversion}).
+Penggunaan \textit{light mode} sangat cocok bagi pengguna yang lebih menyukai tata ruang dokumen putih standar, dengan seluruh komponen \textit{React} diwarnai ulang melalui kelas utilitas \textit{Tailwind} (\textit{dark mode inversion}).
 
 \subsubsection{Detail Respons \textit{Rule-Based Query}}
 

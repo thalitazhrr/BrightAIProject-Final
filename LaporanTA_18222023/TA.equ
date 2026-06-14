@@ -1,6 +1,6 @@
 \contentsline {myequations}{\numberline {II.3}Makro-Rata Presisi, Daya Ingat, dan Skor-F1}{20}{equation.2.3}%
-\contentsline {myequations}{\numberline {II.5}Mikro-Rata Presisi dan Daya Ingat}{21}{equation.2.5}%
-\contentsline {myequations}{\numberline {II.6}Dekomposisi Aditif Deret Waktu (\textit {Prophet})}{33}{equation.2.6}%
+\contentsline {myequations}{\numberline {II.5}Mikro-Rata Presisi dan Daya Ingat}{20}{equation.2.5}%
+\contentsline {myequations}{\numberline {II.6}Dekomposisi Aditif Deret Waktu (\textit {Prophet})}{32}{equation.2.6}%
 \contentsline {myequations}{\numberline {II.12}Persamaan Gerbang LSTM}{34}{equation.2.12}%
 \contentsline {myequations}{\numberline {II.16}Persamaan Gerbang GRU}{35}{equation.2.16}%
 \contentsline {myequations}{\numberline {II.17}\textit {Mean Absolute Error} (MAE)}{44}{equation.2.17}%

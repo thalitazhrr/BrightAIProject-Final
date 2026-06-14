@@ -60,7 +60,17 @@ module.exports = {
             IS_DINAS, IS_POTS, IS_IPTV, LOS, VALID_FROM, PACK_NAME, CITEM,
             SPEED, KW_IH, TREMS_REV_P, TREMS_REV_REF, ASSET_STATUS, LGEST,
             INET_BASIC, INET_OTHERS, ADDON, ADDON_TOTAL, ADDON_PRICE,
-            REGIONAL, WITEL, TELDA, CEK_CGEST, CEK_LGEST, LOY_PROGRAM, P_DIGITAL,
+            WITEL, TELDA, CEK_CGEST, CEK_LGEST, LOY_PROGRAM, P_DIGITAL,
+            CASE 
+                WHEN TRIM(REGIONAL) IN ('REG-1', '1', '01') OR CGEST = 'R1' OR LGEST LIKE '%Regional 1%' THEN '1'
+                WHEN TRIM(REGIONAL) IN ('REG-2', '2', '02') OR CGEST = 'R2' OR LGEST LIKE '%Regional 2%' THEN '2'
+                WHEN TRIM(REGIONAL) IN ('REG-3', '3', '03') OR CGEST = 'R3' OR LGEST LIKE '%Regional 3%' THEN '3'
+                WHEN TRIM(REGIONAL) IN ('REG-4', '4', '04') OR CGEST = 'R4' OR LGEST LIKE '%Regional 4%' THEN '4'
+                WHEN TRIM(REGIONAL) IN ('REG-5', '5', '05') OR CGEST = 'R5' OR LGEST LIKE '%Regional 5%' THEN '5'
+                WHEN TRIM(REGIONAL) IN ('REG-6', '6', '06') OR CGEST = 'R6' OR LGEST LIKE '%Regional 6%' THEN '6'
+                WHEN TRIM(REGIONAL) IN ('REG-7', '7', '07') OR CGEST = 'R7' OR LGEST LIKE '%Regional 7%' THEN '7'
+                ELSE 'Tidak Diketahui'
+            END as REGIONAL,
 
             -- Segmentasi utama customer
             CASE
@@ -83,9 +93,9 @@ module.exports = {
 
             -- Tier berdasarkan revenue HSI
             CASE
-                WHEN TREMS_REV_REF >= 500000 THEN 'HIGH_VALUE'
-                WHEN TREMS_REV_REF >= 300000 THEN 'MEDIUM_VALUE'
-                WHEN TREMS_REV_REF >= 150000 THEN 'STANDARD_VALUE'
+                WHEN COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 500000 THEN 'HIGH_VALUE'
+                WHEN COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 300000 THEN 'MEDIUM_VALUE'
+                WHEN COALESCE(TREMS_REV_P, TREMS_REV_REF, 0) >= 150000 THEN 'STANDARD_VALUE'
                 ELSE 'ENTRY_VALUE'
             END as REVENUE_TIER,
 
@@ -113,7 +123,7 @@ module.exports = {
         TELDA,
         COUNT(*) as CUSTOMER_COUNT,
         ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER(), 2) as CUSTOMER_PERCENTAGE,
-        ROUND(AVG(TREMS_REV_REF), 0) as AVG_HSI_REVENUE,
+        ROUND(AVG(COALESCE(TREMS_REV_P, TREMS_REV_REF, 0)), 0) as AVG_HSI_REVENUE,
         ROUND(AVG(CAST(SPEED AS NUMBER)/1000), 0) as AVG_SPEED_MBPS,
         ROUND(AVG(CAST(LOS AS NUMBER)), 0) as AVG_TENURE_MONTHS,
         COUNT(DISTINCT TELDA) as TELDA_COVERAGE,

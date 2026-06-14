@@ -5,7 +5,7 @@ module.exports = {
   RULE_META: {
     RULE_ID: 'mart_002',
     RULE_NAME: 'hsi_regional_performance_analysis',
-    DESCRIPTION: 'Analisis performa revenue HSI berdasarkan hierarchy regional, witel, datel, dan STO',
+    DESCRIPTION: 'Analisis performa revenue HSI berdasarkan hierarchy regional, witel, datel, dan WITEL_BILL',
     DATABASE: 'BRIGHTAI_REVENUE',
     CATEGORY: 'regional_performance',
     COMPLEXITY: 'HIGH',
@@ -81,7 +81,7 @@ module.exports = {
   SQL_QUERY: `
     WITH LATEST_MONTH AS (
         SELECT MAX(YEAR_ID || LPAD(MONTH_ID, 2, '0')) as LATEST_PERIOD
-        FROM DWH_MOIS.BRIGHTAI_REVENUE 
+        FROM PMSDBS.BRIGHTAI_REVENUE 
         WHERE GROUP4 = 'High Speed Internet'
     ),
     
@@ -89,19 +89,17 @@ module.exports = {
         SELECT 
             REGIONAL_BILL,
             WITEL_BILL,
-            DATEL,
-            CSTO,
 
             -- Customer and Service Metrics
             COUNT(DISTINCT NIP_NAS) as TOTAL_PELANGGAN,
-            COUNT(DISTINCT NCLI) as TOTAL_NCLI,
-            COUNT(DISTINCT ND) as TOTAL_LAYANAN,
+            COUNT(DISTINCT NIP_NAS) as TOTAL_NCLI,
+            COUNT(DISTINCT NIP_NAS) as TOTAL_LAYANAN,
             
             -- Revenue Metrics
             SUM(REVENUE) as TOTAL_REVENUE,
             ROUND(AVG(REVENUE), 0) as AVG_REVENUE_PER_LAYANAN,
             ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 0) as REVENUE_PER_PELANGGAN,
-            ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NCLI), 0), 0) as REVENUE_PER_NCLI,
+            ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 0) as REVENUE_PER_NCLI,
             
             -- Revenue distribution by scaling type
             SUM(CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING NEW' THEN REVENUE ELSE 0 END) as NEW_REVENUE,
@@ -115,26 +113,20 @@ module.exports = {
             COUNT(DISTINCT GROUP3) as GROUP3_DIVERSITY,
             COUNT(DISTINCT GROUP5) as GROUP5_DIVERSITY
             
-        FROM DWH_MOIS.BRIGHTAI_REVENUE
+        FROM PMSDBS.BRIGHTAI_REVENUE
         CROSS JOIN LATEST_MONTH
         WHERE GROUP4 = 'High Speed Internet'
           AND YEAR_ID || LPAD(MONTH_ID, 2, '0') = LATEST_MONTH.LATEST_PERIOD
           AND REVENUE > 0
           AND REGIONAL_BILL IS NOT NULL
           AND WITEL_BILL IS NOT NULL
-          AND DATEL IS NOT NULL
-          AND CSTO IS NOT NULL
           AND NIP_NAS IS NOT NULL
-          AND NCLI IS NOT NULL
-          AND ND IS NOT NULL
-        GROUP BY REGIONAL_BILL, WITEL_BILL, DATEL, CSTO
+        GROUP BY REGIONAL_BILL, WITEL_BILL
     )
     
     SELECT 
         REGIONAL_BILL,
         WITEL_BILL,
-        DATEL,
-        CSTO,
         TOTAL_PELANGGAN,
         TOTAL_NCLI,
         TOTAL_LAYANAN,
@@ -161,13 +153,13 @@ module.exports = {
         RANK() OVER (PARTITION BY WITEL_BILL ORDER BY TOTAL_REVENUE DESC) as WITEL_REVENUE_RANK,
         
         -- Datel ranking
-        RANK() OVER (PARTITION BY DATEL ORDER BY TOTAL_REVENUE DESC) as DATEL_REVENUE_RANK,
+        RANK() OVER (PARTITION BY WITEL_BILL ORDER BY TOTAL_REVENUE DESC) as DATEL_REVENUE_RANK,
         
         -- Revenue contribution
         ROUND(TOTAL_REVENUE * 100.0 / NULLIF(SUM(TOTAL_REVENUE) OVER(), 0), 4) as NATIONAL_REVENUE_CONTRIBUTION,
         ROUND(TOTAL_REVENUE * 100.0 / NULLIF(SUM(TOTAL_REVENUE) OVER(PARTITION BY REGIONAL_BILL), 0), 2) as REGIONAL_REVENUE_CONTRIBUTION,
         ROUND(TOTAL_REVENUE * 100.0 / NULLIF(SUM(TOTAL_REVENUE) OVER(PARTITION BY WITEL_BILL), 0), 2) as WITEL_REVENUE_CONTRIBUTION,
-        ROUND(TOTAL_REVENUE * 100.0 / NULLIF(SUM(TOTAL_REVENUE) OVER(PARTITION BY DATEL), 0), 2) as DATEL_REVENUE_CONTRIBUTION,
+        ROUND(TOTAL_REVENUE * 100.0 / NULLIF(SUM(TOTAL_REVENUE) OVER(PARTITION BY WITEL_BILL), 0), 2) as DATEL_REVENUE_CONTRIBUTION,
         
         -- Performance categories
         CASE 
@@ -190,22 +182,22 @@ module.exports = {
     assessPerformanceLevel: function(revenue_category, revenue_per_customer, market_share_percentage) {
       const performanceMatrix = {
         'HIGH_PERFORMER': {
-          description: 'STO dengan performa revenue HSI sangat tinggi dan market dominance',
+          description: 'WITEL_BILL dengan performa revenue HSI sangat tinggi dan market dominance',
           strategic_action: 'Maintain excellence dan ekspansi ke area adjacency',
           investment_priority: 'HIGH - Scaling dan innovation initiatives'
         },
         'MEDIUM_PERFORMER': {
-          description: 'STO dengan performa revenue HSI solid dan potensi growth',
+          description: 'WITEL_BILL dengan performa revenue HSI solid dan potensi growth',
           strategic_action: 'Optimize performance dan selective expansion',
           investment_priority: 'MEDIUM - Growth acceleration programs'
         },
         'STANDARD_PERFORMER': {
-          description: 'STO dengan performa revenue HSI standard memerlukan improvement',
+          description: 'WITEL_BILL dengan performa revenue HSI standard memerlukan improvement',
           strategic_action: 'Performance improvement dan efficiency enhancement',
           investment_priority: 'MEDIUM - Operational excellence initiatives'
         },
         'LOW_PERFORMER': {
-          description: 'STO dengan performa revenue HSI rendah perlu intervesi',
+          description: 'WITEL_BILL dengan performa revenue HSI rendah perlu intervesi',
           strategic_action: 'Turnaround strategy dan fundamental restructuring',
           investment_priority: 'LOW - Selective intervention only'
         }
@@ -282,15 +274,15 @@ module.exports = {
         return {
           regional: regional,
           leader_sto: {
-            kode: topSTO.CSTO,
+            kode: topSTO.WITEL_BILL,
             witel: topSTO.WITEL_BILL,
-            datel: topSTO.DATEL,
+            datel: topSTO.WITEL_BILL,
             revenue: topSTO.TOTAL_REVENUE,
-            market_share: ((topSTO.TOTAL_REVENUE / totalRegionalRevenue) * 100).toFixed(2)
+            market_share: ((topSTO.TOTAL_REVENUE / (totalRegionalRevenue || 1)) * 100).toFixed(2)
           },
           total_sto_count: stos.length,
           total_regional_revenue: totalRegionalRevenue,
-          average_revenue_per_sto: Math.round(totalRegionalRevenue / stos.length)
+          average_revenue_per_sto: Math.round(totalRegionalRevenue / (stos.length || 1))
         };
       }).sort((a, b) => b.total_regional_revenue - a.total_regional_revenue);
     },
@@ -359,7 +351,7 @@ module.exports = {
       const regionalLeaders = this.identifyRegionalLeaders(data);
       const efficiencyMetrics = this.generateEfficiencyMetrics(data);
       
-      // Top 10 STO by revenue
+      // Top 10 WITEL_BILL by revenue
       const topSTO = data.slice(0, 10).map(sto => {
         const performanceAssessment = this.assessPerformanceLevel(
           sto.PERFORMANCE_CATEGORY, 
@@ -397,36 +389,36 @@ module.exports = {
         acc[item.REGIONAL_BILL].customers += item.TOTAL_PELANGGAN;
         acc[item.REGIONAL_BILL].ncli += item.TOTAL_NCLI;
         acc[item.REGIONAL_BILL].witel_count.add(item.WITEL_BILL);
-        acc[item.REGIONAL_BILL].datel_count.add(item.DATEL);
+        acc[item.REGIONAL_BILL].datel_count.add(item.WITEL_BILL);
         return acc;
       }, {});
       
       return {
-        ringkasan: 'Analisis performa revenue HSI berdasarkan hierarchy regional, witel, datel, dan STO',
+        ringkasan: 'Analisis performa revenue HSI berdasarkan hierarchy regional, witel, datel, dan WITEL_BILL',
         periode_data: 'Data terbaru tersedia',
         
         metrik_nasional: {
-          total_sto_analyzed: data.length.toLocaleString('id-ID'),
-          total_revenue: `Rp ${totalNationalRevenue.toLocaleString('id-ID')}`,
-          total_pelanggan: totalNationalCustomers.toLocaleString('id-ID'),
-          total_ncli: totalNationalNCLI.toLocaleString('id-ID'),
-          total_layanan: totalNationalServices.toLocaleString('id-ID'),
-          rata_revenue_per_sto: `Rp ${Math.round(totalNationalRevenue / data.length).toLocaleString('id-ID')}`,
-          rata_revenue_per_pelanggan: `Rp ${Math.round(totalNationalRevenue / totalNationalCustomers).toLocaleString('id-ID')}`
+          total_sto_analyzed: (data.length || 0).toLocaleString('id-ID'),
+          total_revenue: `Rp ${(totalNationalRevenue || 0).toLocaleString('id-ID')}`,
+          total_pelanggan: (totalNationalCustomers || 0).toLocaleString('id-ID'),
+          total_ncli: (totalNationalNCLI || 0).toLocaleString('id-ID'),
+          total_layanan: (totalNationalServices || 0).toLocaleString('id-ID'),
+          rata_revenue_per_sto: `Rp ${Math.round(totalNationalRevenue / (data.length || 1)).toLocaleString('id-ID')}`,
+          rata_revenue_per_pelanggan: `Rp ${Math.round(totalNationalRevenue / (totalNationalCustomers || 1)).toLocaleString('id-ID')}`
         },
         
         benchmark_efisiensi: {
           revenue_benchmarks: {
-            top_10_percent: `Rp ${efficiencyMetrics.revenue_benchmarks.p90.toLocaleString('id-ID')}`,
-            top_quartile: `Rp ${efficiencyMetrics.revenue_benchmarks.p75.toLocaleString('id-ID')}`,
-            median: `Rp ${efficiencyMetrics.revenue_benchmarks.p50.toLocaleString('id-ID')}`,
-            bottom_quartile: `Rp ${efficiencyMetrics.revenue_benchmarks.p25.toLocaleString('id-ID')}`
+            top_10_percent: `Rp ${(efficiencyMetrics.revenue_benchmarks.p90 || 0).toLocaleString('id-ID')}`,
+            top_quartile: `Rp ${(efficiencyMetrics.revenue_benchmarks.p75 || 0).toLocaleString('id-ID')}`,
+            median: `Rp ${(efficiencyMetrics.revenue_benchmarks.p50 || 0).toLocaleString('id-ID')}`,
+            bottom_quartile: `Rp ${(efficiencyMetrics.revenue_benchmarks.p25 || 0).toLocaleString('id-ID')}`
           },
           efficiency_benchmarks: {
-            revenue_per_customer_top_quartile: `Rp ${efficiencyMetrics.efficiency_benchmarks.revenue_per_customer.top_quartile.toLocaleString('id-ID')}`,
-            revenue_per_customer_median: `Rp ${efficiencyMetrics.efficiency_benchmarks.revenue_per_customer.median.toLocaleString('id-ID')}`,
-            revenue_per_ncli_top_quartile: `Rp ${efficiencyMetrics.efficiency_benchmarks.revenue_per_ncli.top_quartile.toLocaleString('id-ID')}`,
-            revenue_per_ncli_median: `Rp ${efficiencyMetrics.efficiency_benchmarks.revenue_per_ncli.median.toLocaleString('id-ID')}`
+            revenue_per_customer_top_quartile: `Rp ${(efficiencyMetrics.efficiency_benchmarks.revenue_per_customer.top_quartile || 0).toLocaleString('id-ID')}`,
+            revenue_per_customer_median: `Rp ${(efficiencyMetrics.efficiency_benchmarks.revenue_per_customer.median || 0).toLocaleString('id-ID')}`,
+            revenue_per_ncli_top_quartile: `Rp ${(efficiencyMetrics.efficiency_benchmarks.revenue_per_ncli.top_quartile || 0).toLocaleString('id-ID')}`,
+            revenue_per_ncli_median: `Rp ${(efficiencyMetrics.efficiency_benchmarks.revenue_per_ncli.median || 0).toLocaleString('id-ID')}`
           }
         },
         
@@ -435,10 +427,10 @@ module.exports = {
           .map(([category, stats]) => ({
             kategori: category,
             jumlah_sto: stats.count,
-            total_revenue: `Rp ${stats.revenue.toLocaleString('id-ID')}`,
-            total_pelanggan: stats.customers.toLocaleString('id-ID'),
-            kontribusi_revenue: `${((stats.revenue / totalNationalRevenue) * 100).toFixed(2)}%`,
-            rata_revenue_per_sto: `Rp ${Math.round(stats.revenue / stats.count).toLocaleString('id-ID')}`
+            total_revenue: `Rp ${(stats.revenue || 0).toLocaleString('id-ID')}`,
+            total_pelanggan: (stats.customers || 0).toLocaleString('id-ID'),
+            kontribusi_revenue: `${((stats.revenue / (totalNationalRevenue || 1)) * 100).toFixed(2)}%`,
+            rata_revenue_per_sto: `Rp ${Math.round(stats.revenue / (stats.count || 1)).toLocaleString('id-ID')}`
           })),
         
         regional_leaders: regionalLeaders.slice(0, 7).map(regional => ({
@@ -447,27 +439,27 @@ module.exports = {
             kode_nama: regional.leader_sto.kode,
             witel: regional.leader_sto.witel,
             datel: regional.leader_sto.datel,
-            revenue: `Rp ${regional.leader_sto.revenue.toLocaleString('id-ID')}`,
+            revenue: `Rp ${(regional.leader_sto.revenue || 0).toLocaleString('id-ID')}`,
             market_share_regional: `${regional.leader_sto.market_share}%`
           },
           total_sto: regional.total_sto_count,
-          total_revenue_regional: `Rp ${regional.total_regional_revenue.toLocaleString('id-ID')}`,
-          rata_revenue_per_sto: `Rp ${regional.average_revenue_per_sto.toLocaleString('id-ID')}`
+          total_revenue_regional: `Rp ${(regional.total_regional_revenue || 0).toLocaleString('id-ID')}`,
+          rata_revenue_per_sto: `Rp ${(regional.average_revenue_per_sto || 0).toLocaleString('id-ID')}`
         })),
         
         top_10_sto_performer: topSTO.map(sto => ({
           ranking_nasional: sto.NATIONAL_REVENUE_RANK,
           regional: sto.REGIONAL_BILL,
           witel: sto.WITEL_BILL,
-          datel: sto.DATEL,
-          kode_sto: sto.CSTO,
-          total_revenue: `Rp ${sto.TOTAL_REVENUE.toLocaleString('id-ID')}`,
+          datel: sto.WITEL_BILL,
+          kode_sto: sto.WITEL_BILL,
+          total_revenue: `Rp ${(sto.TOTAL_REVENUE || 0).toLocaleString('id-ID')}`,
           kontribusi_nasional: `${sto.NATIONAL_REVENUE_CONTRIBUTION}%`,
-          total_pelanggan: sto.TOTAL_PELANGGAN.toLocaleString('id-ID'),
-          total_ncli: sto.TOTAL_NCLI.toLocaleString('id-ID'),
-          total_layanan: sto.TOTAL_LAYANAN.toLocaleString('id-ID'),
-          revenue_per_pelanggan: `Rp ${sto.REVENUE_PER_PELANGGAN.toLocaleString('id-ID')}`,
-          revenue_per_ncli: `Rp ${sto.REVENUE_PER_NCLI.toLocaleString('id-ID')}`,
+          total_pelanggan: (sto.TOTAL_PELANGGAN || 0).toLocaleString('id-ID'),
+          total_ncli: (sto.TOTAL_NCLI || 0).toLocaleString('id-ID'),
+          total_layanan: (sto.TOTAL_LAYANAN || 0).toLocaleString('id-ID'),
+          revenue_per_pelanggan: `Rp ${(sto.REVENUE_PER_PELANGGAN || 0).toLocaleString('id-ID')}`,
+          revenue_per_ncli: `Rp ${(sto.REVENUE_PER_NCLI || 0).toLocaleString('id-ID')}`,
           kategori_performa: sto.PERFORMANCE_CATEGORY,
           ranking_regional: sto.REGIONAL_REVENUE_RANK,
           ranking_witel: sto.WITEL_REVENUE_RANK,
@@ -491,22 +483,22 @@ module.exports = {
           jumlah_sto: data.sto_count,
           jumlah_witel: data.witel_count.size,
           jumlah_datel: data.datel_count.size,
-          total_revenue: `Rp ${data.revenue.toLocaleString('id-ID')}`,
-          total_pelanggan: data.customers.toLocaleString('id-ID'),
-          total_ncli: data.ncli.toLocaleString('id-ID'),
-          rata_revenue_per_sto: `Rp ${Math.round(data.revenue / data.sto_count).toLocaleString('id-ID')}`,
-          kontribusi_nasional: `${((data.revenue / totalNationalRevenue) * 100).toFixed(2)}%`
+          total_revenue: `Rp ${(data.revenue || 0).toLocaleString('id-ID')}`,
+          total_pelanggan: (data.customers || 0).toLocaleString('id-ID'),
+          total_ncli: (data.ncli || 0).toLocaleString('id-ID'),
+          rata_revenue_per_sto: `Rp ${Math.round(data.revenue / (data.sto_count || 1)).toLocaleString('id-ID')}`,
+          kontribusi_nasional: `${((data.revenue / (totalNationalRevenue || 1)) * 100).toFixed(2)}%`
         })).sort((a, b) => 
           parseInt(b.total_revenue.replace(/[^\d]/g, '')) - parseInt(a.total_revenue.replace(/[^\d]/g, ''))
         ),
         
         insight_bisnis: [
-          'Identifikasi STO dengan performa revenue HSI tertinggi dan terendah dengan hierarchy lengkap',
-          'Analisis distribusi coverage HSI berdasarkan geographic footprint regional-witel-datel-STO',
-          'Evaluasi efisiensi revenue per pelanggan, NCLI, dan layanan di setiap level hierarchy',
-          'Monitoring kontribusi masing-masing STO terhadap revenue witel, datel, regional, dan nasional',
+          'Identifikasi WITEL_BILL dengan performa revenue HSI tertinggi dan terendah dengan hierarchy lengkap',
+          'Analisis distribusi coverage HSI berdasarkan geographic footprint regional-witel-datel-WITEL_BILL',
+          'Evaluasi efisiensi revenue per pelanggan, NIP_NAS, dan layanan di setiap level hierarchy',
+          'Monitoring kontribusi masing-masing WITEL_BILL terhadap revenue witel, datel, regional, dan nasional',
           'Assessment ranking performance across different geographic levels',
-          'Benchmark performa STO untuk resource allocation dan investment strategy'
+          'Benchmark performa WITEL_BILL untuk resource allocation dan investment strategy'
         ],
         
         rekomendasi_strategis: [

@@ -5,7 +5,7 @@ module.exports = {
   RULE_META: {
     RULE_ID: 'ps_008',
     RULE_NAME: 'revenue_per_bandwidth',
-    DESCRIPTION: 'Analisis revenue berdasarkan kategori bandwidth HSI dengan klasifikasi produk yang tepat menggunakan ORDER_ID, NCLI, dan ND_HSI',
+    DESCRIPTION: 'Analisis revenue berdasarkan kategori bandwidth HSI',
     DATABASE: 'BRIGHTAI_SALES',
     CATEGORY: 'REVENUE_ANALYSIS',
     COMPLEXITY: 'HIGH',
@@ -82,10 +82,15 @@ module.exports = {
             TYPE_TRANS,
             PACKAGE_NAME,
             PRODUCT,
-            BW,
             EKOSISTEM,
             PROVIDER,
-            
+            -- Extract bandwidth (Mbps) from PACKAGE_NAME patterns like HSIE50M, HSIEF20M, 50 Mbps, etc.
+            COALESCE(
+                TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), '([0-9]+)[[:space:]]*MBPS', 1, 1, 'i', 1)),
+                TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'HSIE[F]?([0-9]+)M', 1, 1, 'i', 1)),
+                TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'INETF?([0-9]+)M', 1, 1, 'i', 1))
+            ) as EXTRACTED_BW_MBPS,
+
             -- HSI Bisnis Classification
             CASE 
                 WHEN UPPER(PRODUCT) = 'WMS' THEN 0
@@ -153,26 +158,40 @@ module.exports = {
                  
             CASE WHEN UPPER(PACKAGE_NAME) LIKE '%NETMONK%' THEN 1 ELSE 0 END as IS_NETMONK,
             
-            -- Bandwidth categorization
-            CASE 
-                WHEN CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) >= 200000 THEN 'Ultra Premium (≥200 Mbps)'
-                WHEN CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) >= 100000 THEN 'Premium (100-199 Mbps)'
-                WHEN CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) >= 50000 THEN 'High Speed (50-99 Mbps)'
-                WHEN CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) >= 20000 THEN 'Standard (20-49 Mbps)'
-                WHEN CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) > 0 THEN 'Basic (<20 Mbps)'
+            -- Bandwidth categorization (using extracted BW from PACKAGE_NAME)
+            CASE
+                WHEN COALESCE(
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), '([0-9]+)[[:space:]]*MBPS', 1, 1, 'i', 1)),
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'HSIE[F]?([0-9]+)M', 1, 1, 'i', 1)),
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'INETF?([0-9]+)M', 1, 1, 'i', 1))
+                ) >= 200 THEN 'Ultra Premium (≥200 Mbps)'
+                WHEN COALESCE(
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), '([0-9]+)[[:space:]]*MBPS', 1, 1, 'i', 1)),
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'HSIE[F]?([0-9]+)M', 1, 1, 'i', 1)),
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'INETF?([0-9]+)M', 1, 1, 'i', 1))
+                ) >= 100 THEN 'Premium (100-199 Mbps)'
+                WHEN COALESCE(
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), '([0-9]+)[[:space:]]*MBPS', 1, 1, 'i', 1)),
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'HSIE[F]?([0-9]+)M', 1, 1, 'i', 1)),
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'INETF?([0-9]+)M', 1, 1, 'i', 1))
+                ) >= 50 THEN 'High Speed (50-99 Mbps)'
+                WHEN COALESCE(
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), '([0-9]+)[[:space:]]*MBPS', 1, 1, 'i', 1)),
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'HSIE[F]?([0-9]+)M', 1, 1, 'i', 1)),
+                    TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'INETF?([0-9]+)M', 1, 1, 'i', 1))
+                ) > 0 THEN 'Standard/Basic (<50 Mbps)'
                 ELSE 'Unknown'
             END as BANDWIDTH_CATEGORY,
-            
-            -- Bandwidth numeric value for calculations
-            CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) as BANDWIDTH_NUMERIC
+
+            -- Bandwidth numeric value for calculations (in Mbps, extracted from PACKAGE_NAME)
+            COALESCE(
+                TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), '([0-9]+)[[:space:]]*MBPS', 1, 1, 'i', 1)),
+                TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'HSIE[F]?([0-9]+)M', 1, 1, 'i', 1)),
+                TO_NUMBER(REGEXP_SUBSTR(UPPER(PACKAGE_NAME), 'INETF?([0-9]+)M', 1, 1, 'i', 1))
+            ) as BANDWIDTH_NUMERIC
             
         FROM DWH_MOIS.BRIGHTAI_SALES
-        WHERE ORDER_DATE >= ADD_MONTHS(SYSDATE, -3)
-          AND BW IS NOT NULL 
-          AND TRIM(BW) != ''
-          AND ORDER_ID IS NOT NULL
-          AND NCLI IS NOT NULL
-          AND ND_HSI IS NOT NULL
+        WHERE ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD')
     ),
     
     BANDWIDTH_REVENUE_ANALYSIS AS (
@@ -219,7 +238,7 @@ module.exports = {
             COUNT(DISTINCT WITEL) as WITEL_COVERAGE,
             
             -- Average bandwidth untuk pricing estimation
-            AVG(BANDWIDTH_NUMERIC) as AVG_BANDWIDTH_KBPS,
+            AVG(BANDWIDTH_NUMERIC) as AVG_BANDWIDTH_MBPS,
             
             -- Mix percentages
             COUNT(DISTINCT CASE WHEN IS_HSI_BISNIS = 1 THEN ORDER_ID END) * 100.0 / NULLIF(COUNT(DISTINCT CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) THEN ORDER_ID END), 0) as BISNIS_MIX_PCT,
@@ -263,7 +282,7 @@ module.exports = {
             t.NETMONK_ORDERS,
             t.REGIONAL_COVERAGE,
             t.WITEL_COVERAGE,
-            t.AVG_BANDWIDTH_KBPS,
+            t.AVG_BANDWIDTH_MBPS,
             t.BISNIS_MIX_PCT,
             t.BASIC_MIX_PCT,
             t.TOTAL_BUNDLING_PCT,
@@ -329,7 +348,7 @@ module.exports = {
             t.NETMONK_ORDERS,
             t.REGIONAL_COVERAGE,
             t.WITEL_COVERAGE,
-            t.AVG_BANDWIDTH_KBPS,
+            t.AVG_BANDWIDTH_MBPS,
             t.BISNIS_MIX_PCT,
             t.BASIC_MIX_PCT,
             t.TOTAL_BUNDLING_PCT,
@@ -374,7 +393,7 @@ module.exports = {
         ROUND(DIGITAL_PENETRATION_PCT, 1) as DIGITAL_PENETRATION_PCT,
         REGIONAL_COVERAGE,
         WITEL_COVERAGE,
-        ROUND(AVG_BANDWIDTH_KBPS, 0) as RATA_RATA_BANDWIDTH_KBPS,
+        ROUND(AVG_BANDWIDTH_MBPS, 0) as RATA_RATA_BANDWIDTH_MBPS,
         ESTIMATED_BASE_ARPU,
         BUNDLING_PREMIUM_FACTOR,
         DIGITAL_PREMIUM_FACTOR,
@@ -477,11 +496,11 @@ module.exports = {
       // Top categories berdasarkan data aktual
       analysis.kategori_teratas = data.slice(0, 3).map(d => ({
         kategori: d.BANDWIDTH_CATEGORY,
-        kontribusi_revenue: `${d.REVENUE_CONTRIBUTION_PCT}%`,
-        arpu_estimasi: `Rp ${d.FINAL_MONTHLY_ARPU.toLocaleString('id-ID')}`,
-        total_pelanggan: d.TOTAL_HSI_PELANGGAN.toLocaleString('id-ID'),
-        total_order: d.TOTAL_HSI_ORDERS.toLocaleString('id-ID'),
-        total_layanan: d.TOTAL_HSI_LAYANAN.toLocaleString('id-ID')
+        kontribusi_revenue: `${d.REVENUE_CONTRIBUTION_PCT || 0}%`,
+        arpu_estimasi: `Rp ${(d.FINAL_MONTHLY_ARPU || 0).toLocaleString('id-ID')}`,
+        total_pelanggan: (d.TOTAL_HSI_PELANGGAN || 0).toLocaleString('id-ID'),
+        total_order: (d.TOTAL_HSI_ORDERS || 0).toLocaleString('id-ID'),
+        total_layanan: (d.TOTAL_HSI_LAYANAN || 0).toLocaleString('id-ID')
       }));
       
       // Generate insights berdasarkan data aktual
@@ -490,18 +509,30 @@ module.exports = {
       );
       const premium_revenue_share = premium_segments.reduce((sum, d) => sum + d.REVENUE_CONTRIBUTION_PCT, 0);
       
-      analysis.insights.push(`Segmen premium (≥100 Mbps) berkontribusi ${premium_revenue_share.toFixed(1)}% dari total estimasi revenue`);
+      analysis.insights.push({
+        kategori: 'Kontribusi Premium',
+        nilai: `Segmen premium (≥100 Mbps) berkontribusi ${(premium_revenue_share || 0).toFixed(1)}% dari total estimasi revenue`
+      });
       
       const avg_digital_penetration = data.reduce((sum, d) => sum + d.DIGITAL_PENETRATION_PCT, 0) / data.length;
-      analysis.insights.push(`Rata-rata penetrasi produk digital adalah ${avg_digital_penetration.toFixed(1)}%`);
+      analysis.insights.push({
+        kategori: 'Penetrasi Digital',
+        nilai: `Rata-rata penetrasi produk digital adalah ${(avg_digital_penetration || 0).toFixed(1)}%`
+      });
       
       const high_bundling_segments = data.filter(d => d.TOTAL_BUNDLING_PCT > 50);
       if (high_bundling_segments.length > 0) {
-        analysis.insights.push(`${high_bundling_segments.length} kategori bandwidth memiliki tingkat bundling di atas 50%`);
+        analysis.insights.push({
+          kategori: 'Adopsi Bundling',
+          nilai: `${high_bundling_segments.length} kategori bandwidth memiliki tingkat bundling di atas 50%`
+        });
       }
       
       const avg_layanan_per_pelanggan = analysis.total_layanan / analysis.total_pelanggan;
-      analysis.insights.push(`Rata-rata ${avg_layanan_per_pelanggan.toFixed(2)} layanan HSI per pelanggan`);
+      analysis.insights.push({
+        kategori: 'Rasio Layanan',
+        nilai: `Rata-rata ${(avg_layanan_per_pelanggan || 0).toFixed(2)} layanan HSI per pelanggan`
+      });
       
       return analysis;
     },
@@ -529,44 +560,44 @@ module.exports = {
         return {
           kategori_bandwidth: kategori.BANDWIDTH_CATEGORY,
           metrik_fundamental: {
-            total_pesanan: kategori.TOTAL_PESANAN.toLocaleString('id-ID'),
-            total_pelanggan_unik: kategori.TOTAL_PELANGGAN_UNIK.toLocaleString('id-ID'),
-            total_layanan_hsi_unik: kategori.TOTAL_LAYANAN_HSI_UNIK.toLocaleString('id-ID'),
+            total_pesanan: (kategori.TOTAL_PESANAN || 0).toLocaleString('id-ID'),
+            total_pelanggan_unik: (kategori.TOTAL_PELANGGAN_UNIK || 0).toLocaleString('id-ID'),
+            total_layanan_hsi_unik: (kategori.TOTAL_LAYANAN_HSI_UNIK || 0).toLocaleString('id-ID'),
             rata_rata_order_per_pelanggan: kategori.RATA_RATA_ORDER_PER_PELANGGAN,
             rata_rata_layanan_per_pelanggan: kategori.RR_LAYANAN_PER_PELANGGAN,
-            rata_rata_bandwidth_kbps: `${kategori.RATA_RATA_BANDWIDTH_KBPS.toLocaleString('id-ID')} Kbps`
+            rata_rata_bandwidth_kbps: `${(kategori.RATA_RATA_BANDWIDTH_MBPS || 0).toLocaleString('id-ID')} Mbps`
           },
           metrik_hsi: {
-            total_order_hsi: kategori.TOTAL_HSI_ORDERS.toLocaleString('id-ID'),
-            total_pelanggan_hsi: kategori.TOTAL_HSI_PELANGGAN.toLocaleString('id-ID'),
-            total_layanan_hsi: kategori.TOTAL_HSI_LAYANAN.toLocaleString('id-ID'),
-            order_hsi_bisnis: kategori.HSI_BISNIS_ORDERS.toLocaleString('id-ID'),
-            order_hsi_basic: kategori.HSI_BASIC_ORDERS.toLocaleString('id-ID'),
-            pelanggan_hsi_bisnis: kategori.HSI_BISNIS_PELANGGAN.toLocaleString('id-ID'),
-            pelanggan_hsi_basic: kategori.HSI_BASIC_PELANGGAN.toLocaleString('id-ID'),
-            komposisi_bisnis: `${kategori.BISNIS_MIX_PCT}%`,
-            komposisi_basic: `${kategori.BASIC_MIX_PCT}%`
+            total_order_hsi: (kategori.TOTAL_HSI_ORDERS || 0).toLocaleString('id-ID'),
+            total_pelanggan_hsi: (kategori.TOTAL_HSI_PELANGGAN || 0).toLocaleString('id-ID'),
+            total_layanan_hsi: (kategori.TOTAL_HSI_LAYANAN || 0).toLocaleString('id-ID'),
+            order_hsi_bisnis: (kategori.HSI_BISNIS_ORDERS || 0).toLocaleString('id-ID'),
+            order_hsi_basic: (kategori.HSI_BASIC_ORDERS || 0).toLocaleString('id-ID'),
+            pelanggan_hsi_bisnis: (kategori.HSI_BISNIS_PELANGGAN || 0).toLocaleString('id-ID'),
+            pelanggan_hsi_basic: (kategori.HSI_BASIC_PELANGGAN || 0).toLocaleString('id-ID'),
+            komposisi_bisnis: `${kategori.BISNIS_MIX_PCT || 0}%`,
+            komposisi_basic: `${kategori.BASIC_MIX_PCT || 0}%`
           },
           analisis_bundling: {
-            hard_bundling: kategori.HARD_BUNDLING_ORDERS.toLocaleString('id-ID'),
-            alacarte_bundling: kategori.ALACARTE_BUNDLING_ORDERS.toLocaleString('id-ID'),
-            standalone: kategori.STANDALONE_ORDERS.toLocaleString('id-ID'),
-            tingkat_bundling_total: `${kategori.TOTAL_BUNDLING_PCT}%`,
-            tingkat_hard_bundling: `${kategori.HARD_BUNDLING_PCT}%`
+            hard_bundling: (kategori.HARD_BUNDLING_ORDERS || 0).toLocaleString('id-ID'),
+            alacarte_bundling: (kategori.ALACARTE_BUNDLING_ORDERS || 0).toLocaleString('id-ID'),
+            standalone: (kategori.STANDALONE_ORDERS || 0).toLocaleString('id-ID'),
+            tingkat_bundling_total: `${kategori.TOTAL_BUNDLING_PCT || 0}%`,
+            tingkat_hard_bundling: `${kategori.HARD_BUNDLING_PCT || 0}%`
           },
           penetrasi_digital: {
-            pijar_sekolah: kategori.PIJAR_ORDERS.toLocaleString('id-ID'),
-            oca_interaction: kategori.OCA_INTERACTION_ORDERS.toLocaleString('id-ID'),
-            oca_blast: kategori.OCA_BLAST_ORDERS.toLocaleString('id-ID'),
-            netmonk: kategori.NETMONK_ORDERS.toLocaleString('id-ID'),
-            tingkat_penetrasi_digital: `${kategori.DIGITAL_PENETRATION_PCT}%`
+            pijar_sekolah: (kategori.PIJAR_ORDERS || 0).toLocaleString('id-ID'),
+            oca_interaction: (kategori.OCA_INTERACTION_ORDERS || 0).toLocaleString('id-ID'),
+            oca_blast: (kategori.OCA_BLAST_ORDERS || 0).toLocaleString('id-ID'),
+            netmonk: (kategori.NETMONK_ORDERS || 0).toLocaleString('id-ID'),
+            tingkat_penetrasi_digital: `${kategori.DIGITAL_PENETRATION_PCT || 0}%`
           },
           metrik_revenue: {
-            arpu_dasar_estimasi: `Rp ${kategori.ESTIMATED_BASE_ARPU.toLocaleString('id-ID')}`,
+            arpu_dasar_estimasi: `Rp ${(kategori.ESTIMATED_BASE_ARPU || 0).toLocaleString('id-ID')}`,
             faktor_premium_bundling: kategori.BUNDLING_PREMIUM_FACTOR,
             faktor_premium_digital: kategori.DIGITAL_PREMIUM_FACTOR,
-            arpu_final_estimasi: `Rp ${kategori.FINAL_MONTHLY_ARPU.toLocaleString('id-ID')}`,
-            total_revenue_bulanan_estimasi: `Rp ${kategori.TOTAL_MONTHLY_REVENUE_ESTIMATE.toLocaleString('id-ID')}`,
+            arpu_final_estimasi: `Rp ${(kategori.FINAL_MONTHLY_ARPU || 0).toLocaleString('id-ID')}`,
+            total_revenue_bulanan_estimasi: `Rp ${(kategori.TOTAL_MONTHLY_REVENUE_ESTIMATE || 0).toLocaleString('id-ID')}`,
             kontribusi_revenue: `${kategori.REVENUE_CONTRIBUTION_PCT}%`,
             ranking_revenue: kategori.REVENUE_RANKING,
             ranking_arpu: kategori.ARPU_RANKING
@@ -589,11 +620,11 @@ module.exports = {
         periode_data: '3 bulan terakhir',
         total_kategori_bandwidth: trends.total_kategori,
         metrik_keseluruhan: {
-          total_estimasi_revenue_bulanan: `Rp ${trends.total_revenue.toLocaleString('id-ID')}`,
-          total_order_hsi: trends.total_orders.toLocaleString('id-ID'),
-          total_pelanggan_hsi: trends.total_pelanggan.toLocaleString('id-ID'),
-          total_layanan_hsi: trends.total_layanan.toLocaleString('id-ID'),
-          rata_rata_layanan_per_pelanggan: (trends.total_layanan / trends.total_pelanggan).toFixed(2)
+          total_estimasi_revenue_bulanan: `Rp ${(trends.total_revenue || 0).toLocaleString('id-ID')}`,
+          total_order_hsi: (trends.total_orders || 0).toLocaleString('id-ID'),
+          total_pelanggan_hsi: (trends.total_pelanggan || 0).toLocaleString('id-ID'),
+          total_layanan_hsi: (trends.total_layanan || 0).toLocaleString('id-ID'),
+          rata_rata_layanan_per_pelanggan: ((trends.total_layanan / (trends.total_pelanggan || 1)) || 0).toFixed(2)
         },
         kategori_revenue_teratas: trends.kategori_teratas,
         insight_utama: trends.insights,
@@ -605,12 +636,12 @@ module.exports = {
           revenue_calculation: 'Total pelanggan unik HSI × ARPU final (dengan premium factors)'
         },
         rekomendasi_strategis: [
-          'Fokus investasi pada segmen dengan kontribusi revenue tertinggi berdasarkan data aktual',
-          'Tingkatkan penetrasi bundling untuk meningkatkan ARPU secara keseluruhan',
-          'Kembangkan strategi upselling dari kategori bandwidth rendah ke tinggi',
-          'Ekspansi produk digital pada segmen dengan penetrasi rendah',
-          'Optimasi cross-selling layanan untuk meningkatkan rata-rata layanan per pelanggan',
-          'Monitor efisiensi order per pelanggan untuk mengidentifikasi peluang konsolidasi'
+          { area: 'Fokus Investasi', rekomendasi: 'Fokus investasi pada segmen dengan kontribusi revenue tertinggi berdasarkan data aktual' },
+          { area: 'Strategi Bundling', rekomendasi: 'Tingkatkan penetrasi bundling untuk meningkatkan ARPU secara keseluruhan' },
+          { area: 'Peluang Upselling', rekomendasi: 'Kembangkan strategi upselling dari kategori bandwidth rendah ke tinggi' },
+          { area: 'Ekspansi Digital', rekomendasi: 'Ekspansi produk digital pada segmen dengan penetrasi rendah' },
+          { area: 'Cross-selling', rekomendasi: 'Optimasi cross-selling layanan untuk meningkatkan rata-rata layanan per pelanggan' },
+          { area: 'Efisiensi Operasional', rekomendasi: 'Monitor efisiensi order per pelanggan untuk mengidentifikasi peluang konsolidasi' }
         ]
       };
     }

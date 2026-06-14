@@ -86,13 +86,13 @@ module.exports = {
             TYPE_TRANS,
             PACKAGE_NAME,
             PRODUCT,
-            BW,
             STATUS_RESUME,
+            BW,
             EKOSISTEM,
             PROVIDER,
             ND_VOICE,
             TGL_PSB,
-            
+
             -- HSI Bisnis Classification
             CASE 
                 WHEN UPPER(PRODUCT) = 'WMS' THEN 0
@@ -162,7 +162,7 @@ module.exports = {
             
             -- Voice service identification
             CASE WHEN ND_VOICE IS NOT NULL AND TRIM(ND_VOICE) != '' THEN 1 ELSE 0 END as HAS_VOICE,
-            
+
             -- Customer Transaction Type Classification (from TYPE_TRANS)
             CASE 
                 WHEN TYPE_TRANS = 'NEW SALES' THEN 'Penjualan Baru'
@@ -176,9 +176,9 @@ module.exports = {
             END as TRANSACTION_TYPE,
             
             -- Target Ecosystem Classification (from EKOSISTEM)
-            CASE 
+            CASE
                 WHEN UPPER(EKOSISTEM) IN ('EDUCATION', 'SEKOLAH', 'PESANTREN') THEN 'Pendidikan'
-                WHEN UPPER(EKOSISTEM) IN ('GOVERNMENT') THEN 'Pemerintahan' 
+                WHEN UPPER(EKOSISTEM) IN ('GOVERNMENT') THEN 'Pemerintahan'
                 WHEN UPPER(EKOSISTEM) IN ('HEALTH', 'KLINIK', 'HEALTY') THEN 'Kesehatan'
                 WHEN UPPER(EKOSISTEM) IN ('HOTEL', 'PROPERTY', 'APARTEMEN') THEN 'Hospitalitas'
                 WHEN UPPER(EKOSISTEM) IN ('AGRI', 'AGRICULTURE') THEN 'Pertanian'
@@ -187,28 +187,12 @@ module.exports = {
                 ELSE 'Lainnya'
             END as CUSTOMER_ECOSYSTEM,
             
-            -- Customer Tenure Analysis (from TGL_PSB)
-            CASE 
-                WHEN TGL_PSB IS NOT NULL AND ORDER_DATE IS NOT NULL 
-                THEN MONTHS_BETWEEN(ORDER_DATE, TGL_PSB)
-                ELSE NULL
-            END as CUSTOMER_TENURE_MONTHS,
-            
-            CASE 
-                WHEN TGL_PSB IS NOT NULL AND ORDER_DATE IS NOT NULL THEN
-                    CASE 
-                        WHEN MONTHS_BETWEEN(ORDER_DATE, TGL_PSB) <= 12 THEN 'Customer Baru'
-                        WHEN MONTHS_BETWEEN(ORDER_DATE, TGL_PSB) <= 36 THEN 'Customer Established'
-                        ELSE 'Customer Jangka Panjang'
-                    END
-                ELSE 'Tenure Tidak Diketahui'
-            END as CUSTOMER_VINTAGE
+            -- Customer Tenure Analysis — disabled (TGL_PSB format mismatch)
+            NULL as CUSTOMER_TENURE_MONTHS,
+            'Tenure Tidak Diketahui' as CUSTOMER_VINTAGE
             
         FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE ORDER_DATE >= ADD_MONTHS(SYSDATE, -24) -- 2 years data for seasonal analysis
-          AND ORDER_ID IS NOT NULL    -- Pastikan ORDER_ID tidak null
-          AND NCLI IS NOT NULL        -- Pastikan NCLI tidak null
-          AND ND_HSI IS NOT NULL      -- Pastikan ND_HSI tidak null untuk layanan HSI
     ),
     
     MONTHLY_PATTERNS AS (
@@ -271,7 +255,7 @@ module.exports = {
             COUNT(DISTINCT CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) AND HAS_VOICE = 1 THEN ORDER_ID END) as voice_combo_orders,
             
             -- Average bandwidth analysis
-            AVG(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) 
+            AVG(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1)
                      AND CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) > 0
                 THEN CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) END) as avg_bandwidth_kbps,
             
@@ -459,22 +443,23 @@ module.exports = {
             oa.grand_avg_new_customer_mix,
             
             -- Seasonal indices calculation dengan metrik yang diperluas
-            ROUND((ss.avg_total_pesanan - oa.grand_avg_pesanan) / oa.grand_avg_pesanan * 100, 1) as seasonal_index_pesanan,
-            ROUND((ss.avg_total_pelanggan - oa.grand_avg_pelanggan) / oa.grand_avg_pelanggan * 100, 1) as seasonal_index_pelanggan,
-            ROUND((ss.avg_total_hsi_orders - oa.grand_avg_orders) / oa.grand_avg_orders * 100, 1) as seasonal_index_volume,
-            ROUND((ss.avg_total_hsi_customers - oa.grand_avg_customers) / oa.grand_avg_customers * 100, 1) as seasonal_index_customers,
-            ROUND((ss.avg_bisnis_mix_pct - oa.grand_avg_bisnis_mix) / oa.grand_avg_bisnis_mix * 100, 1) as seasonal_index_bisnis_mix,
-            ROUND((ss.avg_bundling_rate - oa.grand_avg_bundling_rate) / oa.grand_avg_bundling_rate * 100, 1) as seasonal_index_bundling,
-            ROUND((ss.avg_digital_penetration - oa.grand_avg_digital_penetration) / oa.grand_avg_digital_penetration * 100, 1) as seasonal_index_digital,
-            ROUND((ss.avg_new_sales_mix_pct - oa.grand_avg_new_sales_mix) / oa.grand_avg_new_sales_mix * 100, 1) as seasonal_index_new_sales,
-            ROUND((ss.avg_education_mix_pct - oa.grand_avg_education_mix) / oa.grand_avg_education_mix * 100, 1) as seasonal_index_education,
-            ROUND((ss.avg_new_customer_mix_pct - oa.grand_avg_new_customer_mix) / oa.grand_avg_new_customer_mix * 100, 1) as seasonal_index_new_customer,
-            
+            ROUND((ss.avg_total_pesanan - oa.grand_avg_pesanan) / NULLIF(oa.grand_avg_pesanan, 0) * 100, 1) as seasonal_index_pesanan,
+            ROUND((ss.avg_total_pelanggan - oa.grand_avg_pelanggan) / NULLIF(oa.grand_avg_pelanggan, 0) * 100, 1) as seasonal_index_pelanggan,
+            ROUND((ss.avg_total_hsi_orders - oa.grand_avg_orders) / NULLIF(oa.grand_avg_orders, 0) * 100, 1) as seasonal_index_volume,
+            ROUND((ss.avg_total_hsi_customers - oa.grand_avg_customers) / NULLIF(oa.grand_avg_customers, 0) * 100, 1) as seasonal_index_customers,
+            ROUND((ss.avg_bisnis_mix_pct - oa.grand_avg_bisnis_mix) / NULLIF(oa.grand_avg_bisnis_mix, 0) * 100, 1) as seasonal_index_bisnis_mix,
+            ROUND((ss.avg_bundling_rate - oa.grand_avg_bundling_rate) / NULLIF(oa.grand_avg_bundling_rate, 0) * 100, 1) as seasonal_index_bundling,
+            ROUND((ss.avg_digital_penetration - oa.grand_avg_digital_penetration) / NULLIF(oa.grand_avg_digital_penetration, 0) * 100, 1) as seasonal_index_digital,
+            ROUND((ss.avg_new_sales_mix_pct - oa.grand_avg_new_sales_mix) / NULLIF(oa.grand_avg_new_sales_mix, 0) * 100, 1) as seasonal_index_new_sales,
+            ROUND((ss.avg_education_mix_pct - oa.grand_avg_education_mix) / NULLIF(oa.grand_avg_education_mix, 0) * 100, 1) as seasonal_index_education,
+            ROUND((ss.avg_new_customer_mix_pct - oa.grand_avg_new_customer_mix) / NULLIF(oa.grand_avg_new_customer_mix, 0) * 100, 1) as seasonal_index_new_customer,
+
             -- Volatility assessment
-            ROUND(ss.stddev_total_orders / ss.avg_total_hsi_orders * 100, 1) as coefficient_of_variation,
-            
+            ROUND(ss.stddev_total_orders / NULLIF(ss.avg_total_hsi_orders, 0) * 100, 1) as coefficient_of_variation,
+
             -- Seasonal categorization based on volume
-            CASE 
+            CASE
+                WHEN NULLIF(oa.grand_avg_orders, 0) IS NULL THEN 'NORMAL'
                 WHEN (ss.avg_total_hsi_orders - oa.grand_avg_orders) / oa.grand_avg_orders * 100 >= 20 THEN 'PUNCAK'
                 WHEN (ss.avg_total_hsi_orders - oa.grand_avg_orders) / oa.grand_avg_orders * 100 >= 10 THEN 'TINGGI'
                 WHEN (ss.avg_total_hsi_orders - oa.grand_avg_orders) / oa.grand_avg_orders * 100 >= -10 THEN 'NORMAL'
@@ -858,21 +843,21 @@ module.exports = {
           tahun_data: month.YEARS_OF_DATA
         },
         metrik_fundamental: {
-          rata_rata_total_pesanan: month.RATA_RATA_TOTAL_PESANAN.toLocaleString('id-ID'),
-          rata_rata_total_pelanggan: month.RATA_RATA_TOTAL_PELANGGAN.toLocaleString('id-ID'),
-          rata_rata_total_layanan_hsi: month.RATA_RATA_TOTAL_LAYANAN_HSI.toLocaleString('id-ID'),
+          rata_rata_total_pesanan: (month.RATA_RATA_TOTAL_PESANAN || 0).toLocaleString('id-ID'),
+          rata_rata_total_pelanggan: (month.RATA_RATA_TOTAL_PELANGGAN || 0).toLocaleString('id-ID'),
+          rata_rata_total_layanan_hsi: (month.RATA_RATA_TOTAL_LAYANAN_HSI || 0).toLocaleString('id-ID'),
           efisiensi_order_per_pelanggan: month.RATA_RATA_ORDER_PER_PELANGGAN,
           efisiensi_layanan_per_pelanggan: month.RATA_RATA_LAYANAN_PER_PELANGGAN,
           efisiensi_order_per_layanan: month.RATA_RATA_ORDER_PER_LAYANAN
         },
         metrik_hsi: {
-          rata_rata_order_hsi: month.RATA_RATA_ORDER_HSI.toLocaleString('id-ID'),
-          rata_rata_customer_hsi: month.RATA_RATA_CUSTOMER_HSI.toLocaleString('id-ID'),
-          rata_rata_layanan_hsi: month.RATA_RATA_LAYANAN_HSI.toLocaleString('id-ID'),
-          rata_rata_order_bisnis: month.RATA_RATA_ORDER_BISNIS.toLocaleString('id-ID'),
-          rata_rata_order_basic: month.RATA_RATA_ORDER_BASIC.toLocaleString('id-ID'),
-          rata_rata_customer_bisnis: month.RATA_RATA_CUSTOMER_BISNIS.toLocaleString('id-ID'),
-          rata_rata_customer_basic: month.RATA_RATA_CUSTOMER_BASIC.toLocaleString('id-ID'),
+          rata_rata_order_hsi: (month.RATA_RATA_ORDER_HSI || 0).toLocaleString('id-ID'),
+          rata_rata_customer_hsi: (month.RATA_RATA_CUSTOMER_HSI || 0).toLocaleString('id-ID'),
+          rata_rata_layanan_hsi: (month.RATA_RATA_LAYANAN_HSI || 0).toLocaleString('id-ID'),
+          rata_rata_order_bisnis: (month.RATA_RATA_ORDER_BISNIS || 0).toLocaleString('id-ID'),
+          rata_rata_order_basic: (month.RATA_RATA_ORDER_BASIC || 0).toLocaleString('id-ID'),
+          rata_rata_customer_bisnis: (month.RATA_RATA_CUSTOMER_BISNIS || 0).toLocaleString('id-ID'),
+          rata_rata_customer_basic: (month.RATA_RATA_CUSTOMER_BASIC || 0).toLocaleString('id-ID'),
           komposisi_bisnis: `${month.RATA_RATA_BISNIS_MIX_PCT}%`,
           komposisi_basic: `${month.RATA_RATA_BASIC_MIX_PCT}%`
         },
@@ -917,10 +902,10 @@ module.exports = {
           indeks_digital: month.SEASONAL_INDEX_DIGITAL
         },
         metrik_volatilitas: {
-          volatilitas_order: month.VOLATILITAS_ORDER.toLocaleString('id-ID'),
+          volatilitas_order: (month.VOLATILITAS_ORDER || 0).toLocaleString('id-ID'),
           coefficient_of_variation: `${month.COEFFICIENT_OF_VARIATION}%`,
-          order_minimum: month.MIN_TOTAL_ORDERS.toLocaleString('id-ID'),
-          order_maksimum: month.MAX_TOTAL_ORDERS.toLocaleString('id-ID'),
+          order_minimum: (month.MIN_TOTAL_ORDERS || 0).toLocaleString('id-ID'),
+          order_maksimum: (month.MAX_TOTAL_ORDERS || 0).toLocaleString('id-ID'),
           stabilitas: month.COEFFICIENT_OF_VARIATION < 15 ? 'Stabil' : month.COEFFICIENT_OF_VARIATION < 25 ? 'Moderat' : 'Tinggi'
         },
         ranking_performa: {
@@ -935,9 +920,9 @@ module.exports = {
         ringkasan_eksekutif: {
           periode_analisis: '24 bulan terakhir untuk analisis pola musiman',
           total_bulan_analisis: data.length,
-          rata_rata_efisiensi_order_per_customer: customer_efficiency.avg_order_per_customer.toFixed(2),
-          rata_rata_efisiensi_service_per_customer: customer_efficiency.avg_service_per_customer.toFixed(2),
-          rata_rata_efisiensi_order_per_service: customer_efficiency.avg_order_per_service.toFixed(2),
+          rata_rata_efisiensi_order_per_customer: (customer_efficiency.avg_order_per_customer || 0).toFixed(2),
+          rata_rata_efisiensi_service_per_customer: (customer_efficiency.avg_service_per_customer || 0).toFixed(2),
+          rata_rata_efisiensi_order_per_service: (customer_efficiency.avg_order_per_service || 0).toFixed(2),
           bulan_puncak: seasonal_patterns.total_peak_months,
           bulan_rendah: seasonal_patterns.total_low_months
         },

@@ -26,12 +26,12 @@ module.exports = {
       // Performance terms familiar
       'performa fulfillment', 'kinerja fulfillment', 'efisiensi fulfillment',
       'penyelesaian order', 'sukses order', 'keberhasilan instalasi',
-      'sukses instalasi', 'instalasi hsi', 'persen sukses'
+      'sukses instalasi', 'persen sukses'
     ],
-    
+
     supporting: [
       // Process terms familiar
-      'proses', 'instalasi', 'penyelesaian', 'waktu', 'durasi',
+      'proses', 'penyelesaian',
       
       // Geographic familiar terms
       'regional', 'witel', 'wilayah', 'area', 'cabang',
@@ -58,7 +58,14 @@ module.exports = {
       if (primaryMatches > 0) {
         score = 70 + (primaryMatches * 15) + (supportingMatches * 3);
       }
-      
+
+      // Penalize if query is about installation TIME/DURATION (belongs to ps_007)
+      if ((lowerInput.includes('waktu instalasi') || lowerInput.includes('durasi instalasi')
+           || lowerInput.includes('lama instalasi') || lowerInput.includes('rata-rata instalasi'))
+          && !lowerInput.includes('fulfillment') && !lowerInput.includes('keberhasilan')) {
+        score = Math.max(score - 40, 0);
+      }
+
       return Math.min(score, 100);
     }
   },
@@ -80,7 +87,7 @@ module.exports = {
             PACKAGE_NAME,
             PRODUCT,
             EKOSISTEM,
-            
+
             -- HSI Bisnis Classification
             CASE 
                 WHEN UPPER(PRODUCT) = 'WMS' THEN 0
@@ -209,7 +216,7 @@ module.exports = {
             END as TRANSACTION_TYPE,
 
             -- Ecosystem Standardization (EKOSISTEM)
-            CASE 
+            CASE
                 WHEN UPPER(NVL(EKOSISTEM, 'LAINNYA')) IN ('EDUCATION', 'SEKOLAH', 'PESANTREN') THEN 'PENDIDIKAN'
                 WHEN UPPER(NVL(EKOSISTEM, 'LAINNYA')) IN ('GOVERNMENT', 'GOV') THEN 'PEMERINTAHAN'
                 WHEN UPPER(NVL(EKOSISTEM, 'LAINNYA')) IN ('HEALTH', 'HEALTY', 'KLINIK') THEN 'KESEHATAN'
@@ -227,10 +234,7 @@ module.exports = {
             END as ECOSYSTEM_STANDARDIZED
             
         FROM DWH_MOIS.BRIGHTAI_SALES
-        WHERE ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD') -- Data mulai dari 1 Januari 2025
-          AND ORDER_ID IS NOT NULL  -- ADDED: Pastikan ada order ID
-          AND NCLI IS NOT NULL       -- ADDED: Pastikan ada customer identifier
-          AND ND_HSI IS NOT NULL     -- ADDED: Pastikan ada HSI service identifier
+        WHERE ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD')
     ),
     
     FULFILLMENT_ANALYSIS AS (
@@ -718,15 +722,15 @@ module.exports = {
         }));
       
       // Generate insights
-      const avg_success_rate = data.reduce((sum, d) => sum + d.SUCCESS_RATE_TOTAL, 0) / data.length;
-      const avg_customer_success = data.reduce((sum, d) => sum + d.CUSTOMER_SUCCESS_RATE, 0) / data.length;
-      const avg_service_success = data.reduce((sum, d) => sum + d.SERVICE_SUCCESS_RATE, 0) / data.length;
-      const avg_fulfillment_time = data.reduce((sum, d) => sum + d.AVG_FULFILLMENT_DAYS, 0) / data.length;
+      const avg_success_rate = data.reduce((sum, d) => sum + (d.SUCCESS_RATE_TOTAL || 0), 0) / data.length;
+      const avg_customer_success = data.reduce((sum, d) => sum + (d.CUSTOMER_SUCCESS_RATE || 0), 0) / data.length;
+      const avg_service_success = data.reduce((sum, d) => sum + (d.SERVICE_SUCCESS_RATE || 0), 0) / data.length;
+      const avg_fulfillment_time = data.reduce((sum, d) => sum + (d.AVG_FULFILLMENT_DAYS || 0), 0) / data.length;
       
-      analysis.insights.push(`Rata-rata tingkat keberhasilan fulfillment order HSI dalam 2025 adalah ${avg_success_rate.toFixed(1)}%`);
-      analysis.insights.push(`Rata-rata tingkat keberhasilan customer HSI dalam 2025 adalah ${avg_customer_success.toFixed(1)}%`);
-      analysis.insights.push(`Rata-rata tingkat keberhasilan service HSI dalam 2025 adalah ${avg_service_success.toFixed(1)}%`);
-      analysis.insights.push(`Rata-rata waktu fulfillment YTD 2025 adalah ${avg_fulfillment_time.toFixed(1)} hari`);
+      analysis.insights.push(`Rata-rata tingkat keberhasilan fulfillment order HSI dalam 2025 adalah ${(avg_success_rate || 0).toFixed(1)}%`);
+      analysis.insights.push(`Rata-rata tingkat keberhasilan customer HSI dalam 2025 adalah ${(avg_customer_success || 0).toFixed(1)}%`);
+      analysis.insights.push(`Rata-rata tingkat keberhasilan service HSI dalam 2025 adalah ${(avg_service_success || 0).toFixed(1)}%`);
+      analysis.insights.push(`Rata-rata waktu fulfillment YTD 2025 adalah ${(avg_fulfillment_time || 0).toFixed(1)} hari`);
       
       if (analysis.distribusi_performa.kritis > 0) {
         analysis.insights.push(`Terdapat ${analysis.distribusi_performa.kritis} unit dengan performa kritis yang memerlukan perhatian segera untuk closing 2025`);
@@ -746,7 +750,7 @@ module.exports = {
       // YTD 2025 specific insights
       const excellent_units = analysis.distribusi_performa.sangat_baik + analysis.distribusi_performa.baik;
       const total_units = analysis.total_unit;
-      const excellence_rate = (excellent_units / total_units * 100).toFixed(1);
+      const excellence_rate = ((excellent_units / (total_units || 1) * 100) || 0).toFixed(1);
       analysis.insights.push(`${excellence_rate}% unit mencapai performa baik atau sangat baik dalam 2025`);
       
       return analysis;
@@ -784,38 +788,38 @@ module.exports = {
           },
           
           metrik_volume: {
-            total_order: unit.TOTAL_ORDERS.toLocaleString('id-ID'),
-            total_customer: unit.TOTAL_CUSTOMERS.toLocaleString('id-ID'),
-            total_layanan_hsi: unit.TOTAL_HSI_SERVICES.toLocaleString('id-ID'),
-            efisiensi_customer: `${unit.AVG_ORDERS_PER_CUSTOMER} order/customer`,
-            efisiensi_layanan: `${unit.AVG_ORDERS_PER_SERVICE} order/layanan`,
-            penetrasi_multi_service: `${unit.AVG_SERVICES_PER_CUSTOMER} layanan/customer`
+            total_order: (unit.TOTAL_ORDERS || 0).toLocaleString('id-ID'),
+            total_customer: (unit.TOTAL_CUSTOMERS || 0).toLocaleString('id-ID'),
+            total_layanan_hsi: (unit.TOTAL_HSI_SERVICES || 0).toLocaleString('id-ID'),
+            efisiensi_customer: `${unit.AVG_ORDERS_PER_CUSTOMER || 0} order/customer`,
+            efisiensi_layanan: `${unit.AVG_ORDERS_PER_SERVICE || 0} order/layanan`,
+            penetrasi_multi_service: `${unit.AVG_SERVICES_PER_CUSTOMER || 0} layanan/customer`
           },
           
           metrik_fulfillment: {
-            total_order_hsi: unit.TOTAL_HSI_ORDERS.toLocaleString('id-ID'),
-            order_hsi_bisnis: unit.HSI_BISNIS_ORDERS.toLocaleString('id-ID'),
-            order_hsi_basic: unit.HSI_BASIC_ORDERS.toLocaleString('id-ID'),
-            total_customer_hsi: unit.TOTAL_HSI_CUSTOMERS.toLocaleString('id-ID'),
-            total_layanan_hsi_aktif: unit.TOTAL_HSI_SERVICES_ACTIVE.toLocaleString('id-ID'),
-            order_berhasil: unit.SUCCESSFUL_HSI_ORDERS.toLocaleString('id-ID'),
-            customer_berhasil: unit.SUCCESSFUL_HSI_CUSTOMERS.toLocaleString('id-ID'),
-            layanan_berhasil: unit.SUCCESSFUL_HSI_SERVICES.toLocaleString('id-ID'),
-            order_gagal: unit.FAILED_HSI_ORDERS.toLocaleString('id-ID')
+            total_order_hsi: (unit.TOTAL_HSI_ORDERS || 0).toLocaleString('id-ID'),
+            order_hsi_bisnis: (unit.HSI_BISNIS_ORDERS || 0).toLocaleString('id-ID'),
+            order_hsi_basic: (unit.HSI_BASIC_ORDERS || 0).toLocaleString('id-ID'),
+            total_customer_hsi: (unit.TOTAL_HSI_CUSTOMERS || 0).toLocaleString('id-ID'),
+            total_layanan_hsi_aktif: (unit.TOTAL_HSI_SERVICES_ACTIVE || 0).toLocaleString('id-ID'),
+            order_berhasil: (unit.SUCCESSFUL_HSI_ORDERS || 0).toLocaleString('id-ID'),
+            customer_berhasil: (unit.SUCCESSFUL_HSI_CUSTOMERS || 0).toLocaleString('id-ID'),
+            layanan_berhasil: (unit.SUCCESSFUL_HSI_SERVICES || 0).toLocaleString('id-ID'),
+            order_gagal: (unit.FAILED_HSI_ORDERS || 0).toLocaleString('id-ID')
           },
           
           tingkat_keberhasilan: {
-            order_success_rate: `${unit.SUCCESS_RATE_TOTAL}%`,
-            customer_success_rate: `${unit.CUSTOMER_SUCCESS_RATE}%`,
-            service_success_rate: `${unit.SERVICE_SUCCESS_RATE}%`,
+            order_success_rate: `${unit.SUCCESS_RATE_TOTAL || 0}%`,
+            customer_success_rate: `${unit.CUSTOMER_SUCCESS_RATE || 0}%`,
+            service_success_rate: `${unit.SERVICE_SUCCESS_RATE || 0}%`,
             bisnis_success_rate: `${unit.SUCCESS_RATE_BISNIS || 0}%`,
             basic_success_rate: `${unit.SUCCESS_RATE_BASIC || 0}%`,
-            failure_rate: `${unit.FAILURE_RATE}%`
+            failure_rate: `${unit.FAILURE_RATE || 0}%`
           },
           
           analisis_waktu: {
-            rata_rata_fulfillment: `${unit.AVG_FULFILLMENT_DAYS} hari`,
-            median_fulfillment: `${unit.MEDIAN_FULFILLMENT_DAYS} hari`,
+            rata_rata_fulfillment: `${unit.AVG_FULFILLMENT_DAYS || 0} hari`,
+            median_fulfillment: `${unit.MEDIAN_FULFILLMENT_DAYS || 0} hari`,
             rata_rata_bisnis: `${unit.AVG_BISNIS_FULFILLMENT_DAYS || 0} hari`,
             rata_rata_basic: `${unit.AVG_BASIC_FULFILLMENT_DAYS || 0} hari`,
             rata_rata_penjualan_baru: `${unit.AVG_NEW_SALES_FULFILLMENT_DAYS || 0} hari`,

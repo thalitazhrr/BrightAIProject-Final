@@ -64,11 +64,9 @@ module.exports = {
             MONTH_ID,
             REGIONAL_BILL,
             WITEL_BILL,
-            DATEL,
-            CSTO,
             NIP_NAS,
-            NCLI,
-            ND,
+            NIP_NAS,
+            NIP_NAS,
             TGL_PS,
             TGL_CA,
             REVENUE,
@@ -103,16 +101,12 @@ module.exports = {
                 ELSE 0
             END as CUSTOMER_TENURE_MONTHS
             
-        FROM DWH_MOIS.BRIGHTAI_REVENUE
+        FROM PMSDBS.BRIGHTAI_REVENUE
         WHERE GROUP4 = 'High Speed Internet'
           AND REVENUE > 0
           AND REGIONAL_BILL IS NOT NULL
           AND WITEL_BILL IS NOT NULL
-          AND DATEL IS NOT NULL
-          AND CSTO IS NOT NULL
           AND NIP_NAS IS NOT NULL
-          AND NCLI IS NOT NULL
-          AND ND IS NOT NULL
     )
     
     SELECT 
@@ -120,25 +114,23 @@ module.exports = {
         MONTH_ID,
         REGIONAL_BILL,
         WITEL_BILL,
-        DATEL,
-        CSTO,
 
         -- Customer metrics
         COUNT(DISTINCT NIP_NAS) as TOTAL_PELANGGAN,
-        COUNT(DISTINCT NCLI) as TOTAL_NCLI,
-        COUNT(DISTINCT ND) as TOTAL_LAYANAN,
+        COUNT(DISTINCT NIP_NAS) as TOTAL_NCLI,
+        COUNT(DISTINCT NIP_NAS) as TOTAL_LAYANAN,
         
         -- Installation metrics
         COUNT(CASE WHEN INSTALL_STATUS = 'NEW_INSTALL' THEN 1 END) as NEW_INSTALLATIONS,
         COUNT(CASE WHEN INSTALL_STATUS = 'EXISTING' THEN 1 END) as EXISTING_CUSTOMERS,
         COUNT(DISTINCT CASE WHEN INSTALL_STATUS = 'NEW_INSTALL' THEN NIP_NAS END) as NEW_CUSTOMERS_INSTALLED,
-        COUNT(DISTINCT CASE WHEN INSTALL_STATUS = 'NEW_INSTALL' THEN NCLI END) as NEW_NCLI_INSTALLED,
+        COUNT(DISTINCT CASE WHEN INSTALL_STATUS = 'NEW_INSTALL' THEN NIP_NAS END) as NEW_NCLI_INSTALLED,
         
         -- Disconnection metrics
         COUNT(CASE WHEN DISCONNECT_STATUS = 'DISCONNECTED' THEN 1 END) as DISCONNECTIONS,
         COUNT(CASE WHEN DISCONNECT_STATUS = 'ACTIVE' THEN 1 END) as ACTIVE_SERVICES,
         COUNT(DISTINCT CASE WHEN DISCONNECT_STATUS = 'DISCONNECTED' THEN NIP_NAS END) as CUSTOMERS_DISCONNECTED,
-        COUNT(DISTINCT CASE WHEN DISCONNECT_STATUS = 'DISCONNECTED' THEN NCLI END) as NCLI_DISCONNECTED,
+        COUNT(DISTINCT CASE WHEN DISCONNECT_STATUS = 'DISCONNECTED' THEN NIP_NAS END) as NCLI_DISCONNECTED,
         
         -- Net customer change
         COUNT(CASE WHEN INSTALL_STATUS = 'NEW_INSTALL' THEN 1 END) - 
@@ -155,7 +147,7 @@ module.exports = {
         
         -- Revenue per metrics
         ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 0) as REVENUE_PER_CUSTOMER,
-        ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NCLI), 0), 0) as REVENUE_PER_NCLI,
+        ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 0) as REVENUE_PER_NCLI,
         
         -- Customer tenure analysis
         ROUND(AVG(CASE WHEN CUSTOMER_TENURE_MONTHS > 0 THEN CUSTOMER_TENURE_MONTHS END), 1) as AVG_CUSTOMER_TENURE,
@@ -177,8 +169,8 @@ module.exports = {
         ) as RETENTION_RATE_PERCENT
         
     FROM CUSTOMER_LIFECYCLE
-    GROUP BY YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO
-    ORDER BY YEAR_ID DESC, MONTH_ID DESC, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO
+    GROUP BY YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL
+    ORDER BY YEAR_ID DESC, MONTH_ID DESC, REGIONAL_BILL, WITEL_BILL
   `,
 
   BUSINESS_LOGIC: {
@@ -256,10 +248,10 @@ module.exports = {
         };
       }
       
-      const pct_0_12 = (tenure_0_12 / total) * 100;
-      const pct_13_24 = (tenure_13_24 / total) * 100;
-      const pct_25_36 = (tenure_25_36 / total) * 100;
-      const pct_36_plus = (tenure_36_plus / total) * 100;
+      const pct_0_12 = (tenure_0_12 / (total || 1)) * 100;
+      const pct_13_24 = (tenure_13_24 / (total || 1)) * 100;
+      const pct_25_36 = (tenure_25_36 / (total || 1)) * 100;
+      const pct_36_plus = (tenure_36_plus / (total || 1)) * 100;
       
       let distribution_type = '';
       let maturity_level = '';
@@ -408,9 +400,9 @@ module.exports = {
       const totalNCLI = data.reduce((sum, d) => sum + d.TOTAL_NCLI, 0);
       
       const avgChurnRate = data.length > 0 ? 
-        data.reduce((sum, d) => sum + d.CHURN_RATE_PERCENT, 0) / data.length : 0;
+        data.reduce((sum, d) => sum + d.CHURN_RATE_PERCENT, 0) / (data.length || 1) : 0;
       const avgRetentionRate = data.length > 0 ?
-        data.reduce((sum, d) => sum + d.RETENTION_RATE_PERCENT, 0) / data.length : 0;
+        data.reduce((sum, d) => sum + d.RETENTION_RATE_PERCENT, 0) / (data.length || 1) : 0;
       const avgTenure = data.length > 0 ?
         data.filter(d => d.AVG_CUSTOMER_TENURE).reduce((sum, d) => sum + d.AVG_CUSTOMER_TENURE, 0) / 
         data.filter(d => d.AVG_CUSTOMER_TENURE).length : 0;
@@ -428,7 +420,7 @@ module.exports = {
       );
       
       const clvAnalysis = this.calculateCustomerLifetimeValue(
-        totalRevenue / totalCustomers, avgTenure, avgChurnRate
+        totalRevenue / (totalCustomers || 1), avgTenure, avgChurnRate
       );
       
       const lifecycleRisks = this.identifyLifecycleRisks(
@@ -440,18 +432,18 @@ module.exports = {
         periode_analisis: data.length > 0 ? `${data[0].YEAR_ID}` : 'Data tidak tersedia',
         
         metrik_nasional: {
-          total_revenue: `Rp ${totalRevenue.toLocaleString('id-ID')}`,
-          total_pelanggan: totalCustomers.toLocaleString('id-ID'),
-          total_ncli: totalNCLI.toLocaleString('id-ID'),
-          total_pemasangan_baru: totalNewInstalls.toLocaleString('id-ID'),
-          total_pencabutan: totalDisconnections.toLocaleString('id-ID'),
-          net_service_change: totalNetServiceChange.toLocaleString('id-ID'),
-          net_customer_change: totalNetCustomerChange.toLocaleString('id-ID'),
+          total_revenue: `Rp ${(totalRevenue || 0).toLocaleString('id-ID')}`,
+          total_pelanggan: (totalCustomers || 0).toLocaleString('id-ID'),
+          total_ncli: (totalNCLI || 0).toLocaleString('id-ID'),
+          total_pemasangan_baru: (totalNewInstalls || 0).toLocaleString('id-ID'),
+          total_pencabutan: (totalDisconnections || 0).toLocaleString('id-ID'),
+          net_service_change: (totalNetServiceChange || 0).toLocaleString('id-ID'),
+          net_customer_change: (totalNetCustomerChange || 0).toLocaleString('id-ID'),
           rata_churn_rate: `${avgChurnRate.toFixed(2)}%`,
           rata_retention_rate: `${avgRetentionRate.toFixed(2)}%`,
           rata_customer_tenure: `${avgTenure.toFixed(1)} bulan`,
-          revenue_per_pelanggan: `Rp ${Math.round(totalRevenue / totalCustomers).toLocaleString('id-ID')}`,
-          revenue_per_ncli: `Rp ${Math.round(totalRevenue / totalNCLI).toLocaleString('id-ID')}`
+          revenue_per_pelanggan: `Rp ${Math.round(totalRevenue / (totalCustomers || 1)).toLocaleString('id-ID')}`,
+          revenue_per_ncli: `Rp ${Math.round(totalRevenue / (totalNCLI || 1)).toLocaleString('id-ID')}`
         },
         
         analisis_kesehatan_lifecycle: {
@@ -474,7 +466,7 @@ module.exports = {
         },
         
         customer_lifetime_value: {
-          estimasi_clv: `Rp ${clvAnalysis.clv_estimated.toLocaleString('id-ID')}`,
+          estimasi_clv: `Rp ${(clvAnalysis.clv_estimated || 0).toLocaleString('id-ID')}`,
           kategori_clv: clvAnalysis.clv_category,
           interpretasi: clvAnalysis.clv_interpretation
         },
@@ -511,38 +503,38 @@ module.exports = {
             periode: `${item.YEAR_ID}-${item.MONTH_ID.toString().padStart(2, '0')}`,
             regional: item.REGIONAL_BILL,
             witel: item.WITEL_BILL,
-            datel: item.DATEL,
-            kode_sto: item.CSTO,
-            total_pelanggan: item.TOTAL_PELANGGAN.toLocaleString('id-ID'),
-            total_ncli: item.TOTAL_NCLI.toLocaleString('id-ID'),
-            total_layanan: item.TOTAL_LAYANAN.toLocaleString('id-ID'),
-            pemasangan_baru: item.NEW_INSTALLATIONS.toLocaleString('id-ID'),
-            pelanggan_baru: item.NEW_CUSTOMERS_INSTALLED.toLocaleString('id-ID'),
-            ncli_baru: item.NEW_NCLI_INSTALLED.toLocaleString('id-ID'),
-            pencabutan: item.DISCONNECTIONS.toLocaleString('id-ID'),
-            pelanggan_disconnect: item.CUSTOMERS_DISCONNECTED.toLocaleString('id-ID'),
-            ncli_disconnect: item.NCLI_DISCONNECTED.toLocaleString('id-ID'),
-            net_service_change: item.NET_SERVICE_CHANGE.toLocaleString('id-ID'),
-            net_customer_change: item.NET_CUSTOMER_CHANGE.toLocaleString('id-ID'),
+            datel: item.WITEL_BILL,
+            kode_sto: item.WITEL_BILL,
+            total_pelanggan: (item.TOTAL_PELANGGAN || 0).toLocaleString('id-ID'),
+            total_ncli: (item.TOTAL_NCLI || 0).toLocaleString('id-ID'),
+            total_layanan: (item.TOTAL_LAYANAN || 0).toLocaleString('id-ID'),
+            pemasangan_baru: (item.NEW_INSTALLATIONS || 0).toLocaleString('id-ID'),
+            pelanggan_baru: (item.NEW_CUSTOMERS_INSTALLED || 0).toLocaleString('id-ID'),
+            ncli_baru: (item.NEW_NCLI_INSTALLED || 0).toLocaleString('id-ID'),
+            pencabutan: (item.DISCONNECTIONS || 0).toLocaleString('id-ID'),
+            pelanggan_disconnect: (item.CUSTOMERS_DISCONNECTED || 0).toLocaleString('id-ID'),
+            ncli_disconnect: (item.NCLI_DISCONNECTED || 0).toLocaleString('id-ID'),
+            net_service_change: (item.NET_SERVICE_CHANGE || 0).toLocaleString('id-ID'),
+            net_customer_change: (item.NET_CUSTOMER_CHANGE || 0).toLocaleString('id-ID'),
             churn_rate: `${item.CHURN_RATE_PERCENT}%`,
             retention_rate: `${item.RETENTION_RATE_PERCENT}%`,
             rata_tenure_bulan: item.AVG_CUSTOMER_TENURE || 'N/A',
             lifecycle_health_score: stoLifecycleHealth.health_score,
             lifecycle_category: stoLifecycleHealth.category,
-            total_revenue: `Rp ${item.TOTAL_REVENUE.toLocaleString('id-ID')}`,
-            revenue_per_pelanggan: `Rp ${item.REVENUE_PER_CUSTOMER.toLocaleString('id-ID')}`,
-            revenue_per_ncli: `Rp ${item.REVENUE_PER_NCLI.toLocaleString('id-ID')}`,
-            new_install_revenue: `Rp ${item.NEW_INSTALL_REVENUE.toLocaleString('id-ID')}`,
-            lost_revenue: `Rp ${item.LOST_REVENUE.toLocaleString('id-ID')}`,
-            retained_revenue: `Rp ${item.RETAINED_REVENUE.toLocaleString('id-ID')}`
+            total_revenue: `Rp ${(item.TOTAL_REVENUE || 0).toLocaleString('id-ID')}`,
+            revenue_per_pelanggan: `Rp ${(item.REVENUE_PER_CUSTOMER || 0).toLocaleString('id-ID')}`,
+            revenue_per_ncli: `Rp ${(item.REVENUE_PER_NCLI || 0).toLocaleString('id-ID')}`,
+            new_install_revenue: `Rp ${(item.NEW_INSTALL_REVENUE || 0).toLocaleString('id-ID')}`,
+            lost_revenue: `Rp ${(item.LOST_REVENUE || 0).toLocaleString('id-ID')}`,
+            retained_revenue: `Rp ${(item.RETAINED_REVENUE || 0).toLocaleString('id-ID')}`
           };
         }),
         
         insight_bisnis: [
-          'Monitoring tingkat churn rate dan retention rate pelanggan HSI per STO dengan geographic hierarchy',
+          'Monitoring tingkat churn rate dan retention rate pelanggan HSI per WITEL_BILL dengan geographic hierarchy',
           'Analisis net customer dan service growth serta dampaknya terhadap revenue di setiap lokasi',
           'Evaluasi distribusi tenure pelanggan untuk customer lifetime value analysis per area',
-          'Identifikasi STO dengan performance lifecycle terbaik berdasarkan churn dan acquisition',
+          'Identifikasi WITEL_BILL dengan performance lifecycle terbaik berdasarkan churn dan acquisition',
           'Assessment revenue impact dari customer acquisition vs churn di level geographic detail',
           'Tracking customer journey dari pemasangan hingga pencabutan dengan revenue correlation'
         ],

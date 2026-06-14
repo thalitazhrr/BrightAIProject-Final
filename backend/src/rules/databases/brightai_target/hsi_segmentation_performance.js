@@ -91,7 +91,7 @@ module.exports = {
             -- Achievement per segment
             CASE 
                 WHEN SUM(TARGET) > 0 THEN 
-                    ROUND((SUM(REALISASI) * 100.0 / SUM(TARGET)), 2)
+                    ROUND((SUM(REALISASI) * 100.0 / NULLIF(SUM(TARGET), 0)), 2)
                 ELSE 0 
             END as SEGMENT_ACHIEVEMENT_PCT,
             
@@ -215,7 +215,7 @@ module.exports = {
             -- Growth calculations
             CASE
                 WHEN p.PREV_REALISASI IS NOT NULL AND p.PREV_REALISASI > 0 THEN
-                    ROUND(((p.SEGMENT_REALISASI - p.PREV_REALISASI) * 100.0 / p.PREV_REALISASI), 2)
+                    ROUND(((p.SEGMENT_REALISASI - p.PREV_REALISASI) * 100.0 / NULLIF(p.PREV_REALISASI, 0)), 2)
                 ELSE NULL
             END as GROWTH_RATE_PCT,
 
@@ -228,9 +228,9 @@ module.exports = {
             -- Growth categorization
             CASE
                 WHEN p.PREV_REALISASI IS NULL THEN 'NEW_SEGMENT'
-                WHEN ((p.SEGMENT_REALISASI - p.PREV_REALISASI) * 100.0 / p.PREV_REALISASI) >= 15 THEN 'HIGH_GROWTH'
-                WHEN ((p.SEGMENT_REALISASI - p.PREV_REALISASI) * 100.0 / p.PREV_REALISASI) >= 5 THEN 'MODERATE_GROWTH'
-                WHEN ((p.SEGMENT_REALISASI - p.PREV_REALISASI) * 100.0 / p.PREV_REALISASI) >= -5 THEN 'STABLE'
+                WHEN ((p.SEGMENT_REALISASI - p.PREV_REALISASI) * 100.0 / NULLIF(p.PREV_REALISASI, 0)) >= 15 THEN 'HIGH_GROWTH'
+                WHEN ((p.SEGMENT_REALISASI - p.PREV_REALISASI) * 100.0 / NULLIF(p.PREV_REALISASI, 0)) >= 5 THEN 'MODERATE_GROWTH'
+                WHEN ((p.SEGMENT_REALISASI - p.PREV_REALISASI) * 100.0 / NULLIF(p.PREV_REALISASI, 0)) >= -5 THEN 'STABLE'
                 ELSE 'DECLINING'
             END as GROWTH_CATEGORY
 
@@ -478,8 +478,8 @@ module.exports = {
             fokus_bisnis: segment_potential.unit_context.business_focus
           },
           metrik_performa: {
-            target: `${record.SEGMENT_TARGET.toLocaleString('id-ID')} ${record.SATUAN}`,
-            realisasi: `${record.SEGMENT_REALISASI.toLocaleString('id-ID')} ${record.SATUAN}`,
+            target: `${(record.SEGMENT_TARGET || 0).toLocaleString('id-ID')} ${record.SATUAN}`,
+            realisasi: `${(record.SEGMENT_REALISASI || 0).toLocaleString('id-ID')} ${record.SATUAN}`,
             pencapaian: `${record.SEGMENT_ACHIEVEMENT_PCT}%`,
             pangsa_pasar: `${record.MARKET_SHARE_PCT}%`,
             kontribusi_target: `${record.TARGET_CONTRIBUTION_PCT}%`,

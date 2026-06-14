@@ -79,15 +79,15 @@ module.exports = {
             TYPE_TRANS,
             PACKAGE_NAME,
             PRODUCT,
-            BW,
             STATUS_RESUME,
+            BW,
             EKOSISTEM,
             PROVIDER,
             ND_VOICE,
             TGL_PSB,
             LAST_UPDATED_DATE,
-            
-            CASE 
+
+            CASE
                 WHEN UPPER(PRODUCT) = 'WMS' THEN 0
                 WHEN (UPPER(PACKAGE_NAME) LIKE '%HSIE%' 
                      OR UPPER(PACKAGE_NAME) LIKE '%HSI BISNIS%'
@@ -151,33 +151,30 @@ module.exports = {
             CASE WHEN UPPER(PACKAGE_NAME) LIKE '%NETMONK%' THEN 1 ELSE 0 END as IS_NETMONK,
             
             CASE WHEN ND_VOICE IS NOT NULL AND TRIM(ND_VOICE) != '' THEN 1 ELSE 0 END as HAS_VOICE,
-            
-            CASE 
+
+            CASE
                 WHEN TYPE_TRANS = 'NEW SALES' THEN 'PERTUMBUHAN_ORGANIK'
                 WHEN TYPE_TRANS = 'ADD SERVICE' THEN 'EKSPANSI_EXISTING' 
                 WHEN TYPE_TRANS IN ('DO', 'SO') THEN 'CHURN_ACTIVITY'
                 ELSE 'OPERASIONAL_LAINNYA'
             END as KATEGORI_TRANSAKSI,
             
-            CASE 
+            CASE
                 WHEN UPPER(NVL(PROVIDER, 'OTHERS')) LIKE '%DES%' THEN 'ENTERPRISE_SERVICES'
-                WHEN UPPER(NVL(PROVIDER, 'OTHERS')) LIKE '%DGS%' THEN 'GOVERNMENT_SERVICES' 
+                WHEN UPPER(NVL(PROVIDER, 'OTHERS')) LIKE '%DGS%' THEN 'GOVERNMENT_SERVICES'
                 WHEN UPPER(NVL(PROVIDER, 'OTHERS')) LIKE '%DBS%' THEN 'BUSINESS_SERVICES'
                 WHEN UPPER(NVL(PROVIDER, 'OTHERS')) LIKE '%RBS%' THEN 'REGIONAL_BUSINESS'
                 ELSE 'OTHERS'
             END as KATEGORI_PROVIDER,
             
-            CASE 
-                WHEN LAST_UPDATED_DATE IS NOT NULL 
-                     AND MONTHS_BETWEEN(SYSDATE, TO_DATE(LAST_UPDATED_DATE, 'YYYY-MM-DD')) >= 6 
-                THEN 1 ELSE 0 
+            CASE
+                WHEN LAST_UPDATED_DATE IS NOT NULL
+                     AND MONTHS_BETWEEN(SYSDATE, TO_DATE(LAST_UPDATED_DATE, 'YYYY-MM-DD')) >= 6
+                THEN 1 ELSE 0
             END as POTENTIAL_CHURN_RISK
             
         FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD')
-          AND ORDER_ID IS NOT NULL
-          AND NCLI IS NOT NULL
-          AND ND_HSI IS NOT NULL
     ),
     
     DAILY_AGGREGATES AS (
@@ -222,7 +219,7 @@ module.exports = {
             
             COUNT(DISTINCT CASE WHEN POTENTIAL_CHURN_RISK = 1 THEN ORDER_ID END) as DAILY_CHURN_RISK_ORDERS,
             
-            AVG(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1) 
+            AVG(CASE WHEN (IS_HSI_BISNIS = 1 OR IS_HSI_BASIC = 1)
                      AND CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) > 0
                 THEN CAST(NULLIF(REGEXP_REPLACE(BW, '[^0-9]', ''), '') AS NUMBER) END) as DAILY_AVG_BANDWIDTH_KBPS,
             
@@ -744,8 +741,8 @@ module.exports = {
         tingkat_kepercayaan: confidence,
         periode_proyeksi: timeframe === 'WEEKLY' ? '4 minggu' : '3 bulan',
         metodologi: 'Pertumbuhan majemuk dengan penyesuaian momentum berdasarkan hubungan customer-order-service',
-        asumsi_pertumbuhan_order: `${((order_multiplier - 1) * 100).toFixed(1)}% per periode`,
-        asumsi_pertumbuhan_customer: `${((customer_multiplier - 1) * 100).toFixed(1)}% per periode`
+        asumsi_pertumbuhan_order: `${(((order_multiplier - 1) * 100) || 0).toFixed(1)}% per periode`,
+        asumsi_pertumbuhan_customer: `${(((customer_multiplier - 1) * 100) || 0).toFixed(1)}% per periode`
         };
     },
     
@@ -794,9 +791,9 @@ module.exports = {
         const avg_order_per_service = data.reduce((sum, d) => sum + (d.AVG_ORDER_PER_SERVICE || 0), 0) / data.length;
         
         analysis.hubungan_customer_order_service = {
-        rata_rata_order_per_customer: avg_order_per_customer.toFixed(2),
-        rata_rata_service_per_customer: avg_service_per_customer.toFixed(2),
-        rata_rata_order_per_service: avg_order_per_service.toFixed(2),
+        rata_rata_order_per_customer: (avg_order_per_customer || 0).toFixed(2),
+        rata_rata_service_per_customer: (avg_service_per_customer || 0).toFixed(2),
+        rata_rata_order_per_service: (avg_order_per_service || 0).toFixed(2),
         efisiensi_cross_selling: avg_service_per_customer > 1.5 ? 'TINGGI' : avg_service_per_customer > 1.2 ? 'SEDANG' : 'RENDAH',
         aktivitas_layanan: avg_order_per_service > 1.3 ? 'AKTIF' : 'STABIL'
         };
@@ -808,10 +805,10 @@ module.exports = {
         const avg_organic_rate = data.reduce((sum, d) => sum + (d.ORGANIC_GROWTH_PCT || 0), 0) / data.length;
         
         analysis.tren_komposisi = {
-        rata_rata_mix_bisnis: avg_bisnis_mix.toFixed(1),
-        rata_rata_tingkat_bundling: avg_bundling_rate.toFixed(1),
-        rata_rata_tingkat_digital: avg_digital_rate.toFixed(1),
-        rata_rata_pertumbuhan_organik: avg_organic_rate.toFixed(1)
+        rata_rata_mix_bisnis: (avg_bisnis_mix || 0).toFixed(1),
+        rata_rata_tingkat_bundling: (avg_bundling_rate || 0).toFixed(1),
+        rata_rata_tingkat_digital: (avg_digital_rate || 0).toFixed(1),
+        rata_rata_pertumbuhan_organik: (avg_organic_rate || 0).toFixed(1)
         };
         
         // Generate insights berdasarkan hubungan customer-order-service
@@ -886,25 +883,25 @@ module.exports = {
             tanggal_mulai: period.PERIOD_START
             },
             metrik_fundamental: {
-            total_pesanan: period.TOTAL_ORDERS.toLocaleString('id-ID'),
-            total_customer: period.TOTAL_CUSTOMERS.toLocaleString('id-ID'),
-            total_layanan: period.TOTAL_SERVICES.toLocaleString('id-ID'),
+            total_pesanan: (period.TOTAL_ORDERS || 0).toLocaleString('id-ID'),
+            total_customer: (period.TOTAL_CUSTOMERS || 0).toLocaleString('id-ID'),
+            total_layanan: (period.TOTAL_SERVICES || 0).toLocaleString('id-ID'),
             rasio_order_per_customer: period.AVG_ORDER_PER_CUSTOMER,
             rasio_service_per_customer: period.AVG_SERVICE_PER_CUSTOMER,
             rasio_order_per_service: period.AVG_ORDER_PER_SERVICE
             },
             metrik_volume_hsi: {
-            total_pesanan_hsi: period.TOTAL_HSI_ORDERS.toLocaleString('id-ID'),
-            total_customer_hsi: period.TOTAL_HSI_CUSTOMERS.toLocaleString('id-ID'),
-            total_layanan_hsi: period.TOTAL_HSI_SERVICES.toLocaleString('id-ID'),
-            pesanan_hsi_bisnis: period.BISNIS_ORDERS.toLocaleString('id-ID'),
-            pesanan_hsi_basic: period.BASIC_ORDERS.toLocaleString('id-ID'),
-            customer_hsi_bisnis: period.BISNIS_CUSTOMERS.toLocaleString('id-ID'),
-            customer_hsi_basic: period.BASIC_CUSTOMERS.toLocaleString('id-ID'),
-            layanan_hsi_bisnis: period.BISNIS_SERVICES.toLocaleString('id-ID'),
-            layanan_hsi_basic: period.BASIC_SERVICES.toLocaleString('id-ID'),
-            pesanan_bundling: period.BUNDLING_ORDERS.toLocaleString('id-ID'),
-            pesanan_digital: period.DIGITAL_ORDERS.toLocaleString('id-ID'),
+            total_pesanan_hsi: (period.TOTAL_HSI_ORDERS || 0).toLocaleString('id-ID'),
+            total_customer_hsi: (period.TOTAL_HSI_CUSTOMERS || 0).toLocaleString('id-ID'),
+            total_layanan_hsi: (period.TOTAL_HSI_SERVICES || 0).toLocaleString('id-ID'),
+            pesanan_hsi_bisnis: (period.BISNIS_ORDERS || 0).toLocaleString('id-ID'),
+            pesanan_hsi_basic: (period.BASIC_ORDERS || 0).toLocaleString('id-ID'),
+            customer_hsi_bisnis: (period.BISNIS_CUSTOMERS || 0).toLocaleString('id-ID'),
+            customer_hsi_basic: (period.BASIC_CUSTOMERS || 0).toLocaleString('id-ID'),
+            layanan_hsi_bisnis: (period.BISNIS_SERVICES || 0).toLocaleString('id-ID'),
+            layanan_hsi_basic: (period.BASIC_SERVICES || 0).toLocaleString('id-ID'),
+            pesanan_bundling: (period.BUNDLING_ORDERS || 0).toLocaleString('id-ID'),
+            pesanan_digital: (period.DIGITAL_ORDERS || 0).toLocaleString('id-ID'),
             rata_rata_bandwidth: `${period.AVG_BANDWIDTH_MBPS} Mbps`
             },
             analisis_pertumbuhan: {
@@ -928,19 +925,19 @@ module.exports = {
             perubahan_digital: `${period.DIGITAL_RATE_CHANGE}%`
             },
             analisis_transaksi: {
-            pertumbuhan_organik: period.ORGANIC_GROWTH_ORDERS.toLocaleString('id-ID'),
-            ekspansi_existing: period.EXPANSION_ORDERS.toLocaleString('id-ID'),
-            aktivitas_churn: period.CHURN_ORDERS.toLocaleString('id-ID'),
+            pertumbuhan_organik: (period.ORGANIC_GROWTH_ORDERS || 0).toLocaleString('id-ID'),
+            ekspansi_existing: (period.EXPANSION_ORDERS || 0).toLocaleString('id-ID'),
+            aktivitas_churn: (period.CHURN_ORDERS || 0).toLocaleString('id-ID'),
             persentase_organik: `${period.ORGANIC_GROWTH_PCT}%`,
             persentase_ekspansi: `${period.EXPANSION_PCT}%`,
             persentase_churn: `${period.CHURN_PCT}%`,
             perubahan_organik: `${period.ORGANIC_GROWTH_CHANGE}%`
             },
             analisis_provider: {
-            enterprise_services: period.ENTERPRISE_ORDERS.toLocaleString('id-ID'),
-            government_services: period.GOVERNMENT_ORDERS.toLocaleString('id-ID'),
-            business_services: period.BUSINESS_ORDERS.toLocaleString('id-ID'),
-            risiko_churn: period.CHURN_RISK_ORDERS.toLocaleString('id-ID')
+            enterprise_services: (period.ENTERPRISE_ORDERS || 0).toLocaleString('id-ID'),
+            government_services: (period.GOVERNMENT_ORDERS || 0).toLocaleString('id-ID'),
+            business_services: (period.BUSINESS_ORDERS || 0).toLocaleString('id-ID'),
+            risiko_churn: (period.CHURN_RISK_ORDERS || 0).toLocaleString('id-ID')
             },
             proyeksi_pertumbuhan: projection,
             faktor_pendorong: drivers

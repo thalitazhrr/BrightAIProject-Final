@@ -22,6 +22,7 @@ module.exports = {
       // Waktu instalasi - yang biasa digunakan
       'waktu instalasi', 'installation time', 'lama instalasi', 'durasi instalasi',
       'kecepatan instalasi', 'installation speed', 'lead time instalasi',
+      'instalasi hsi', 'analisis instalasi', 'rata-rata instalasi',
       
       // SLA terkait - istilah yang familiar
       'sla instalasi', 'installation sla', 'target instalasi', 'standar instalasi',
@@ -80,7 +81,7 @@ module.exports = {
             PACKAGE_NAME,
             PRODUCT,
             EKOSISTEM,
-            
+
             -- Klasifikasi HSI Bisnis
             CASE 
                 WHEN UPPER(PRODUCT) = 'WMS' THEN 0
@@ -209,7 +210,7 @@ module.exports = {
             END as JENIS_TRANSAKSI,
 
             -- Standarisasi Ekosistem (EKOSISTEM)
-            CASE 
+            CASE
                 WHEN UPPER(NVL(EKOSISTEM, 'LAINNYA')) IN ('EDUCATION', 'SEKOLAH', 'PESANTREN') THEN 'PENDIDIKAN'
                 WHEN UPPER(NVL(EKOSISTEM, 'LAINNYA')) IN ('GOVERNMENT', 'GOV') THEN 'PEMERINTAHAN'
                 WHEN UPPER(NVL(EKOSISTEM, 'LAINNYA')) IN ('HEALTH', 'HEALTY', 'KLINIK') THEN 'KESEHATAN'
@@ -228,11 +229,8 @@ module.exports = {
             
         FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD')
-          AND TGL_PS IS NOT NULL 
+          AND TGL_PS IS NOT NULL
           AND ORDER_DATE IS NOT NULL
-          AND ORDER_ID IS NOT NULL  -- ADDED: Pastikan ada order ID
-          AND NCLI IS NOT NULL       -- ADDED: Pastikan ada customer identifier
-          AND ND_HSI IS NOT NULL     -- ADDED: Pastikan ada HSI service identifier
     ),
     
     METRIK_INSTALASI AS (
@@ -634,15 +632,15 @@ module.exports = {
         }));
       
       // Menghasilkan wawasan
-      const rata_rata_waktu_instalasi = data.reduce((sum, d) => sum + d.RATA_RATA_WAKTU_HSI_HARI, 0) / data.length;
-      const rata_rata_kepatuhan_sla = data.reduce((sum, d) => sum + d.KEPATUHAN_SLA_7HARI, 0) / data.length;
-      const rata_rata_customer_sla = data.reduce((sum, d) => sum + d.CUSTOMER_SLA_COMPLIANCE_7HARI, 0) / data.length;
-      const rata_rata_service_sla = data.reduce((sum, d) => sum + d.SERVICE_SLA_COMPLIANCE_7HARI, 0) / data.length;
+      const rata_rata_waktu_instalasi = data.reduce((sum, d) => sum + (d.RATA_RATA_WAKTU_HSI_HARI || 0), 0) / data.length;
+      const rata_rata_kepatuhan_sla = data.reduce((sum, d) => sum + (d.KEPATUHAN_SLA_7HARI || 0), 0) / data.length;
+      const rata_rata_customer_sla = data.reduce((sum, d) => sum + (d.CUSTOMER_SLA_COMPLIANCE_7HARI || 0), 0) / data.length;
+      const rata_rata_service_sla = data.reduce((sum, d) => sum + (d.SERVICE_SLA_COMPLIANCE_7HARI || 0), 0) / data.length;
       
-      analisis.wawasan.push(`Rata-rata waktu instalasi HSI secara keseluruhan adalah ${rata_rata_waktu_instalasi.toFixed(1)} hari`);
-      analisis.wawasan.push(`Rata-rata tingkat kepatuhan SLA 7 hari order adalah ${rata_rata_kepatuhan_sla.toFixed(1)}%`);
-      analisis.wawasan.push(`Rata-rata customer SLA compliance adalah ${rata_rata_customer_sla.toFixed(1)}%`);
-      analisis.wawasan.push(`Rata-rata service SLA compliance adalah ${rata_rata_service_sla.toFixed(1)}%`);
+      analisis.wawasan.push(`Rata-rata waktu instalasi HSI secara keseluruhan adalah ${(rata_rata_waktu_instalasi || 0).toFixed(1)} hari`);
+      analisis.wawasan.push(`Rata-rata tingkat kepatuhan SLA 7 hari order adalah ${(rata_rata_kepatuhan_sla || 0).toFixed(1)}%`);
+      analisis.wawasan.push(`Rata-rata customer SLA compliance adalah ${(rata_rata_customer_sla || 0).toFixed(1)}%`);
+      analisis.wawasan.push(`Rata-rata service SLA compliance adalah ${(rata_rata_service_sla || 0).toFixed(1)}%`);
       
       if (analisis.distribusi_performa.kritis > 0) {
         analisis.wawasan.push(`Terdapat ${analisis.distribusi_performa.kritis} STO dengan performa kritis yang memerlukan perbaikan segera`);
@@ -763,20 +761,20 @@ module.exports = {
           },
           
           metrik_volume: {
-            total_order: sto.TOTAL_ORDERS.toLocaleString('id-ID'),
-            total_customer: sto.TOTAL_CUSTOMERS.toLocaleString('id-ID'),
-            total_layanan_hsi: sto.TOTAL_HSI_SERVICES.toLocaleString('id-ID'),
-            efisiensi_customer: `${sto.AVG_ORDERS_PER_CUSTOMER} order/customer`,
-            efisiensi_layanan: `${sto.AVG_ORDERS_PER_SERVICE} order/layanan`,
-            penetrasi_multi_service: `${sto.AVG_SERVICES_PER_CUSTOMER} layanan/customer`
+            total_order: (sto.TOTAL_ORDERS || 0).toLocaleString('id-ID'),
+            total_customer: (sto.TOTAL_CUSTOMERS || 0).toLocaleString('id-ID'),
+            total_layanan_hsi: (sto.TOTAL_HSI_SERVICES || 0).toLocaleString('id-ID'),
+            efisiensi_customer: `${sto.AVG_ORDERS_PER_CUSTOMER || 0} order/customer`,
+            efisiensi_layanan: `${sto.AVG_ORDERS_PER_SERVICE || 0} order/layanan`,
+            penetrasi_multi_service: `${sto.AVG_SERVICES_PER_CUSTOMER || 0} layanan/customer`
           },
           
           metrik_instalasi: {
-            total_instalasi_hsi: sto.TOTAL_INSTALASI_HSI.toLocaleString('id-ID'),
-            instalasi_hsi_bisnis: sto.INSTALASI_HSI_BISNIS.toLocaleString('id-ID'),
-            instalasi_hsi_basic: sto.INSTALASI_HSI_BASIC.toLocaleString('id-ID'),
-            layanan_hsi_terinstal: sto.TOTAL_HSI_SERVICES_INSTALLED.toLocaleString('id-ID'),
-            customer_hsi_terinstal: sto.TOTAL_HSI_CUSTOMERS_INSTALLED.toLocaleString('id-ID'),
+            total_instalasi_hsi: (sto.TOTAL_INSTALASI_HSI || 0).toLocaleString('id-ID'),
+            instalasi_hsi_bisnis: (sto.INSTALASI_HSI_BISNIS || 0).toLocaleString('id-ID'),
+            instalasi_hsi_basic: (sto.INSTALASI_HSI_BASIC || 0).toLocaleString('id-ID'),
+            layanan_hsi_terinstal: (sto.TOTAL_HSI_SERVICES_INSTALLED || 0).toLocaleString('id-ID'),
+            customer_hsi_terinstal: (sto.TOTAL_HSI_CUSTOMERS_INSTALLED || 0).toLocaleString('id-ID'),
             rata_rata_waktu_hsi: `${sto.RATA_RATA_WAKTU_HSI_HARI} hari`,
             median_waktu_hsi: `${sto.MEDIAN_WAKTU_HSI_HARI} hari`,
             waktu_tercepat: `${sto.INSTALASI_TERCEPAT_HSI} hari`,
@@ -810,15 +808,15 @@ module.exports = {
           },
           
           kepatuhan_sla: {
-            dalam_sla_7_hari: sto.SESUAI_SLA_7HARI.toLocaleString('id-ID'),
-            dalam_sla_14_hari: sto.SESUAI_SLA_14HARI.toLocaleString('id-ID'),
-            layanan_sla_7_hari: sto.SERVICES_SLA_7HARI.toLocaleString('id-ID'),
-            customer_sla_7_hari: sto.CUSTOMERS_SLA_7HARI.toLocaleString('id-ID'),
-            persentase_sla_7_hari: `${sto.KEPATUHAN_SLA_7HARI}%`,
-            persentase_sla_14_hari: `${sto.KEPATUHAN_SLA_14HARI}%`,
-            customer_sla_compliance: `${sto.CUSTOMER_SLA_COMPLIANCE_7HARI}%`,
-            service_sla_compliance: `${sto.SERVICE_SLA_COMPLIANCE_7HARI}%`,
-            konsistensi_waktu: `${sto.KONSISTENSI_WAKTU} hari (standar deviasi)`
+            dalam_sla_7_hari: (sto.SESUAI_SLA_7HARI || 0).toLocaleString('id-ID'),
+            dalam_sla_14_hari: (sto.SESUAI_SLA_14HARI || 0).toLocaleString('id-ID'),
+            layanan_sla_7_hari: (sto.SERVICES_SLA_7HARI || 0).toLocaleString('id-ID'),
+            customer_sla_7_hari: (sto.CUSTOMERS_SLA_7HARI || 0).toLocaleString('id-ID'),
+            persentase_sla_7_hari: `${sto.KEPATUHAN_SLA_7HARI || 0}%`,
+            persentase_sla_14_hari: `${sto.KEPATUHAN_SLA_14HARI || 0}%`,
+            customer_sla_compliance: `${sto.CUSTOMER_SLA_COMPLIANCE_7HARI || 0}%`,
+            service_sla_compliance: `${sto.SERVICE_SLA_COMPLIANCE_7HARI || 0}%`,
+            konsistensi_waktu: `${sto.KONSISTENSI_WAKTU || 0} hari (standar deviasi)`
           },
           
           evaluasi_performa: {

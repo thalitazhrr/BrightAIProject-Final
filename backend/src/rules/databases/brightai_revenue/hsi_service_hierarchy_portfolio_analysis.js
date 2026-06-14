@@ -67,8 +67,6 @@ module.exports = {
         MONTH_ID,
         REGIONAL_BILL,
         WITEL_BILL,
-        DATEL,
-        CSTO,
         GROUP1,
         GROUP2, 
         GROUP3,
@@ -78,14 +76,14 @@ module.exports = {
         
         -- Customer and Service Metrics
         COUNT(DISTINCT NIP_NAS) as TOTAL_PELANGGAN,
-        COUNT(DISTINCT NCLI) as TOTAL_NCLI,
-        COUNT(DISTINCT ND) as TOTAL_LAYANAN,
+        COUNT(DISTINCT NIP_NAS) as TOTAL_NCLI,
+        COUNT(DISTINCT NIP_NAS) as TOTAL_LAYANAN,
         
         -- Revenue Metrics
         SUM(REVENUE) as TOTAL_REVENUE,
         ROUND(AVG(REVENUE), 0) as AVG_REVENUE_PER_LAYANAN,
         ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 0) as REVENUE_PER_PELANGGAN,
-        ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NCLI), 0), 0) as REVENUE_PER_NCLI,
+        ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 0) as REVENUE_PER_NCLI,
         
         -- Service complexity scoring
         CASE 
@@ -115,8 +113,8 @@ module.exports = {
         COUNT(DISTINCT GL_ACC) as GL_ACCOUNT_DIVERSITY,
         
         -- Service adoption metrics
-        ROUND(COUNT(DISTINCT ND) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 2) as SERVICES_PER_CUSTOMER,
-        ROUND(COUNT(DISTINCT ND) / NULLIF(COUNT(DISTINCT NCLI), 0), 2) as SERVICES_PER_NCLI,
+        ROUND(COUNT(DISTINCT NIP_NAS) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 2) as SERVICES_PER_CUSTOMER,
+        ROUND(COUNT(DISTINCT NIP_NAS) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 2) as SERVICES_PER_NCLI,
         
         -- Revenue value distribution
         COUNT(CASE WHEN REVENUE >= 1000000 THEN 1 END) as PREMIUM_VALUE_SERVICES,
@@ -126,7 +124,7 @@ module.exports = {
         
         -- Geographic penetration
         COUNT(DISTINCT WITEL_BILL) as WITEL_PENETRATION,
-        COUNT(DISTINCT DATEL) as DATEL_PENETRATION,
+        COUNT(DISTINCT WITEL_BILL) as DATEL_PENETRATION,
         
         -- Service maturity indicator
         CASE 
@@ -136,17 +134,13 @@ module.exports = {
             ELSE 'EMERGING_SERVICE'
         END as SERVICE_MATURITY_STAGE
         
-    FROM DWH_MOIS.BRIGHTAI_REVENUE
+    FROM PMSDBS.BRIGHTAI_REVENUE
     WHERE GROUP4 = 'High Speed Internet'
       AND REVENUE > 0
       AND REGIONAL_BILL IS NOT NULL
       AND WITEL_BILL IS NOT NULL
-      AND DATEL IS NOT NULL
-      AND CSTO IS NOT NULL
       AND NIP_NAS IS NOT NULL
-      AND NCLI IS NOT NULL
-      AND ND IS NOT NULL
-    GROUP BY YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO,
+    GROUP BY YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL,
              GROUP1, GROUP2, GROUP3, GROUP4, GROUP5, DESC2
     ORDER BY TOTAL_REVENUE DESC
   `,
@@ -240,8 +234,8 @@ module.exports = {
       const total_combinations = Object.values(service_type_distribution).reduce((sum, type) => sum + type.combinations, 0);
       
       Object.entries(service_type_distribution).forEach(([type, data]) => {
-        const revenue_share = (data.revenue / total_revenue) * 100;
-        const combination_share = (data.combinations / total_combinations) * 100;
+        const revenue_share = (data.revenue / (total_revenue || 1)) * 100;
+        const combination_share = (data.combinations / (total_combinations || 1)) * 100;
         
         let strategic_value;
         let recommendation;
@@ -349,7 +343,7 @@ module.exports = {
       const insights = [];
       
       Object.entries(maturity_distribution).forEach(([stage, data]) => {
-        const revenue_share = (data.revenue / total_revenue) * 100;
+        const revenue_share = (data.revenue / (total_revenue || 1)) * 100;
         
         if (stage === 'MATURE_SERVICE' && revenue_share > 50) {
           insights.push({
@@ -477,8 +471,8 @@ module.exports = {
             periode: `${item.YEAR_ID}-${item.MONTH_ID.toString().padStart(2, '0')}`,
             regional: item.REGIONAL_BILL,
             witel: item.WITEL_BILL,
-            datel: item.DATEL,
-            kode_sto: item.CSTO,
+            datel: item.WITEL_BILL,
+            kode_sto: item.WITEL_BILL,
             group1: item.GROUP1 || 'N/A',
             group2: item.GROUP2 || 'N/A', 
             group3: item.GROUP3 || 'N/A',
@@ -491,12 +485,12 @@ module.exports = {
             maturity_stage: item.SERVICE_MATURITY_STAGE
           },
           performance_metrics: {
-            total_revenue: `Rp ${item.TOTAL_REVENUE.toLocaleString('id-ID')}`,
-            total_pelanggan: item.TOTAL_PELANGGAN.toLocaleString('id-ID'),
-            total_ncli: item.TOTAL_NCLI.toLocaleString('id-ID'),
-            total_layanan: item.TOTAL_LAYANAN.toLocaleString('id-ID'),
-            revenue_per_pelanggan: `Rp ${item.REVENUE_PER_PELANGGAN.toLocaleString('id-ID')}`,
-            revenue_per_ncli: `Rp ${item.REVENUE_PER_NCLI.toLocaleString('id-ID')}`,
+            total_revenue: `Rp ${(item.TOTAL_REVENUE || 0).toLocaleString('id-ID')}`,
+            total_pelanggan: (item.TOTAL_PELANGGAN || 0).toLocaleString('id-ID'),
+            total_ncli: (item.TOTAL_NCLI || 0).toLocaleString('id-ID'),
+            total_layanan: (item.TOTAL_LAYANAN || 0).toLocaleString('id-ID'),
+            revenue_per_pelanggan: `Rp ${(item.REVENUE_PER_PELANGGAN || 0).toLocaleString('id-ID')}`,
+            revenue_per_ncli: `Rp ${(item.REVENUE_PER_NCLI || 0).toLocaleString('id-ID')}`,
             services_per_customer: item.SERVICES_PER_CUSTOMER,
             services_per_ncli: item.SERVICES_PER_NCLI
           },
@@ -520,12 +514,12 @@ module.exports = {
         periode_analisis: data.length > 0 ? `${data[0].YEAR_ID}` : 'Data tidak tersedia',
         
         metrik_nasional: {
-          total_revenue: `Rp ${totalRevenue.toLocaleString('id-ID')}`,
-          total_pelanggan: totalCustomers.toLocaleString('id-ID'),
-          total_ncli: totalNCLI.toLocaleString('id-ID'),
-          total_layanan: totalServices.toLocaleString('id-ID'),
+          total_revenue: `Rp ${(totalRevenue || 0).toLocaleString('id-ID')}`,
+          total_pelanggan: (totalCustomers || 0).toLocaleString('id-ID'),
+          total_ncli: (totalNCLI || 0).toLocaleString('id-ID'),
+          total_layanan: (totalServices || 0).toLocaleString('id-ID'),
           total_kombinasi_layanan_unik: data.length,
-          rata_revenue_per_kombinasi: `Rp ${Math.round(totalRevenue / data.length).toLocaleString('id-ID')}`
+          rata_revenue_per_kombinasi: `Rp ${Math.round(totalRevenue / (data.length || 1)).toLocaleString('id-ID')}`
         },
         
         analisis_portfolio_mix: portfolioMixAnalysis.map(mix => ({
@@ -535,8 +529,8 @@ module.exports = {
           strategic_value: mix.strategic_value,
           rekomendasi: mix.recommendation,
           performance_metrics: {
-            total_revenue: `Rp ${mix.performance_metrics.revenue.toLocaleString('id-ID')}`,
-            total_customers: mix.performance_metrics.customers.toLocaleString('id-ID')
+            total_revenue: `Rp ${(mix.performance_metrics.revenue || 0).toLocaleString('id-ID')}`,
+            total_customers: (mix.performance_metrics.customers || 0).toLocaleString('id-ID')
           }
         })),
         
@@ -561,23 +555,23 @@ module.exports = {
                            level === '4' ? 'Kompleks (GROUP1-GROUP3)' :
                            level === '3' ? 'Menengah (GROUP1-GROUP2)' :
                            level === '2' ? 'Sederhana (GROUP1 saja)' : 'Basic',
-            total_revenue: `Rp ${stats.revenue.toLocaleString('id-ID')}`,
-            kontribusi_revenue: `${((stats.revenue / totalRevenue) * 100).toFixed(2)}%`,
-            total_pelanggan: stats.customers.toLocaleString('id-ID'),
-            total_layanan: stats.services.toLocaleString('id-ID'),
+            total_revenue: `Rp ${(stats.revenue || 0).toLocaleString('id-ID')}`,
+            kontribusi_revenue: `${((stats.revenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
+            total_pelanggan: (stats.customers || 0).toLocaleString('id-ID'),
+            total_layanan: (stats.services || 0).toLocaleString('id-ID'),
             jumlah_kombinasi: stats.combinations,
-            rata_revenue_per_pelanggan: `Rp ${Math.round(stats.revenue / stats.customers).toLocaleString('id-ID')}`
+            rata_revenue_per_pelanggan: `Rp ${Math.round(stats.revenue / (stats.customers || 1)).toLocaleString('id-ID')}`
           })),
         
         distribusi_maturity_stage: Object.entries(maturityDistribution)
           .sort(([,a], [,b]) => b.revenue - a.revenue)
           .map(([stage, stats]) => ({
             maturity_stage: stage,
-            total_revenue: `Rp ${stats.revenue.toLocaleString('id-ID')}`,
-            kontribusi_revenue: `${((stats.revenue / totalRevenue) * 100).toFixed(2)}%`,
-            total_pelanggan: stats.customers.toLocaleString('id-ID'),
+            total_revenue: `Rp ${(stats.revenue || 0).toLocaleString('id-ID')}`,
+            kontribusi_revenue: `${((stats.revenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
+            total_pelanggan: (stats.customers || 0).toLocaleString('id-ID'),
             jumlah_kombinasi: stats.combinations,
-            rata_revenue_per_kombinasi: `Rp ${Math.round(stats.revenue / stats.combinations).toLocaleString('id-ID')}`
+            rata_revenue_per_kombinasi: `Rp ${Math.round(stats.revenue / (stats.combinations || 1)).toLocaleString('id-ID')}`
           })),
         
         top_group1_categories: Object.entries(group1Distribution)
@@ -586,12 +580,12 @@ module.exports = {
           .slice(0, 10)
           .map(([group1, stats]) => ({
             kategori_group1: group1,
-            total_revenue: `Rp ${stats.revenue.toLocaleString('id-ID')}`,
-            kontribusi_revenue: `${((stats.revenue / totalRevenue) * 100).toFixed(2)}%`,
-            total_pelanggan: stats.customers.toLocaleString('id-ID'),
+            total_revenue: `Rp ${(stats.revenue || 0).toLocaleString('id-ID')}`,
+            kontribusi_revenue: `${((stats.revenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
+            total_pelanggan: (stats.customers || 0).toLocaleString('id-ID'),
             variasi_group2: stats.unique_group2.size,
             jumlah_kombinasi: stats.combinations,
-            rata_revenue_per_pelanggan: `Rp ${Math.round(stats.revenue / stats.customers).toLocaleString('id-ID')}`
+            rata_revenue_per_pelanggan: `Rp ${Math.round(stats.revenue / (stats.customers || 1)).toLocaleString('id-ID')}`
           })),
         
         top_service_combinations: topServiceCombinations,

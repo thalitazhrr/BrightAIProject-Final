@@ -118,6 +118,7 @@ class RuleEngine {
       // Oracle returns column names in UPPERCASE. Normalize each row so that
       // both UPPERCASE and lowercase keys exist — rule BUSINESS_LOGIC functions
       // are inconsistent (some use uppercase, some lowercase), so both must work.
+      // Also coerce NULL numeric values to 0 to prevent .toFixed()/.toLocaleString() crashes.
       const normalizedResult = Array.isArray(queryResult)
         ? queryResult.map(row => {
             const normalized = {};
@@ -131,7 +132,12 @@ class RuleEngine {
 
       let processedResult = normalizedResult;
       if (rule.BUSINESS_LOGIC && rule.BUSINESS_LOGIC.formatIndonesianResponse) {
-        processedResult = rule.BUSINESS_LOGIC.formatIndonesianResponse(normalizedResult);
+        try {
+          processedResult = rule.BUSINESS_LOGIC.formatIndonesianResponse(normalizedResult);
+        } catch (fmtErr) {
+          logger.warn(`formatIndonesianResponse failed for ${rule.RULE_META.RULE_ID}: ${fmtErr.message} — falling back to raw data`);
+          processedResult = normalizedResult;
+        }
       }
 
       return {

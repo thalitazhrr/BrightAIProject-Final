@@ -9,7 +9,7 @@ Berdasarkan analisis komprehensif terhadap permasalahan yang dihadapi dan kebutu
 
 Transformasi dari kondisi \textit{status quo} menuju solusi yang diusulkan melibatkan perubahan yang bersifat fundamental pada tiga aspek utama, yaitu arsitektur sistem yang bergeser dari pelaporan manual dan \textit{dashboard} statis menuju sistem otomatis berbasis percakapan dengan kemampuan pemrosesan mendekati \textit{real-time}, kemampuan analitik yang berkembang dari analisis retrospektif menjadi analisis prediktif yang bersifat proaktif, serta pengalaman pengguna yang beralih dari ketergantungan pada pengguna teknis yang memahami SQL menjadi kemudahan akses bagi pengguna bisnis umum melalui interaksi berbasis bahasa alami. Dengan demikian, sistem diharapkan mampu menjembatani kesenjangan antara kebutuhan pengambilan keputusan yang cepat dan kompleksitas teknis yang selama ini menjadi penghalang utama dalam pemanfaatan penuh kapabilitas data dan analitik di lingkungan organisasi.
 
-Sistem analitik yang ada saat ini (\textit{as-is}) masih mengikuti pola operasional tradisional yang berfokus pada pelaporan manual dan eksplorasi data yang terbatas. Proses dimulai dari identifikasi kebutuhan analitik oleh pengguna bisnis, dilanjutkan dengan penerjemahan kebutuhan tersebut menjadi kueri basis data oleh analis atau tim teknis, eksekusi kueri terhadap \textit{Enterprise Data Warehouse}, pemrosesan dan transformasi data untuk memenuhi standar kualitas serta format analisis, kemudian diakhiri dengan penyajian hasil dalam bentuk laporan atau visualisasi \textit{dashboard}. Keterbatasan utama dari pola \textit{as-is} ini mencakup waktu respons yang lama akibat proses multi-tahap dengan \textit{multiple touchpoint} antardepartemen sebelum \textit{insight} dapat dihasilkan, tingkat aksesibilitas yang rendah karena hanya pengguna dengan keahlian teknis yang mampu melakukan analisis secara mandiri, ketiadaan kemampuan prediktif karena sistem berfokus pada analisis historis tanpa dukungan \textit{forecasting} untuk pengambilan keputusan proaktif, serta efisiensi operasional yang rendah karena tim teknis harus mengalokasikan waktu signifikan untuk mengonversi permintaan analitik menjadi \textit{query} teknis alih-alih berfokus pada aktivitas bernilai tambah yang lebih strategis.
+Sistem analitik yang ada saat ini (\textit{as-is}) masih mengikuti pola operasional tradisional yang berfokus pada pelaporan manual dan eksplorasi data yang terbatas. Proses dimulai dari identifikasi kebutuhan analitik oleh pengguna bisnis, dilanjutkan dengan penerjemahan kebutuhan tersebut menjadi kueri basis data oleh analis atau tim teknis, eksekusi kueri terhadap \textit{Enterprise Data Warehouse}, pemrosesan dan transformasi data untuk memenuhi standar kualitas serta format analisis, kemudian diakhiri dengan penyajian hasil dalam bentuk laporan. Keterbatasan utama dari pola \textit{as-is} ini mencakup waktu respons yang lama akibat proses multi-tahap dengan \textit{multiple touchpoint} antardepartemen sebelum \textit{insight} dapat dihasilkan, tingkat aksesibilitas yang rendah karena hanya pengguna dengan keahlian teknis yang mampu melakukan analisis secara mandiri, ketiadaan kemampuan prediktif karena sistem berfokus pada analisis historis tanpa dukungan \textit{forecasting} untuk pengambilan keputusan proaktif, serta efisiensi operasional yang rendah karena tim teknis harus mengalokasikan waktu signifikan untuk mengonversi permintaan analitik menjadi \textit{query} teknis alih-alih berfokus pada aktivitas bernilai tambah yang lebih strategis.
 
 \section{Alur Proses Bisnis Sistem Analitik Saat Ini (\textit{As-Is})}
 \label{sec:asis}
@@ -87,7 +87,7 @@ Proses Pengambilan Data & Ekstraksi manual dari berbagai sistem, transformasi vi
 Kemampuan Prediktif & Tidak tersedia atau dilakukan manual secara periodik & Terintegrasi dengan model \textit{time series forecasting} (LSTM/GRU/Prophet/ARIMA) \\
 \hline
 
-Format Respons & Tabel, grafik, laporan tertulis & Narasi bahasa alami (\textit{template-based NLG}) dengan visualisasi pendukung \\
+Format Respons & Tabel, grafik, laporan tertulis & Narasi bahasa alami (\textit{template-based NLG}) \\
 \hline
 
 Siklus \textit{Feedback} & Iteratif dan panjang dengan banyak \textit{handoff} & \textit{Real-time} dengan kemampuan kueri lanjutan \\
@@ -110,7 +110,7 @@ Rancangan solusi keseluruhan mengintegrasikan lima lapisan (\textit{layer}) arsi
 \subsection{Komponen-Komponen Utama Arsitektur}
 \label{subsec:komponen-arsitektur}
 
-Lapisan presentasi mencakup antarmuka pengguna yang dibangun dengan teknologi \textit{web} modern, dengan fokus pada antarmuka \textit{chatbot} berbasis \textit{web} yang mendukung interaksi waktu nyata (\textit{real-time}) dengan \textit{backend} sistem. Antarmuka ini diimplementasikan menggunakan kerangka kerja \textit{frontend} modern dengan pemanfaatan komunikasi asinkronus yang memungkinkan percakapan dua arah tanpa penundaan yang signifikan. Lapisan ini juga mencakup komponen untuk menampilkan visualisasi data, metrik interaktif, dan laporan yang terintegrasi dengan hasil analisis yang dihasilkan oleh \textit{backend}.
+Lapisan presentasi mencakup antarmuka pengguna yang dibangun dengan teknologi \textit{web} modern, dengan fokus pada antarmuka \textit{chatbot} berbasis \textit{web} yang mendukung interaksi waktu nyata (\textit{real-time}) dengan \textit{backend} sistem. Antarmuka ini diimplementasikan menggunakan kerangka kerja \textit{frontend} modern dengan pemanfaatan komunikasi asinkronus yang memungkinkan percakapan dua arah tanpa penundaan yang signifikan. Lapisan ini juga mencakup komponen untuk menampilkan metrik interaktif dan laporan yang terintegrasi dengan hasil analisis yang dihasilkan oleh \textit{backend}.
 
 Lapisan aplikasi mengenkapsulasi logika inti sistem yang terdiri atas beberapa modul utama. Modul \textit{Natural Language Understanding} (NLU) bertanggung jawab untuk melakukan penguraian (\textit{parsing}) dan pemahaman terhadap masukan pengguna dalam bahasa alami. Modul manajemen dialog mengelola status percakapan dan menjaga koherensi dalam dialog multigiliran (\textit{multi-turn}). Modul pembangkitan respons menghasilkan tanggapan yang sesuai berdasarkan hasil analisis yang diterima dari lapisan logika bisnis. Di sisi lain, lapisan logika bisnis mencakup implementasi aturan bisnis yang telah didefinisikan, mesin klasifikasi maksud, mesin kueri berbasis aturan, model \textit{machine learning} untuk peramalan, serta repositori templat untuk NLG. Lapisan ini merupakan jantung sistem yang mengonversi maksud pengguna menjadi aksi teknis yang konkret dan menghasilkan wawasan berbasis data.
 
@@ -124,11 +124,11 @@ Arsitektur sistem secara keseluruhan dirancang dengan pendekatan modular berbasi
 Diagram arsitektur sistem yang lebih rinci disajikan pada Gambar~\ref{fig:arsitektur}, yang memperlihatkan integrasi kelima lapisan dan aliran data antarkomponen di dalam sistem. Arsitektur ini dirancang untuk mendukung:
 
 \begin{enumerate}
-    \item \textbf{Skalabilitas horizontal}, dengan setiap layanan dapat diduplikasi sesuai dengan kebutuhan kapasitas.
-    \item \textbf{Ketahanan (\textit{Resilience})} sehingga kegagalan pada satu layanan tidak secara langsung menyebabkan kegagalan sistem secara keseluruhan.
-    \item \textbf{Kemudahan Pemeliharaan} karena setiap modul dapat dikembangkan, diuji, dan di-\textit{deploy} secara independen.
-    \item \textbf{Interoperabilitas}, melalui kemampuan setiap layanan untuk berinteraksi menggunakan standar API.
-    \item \textbf{Keamanan}, dengan penerapan autentikasi berlapis dan enkripsi data.
+    \item Skalabilitas horizontal, dengan setiap layanan dapat diduplikasi sesuai dengan kebutuhan kapasitas.
+    \item Ketahanan (\textit{Resilience)} sehingga kegagalan pada satu layanan tidak secara langsung menyebabkan kegagalan sistem secara keseluruhan.
+    \item Kemudahan Pemeliharaan karena setiap modul dapat dikembangkan, diuji, dan di-\textit{deploy} secara independen.
+    \item Interoperabilitas, melalui kemampuan setiap layanan untuk berinteraksi menggunakan standar API.
+    \item Keamanan, dengan penerapan autentikasi berlapis dan enkripsi data.
 \end{enumerate}
 
 \begin{figure}[htbp] 
@@ -180,10 +180,10 @@ Modul pencocokan kueri ke aturan bisnis dievaluasi menggunakan metrik standar kl
 Metrik evaluasi yang digunakan untuk mengukur performa klasifikasi maksud mencakup:
 
 \begin{enumerate}
-    \item \textbf{Akurasi (\textit{Accuracy})}: Proporsi prediksi yang benar dari keseluruhan prediksi. Target minimal adalah 85\%.
-    \item \textbf{Presisi (\textit{Precision})}: Proporsi prediksi positif yang benar dari seluruh prediksi positif. Dihitung per kelas kemudian diagregasi.
-    \item \textbf{Daya Ingat (\textit{Recall})}: Proporsi sampel positif yang berhasil diprediksi benar dari seluruh sampel positif aktual.
-    \item \textbf{Skor-F1 (\textit{F1-Score})}: Rata-rata harmonik dari presisi dan daya ingat, memberikan keseimbangan antara kedua metrik.
+    \item Akurasi (\textit{Accuracy)}: Proporsi prediksi yang benar dari keseluruhan prediksi. Target minimal adalah 85\%.
+    \item Presisi (\textit{Precision)}: Proporsi prediksi positif yang benar dari seluruh prediksi positif. Dihitung per kelas kemudian diagregasi.
+    \item Daya Ingat (\textit{Recall)}: Proporsi sampel positif yang berhasil diprediksi benar dari seluruh sampel positif aktual.
+    \item Skor-F1 (\textit{F1-Score)}: Rata-rata harmonik dari presisi dan daya ingat, memberikan keseimbangan antara kedua metrik.
 \end{enumerate}
 
 Formula perhitungan metrik agregasi adalah sebagai berikut.
@@ -227,10 +227,10 @@ Akurasi faktual dievaluasi dengan memverifikasi apakah seluruh nilai numerik dan
 
 Kualitas keluaran NLG dinilai secara subjektif oleh pengguna internal perusahaan menggunakan kuesioner berskala Likert 1--5 pada empat dimensi utama:
 \begin{enumerate}
-    \item \textbf{Ketepatan Respons}: Menilai apakah jawaban yang diberikan sistem sesuai dengan data aktual.
-    \item \textbf{Kejelasan Narasi}: Menilai apakah narasi, tabel, dan penjelasan yang dihasilkan sistem mudah dipahami.
-    \item \textbf{Relevansi Analisis}: Menilai apakah \textit{insight} atau analisis yang diberikan sistem relevan dengan konteks pertanyaan pengguna.
-    \item \textbf{Kemudahan Penggunaan}: Menilai apakah antarmuka dan alur interaksi sistem bersifat intuitif.
+    \item Ketepatan Respons: Menilai apakah jawaban yang diberikan sistem sesuai dengan data aktual.
+    \item Kejelasan Narasi: Menilai apakah narasi, tabel, dan penjelasan yang dihasilkan sistem mudah dipahami.
+    \item Relevansi Analisis: Menilai apakah \textit{insight} atau analisis yang diberikan sistem relevan dengan konteks pertanyaan pengguna.
+    \item Kemudahan Penggunaan: Menilai apakah antarmuka dan alur interaksi sistem bersifat intuitif.
 \end{enumerate}
 
 \subsection{Evaluasi Peramalan Deret Waktu}
@@ -239,15 +239,15 @@ Kualitas keluaran NLG dinilai secara subjektif oleh pengguna internal perusahaan
 Model dievaluasi menggunakan protokol \textit{rolling-origin backtesting} untuk mencegah \textit{data leakage}. Evaluasi mencakup \textit{baseline} (ARIMA, Prophet) dan model utama (LSTM, GRU).
 
 \begin{enumerate}
-    \item \textbf{MAE (\textit{Mean Absolute Error})}: Rata-rata nilai absolut selisih prediksi dan aktual.
-    \item \textbf{RMSE (\textit{Root Mean Squared Error})}: Akar kuadrat rata-rata kuadrat selisih.
-    \item \textbf{sMAPE (\textit{Symmetric Mean Absolute Percentage Error})}:
+    \item MAE (\textit{Mean Absolute Error)}: Rata-rata nilai absolut selisih prediksi dan aktual.
+    \item RMSE (\textit{Root Mean Squared Error)}: Akar kuadrat rata-rata kuadrat selisih.
+    \item sMAPE (\textit{Symmetric Mean Absolute Percentage Error)}:
     \begin{equation}
     \text{sMAPE} = \frac{100\%}{n} \sum_{i=1}^{n} \frac{|y_i - \hat{y}_i|}{(|y_i| + |\hat{y}_i|)/2}
     \end{equation}
     \eqcaption{sMAPE}
 
-    \item \textbf{MASE (\textit{Mean Absolute Scaled Error})}:
+    \item MASE (\textit{Mean Absolute Scaled Error)}:
     \begin{equation}
     \text{MASE} = \frac{\text{MAE}}{\frac{1}{n-1} \sum_{i=2}^{n} |y_i - y_{i-1}|}
     \end{equation}

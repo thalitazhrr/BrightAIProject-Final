@@ -86,7 +86,7 @@ module.exports = {
             -- Regional achievement
             CASE 
                 WHEN SUM(TARGET) > 0 THEN 
-                    ROUND((SUM(REALISASI) * 100.0 / SUM(TARGET)), 2)
+                    ROUND((SUM(REALISASI) * 100.0 / NULLIF(SUM(TARGET), 0)), 2)
                 ELSE 0 
             END as REGIONAL_ACHIEVEMENT_PCT,
             
@@ -133,7 +133,7 @@ module.exports = {
             -- Regional density (realisasi per unit)
             CASE 
                 WHEN JUMLAH_UNIT_TARGET > 0 THEN 
-                    ROUND(REGIONAL_REALISASI / JUMLAH_UNIT_TARGET, 2)
+                    ROUND(REGIONAL_REALISASI / NULLIF(JUMLAH_UNIT_TARGET, 0), 2)
                 ELSE 0
             END as DENSITY_PER_UNIT,
             
@@ -239,7 +239,7 @@ module.exports = {
             -- Growth calculations
             CASE 
                 WHEN PREV_REALISASI IS NOT NULL AND PREV_REALISASI > 0 THEN 
-                    ROUND(((REGIONAL_REALISASI - PREV_REALISASI) * 100.0 / PREV_REALISASI), 2)
+                    ROUND(((REGIONAL_REALISASI - PREV_REALISASI) * 100.0 / NULLIF(PREV_REALISASI, 0)), 2)
                 ELSE NULL
             END as GROWTH_RATE_PCT,
             
@@ -523,15 +523,15 @@ module.exports = {
             fokus_geografis: regional_strength.unit_context.geographic_focus
           },
           metrik_performa: {
-            target: `${record.REGIONAL_TARGET.toLocaleString('id-ID')} ${record.SATUAN}`,
-            realisasi: `${record.REGIONAL_REALISASI.toLocaleString('id-ID')} ${record.SATUAN}`,
+            target: `${(record.REGIONAL_TARGET || 0).toLocaleString('id-ID')} ${record.SATUAN}`,
+            realisasi: `${(record.REGIONAL_REALISASI || 0).toLocaleString('id-ID')} ${record.SATUAN}`,
             pencapaian: `${record.REGIONAL_ACHIEVEMENT_PCT}%`,
             pangsa_pasar_nasional: `${record.NATIONAL_MARKET_SHARE_PCT}%`,
             kontribusi_target: `${record.TARGET_CONTRIBUTION_PCT}%`,
             vs_rata_rata_nasional: `${record.VS_NATIONAL_AVG_PCT > 0 ? '+' : ''}${record.VS_NATIONAL_AVG_PCT}%`
           },
           analisis_efisiensi: {
-            density_per_unit: record.DENSITY_PER_UNIT.toLocaleString('id-ID'),
+            density_per_unit: (record.DENSITY_PER_UNIT || 0).toLocaleString('id-ID'),
             skor_efisiensi: record.EFFICIENCY_SCORE,
             kategori_regional: record.KATEGORI_REGIONAL,
             posisi_pasar: record.MARKET_POSITION

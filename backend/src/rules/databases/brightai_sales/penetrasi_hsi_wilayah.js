@@ -8,7 +8,7 @@ module.exports = {
   RULE_META: {
     RULE_ID: 'ps_004',
     RULE_NAME: 'penetrasi_hsi_wilayah',
-    DESCRIPTION: 'Analisis tingkat penetrasi HSI berdasarkan wilayah geografis dengan kategorisasi produk yang tepat, termasuk customer journey, ecosystem analysis, dan provider performance dalam bahasa Indonesia dengan tracking ORDER_ID, NCLI, dan ND_HSI',
+    DESCRIPTION: 'Analisis tingkat penetrasi HSI berdasarkan wilayah geografis',
     DATABASE: 'BRIGHTAI_SALES',
     CATEGORY: 'penetration_analytics',
     COMPLEXITY: 'VERY_HIGH',
@@ -140,11 +140,11 @@ module.exports = {
             BW,
             TGL_PSB,
             EKOSISTEM,
-            PROVIDER,
             KCONTACT,
             POTS,
             LAST_UPDATED_DATE,
-            
+
+
             -- HSI Bisnis Classification
             CASE 
                 WHEN UPPER(PRODUCT) = 'WMS' THEN 0
@@ -268,17 +268,11 @@ module.exports = {
                 ELSE 'LAINNYA'
             END as JENIS_CUSTOMER_JOURNEY,
 
-            -- Customer Lifecycle Analysis
-            CASE 
-                WHEN TGL_PSB IS NOT NULL AND MONTHS_BETWEEN(ORDER_DATE, TO_DATE(TGL_PSB, 'YYYY-MM-DD')) <= 6 THEN 'PELANGGAN_BARU'
-                WHEN TGL_PSB IS NOT NULL AND MONTHS_BETWEEN(ORDER_DATE, TO_DATE(TGL_PSB, 'YYYY-MM-DD')) <= 24 THEN 'PELANGGAN_BERKEMBANG' 
-                WHEN TGL_PSB IS NOT NULL AND MONTHS_BETWEEN(ORDER_DATE, TO_DATE(TGL_PSB, 'YYYY-MM-DD')) <= 60 THEN 'PELANGGAN_MATANG'
-                WHEN TGL_PSB IS NOT NULL THEN 'PELANGGAN_SENIOR'
-                ELSE 'MASA_BERLANGGANAN_TIDAK_DIKETAHUI'
-            END as TINGKAT_KEMATANGAN_PELANGGAN,
+            -- Customer Lifecycle Analysis — disabled (TGL_PSB format mismatch)
+            'MASA_BERLANGGANAN_TIDAK_DIKETAHUI' as TINGKAT_KEMATANGAN_PELANGGAN,
 
             -- Ecosystem Standardization
-            CASE 
+            CASE
                 WHEN UPPER(NVL(EKOSISTEM, 'LAINNYA')) IN ('EDUCATION', 'SEKOLAH', 'PESANTREN') THEN 'PENDIDIKAN'
                 WHEN UPPER(NVL(EKOSISTEM, 'LAINNYA')) IN ('GOVERNMENT', 'GOV') THEN 'PEMERINTAHAN'
                 WHEN UPPER(NVL(EKOSISTEM, 'LAINNYA')) IN ('HEALTH', 'HEALTY', 'KLINIK') THEN 'KESEHATAN'
@@ -296,9 +290,9 @@ module.exports = {
             END as EKOSISTEM_TERSTANDAR,
 
             -- Provider/Division Standardization
-            CASE 
+            CASE
                 WHEN UPPER(NVL(PROVIDER, 'LAINNYA')) LIKE '%DGS%' THEN 'LAYANAN_PEMERINTAH'
-                WHEN UPPER(NVL(PROVIDER, 'LAINNYA')) LIKE '%DES%' THEN 'LAYANAN_ENTERPRISE'  
+                WHEN UPPER(NVL(PROVIDER, 'LAINNYA')) LIKE '%DES%' THEN 'LAYANAN_ENTERPRISE'
                 WHEN UPPER(NVL(PROVIDER, 'LAINNYA')) LIKE '%DBS%' THEN 'LAYANAN_BISNIS'
                 WHEN UPPER(NVL(PROVIDER, 'LAINNYA')) LIKE '%RBS%' THEN 'BISNIS_REGIONAL'
                 WHEN UPPER(NVL(PROVIDER, 'LAINNYA')) LIKE '%DCS%' THEN 'LAYANAN_KORPORAT'
@@ -310,29 +304,26 @@ module.exports = {
             END as KATEGORI_PROVIDER,
 
             -- Churn Risk Assessment
-            CASE 
-                WHEN LAST_UPDATED_DATE IS NOT NULL 
+            CASE
+                WHEN LAST_UPDATED_DATE IS NOT NULL
                      AND MONTHS_BETWEEN(SYSDATE, TO_DATE(LAST_UPDATED_DATE, 'YYYY-MM-DD')) >= 6 THEN 1
                 ELSE 0
             END as BERISIKO_CHURN,
 
             -- Contact Information Quality
-            CASE 
+            CASE
                 WHEN KCONTACT IS NOT NULL AND LENGTH(TRIM(KCONTACT)) > 10 THEN 1
                 ELSE 0
             END as KONTAK_BERKUALITAS,
 
             -- POTS Integration Status
-            CASE 
+            CASE
                 WHEN POTS IS NOT NULL AND LENGTH(TRIM(POTS)) >= 8 THEN 1
                 ELSE 0
             END as TERINTEGRASI_POTS
 
         FROM DWH_MOIS.BRIGHTAI_SALES
         WHERE ORDER_DATE >= TO_DATE('2025-01-01', 'YYYY-MM-DD')
-          AND ORDER_ID IS NOT NULL
-          AND NCLI IS NOT NULL
-          AND ND_HSI IS NOT NULL
     ),
     
     ANALISIS_PENETRASI AS (
@@ -675,23 +666,23 @@ module.exports = {
       // Top 5 Regional Nasional dengan metrik yang disesuaikan
       const regionalSummary = Object.keys(dataByRegional).map(regional => {
         const regionalData = dataByRegional[regional];
-        const avgPenetrasi = regionalData.reduce((sum, d) => sum + d.penetrasi_hsi_order, 0) / regionalData.length;
-        const totalVolume = regionalData.reduce((sum, d) => sum + d.total_pesanan_hsi, 0);
-        const totalPelanggan = regionalData.reduce((sum, d) => sum + d.total_pelanggan_unik, 0);
-        const totalLayanan = regionalData.reduce((sum, d) => sum + d.total_layanan_hsi_unik, 0);
+        const avgPenetrasi = regionalData.reduce((sum, d) => sum + (d.penetrasi_hsi_order || 0), 0) / regionalData.length;
+        const totalVolume = regionalData.reduce((sum, d) => sum + (d.total_pesanan_hsi || 0), 0);
+        const totalPelanggan = regionalData.reduce((sum, d) => sum + (d.total_pelanggan_unik || 0), 0);
+        const totalLayanan = regionalData.reduce((sum, d) => sum + (d.total_layanan_hsi_unik || 0), 0);
         const bestSTO = regionalData.reduce((best, current) =>
-          current.penetrasi_hsi_order > best.penetrasi_hsi_order ? current : best
+          (current.penetrasi_hsi_order || 0) > (best.penetrasi_hsi_order || 0) ? current : best
         );
 
         return {
           regional: regional,
-          rata_rata_penetrasi: avgPenetrasi.toFixed(1),
+          rata_rata_penetrasi: (avgPenetrasi || 0).toFixed(1),
           total_volume: totalVolume,
           total_pelanggan_unik: totalPelanggan,
           total_layanan_hsi: totalLayanan,
-          sto_terbaik: bestSTO.STO,
-          penetrasi_sto_terbaik: bestSTO.penetrasi_hsi_order.toFixed(1),
-          efisiensi_layanan_per_pelanggan: (totalLayanan / totalPelanggan).toFixed(2)
+          sto_terbaik: bestSTO.STO || '-',
+          penetrasi_sto_terbaik: (bestSTO.penetrasi_hsi_order || 0).toFixed(1),
+          efisiensi_layanan_per_pelanggan: totalPelanggan > 0 ? ((totalLayanan / totalPelanggan) || 0).toFixed(2) : '0.00'
         };
       }).sort((a, b) => b.rata_rata_penetrasi - a.rata_rata_penetrasi);
 
@@ -793,26 +784,26 @@ module.exports = {
             regional: area.REGIONAL
           },
           metrik_fundamental: {
-            total_pesanan: area.total_pesanan.toLocaleString('id-ID'),
-            total_pelanggan_unik: area.total_pelanggan_unik.toLocaleString('id-ID'),
-            total_layanan_hsi_unik: area.total_layanan_hsi_unik.toLocaleString('id-ID'),
+            total_pesanan: (area.total_pesanan || 0).toLocaleString('id-ID'),
+            total_pelanggan_unik: (area.total_pelanggan_unik || 0).toLocaleString('id-ID'),
+            total_layanan_hsi_unik: (area.total_layanan_hsi_unik || 0).toLocaleString('id-ID'),
             rata_rata_order_per_pelanggan: area.rata_rata_order_per_pelanggan,
             rr_layanan_per_pelanggan: area.rr_layanan_per_pelanggan,
             rata_rata_order_per_layanan: area.rata_rata_order_per_layanan
           },
           metrik_penetrasi: {
-            pesanan_hsi_total: area.total_pesanan_hsi.toLocaleString('id-ID'),
-            pesanan_hsi_bisnis: area.pesanan_hsi_bisnis.toLocaleString('id-ID'),
-            pesanan_hsi_basic: area.pesanan_hsi_basic.toLocaleString('id-ID'),
-            layanan_hsi_unik: area.layanan_hsi_unik.toLocaleString('id-ID'),
-            pelanggan_hsi_unik: area.pelanggan_hsi_unik.toLocaleString('id-ID'),
-            penetrasi_hsi_order: `${area.penetrasi_hsi_order.toFixed(1)}%`,
-            penetrasi_hsi_pelanggan: `${area.penetrasi_hsi_pelanggan.toFixed(1)}%`,
-            penetrasi_hsi_layanan: `${area.penetrasi_hsi_layanan.toFixed(1)}%`,
-            penetrasi_hsi_bisnis: `${area.penetrasi_hsi_bisnis.toFixed(1)}%`,
-            penetrasi_hsi_basic: `${area.penetrasi_hsi_basic.toFixed(1)}%`,
+            pesanan_hsi_total: (area.total_pesanan_hsi || 0).toLocaleString('id-ID'),
+            pesanan_hsi_bisnis: (area.pesanan_hsi_bisnis || 0).toLocaleString('id-ID'),
+            pesanan_hsi_basic: (area.pesanan_hsi_basic || 0).toLocaleString('id-ID'),
+            layanan_hsi_unik: (area.layanan_hsi_unik || 0).toLocaleString('id-ID'),
+            pelanggan_hsi_unik: (area.pelanggan_hsi_unik || 0).toLocaleString('id-ID'),
+            penetrasi_hsi_order: `${(area.penetrasi_hsi_order || 0).toFixed(1)}%`,
+            penetrasi_hsi_pelanggan: `${(area.penetrasi_hsi_pelanggan || 0).toFixed(1)}%`,
+            penetrasi_hsi_layanan: `${(area.penetrasi_hsi_layanan || 0).toFixed(1)}%`,
+            penetrasi_hsi_bisnis: `${(area.penetrasi_hsi_bisnis || 0).toFixed(1)}%`,
+            penetrasi_hsi_basic: `${(area.penetrasi_hsi_basic || 0).toFixed(1)}%`,
             rata_rata_bandwidth: `${Math.round(area.rata_rata_bandwidth || 0)} Kbps`,
-            tingkat_keberhasilan: `${area.tingkat_keberhasilan.toFixed(1)}%`
+            tingkat_keberhasilan: `${(area.tingkat_keberhasilan || 0).toFixed(1)}%`
           },
           analisis_bundling: {
             hard_bundling: area.pesanan_hard_bundling,
@@ -890,8 +881,8 @@ module.exports = {
         };
       });
 
-      // Analisis granular top performers
-      const topPerformersAnalysis = this.analisisPerformerTingkatGranular(hasil);
+      // Analisis granular top performers (butuh raw SQL rows, bukan transformed hasil)
+      const topPerformersAnalysis = this.analisisPerformerTingkatGranular(data);
 
       return {
         ringkasan: 'Analisis komprehensif penetrasi HSI dengan tracking ORDER_ID, NCLI, dan ND_HSI untuk customer journey, ekosistem, dan performa provider periode 2025 dengan dimensi temporal dan ranking granular',

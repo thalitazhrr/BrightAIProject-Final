@@ -241,7 +241,7 @@
     basicstyle=\ttfamily\footnotesize,
     breakatwhitespace=false,         
     breaklines=true,                 
-    captionpos=b,                    
+    captionpos=t,                    
     keepspaces=true,                 
     numbers=left,                    
     numbersep=5pt,                  
@@ -249,7 +249,9 @@
     showstringspaces=false,
     showtabs=false,                  
     tabsize=4,
-    language=Python
+    language=Python,
+    frame=single,
+    rulecolor=\color{black}
 }
 \lstset{style=pythonstyle}
 % --- END OF LISTINGS STYLE FOR PYTHON CODE ---
@@ -264,7 +266,7 @@
     basicstyle=\ttfamily\footnotesize,
     breakatwhitespace=false,
     breaklines=true,
-    captionpos=b,
+    captionpos=t,
     keepspaces=true,
     numbers=left,
     numbersep=5pt,
@@ -273,6 +275,8 @@
     showtabs=false,
     tabsize=2,
     language=Java,
+    frame=single,
+    rulecolor=\color{black},
     morekeywords={const,let,async,await,function,class,require,module,exports,
                   try,catch,finally,this,new,typeof,for,of,if,else,return}
 }
@@ -291,6 +295,14 @@
 \titlespacing{\section}{0pt}{6pt}{6pt}
 \titlespacing{\subsection}{0pt}{6pt}{6pt}
 \titlespacing{\subsubsection}{0pt}{6pt}{6pt}
+
+% --- Atur spasi sebelum dan sesudah rumus matematis ---
+\AtBeginDocument{%
+  \setlength{\abovedisplayskip}{6pt}
+  \setlength{\belowdisplayskip}{6pt}
+  \setlength{\abovedisplayshortskip}{0pt}
+  \setlength{\belowdisplayshortskip}{6pt}
+}
 
 % --- Judul Subbab dan Subsubbab ---
 \titleformat{\section}

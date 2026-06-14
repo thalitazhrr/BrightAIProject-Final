@@ -23,7 +23,7 @@ Implementasi BI di institusi pendidikan tinggi telah menunjukkan kemampuan untuk
 
 Arsitektur BI hibrida mengintegrasikan sistem BI tradisional dengan kemampuan kecerdasan buatan untuk meningkatkan pengambilan keputusan, analitik prediktif, dan efisiensi operasional. Pendekatan ini menyajikan struktur yang memanfaatkan model pembelajaran mesin bersama pelaporan BI tradisional untuk menjembatani kesenjangan antara analisis historis dan wawasan berbasis data waktu nyata \autocite{sahoo2023artificial}.
 
-Komponen utama arsitektur BI hibrida mencakup beberapa lapisan yang saling terintegrasi \autocite{sahoo2023artificial}. Lapisan sumber data mencakup sumber internal seperti sistem CRM dan perangkat lunak keuangan, serta sumber eksternal seperti data media sosial dan laporan pasar. Gudang data berfungsi sebagai fasilitas penyimpanan terpusat untuk data yang terorganisasi dan siap digunakan untuk pelaporan. Mesin analitik bertanggung jawab untuk pengenalan pola dan analisis tren, memberikan wawasan prediktif untuk perencanaan strategis. Lapisan visualisasi menyediakan dashboard interaktif dan laporan yang meningkatkan adopsi pengguna melalui presentasi data yang intuitif.
+Komponen utama arsitektur BI hibrida mencakup beberapa lapisan yang saling terintegrasi \autocite{sahoo2023artificial}. Lapisan sumber data mencakup sumber internal seperti sistem CRM dan perangkat lunak keuangan, serta sumber eksternal seperti data media sosial dan laporan pasar. Gudang data berfungsi sebagai fasilitas penyimpanan terpusat untuk data yang terorganisasi dan siap digunakan untuk pelaporan. Mesin analitik bertanggung jawab untuk pengenalan pola dan analisis tren, memberikan wawasan prediktif untuk perencanaan strategis. 
 
 Penelitian empiris berskala besar menunjukkan bahwa organisasi yang mengadopsi pengambilan keputusan berbasis data (\textit{data-driven decision-making}) memiliki produktivitas 5--6\% lebih tinggi dibandingkan organisasi yang belum mengadopsinya \autocite{gul2023from}. Studi lain mengonfirmasi bahwa kapabilitas \textit{Business Intelligence} dan analitik berdampak positif terhadap kinerja organisasi melalui peningkatan kemampuan perubahan proses bisnis \autocite{sahoo2023artificial}. Integrasi komponen-komponen ini membentuk fondasi yang kuat untuk sistem BI modern yang responsif dan dapat diandalkan.
 
@@ -93,7 +93,7 @@ Bagian ini membahas pendekatan klasifikasi \textit{intent} berbasis pola untuk s
 
 Klasifikasi \textit{intent} adalah proses menentukan niat atau tujuan pengguna dari masukan mereka, yang merupakan tugas fundamental dalam sistem \textit{chatbot} percakapan \autocite{ouaddi2025comparative}. Inti dari \textit{chatbot} berbasis AI adalah komponen NLU\label{abbr:NLU} yang mengklasifikasikan \textit{intent} pengguna untuk menghasilkan respons yang sesuai. Tugas klasifikasi ini sangat penting karena menentukan alur percakapan dan tindakan yang akan diambil sistem.
 
-Pasar \textit{Conversational AI} global diproyeksikan mencapai USD 49,9 miliar pada tahun 2030, meningkat dari USD 10,7 miliar pada tahun 2023, dengan CAGR sebesar 25,2\% \autocite{Qaltivate2025}. Pertumbuhan eksponensial ini didorong oleh meningkatnya adopsi teknologi AI dalam layanan pelanggan dan operasional bisnis. Penelitian menunjukkan bahwa \textit{chatbot} berbasis AI mampu menangani sebagian besar pertanyaan rutin pelanggan secara otomatis, sehingga mengurangi beban kerja agen manusia dan mempercepat waktu respons secara signifikan \autocite{Adam2021Chatbots}. Temuan ini menunjukkan potensi besar klasifikasi \textit{intent} dalam meningkatkan efisiensi operasional dan kepuasan pengguna.
+Pasar \textit{Conversational AI} global diproyeksikan mencapai USD 49,9 miliar pada tahun 2030, meningkat dari USD 10,7 miliar pada tahun 2023, dengan CAGR sebesar 25,2\% \autocite{Qaltivate2025}. Pertumbuhan eksponensial ini didorong oleh meningkatnya adopsi teknologi AI dalam layanan pelanggan dan operasional bisnis. Penelitian menunjukkan bahwa \textit{chatbot} berbasis AI mampu menangani sebagian besar pertanyaan rutin pelanggan secara otomatis sehingga mengurangi beban kerja agen manusia dan mempercepat waktu respons secara signifikan \autocite{Adam2021Chatbots}. Temuan ini menunjukkan potensi besar klasifikasi \textit{intent} dalam meningkatkan efisiensi operasional dan kepuasan pengguna.
 
 \subsection{Pertimbangan Alternatif: Klasifikasi \textit{Intent} Berbasis \textit{Transformer}}
 
@@ -134,11 +134,11 @@ Perbedaan utama antara klasifikasi multi-kelas dan biner adalah pada interpretas
 Dalam menghitung metrik per kelas-\(i\), masalah klasifikasi multi-kelas diubah menjadi masalah biner secara virtual melalui pendekatan \textit{one-vs-all} \autocite{Grandini2020MultiClassMetrics}:
 
 \begin{enumerate}[label=\alph*.]
-    \item \textbf{TP\textsubscript{i}} (\textit{True Positive}): Jumlah sampel kelas-\(i\) yang diprediksi benar sebagai kelas-\(i\) (elemen diagonal matriks kebingungan pada baris dan kolom \(i\))
+    \item TP\textsubscript{i} (\textit{True Positive}): Jumlah sampel kelas-\(i\) yang diprediksi benar sebagai kelas-\(i\) (elemen diagonal matriks kebingungan pada baris dan kolom \(i\))
     
-    \item \textbf{FP\textsubscript{i}} (\textit{False Positive}): Jumlah sampel kelas selain \(i\) yang diprediksi sebagai kelas-\(i\) (jumlah seluruh baris \(i\) pada matriks kebingungan kecuali elemen diagonal)
+    \item FP\textsubscript{i} (\textit{False Positive}): Jumlah sampel kelas selain \(i\) yang diprediksi sebagai kelas-\(i\) (jumlah seluruh baris \(i\) pada matriks kebingungan kecuali elemen diagonal)
     
-    \item \textbf{FN\textsubscript{i}} (\textit{False Negative}): Jumlah sampel kelas-\(i\) yang diprediksi salah sebagai kelas lain (jumlah seluruh kolom \(i\) pada matriks kebingungan kecuali elemen diagonal)
+    \item FN\textsubscript{i} (\textit{False Negative}): Jumlah sampel kelas-\(i\) yang diprediksi salah sebagai kelas lain (jumlah seluruh kolom \(i\) pada matriks kebingungan kecuali elemen diagonal)
 \end{enumerate}
 
 Dalam konteks agregasi metrik (\textit{macro-average} dengan \textit{micro-average}) dan adanya 38 aturan bisnis dalam sistem ini, diperlukan strategi agregasi untuk memperoleh metrik keseluruhan performa sistem. Dua pendekatan utama yang umum digunakan dalam klasifikasi multi-kelas adalah \textit{macro-averaging} dan \textit{micro-averaging} \autocite{EvidentlyMultiClass}
@@ -171,16 +171,16 @@ Sistem menggunakan mekanisme pemberian skor keyakinan (\textit{confidence scorin
     \item Jika tingkat keyakinan \(< 40\): Prediksi dianggap ``tidak cukup yakin''; sistem meminta klarifikasi kepada pengguna atau menawarkan alternatif \textit{intent} yang mungkin
 \end{enumerate}
 
-Nilai ambang 40 dipilih berdasarkan pertimbangan bahwa satu kecocokan kata kunci primer sudah menghasilkan skor $\geq$ 75 (lihat Subbab~\ref{subsec:atribut-relasional}), sedangkan kecocokan kata kunci pendukung saja tanpa kata kunci primer menghasilkan skor yang lebih rendah. Ambang 40 memungkinkan sistem menangkap kueri yang relevan meskipun hanya cocok pada kata kunci pendukung, sekaligus menyaring kueri yang sama sekali tidak berkaitan. Nilai ini lebih rendah daripada \textit{default} 0{,}45 dalam literatur \autocite{hengst2024conformal} karena sistem ini menggunakan pencocokan kata kunci deterministik (bukan probabilistik), sehingga skor rendah tetap mengindikasikan relevansi parsial yang layak diproses.
+Nilai ambang 40 dipilih berdasarkan pertimbangan bahwa satu kecocokan kata kunci primer sudah menghasilkan skor $\geq$ 75 (lihat Subbab~\ref{subsec:atribut-relasional}), sedangkan kecocokan kata kunci pendukung saja tanpa kata kunci primer menghasilkan skor yang lebih rendah. Ambang 40 memungkinkan sistem menangkap kueri yang relevan meskipun hanya cocok pada kata kunci pendukung, sekaligus menyaring kueri yang sama sekali tidak berkaitan. Nilai ini lebih rendah daripada \textit{default} 0{,}45 dalam literatur \autocite{hengst2024conformal} karena sistem ini menggunakan pencocokan kata kunci deterministik (bukan probabilistik) sehingga skor rendah tetap mengindikasikan relevansi parsial yang layak diproses.
 
 Dengan demikian, untuk setiap kelas-\(i\), perhitungan TP, FP, dan FN disesuaikan sebagai berikut.
 
 \begin{enumerate}[label=\alph*.]
-    \item \textbf{TP\textsubscript{i}}: Prediksi kelas-\(i\) dengan tingkat keyakinan \(\geq 40\) yang ternyata benar
+    \item TP\textsubscript{i}: Prediksi kelas-\(i\) dengan tingkat keyakinan \(\geq 40\) yang ternyata benar
 
-    \item \textbf{FP\textsubscript{i}}: Prediksi kelas-\(i\) dengan tingkat keyakinan \(\geq 40\) yang ternyata salah
+    \item FP\textsubscript{i}: Prediksi kelas-\(i\) dengan tingkat keyakinan \(\geq 40\) yang ternyata salah
 
-    \item \textbf{FN\textsubscript{i}}: Sampel kelas-\(i\) yang sebenarnya tidak terprediksi dengan tingkat keyakinan \(\geq 40\) (termasuk prediksi kelas lain atau tingkat keyakinan rendah yang ditolak sistem)
+    \item FN\textsubscript{i}: Sampel kelas-\(i\) yang sebenarnya tidak terprediksi dengan tingkat keyakinan \(\geq 40\) (termasuk prediksi kelas lain atau tingkat keyakinan rendah yang ditolak sistem)
 \end{enumerate}
 
 Visualisasi matriks kebingungan untuk 38 aturan bisnis memberikan informasi penting tentang pola kesalahan pencocokan \autocite{EvidentlyMultiClass}, yaitu diagonal utama menampilkan jumlah pencocokan benar per aturan, sementara intensitas warna pada sel off-diagonal menunjukkan aturan-aturan mana yang sering dikacaukan satu sama lain. Sebagai contoh, jika ditemukan frekuensi tinggi kesalahan antara aturan ``Order per Regional'' dan ``Performa Order per Wilayah'', hal ini menunjukkan tumpang-tindih kata kunci primer yang perlu dibedakan dengan pola yang lebih spesifik.
@@ -188,32 +188,32 @@ Visualisasi matriks kebingungan untuk 38 aturan bisnis memberikan informasi pent
 Setiap kelas \textit{intent} memiliki kepentingan strategis yang berbeda dalam konteks bisnis sehingga penelitian ini menggunakan kombinasi metrik berikut \autocite{Grandini2020MultiClassMetrics}:
 
 \begin{enumerate}[label=\alph*.]
-    \item \textbf{Skor-F1 Makro} sebagai metrik utama: Mengutamakan performa yang merata di semua 38 aturan bisnis, memastikan bahwa aturan-aturan yang jarang dipanggil tidak terabaikan
+    \item Skor-F1 Makro sebagai metrik utama: Mengutamakan performa yang merata di semua 38 aturan bisnis, memastikan bahwa aturan-aturan yang jarang dipanggil tidak terabaikan
     
-    \item \textbf{Skor-F1 Tertimbang} sebagai metrik sekunder: Mempertimbangkan distribusi frekuensi kelas dalam data percobaan, mencerminkan performa yang lebih realistis terhadap data produksi
+    \item Skor-F1 Tertimbang sebagai metrik sekunder: Mempertimbangkan distribusi frekuensi kelas dalam data percobaan, mencerminkan performa yang lebih realistis terhadap data produksi
     
-    \item \textbf{Skor-F1 Mikro} sebagai metrik verifikasi: Harus sama dengan akurasi keseluruhan; digunakan untuk memvalidasi perhitungan
+    \item Skor-F1 Mikro sebagai metrik verifikasi: Harus sama dengan akurasi keseluruhan; digunakan untuk memvalidasi perhitungan
     
-    \item \textbf{Matriks Kebingungan}: Dalam analisis kualitatif pola kesalahan dan identifikasi peningkatan yang diperlukan pada aturan atau templat tertentu
+    \item Matriks Kebingungan: Dalam analisis kualitatif pola kesalahan dan identifikasi peningkatan yang diperlukan pada aturan atau templat tertentu
 \end{enumerate}
 
 Berdasarkan studi industri dan best-practices untuk sistem klasifikasi \textit{intent} dalam \textit{chatbot} bisnis, target performa yang ditetapkan untuk penelitian ini adalah \autocite{Santosa2025IndoBERTIntent,Ozerova2022IntentModule}:
 
 \begin{enumerate}[label=\alph*.]
-    \item \textbf{Skor-F1 Makro} \(\geq 0{,}85\): Menjamin performa yang baik dan seimbang di seluruh kelas, termasuk kelas-kelas dengan sampel pelatihan yang lebih sedikit
+    \item Skor-F1 Makro \(\geq 0{,}85\): Menjamin performa yang baik dan seimbang di seluruh kelas, termasuk kelas-kelas dengan sampel pelatihan yang lebih sedikit
     
-    \item \textbf{Skor-F1 Tertimbang} \(\geq 0{,}90\): Menjamin performa yang baik pada kelas-kelas mayoritas yang mewakili mayoritas pertanyaan pengguna dalam praktik
+    \item Skor-F1 Tertimbang \(\geq 0{,}90\): Menjamin performa yang baik pada kelas-kelas mayoritas yang mewakili mayoritas pertanyaan pengguna dalam praktik
     
-    \item \textbf{Skor-F1 Mikro} (Akurasi Keseluruhan) \(\geq 0{,}88\): Target akurasi minimal untuk sistem dapat diterima dalam produksi
+    \item Skor-F1 Mikro (Akurasi Keseluruhan) \(\geq 0{,}88\): Target akurasi minimal untuk sistem dapat diterima dalam produksi
     
-    \item \textbf{Matriks Kebingungan}: Diharapkan menunjukkan lebih dari 80\% nilai terprediksi berada pada diagonal utama, mengindikasikan bahwa mayoritas prediksi benar
+    \item Matriks Kebingungan: Diharapkan menunjukkan lebih dari 80\% nilai terprediksi berada pada diagonal utama, mengindikasikan bahwa mayoritas prediksi benar
 \end{enumerate}
 
 Pencapaian target-target ini akan diverifikasi melalui pengujian pada data validasi yang terpisah dan independen dari data pelatihan model, memastikan bahwa hasil evaluasi tidak bias dan representatif terhadap performa sistem pada data baru di lingkungan produksi.
 
 \subsubsection{\textit{Confusion Matrix} dan \textit{Confidence Score Analysis}}
 
-\textit{Confusion matrix} menyediakan visualisasi detail tentang performa klasifikasi untuk setiap kelas \textit{intent}. Analisis \textit{confusion matrix} memungkinkan identifikasi \textit{intent} yang sering salah diklasifikasikan dan pola kesalahan sistematis yang dapat diperbaiki melalui penyesuaian pola atau threshold.
+\textit{Confusion matrix} menyediakan detail tentang performa klasifikasi untuk setiap kelas \textit{intent}. Analisis \textit{confusion matrix} memungkinkan identifikasi \textit{intent} yang sering salah diklasifikasikan dan pola kesalahan sistematis yang dapat diperbaiki melalui penyesuaian pola atau threshold.
 
 Analisis distribusi \textit{confidence score} penting untuk memahami bagaimana sistem membedakan antara \textit{intent} yang benar (in-domain) dan pertanyaan di luar domain (out-of-domain atau OOD). Sistem yang baik harus menghasilkan \textit{confidence score} tinggi untuk \textit{intent} in-domain dan score rendah untuk OOD \autocite{khosla2022evaluating,zhang2022disentangling}. Masalah \textit{overconfidence}, dengan sistem menghasilkan score tinggi bahkan untuk sampel OOD yang abnormal, perlu dimitigasi melalui kalibrasi model yang tepat.
 
@@ -305,10 +305,10 @@ Sejumlah survei dan studi empiris menegaskan bahwa evaluasi manusia tetap diangg
 
 Praktik evaluasi manusia yang umum pada sistem NLG dan sejumlah dimensi yang sering digunakan, antara lain \autocite{vanDerLee2021HumanEval}:
 \begin{enumerate}[label=\alph*.]
-    \item \textbf{Kewajaran/\textit{Naturalness}}: Sejauh mana teks terdengar wajar seperti ditulis penutur asli dan tidak tampak kaku atau \textit{robotik}.
-    \item \textbf{Kelancaran/\textit{Fluency}}: Sejauh mana teks bebas dari kesalahan tata bahasa dan struktur kalimat yang janggal.
-    \item \textbf{Kecukupan/\textit{Adequacy} atau \textit{Informativeness}}: Sejauh mana teks menyampaikan informasi yang tepat dan memadai terkait masukan.
-    \item \textbf{Koherensi/\textit{Coherence}}: Sejauh mana kalimat-kalimat dalam teks saling tersambung secara logis dan membentuk alur yang mudah diikuti.
+    \item Kewajaran/\textit{Naturalness}: Sejauh mana teks terdengar wajar seperti ditulis penutur asli dan tidak tampak kaku atau \textit{robotik}.
+    \item Kelancaran/\textit{Fluency}: Sejauh mana teks bebas dari kesalahan tata bahasa dan struktur kalimat yang janggal.
+    \item Kecukupan/\textit{Adequacy atau \textit{Informativeness}}: Sejauh mana teks menyampaikan informasi yang tepat dan memadai terkait masukan.
+    \item Koherensi/\textit{Coherence}: Sejauh mana kalimat-kalimat dalam teks saling tersambung secara logis dan membentuk alur yang mudah diikuti.
 \end{enumerate}
 
 Kerangka evaluasi seperti ConSiDERS dan panduan evaluasi subjektif yang dapat direproduksi menekankan pentingnya perancangan instruksi penilaian yang jelas, pemilihan skala yang konsisten, dan penggunaan beberapa penilai untuk meningkatkan reliabilitas \autocite{Elangovan2023ConSiDERS,Morrison2021ReproSubjective}. Dalam surveinya juga digarisbawahi bahwa untuk banyak tugas NLG, korelasi antara metrik otomatis dan penilaian manusia tidak cukup tinggi sehingga penilaian manusia tetap diperlukan, terutama ketika tujuan utama sistem adalah meningkatkan mutu pengalaman pengguna, bukan mengoptimalkan skor metrik otomatis tertentu \autocite{Sai2020NLGSurvey}.
@@ -317,10 +317,10 @@ Dalam konteks \textit{chatbot} berbasis AI, sejumlah penelitian di bidang kualit
 
 Dengan demikian, evaluasi subjektif dalam konteks \textit{chatbot} BI dapat difokuskan pada beberapa dimensi utama berikut.
 \begin{enumerate}[label=\alph*.]
-    \item \textbf{Kewajaran Bahasa}: Apakah jawaban terdengar alami dan tidak kaku.
-    \item \textbf{Kejelasan dan Keterpahaman}: Apakah isi jawaban mudah dipahami oleh pengguna nonteknis.
-    \item \textbf{Kegunaan/\textit{Usefulness}}: Apakah jawaban benar-benar membantu pengguna menjawab pertanyaan bisnis yang diajukan.
-    \item \textbf{Kenyamanan Interaksi}: Sejauh mana gaya bahasa dan struktur jawaban mendukung pengalaman percakapan yang menyenangkan.
+    \item Kewajaran Bahasa: Apakah jawaban terdengar alami dan tidak kaku.
+    \item Kejelasan dan Keterpahaman: Apakah isi jawaban mudah dipahami oleh pengguna nonteknis.
+    \item Kegunaan/\textit{Usefulness}: Apakah jawaban benar-benar membantu pengguna menjawab pertanyaan bisnis yang diajukan.
+    \item Kenyamanan Interaksi: Sejauh mana gaya bahasa dan struktur jawaban mendukung pengalaman percakapan yang menyenangkan.
 \end{enumerate}
 
 Dimensi-dimensi tersebut dapat diukur menggunakan skala Likert oleh sejumlah penilai internal pada tahap pengujian sistem, mengikuti praktik yang direkomendasikan dalam literatur evaluasi NLG dan kualitas \textit{chatbot} \autocite{vanDerLee2021HumanEval,Syarifudin2024AIChatbotQuality}.
@@ -354,7 +354,7 @@ Berdasarkan informasi tersebut, literatur menyarankan bahwa pemilihan metrik eva
   \label{fig:tsf}
 \end{figure}
 
-Peramalan deret waktu (\textit{Time Series Forecasting}) (diilustrasikan pada Gambar~\ref{fig:tsf}) adalah proses memprediksi nilai masa depan dari suatu variabel berdasarkan observasi nilai-nilai masa lalu dari variabel yang sama secara berurutan waktu. Dalam domain bisnis, metodologi ini fundamental untuk memproyeksikan metrik utama, seperti volume penjualan, permintaan layanan pelanggan, atau tingkat retensi pengguna, sehingga memungkinkan organisasi mengambil langkah antisipatif dan menyusun strategi berbasis data.
+Peramalan deret waktu (\textit{Time Series Forecasting}) (diilustrasikan pada Gambar~\ref{fig:tsf}) adalah proses memprediksi nilai masa depan dari suatu variabel berdasarkan observasi nilai-nilai masa lalu dari variabel yang sama secara berurutan waktu. Dalam domain bisnis, metodologi ini fundamental untuk memproyeksikan metrik utama, seperti volume penjualan, permintaan layanan pelanggan, atau tingkat retensi pengguna sehingga memungkinkan organisasi mengambil langkah antisipatif dan menyusun strategi berbasis data.
 
 Bagian ini membahas konsep peramalan deret waktu, model-model statistik dan pembelajaran mendalam yang digunakan, serta evaluasi performa yang komprehensif. Pembahasan mencakup ARIMA, SARIMA\label{abbr:SARIMA}, LSTM, serta perbandingan karakteristik dan performa masing-masing metode. Pemahaman yang mendalam tentang berbagai pendekatan peramalan ini menjadi fondasi penting dalam memilih dan mengimplementasikan model yang sesuai dengan karakteristik data dan kebutuhan aplikasi.
 
@@ -392,7 +392,7 @@ Keunggulan Prophet adalah kemudahan penggunaan, kemampuan menangani nilai hilang
 
 \subsubsection{Keterbatasan Model Statistik dan Motivasi Penggunaan \textit{Deep Learning}}
 
-Meskipun model statistik seperti ARIMA dan Prophet unggul dalam hal interpretabilitas dan efisiensi komputasi, terdapat sejumlah keterbatasan yang memotivasi penggunaan model \textit{deep learning} dalam penelitian ini. Pertama, ARIMA dan SARIMA mengasumsikan linearitas sehingga kurang mampu menangkap hubungan temporal yang kompleks dan non-linear yang umum dalam data bisnis \autocite{Petropoulos2022ForecastingPractice,Spiliotis2020ForecastingBenchmarks}. Kedua, model statistik univariat seperti ARIMA tidak secara langsung memanfaatkan informasi dari variabel-variabel lain yang berkorelasi, sehingga kurang optimal untuk data multivariat \autocite{Masini2023MLTimeSeriesForecasting}. Ketiga, studi empiris pada data \textit{e-commerce} dan telekomunikasi menunjukkan bahwa model LSTM dan GRU konsisten mengungguli ARIMA dengan pengurangan \textit{error} sekitar 12--18\% pada data dengan pola musiman dan ketergantungan temporal yang kompleks \autocite{Sunendar2025ComparisonARIMALSTMGRU,Tuncer2023ARIMAProphetLSTM}.
+Meskipun model statistik seperti ARIMA dan Prophet unggul dalam hal interpretabilitas dan efisiensi komputasi, terdapat sejumlah keterbatasan yang memotivasi penggunaan model \textit{deep learning} dalam penelitian ini. Pertama, ARIMA dan SARIMA mengasumsikan linearitas sehingga kurang mampu menangkap hubungan temporal yang kompleks dan non-linear yang umum dalam data bisnis \autocite{Petropoulos2022ForecastingPractice,Spiliotis2020ForecastingBenchmarks}. Kedua, model statistik univariat seperti ARIMA tidak secara langsung memanfaatkan informasi dari variabel-variabel lain yang berkorelasi sehingga kurang optimal untuk data multivariat \autocite{Masini2023MLTimeSeriesForecasting}. Ketiga, studi empiris pada data \textit{e-commerce} dan telekomunikasi menunjukkan bahwa model LSTM dan GRU konsisten mengungguli ARIMA dengan pengurangan \textit{error} sekitar 12--18\% pada data dengan pola musiman dan ketergantungan temporal yang kompleks \autocite{Sunendar2025ComparisonARIMALSTMGRU,Tuncer2023ARIMAProphetLSTM}.
 
 Dengan demikian, pendekatan dalam penelitian ini adalah menggunakan ARIMA dan Prophet sebagai \textit{baseline} yang terukur, kemudian membandingkannya dengan model \textit{deep learning} (LSTM dan GRU) untuk memvalidasi bahwa kompleksitas tambahan dari model \textit{deep learning} benar-benar memberikan peningkatan akurasi yang signifikan dalam konteks data indikator bisnis yang digunakan.
 
@@ -443,13 +443,13 @@ Dalam persamaan ini, \(r_t\) adalah gerbang reset, \(z_t\) adalah gerbang pembar
 
 Arsitektur TFT terdiri dari beberapa komponen utama \autocite{Lim2021TFT,Hartanto2024TFTEnhanced}:
 \begin{enumerate}[label=\alph*.]
-    \item \textbf{Variabel \textit{Input} Tipe-Campuran}: TFT menangani masukan eksogen tergantung waktu (\textit{time-dependent exogenous features}) yang terdiri dari masukan yang tidak diketahui sebelumnya dan masukan yang diketahui, serta kovariat statis yang memberikan konteks tentang entitas yang diukur.
+    \item Variabel \textit{Input Tipe-Campuran}: TFT menangani masukan eksogen tergantung waktu (\textit{time-dependent exogenous features}) yang terdiri dari masukan yang tidak diketahui sebelumnya dan masukan yang diketahui, serta kovariat statis yang memberikan konteks tentang entitas yang diukur.
     
-    \item \textbf{Jaringan Pemilihan Variabel (\textit{Variable Selection Network})}: Komponen ini secara adaptif memilih fitur yang paling relevan dari antara semua masukan, meningkatkan interpretabilitas dan mengurangi kebisingan dari fitur yang tidak relevan \autocite{Lim2021TFT}.
+    \item Jaringan Pemilihan Variabel (\textit{Variable Selection Network)}: Komponen ini secara adaptif memilih fitur yang paling relevan dari antara semua masukan, meningkatkan interpretabilitas dan mengurangi kebisingan dari fitur yang tidak relevan \autocite{Lim2021TFT}.
     
-    \item \textbf{Lapisan Gerbang Residu (\textit{Gated Residual Networks})}: Lapisan ini menerapkan mekanisme gerbang untuk menekan komponen yang tidak perlu, meningkatkan kemampuan model untuk fokus pada pola penting \autocite{Lim2021TFT}.
+    \item Lapisan Gerbang Residu (\textit{Gated Residual Networks)}: Lapisan ini menerapkan mekanisme gerbang untuk menekan komponen yang tidak perlu, meningkatkan kemampuan model untuk fokus pada pola penting \autocite{Lim2021TFT}.
     
-    \item \textbf{Mekanisme \textit{Multi-Head Attention}}: Mekanisme perhatian diri memungkinkan model menangkap hubungan jangka panjang dan pola kompleks dalam data, memberikan ketepatan prediksi yang tinggi pada berbagai horizon waktu \autocite{Hartanto2024TFTEnhanced}.
+    \item Mekanisme \textit{Multi-Head Attention}: Mekanisme perhatian diri memungkinkan model menangkap hubungan jangka panjang dan pola kompleks dalam data, memberikan ketepatan prediksi yang tinggi pada berbagai horizon waktu \autocite{Hartanto2024TFTEnhanced}.
 \end{enumerate}
 
 Berbeda dengan RNN yang memproses data secara sekuensial, TFT dapat memproses seluruh urutan masukan secara paralel, menghasilkan pelatihan yang lebih cepat. Penelitian menunjukkan bahwa TFT unggul dalam menangani skenario peramalan multivariat yang kompleks dengan banyak fitur yang saling berinteraksi, seperti kasus prediksi kinerja bisnis yang melibatkan banyak indikator yang saling terkait \autocite{Hartanto2024TFTEnhanced,Cheng2025MultivariateTFFEng}.
@@ -725,8 +725,8 @@ Dalam konteks \textbf{\textit{priority entity}}, model dievaluasi secara terpisa
 
 Dalam setiap kombinasi horizon–entitas, metrik kesalahan dilaporkan menggunakan:
 \begin{enumerate}[label=\alph*.]
-    \item \textbf{Nilai Median (\textit{Median})}: Nilai tengah yang \textit{robust} terhadap \textit{outliers}, memberikan ukuran tendensi sentral yang lebih andal daripada rata-rata.
-    \item \textbf{Rentang Antar Kuartil (\textit{Interquartile Range}, IQR)}: Selisih antara kuartil ketiga dan kuartil pertama, menunjukkan penyebaran 50\% tengah dari distribusi kesalahan. IQR memberikan gambaran tentang variabilitas performa model tanpa dipengaruhi nilai ekstrem.
+    \item Nilai Median (\textit{Median)}: Nilai tengah yang \textit{robust} terhadap \textit{outliers}, memberikan ukuran tendensi sentral yang lebih andal daripada rata-rata.
+    \item Rentang Antar Kuartil (\textit{Interquartile Range, IQR)}: Selisih antara kuartil ketiga dan kuartil pertama, menunjukkan penyebaran 50\% tengah dari distribusi kesalahan. IQR memberikan gambaran tentang variabilitas performa model tanpa dipengaruhi nilai ekstrem.
 \end{enumerate}
 
 Pendekatan ini memungkinkan analisis distribusi performa model yang lebih robust, bukan hanya bergantung pada nilai rata-rata, dan dapat mengidentifikasi situasi atau entitas dengan model mungkin mengalami tantangan \autocite{Petropoulos2023ForecastEval,Spiliotis2020ForecastingBenchmarks}.
@@ -736,37 +736,37 @@ Pendekatan ini memungkinkan analisis distribusi performa model yang lebih robust
 Analisis residual merupakan komponen penting dalam evaluasi model peramalan untuk memastikan bahwa asumsi model terpenuhi dan tidak ada pola sistematis yang tersisa dalam kesalahan prediksi. Analisis ini mencakup beberapa teknik yang saling melengkapi:
 
 \begin{enumerate}[label=\alph*.]
-    \item \textbf{Plot Residual terhadap Waktu}: Mendeteksi pola temporal yang mungkin tersisa dalam residual. Residual yang baik harus terdistribusi secara acak di sekitar nol tanpa tren atau pola musiman yang jelas, mengindikasikan bahwa model telah menangkap sebagian besar struktur dinamis dalam data.
+    \item Plot Residual terhadap Waktu: Mendeteksi pola temporal yang mungkin tersisa dalam residual. Residual yang baik harus terdistribusi secara acak di sekitar nol tanpa tren atau pola musiman yang jelas, mengindikasikan bahwa model telah menangkap sebagian besar struktur dinamis dalam data.
     
-    \item \textbf{Uji Normalitas (\textit{Shapiro-Wilk Test})}: Menguji apakah residual mengikuti distribusi normal. Normalitas residual mengindikasikan bahwa model telah mengekstrak informasi sistem secara efektif dan kesalahan yang tersisa bersifat acak murni.
+    \item Uji Normalitas (\textit{Shapiro-Wilk Test)}: Menguji apakah residual mengikuti distribusi normal. Normalitas residual mengindikasikan bahwa model telah mengekstrak informasi sistem secara efektif dan kesalahan yang tersisa bersifat acak murni.
     
-    \item \textbf{Uji Autokorelasi (\textit{Ljung-Box Test})}: Mendeteksi autokorelasi dalam residual dengan uji statistik. Autokorelasi yang signifikan mengindikasikan bahwa masih ada informasi temporal yang belum ditangkap oleh model, dan model mungkin perlu diperbaiki atau divariasikan.
+    \item Uji Autokorelasi (\textit{Ljung-Box Test)}: Mendeteksi autokorelasi dalam residual dengan uji statistik. Autokorelasi yang signifikan mengindikasikan bahwa masih ada informasi temporal yang belum ditangkap oleh model, dan model mungkin perlu diperbaiki atau divariasikan.
 \end{enumerate}
 
 Ketiga teknik ini memberikan pemeriksaan komprehensif terhadap kualitas model dan asumsi yang mendasarinya \autocite{Petropoulos2023ForecastEval}.
 
 \subsubsection{\textit{Time Series Cross-Validation}}
 
-Validasi silang khusus untuk deret waktu (\textit{time series cross-validation}) menggunakan pendekatan \textit{walk-forward validation} atau \textit{expanding window} untuk menghindari kebocoran informasi dari masa depan ke masa lalu \autocite{Spiliotis2020ForecastingBenchmarks}. Pendekatan ini membagi data secara berurutan: pada setiap iterasi, model dilatih pada subset data historis yang terus bertambah, kemudian diminta memprediksi periode mendatang. Hal ini mensimulasikan kondisi operasional (\textit{deployment}) aktual dengan model harus memprediksi masa depan berdasarkan data masa lalu yang diketahui.
+Validasi silang khusus untuk deret waktu (\textit{time series cross-validation}) menggunakan pendekatan \textit{walk-\-forward va\-li\-da\-tion} atau \textit{expanding window} untuk menghindari kebocoran informasi dari masa depan ke masa lalu \autocite{Spiliotis2020ForecastingBenchmarks}. Pendekatan ini membagi data secara berurutan: pada setiap iterasi, model dilatih pada subset data historis yang terus bertambah, kemudian diminta memprediksi periode mendatang. Hal ini mensimulasikan kondisi operasional (\textit{deployment}) aktual dengan model harus memprediksi masa depan berdasarkan data masa lalu yang diketahui.
 
-Validasi silang deret waktu memberikan estimasi performa yang lebih realistis dibandingkan validasi silang standar (misalnya \textit{k-fold}), yang dapat menghasilkan \textit{overfitting} karena kebocoran informasi temporal. Dengan pendekatan \textit{walk-forward}, estimasi akurasi model pada data uji mencerminkan performa yang dapat diharapkan dalam praktik \autocite{Petropoulos2023ForecastEval}.
+Validasi silang deret waktu memberikan estimasi performa yang lebih realistis dibandingkan validasi silang standar (misalnya \textit{k-fold}), yang dapat menghasilkan \textit{overfitting} karena kebocoran informasi temporal. Dengan pendekatan \textit{walk-\-forward}, estimasi akurasi model pada data uji mencerminkan performa yang dapat diharapkan dalam praktik \autocite{Petropoulos2023ForecastEval}.
 
 \subsubsection{Target Performa \textit{Forecasting}}
 
 Berdasarkan literatur dan praktik industri terkini, target performa yang ditetapkan untuk model peramalan deret waktu multivariat dalam konteks \textit{Business Intelligence} mencakup beberapa kriteria utama \autocite{Petropoulos2023ForecastEval,Spiliotis2020ForecastingBenchmarks}:
 
 \begin{enumerate}[label=\alph*.]
-    \item \textbf{sMAPE}: Harus mencapai maksimal 15\%, yang dianggap dapat diterima untuk sebagian besar aplikasi bisnis dengan prediksi deret waktu multivariat.
+    \item sMAPE: Harus mencapai maksimal 15\%, yang dianggap dapat diterima untuk sebagian besar aplikasi bisnis dengan prediksi deret waktu multivariat.
     
-    \item \textbf{RMSE}: Harus seminimal mungkin dan dibandingkan dengan standar deviasi (\textit{standard deviation}) data aktual. RMSE yang kurang dari setengah standar deviasi data aktual umumnya dianggap performa yang baik.
+    \item RMSE: Harus seminimal mungkin dan dibandingkan dengan standar deviasi (\textit{standard deviation}) data aktual. RMSE yang kurang dari setengah standar deviasi data aktual umumnya dianggap performa yang baik.
     
-    \item \textbf{MAE}: Harus seminimal mungkin dan diinterpretasikan dalam konteks skala data. MAE yang secara signifikan lebih kecil dari nilai rata-rata (\textit{mean}) data aktual menunjukkan performa yang baik.
+    \item MAE: Harus seminimal mungkin dan diinterpretasikan dalam konteks skala data. MAE yang secara signifikan lebih kecil dari nilai rata-rata (\textit{mean}) data aktual menunjukkan performa yang baik.
     
-    \item \textbf{MASE}: Harus bernilai kurang dari 1 untuk menunjukkan bahwa model mengungguli garis dasar sederhana. Nilai MASE antara 0,5 dan 1 mengindikasikan performa yang sangat baik relatif terhadap garis dasar.
+    \item MASE: Harus bernilai kurang dari 1 untuk menunjukkan bahwa model mengungguli garis dasar sederhana. Nilai MASE antara 0,5 dan 1 mengindikasikan performa yang sangat baik relatif terhadap garis dasar.
     
-    \item \textbf{Residual}: Harus lulus uji \textit{Ljung-Box} dengan \textit{p-value} lebih besar dari 0,05, mengindikasikan tidak ada autokorelasi signifikan yang tersisa dalam residual.
+    \item Residual: Harus lulus uji \textit{Ljung-Box} dengan \textit{p-value} lebih besar dari 0,05, mengindikasikan tidak ada autokorelasi signifikan yang tersisa dalam residual.
     
-    \item \textbf{\textit{Skill Score}}: Harus positif untuk semua horizon dan entitas prioritas, menunjukkan konsistensi keunggulan model terhadap garis dasar.
+    \item \textit{Skill Score}: Harus positif untuk semua horizon dan entitas prioritas, menunjukkan konsistensi keunggulan model terhadap garis dasar.
 \end{enumerate}
 
 Pencapaian target-target ini, diukur melalui statistik median dan IQR per horizon dan per entitas prioritas, memastikan bahwa model peramalan dapat memberikan prediksi yang akurat, andal, dan konsisten untuk mendukung perencanaan strategis dan pengambilan keputusan operasional dalam sistem \textit{Business Intelligence} \autocite{Petropoulos2023ForecastEval}.
@@ -834,7 +834,7 @@ Priadinata dkk. (2025) & Analisis Komparatif \textit{LSTM}, \textit{GRU}, dan \t
 Retresco (2024) & \textit{GPT} dan Model Teks Berbasis Templat dalam \textit{NLG} & Pembangkitan teks berbasis templat memberikan kontrol lebih tinggi dan menjamin tidak menghasilkan kalimat tidak diinginkan & Perbanding- an pendekatan \textit{end-to-end} dengan berbasis templat & \textit{Template-based NLG}, \textit{GPT} \\
 \hline
 
-Querio (2025) & \textit{Conversational AI Data Analyst Chatbot} & \textit{Chatbot} analitik memungkinkan kueri bahasa alami tanpa keahlian \textit{SQL} dengan visualisasi otomatis & Integrasi \textit{NLP} dengan \textit{data warehouse} dan lapisan tata kelola & \textit{Conversatio- nal AI}, \textit{text-to-SQL} \\
+Querio (2025) & \textit{Conversational AI Data Analyst Chatbot} & \textit{Chatbot} analitik memungkinkan kueri bahasa alami tanpa keahlian \textit{SQL} & Integrasi \textit{NLP} dengan \textit{data warehouse} dan lapisan tata kelola & \textit{Conversatio- nal AI}, \textit{text-to-SQL} \\
 \hline
 
 Kalogianni dis dkk. (2024) & Integrasi \textit{AI} dalam Analitik Bisnis & Integrasi \textit{NLP} dan \textit{AI} berdampak signifikan terhadap cara pelanggan berinteraksi dan berkomunikasi dengan \textit{chatbot} & Survei terstruktur dengan analisis \textit{SPSS} & \textit{Chatbot}, \textit{NLP}, \textit{virtual assistant} \\
@@ -854,23 +854,23 @@ Berdasarkan telaah kritis terhadap penelitian-penelitian terdahulu, teridentifik
 Poin-poin pembeda utama antara tugas akhir ini dengan penelitian terdahulu adalah sebagai berikut.
 
 \begin{enumerate}
-    \item \textbf{Integrasi Empat Komponen Teknologi dalam Satu Sistem} 
+    \item Integrasi Empat Komponen Teknologi dalam Satu Sistem 
     
     Penelitian terdahulu umumnya mengembangkan klasifikasi \textit{intent}, mesin kueri, pembangkitan bahasa alami, dan peramalan deret waktu sebagai komponen terpisah. Tugas akhir ini mengintegrasikan keempat komponen tersebut dalam satu arsitektur sistem \textit{chatbot Business Intelligence} yang kohesif.
     
-    \item \textbf{Fokus pada Pengguna Internal dan Indikator Bisnis Pelanggan} 
+    \item Fokus pada Pengguna Internal dan Indikator Bisnis Pelanggan 
     
     Sebagian besar penelitian \textit{chatbot} berfokus pada layanan pelanggan eksternal. Tugas akhir ini secara khusus dirancang untuk pengguna internal perusahaan dengan fokus pada analisis indikator bisnis pelanggan seperti pesanan, target penjualan, \textit{churn}, dan pendapatan.
     
-    \item \textbf{Kombinasi Pendekatan Berbasis Aturan dan Pembelajaran Mendalam} 
+    \item Kombinasi Pendekatan Berbasis Aturan dan Pembelajaran Mendalam 
     
     Penelitian terdahulu cenderung menggunakan salah satu pendekatan secara eksklusif. Tugas akhir ini mengkombinasikan klasifikasi \textit{intent} berbasis pola untuk kontrol dan keamanan dengan model \textit{deep learning} untuk kemampuan prediktif.
     
-    \item \textbf{Pembangkitan Bahasa Alami Berbasis Templat untuk Keamanan Data Internal} 
+    \item Pembangkitan Bahasa Alami Berbasis Templat untuk Keamanan Data Internal 
     
     Berbeda dengan pendekatan \textit{end-to-end} yang berisiko menghasilkan informasi tidak akurat, tugas akhir ini menggunakan pendekatan berbasis templat yang menjamin akurasi faktual dan keamanan data sensitif perusahaan.
     
-    \item \textbf{Dukungan Bahasa Indonesia dalam Antarmuka Percakapan} 
+    \item Dukungan Bahasa Indonesia dalam Antarmuka Percakapan 
     
     Penelitian \textit{chatbot Business Intelligence} yang mendukung interaksi dalam Bahasa Indonesia masih sangat terbatas. Tugas akhir ini mengembangkan sistem yang mendukung interaksi dalam Bahasa Indonesia.
 \end{enumerate}

@@ -59,21 +59,19 @@ module.exports = {
         MONTH_ID,
         REGIONAL_BILL,
         WITEL_BILL,
-        DATEL,
-        CSTO,
         FLAG_SCALING_SUSTAIN_REVENUE,
         FLAG_SCALING_MONTHLY_REVENUE,
         
         -- Customer and Service Metrics
         COUNT(DISTINCT NIP_NAS) as TOTAL_PELANGGAN,
-        COUNT(DISTINCT NCLI) as TOTAL_NCLI,
-        COUNT(DISTINCT ND) as TOTAL_LAYANAN,
+        COUNT(DISTINCT NIP_NAS) as TOTAL_NCLI,
+        COUNT(DISTINCT NIP_NAS) as TOTAL_LAYANAN,
         
         -- Revenue Metrics by Scaling Type
         SUM(REVENUE) as TOTAL_REVENUE,
         ROUND(AVG(REVENUE), 0) as AVG_REVENUE_PER_LAYANAN,
         ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 0) as REVENUE_PER_PELANGGAN,
-        ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NCLI), 0), 0) as REVENUE_PER_NCLI,
+        ROUND(SUM(REVENUE) / NULLIF(COUNT(DISTINCT NIP_NAS), 0), 0) as REVENUE_PER_NCLI,
         
         -- Scaling Type Distribution
         COUNT(CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING NEW' THEN 1 END) as NEW_SERVICES_COUNT,
@@ -89,10 +87,10 @@ module.exports = {
         COUNT(DISTINCT CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING RECURRING' THEN NIP_NAS END) as RECURRING_CUSTOMERS_COUNT,
         COUNT(DISTINCT CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SUSTAIN' THEN NIP_NAS END) as SUSTAIN_CUSTOMERS_COUNT,
         
-        -- NCLI Distribution by Scaling Type
-        COUNT(DISTINCT CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING NEW' THEN NCLI END) as NEW_NCLI_COUNT,
-        COUNT(DISTINCT CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING RECURRING' THEN NCLI END) as RECURRING_NCLI_COUNT,
-        COUNT(DISTINCT CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SUSTAIN' THEN NCLI END) as SUSTAIN_NCLI_COUNT,
+        -- NIP_NAS Distribution by Scaling Type
+        COUNT(DISTINCT CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING NEW' THEN NIP_NAS END) as NEW_NCLI_COUNT,
+        COUNT(DISTINCT CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING RECURRING' THEN NIP_NAS END) as RECURRING_NCLI_COUNT,
+        COUNT(DISTINCT CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SUSTAIN' THEN NIP_NAS END) as SUSTAIN_NCLI_COUNT,
         
         -- Performance Ratios
         ROUND(SUM(CASE WHEN FLAG_SCALING_MONTHLY_REVENUE = 'REV SCALING NEW' THEN REVENUE ELSE 0 END) * 100.0 / NULLIF(SUM(REVENUE), 0), 2) as NEW_REVENUE_RATIO,
@@ -112,18 +110,14 @@ module.exports = {
             ELSE 'BALANCED_AREA'
         END as GROWTH_POTENTIAL_CATEGORY
         
-    FROM DWH_MOIS.BRIGHTAI_REVENUE
+    FROM PMSDBS.BRIGHTAI_REVENUE
     WHERE GROUP4 = 'High Speed Internet'
       AND REVENUE > 0
       AND REGIONAL_BILL IS NOT NULL
       AND WITEL_BILL IS NOT NULL
-      AND DATEL IS NOT NULL
-      AND CSTO IS NOT NULL
       AND NIP_NAS IS NOT NULL
-      AND NCLI IS NOT NULL
-      AND ND IS NOT NULL
       AND FLAG_SCALING_MONTHLY_REVENUE IS NOT NULL
-    GROUP BY YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL, DATEL, CSTO,
+    GROUP BY YEAR_ID, MONTH_ID, REGIONAL_BILL, WITEL_BILL,
              FLAG_SCALING_SUSTAIN_REVENUE, FLAG_SCALING_MONTHLY_REVENUE
     ORDER BY YEAR_ID DESC, MONTH_ID DESC, TOTAL_REVENUE DESC
   `,
@@ -328,9 +322,9 @@ module.exports = {
           regional: regional,
           total_revenue: total,
           scaling_profile: {
-            new_ratio: ((data.new_revenue / total) * 100).toFixed(2),
-            recurring_ratio: ((data.recurring_revenue / total) * 100).toFixed(2),
-            sustain_ratio: ((data.sustain_revenue / total) * 100).toFixed(2)
+            new_ratio: ((data.new_revenue / (total || 1)) * 100).toFixed(2),
+            recurring_ratio: ((data.recurring_revenue / (total || 1)) * 100).toFixed(2),
+            sustain_ratio: ((data.sustain_revenue / (total || 1)) * 100).toFixed(2)
           },
           dominant_growth_category: dominant_growth_category,
           sto_count: data.sto_count,
@@ -354,9 +348,9 @@ module.exports = {
       const totalSustainRevenue = data.reduce((sum, d) => sum + d.SUSTAIN_REVENUE_AMOUNT, 0);
       
       // Calculate average ratios
-      const avgNewRatio = (totalNewRevenue / totalRevenue) * 100;
-      const avgRecurringRatio = (totalRecurringRevenue / totalRevenue) * 100;
-      const avgSustainRatio = (totalSustainRevenue / totalRevenue) * 100;
+      const avgNewRatio = (totalNewRevenue / (totalRevenue || 1)) * 100;
+      const avgRecurringRatio = (totalRecurringRevenue / (totalRevenue || 1)) * 100;
+      const avgSustainRatio = (totalSustainRevenue / (totalRevenue || 1)) * 100;
       
       // Advanced analytics
       const scalingStrategyAssessment = this.assessScalingStrategy(
@@ -387,11 +381,11 @@ module.exports = {
         periode_analisis: data.length > 0 ? `${data[0].YEAR_ID}` : 'Data tidak tersedia',
         
         metrik_nasional: {
-          total_revenue: `Rp ${totalRevenue.toLocaleString('id-ID')}`,
-          total_pelanggan: totalCustomers.toLocaleString('id-ID'),
-          total_ncli: totalNCLI.toLocaleString('id-ID'),
-          total_layanan: totalServices.toLocaleString('id-ID'),
-          total_sto_analyzed: data.length.toLocaleString('id-ID')
+          total_revenue: `Rp ${(totalRevenue || 0).toLocaleString('id-ID')}`,
+          total_pelanggan: (totalCustomers || 0).toLocaleString('id-ID'),
+          total_ncli: (totalNCLI || 0).toLocaleString('id-ID'),
+          total_layanan: (totalServices || 0).toLocaleString('id-ID'),
+          total_sto_analyzed: (data.length || 0).toLocaleString('id-ID')
         },
         
         portfolio_scaling_assessment: {
@@ -405,21 +399,21 @@ module.exports = {
         
         distribusi_scaling_revenue: {
           new_revenue: {
-            amount: `Rp ${totalNewRevenue.toLocaleString('id-ID')}`,
+            amount: `Rp ${(totalNewRevenue || 0).toLocaleString('id-ID')}`,
             percentage: `${avgNewRatio.toFixed(2)}%`,
             services: data.reduce((sum, d) => sum + d.NEW_SERVICES_COUNT, 0),
             customers: data.reduce((sum, d) => sum + d.NEW_CUSTOMERS_COUNT, 0),
             ncli: data.reduce((sum, d) => sum + d.NEW_NCLI_COUNT, 0)
           },
           recurring_revenue: {
-            amount: `Rp ${totalRecurringRevenue.toLocaleString('id-ID')}`,
+            amount: `Rp ${(totalRecurringRevenue || 0).toLocaleString('id-ID')}`,
             percentage: `${avgRecurringRatio.toFixed(2)}%`,
             services: data.reduce((sum, d) => sum + d.RECURRING_SERVICES_COUNT, 0),
             customers: data.reduce((sum, d) => sum + d.RECURRING_CUSTOMERS_COUNT, 0),
             ncli: data.reduce((sum, d) => sum + d.RECURRING_NCLI_COUNT, 0)
           },
           sustain_revenue: {
-            amount: `Rp ${totalSustainRevenue.toLocaleString('id-ID')}`,
+            amount: `Rp ${(totalSustainRevenue || 0).toLocaleString('id-ID')}`,
             percentage: `${avgSustainRatio.toFixed(2)}%`,
             services: data.reduce((sum, d) => sum + d.SUSTAIN_SERVICES_COUNT, 0),
             customers: data.reduce((sum, d) => sum + d.SUSTAIN_CUSTOMERS_COUNT, 0),
@@ -432,10 +426,10 @@ module.exports = {
           .map(([category, stats]) => ({
             kategori: category,
             jumlah_sto: stats.sto_count,
-            total_revenue: `Rp ${stats.revenue.toLocaleString('id-ID')}`,
-            total_pelanggan: stats.customers.toLocaleString('id-ID'),
-            kontribusi_revenue: `${((stats.revenue / totalRevenue) * 100).toFixed(2)}%`,
-            rata_revenue_per_sto: `Rp ${Math.round(stats.revenue / stats.sto_count).toLocaleString('id-ID')}`
+            total_revenue: `Rp ${(stats.revenue || 0).toLocaleString('id-ID')}`,
+            total_pelanggan: (stats.customers || 0).toLocaleString('id-ID'),
+            kontribusi_revenue: `${((stats.revenue / (totalRevenue || 1)) * 100).toFixed(2)}%`,
+            rata_revenue_per_sto: `Rp ${Math.round(stats.revenue / (stats.sto_count || 1)).toLocaleString('id-ID')}`
           })),
         
         peluang_scaling: scalingOpportunities.map(opp => ({
@@ -447,7 +441,7 @@ module.exports = {
         
         profil_scaling_regional: regionalScalingProfile.slice(0, 10).map(profile => ({
           regional: profile.regional,
-          total_revenue: `Rp ${profile.total_revenue.toLocaleString('id-ID')}`,
+          total_revenue: `Rp ${(profile.total_revenue || 0).toLocaleString('id-ID')}`,
           profil_scaling: {
             new_ratio: `${profile.scaling_profile.new_ratio}%`,
             recurring_ratio: `${profile.scaling_profile.recurring_ratio}%`,
@@ -462,18 +456,18 @@ module.exports = {
           periode: `${item.YEAR_ID}-${item.MONTH_ID.toString().padStart(2, '0')}`,
           regional: item.REGIONAL_BILL,
           witel: item.WITEL_BILL,
-          datel: item.DATEL,
-          kode_sto: item.CSTO,
+          datel: item.WITEL_BILL,
+          kode_sto: item.WITEL_BILL,
           scaling_sustain_flag: item.FLAG_SCALING_SUSTAIN_REVENUE,
           scaling_monthly_flag: item.FLAG_SCALING_MONTHLY_REVENUE,
           growth_category: item.GROWTH_POTENTIAL_CATEGORY,
-          total_revenue: `Rp ${item.TOTAL_REVENUE.toLocaleString('id-ID')}`,
-          total_pelanggan: item.TOTAL_PELANGGAN.toLocaleString('id-ID'),
-          total_ncli: item.TOTAL_NCLI.toLocaleString('id-ID'),
-          total_layanan: item.TOTAL_LAYANAN.toLocaleString('id-ID'),
-          new_revenue: `Rp ${item.NEW_REVENUE_AMOUNT.toLocaleString('id-ID')}`,
-          recurring_revenue: `Rp ${item.RECURRING_REVENUE_AMOUNT.toLocaleString('id-ID')}`,
-          sustain_revenue: `Rp ${item.SUSTAIN_REVENUE_AMOUNT.toLocaleString('id-ID')}`,
+          total_revenue: `Rp ${(item.TOTAL_REVENUE || 0).toLocaleString('id-ID')}`,
+          total_pelanggan: (item.TOTAL_PELANGGAN || 0).toLocaleString('id-ID'),
+          total_ncli: (item.TOTAL_NCLI || 0).toLocaleString('id-ID'),
+          total_layanan: (item.TOTAL_LAYANAN || 0).toLocaleString('id-ID'),
+          new_revenue: `Rp ${(item.NEW_REVENUE_AMOUNT || 0).toLocaleString('id-ID')}`,
+          recurring_revenue: `Rp ${(item.RECURRING_REVENUE_AMOUNT || 0).toLocaleString('id-ID')}`,
+          sustain_revenue: `Rp ${(item.SUSTAIN_REVENUE_AMOUNT || 0).toLocaleString('id-ID')}`,
           new_revenue_ratio: `${item.NEW_REVENUE_RATIO}%`,
           recurring_revenue_ratio: `${item.RECURRING_REVENUE_RATIO}%`,
           sustain_revenue_ratio: `${item.SUSTAIN_REVENUE_RATIO}%`,
@@ -485,8 +479,8 @@ module.exports = {
         insight_bisnis: [
           'Identifikasi area dengan potensi growth tinggi berdasarkan proporsi new revenue',
           'Analisis balance portfolio revenue scaling strategy per geographic location',
-          'Evaluasi efektivitas strategy acquisition vs retention per STO',
-          'Monitoring distribusi customer dan NCLI across scaling categories',
+          'Evaluasi efektivitas strategy acquisition vs retention per WITEL_BILL',
+          'Monitoring distribusi customer dan NIP_NAS across scaling categories',
           'Assessment mature market vs emerging market berdasarkan revenue composition',
           'Optimization resource allocation untuk maximize scaling revenue potential'
         ],

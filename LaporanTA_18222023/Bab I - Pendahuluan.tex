@@ -28,15 +28,15 @@ Integrasi tiga komponen utama, \textit{Rule-Based Query}, \textit{Natural Langua
 Sebagian besar sistem \textit{Business Intelligence} untuk analisis indikator permintaan terkait pelanggan di lingkungan internal perusahaan pada saat ini masih mengandalkan pelaporan manual, belum terintegrasi dengan antarmuka percakapan berbasis \textit{chatbot}, dan minim pemanfaatan kecerdasan buatan untuk analisis prediktif serta interaksi berbasis bahasa alami. Kondisi ini memunculkan sejumlah permasalahan sebagai berikut.
 
 \begin{enumerate}
-  \item \textbf{Keterbatasan akses analitik berbasis percakapan}
+  \item Keterbatasan akses analitik berbasis percakapan
   
   Tidak tersedia sistem yang mampu memproses dan memahami permintaan data serta analisis bisnis secara otomatis dari pengguna internal melalui percakapan dalam bahasa alami. Hal ini menyebabkan pegawai mengalami kendala dalam memperoleh \textit{insight} terkait pesanan (\textit{order}), pencapaian target penjualan, \textit{churn} pelanggan, serta pendapatan secara cepat dan intuitif untuk mendukung pengambilan keputusan harian.
 
-  \item \textbf{Ketiadaan fitur prediksi yang mudah diakses pengguna nonteknis}
+  \item Ketiadaan fitur prediksi yang mudah diakses pengguna nonteknis
   
   Belum terdapat fitur prediksi indikator utama bisnis terkait pelanggan, seperti peramalan jumlah pesanan, \textit{churn} pelanggan, dan target pendapatan berbasis pembelajaran mesin atau peramalan deret waktu yang dapat diakses oleh pengguna nonteknis. Keadaan ini menyebabkan perencanaan kapasitas, evaluasi target, dan penetapan strategi bisnis perusahaan menjadi kurang responsif terhadap tren serta dinamika bisnis pada masa yang akan datang.
 
-  \item \textbf{Minimnya integrasi \textit{rule-based query} dan \textit{natural language generation}}
+  \item Minimnya integrasi \textit{rule-based query dan \textit{natural language generation}}
   
   Integrasi \textit{rule-based query} dan pemrosesan bahasa alami (\textit{natural language generation}) dalam sistem BI internal masih sangat terbatas sehingga proses pencarian data, penyaringan metrik utama, serta penyusunan laporan kinerja bisnis masih harus dilakukan secara manual dan berulang. Keadaan tersebut menimbulkan keterlambatan pengambilan keputusan serta penyajian data yang kurang selaras dengan kebutuhan analisis oleh manajemen.
 \end{enumerate}
@@ -55,7 +55,7 @@ Secara terperinci, tujuan yang hendak dicapai dalam tugas akhir ini adalah sebag
   \item Mengimplementasikan modul mekanisme \textit{rule-based query} untuk menangani permintaan data yang bersifat terstruktur dan berulang dengan respons yang cepat dan konsisten.
   \item Mengintegrasikan model peramalan deret waktu (\textit{time series forecasting}) terpilih ke dalam sistem dengan membandingkan model \textit{deep learning} (GRU dan LSTM) terhadap \textit{baseline} statistik (ARIMA dan \textit{Prophet}) untuk menghasilkan prediksi terhadap indikator bisnis pelanggan, seperti volume pesanan, pencapaian target penjualan, volume \textit{churn} pelanggan agregat bulanan, dan kualitas layanan operasional. Prediksi \textit{churn} dalam konteks ini merujuk pada peramalan jumlah total pelanggan yang berhenti berlangganan per periode, bukan klasifikasi biner per pelanggan individual.
   \item Mengintegrasikan modul pembangkitan bahasa alami berbasis templat (\textit{template-based Natural Language Generation}) untuk menghasilkan narasi deskriptif dalam bahasa Indonesia dari data terstruktur hasil kueri basis data.
-  \item Merancang dan mengimplementasikan antarmuka percakapan berbasis web yang mendukung interaksi bahasa alami, visualisasi peramalan interaktif, dan alur terpandu (\textit{guided flow}) bagi pengguna internal.
+  \item Merancang dan mengimplementasikan antarmuka percakapan berbasis web yang mendukung interaksi bahasa alami dan alur terpandu (\textit{guided flow}) bagi pengguna internal.
 \end{enumerate}
 
 % --- Batasan Masalah ---
@@ -79,7 +79,7 @@ Dalam memfokuskan ruang lingkup penelitian dan memastikan kelayakan pelaksanaan 
 
   \item Sistem diimplementasikan pada platform berbasis \textit{web} dengan menggunakan \textit{framework} yang umum untuk pengembangan \textit{chatbot}.
 
-  \item Sistem dievaluasi melalui pengujian fungsional, pengukuran akurasi prediksi, analisis waktu respons, serta pengukuran kepuasan perwakilan divisi untuk pengguna internal. Evaluasi klasifikasi difokuskan pada level pencocokan aturan (\textit{rule matching}) terhadap 38 kelas aturan bisnis, bukan pada level klasifikasi \textit{intent} (7+1 kategori), karena taksonomi \textit{intent} dirancang bersifat saling eksklusif secara semantik sehingga klasifikasi pada level tersebut bersifat deterministik.
+  \item Sistem dievaluasi melalui pengujian fungsional, pengukuran akurasi prediksi, analisis waktu respons, serta pengukuran kepuasan perwakilan divisi untuk pengguna internal. Evaluasi klasifikasi difokuskan pada level pencocokan aturan (\textit{rule matching}) terhadap 38 kelas aturan bisnis, bukan pada level klasifikasi \textit{intent} (7+1 kategori) karena taksonomi \textit{intent} dirancang bersifat saling eksklusif secara semantik sehingga klasifikasi pada level tersebut bersifat deterministik.
 
   \item Sistem mengimplementasikan fitur keamanan dan privasi data dibatasi pada tingkat dasar, seperti autentikasi pengguna dan enkripsi koneksi, tanpa mencakup standar keamanan tingkat \textit{enterprise} seperti ISO 27001.
 \end{enumerate}
@@ -105,13 +105,13 @@ Metodologi pelaksanaan tugas akhir ini mengadopsi kerangka kerja CRISP-DM\label{
 Tahapan ini bertujuan untuk mengumpulkan data dan informasi faktual sebagai landasan perumusan masalah. Kegiatan yang dilakukan meliputi:
 
 \begin{enumerate}[label=\alph*.]
-  \item \textbf{Observasi sistem yang ada}, yaitu pengamatan terhadap sistem yang saat ini digunakan organisasi untuk mengidentifikasi keterbatasan dan kebutuhan pengguna internal.
+  \item Observasi sistem yang ada, yaitu pengamatan terhadap sistem yang saat ini digunakan organisasi untuk mengidentifikasi keterbatasan dan kebutuhan pengguna internal.
   
-  \item \textbf{Wawancara dengan pemangku kepentingan}, dilakukan secara terstruktur dengan perwakilan pemangku kepentingan internal untuk menggali kebutuhan fungsional dan ekspektasi terhadap sistem baru.
+  \item Wawancara dengan pemangku kepentingan, dilakukan secara terstruktur dengan perwakilan pemangku kepentingan internal untuk menggali kebutuhan fungsional dan ekspektasi terhadap sistem baru.
   
-  \item \textbf{Analisis data historis}, dilakukan untuk menelaah volume dan tren permintaan, pola musiman, serta kelengkapan dan kualitas data yang tersedia.
+  \item Analisis data historis, dilakukan untuk menelaah volume dan tren permintaan, pola musiman, serta kelengkapan dan kualitas data yang tersedia.
   
-  \item \textbf{Dokumentasi temuan}, mengompilasi seluruh hasil observasi, wawancara, dan analisis dalam bentuk laporan yang akan dilampirkan.
+  \item Dokumentasi temuan, mengompilasi seluruh hasil observasi, wawancara, dan analisis dalam bentuk laporan yang akan dilampirkan.
 \end{enumerate}
 
 \subsection{Studi Literatur}
@@ -119,15 +119,15 @@ Tahapan ini bertujuan untuk mengumpulkan data dan informasi faktual sebagai land
 Tahapan ini bertujuan untuk mengumpulkan, mengelompokkan, dan menyaring literatur yang relevan dengan topik penelitian. Proses yang dilakukan meliputi:
 
 \begin{enumerate}[label=\alph*.]
-  \item \textbf{Pencarian literatur sistematis} pada basis data akademik (IEEE Xplore, ScienceDirect, SpringerLink, ACM Digital Library, Google Scholar) menggunakan kata kunci terkait \textit{business intelligence}, \textit{chatbot}, \textit{natural language generation}, dan \textit{time series forecasting}. 
+  \item Pencarian literatur sistematis pada basis data akademik (IEEE Xplore, ScienceDirect, SpringerLink, ACM Digital Library, Google Scholar) menggunakan kata kunci terkait \textit{business intelligence}, \textit{chatbot}, \textit{natural language generation}, dan \textit{time series forecasting}. 
   
-  \item \textbf{Pengelompokan literatur} berdasarkan tema utama, yaitu konsep \textit{Business Intelligence}, teknologi \textit{chatbot} dan \textit{conversational} AI, pemrosesan bahasa alami, metode peramalan deret waktu, integrasi sistem, dan studi kasus implementasi.
+  \item Pengelompokan literatur berdasarkan tema utama, yaitu konsep \textit{Business Intelligence}, teknologi \textit{chatbot} dan \textit{conversational} AI, pemrosesan bahasa alami, metode peramalan deret waktu, integrasi sistem, dan studi kasus implementasi.
   
-  \item \textbf{Penapisan dan analisis kualitas} literatur berdasarkan faktor dampak, jumlah sitasi, metodologi, dan relevansi terhadap penelitian.
+  \item Penapisan dan analisis kualitas literatur berdasarkan faktor dampak, jumlah sitasi, metodologi, dan relevansi terhadap penelitian.
   
-  \item \textbf{Sintesis literatur} untuk membangun kerangka teoretis, mengidentifikasi praktik terbaik dan teknologi terkini, serta menyusun tinjauan pustaka pada Bab II.
+  \item Sintesis literatur untuk membangun kerangka teoretis, mengidentifikasi praktik terbaik dan teknologi terkini, serta menyusun tinjauan pustaka pada Bab II.
   
-  \item \textbf{Dokumentasi proses} dalam bentuk peninjauan penelitian terdahulu yang ditemukan dan membuat celah penelitian dan kontribusi besar yang ditawarkan penelitian ini.
+  \item Dokumentasi proses dalam bentuk peninjauan penelitian terdahulu yang ditemukan dan membuat celah penelitian dan kontribusi besar yang ditawarkan penelitian ini.
 \end{enumerate}
 
 \subsection{Perancangan Sistem}
@@ -135,17 +135,17 @@ Tahapan ini bertujuan untuk mengumpulkan, mengelompokkan, dan menyaring literatu
 Tahapan ini meliputi perancangan arsitektur dan komponen sistem secara terperinci, mencakup:
 
 \begin{enumerate}[label=\alph*.]
-  \item \textbf{Perancangan arsitektur sistem}, yaitu penyusunan arsitektur berlapis yang mengintegrasikan \textit{chatbot}, pemrosesan bahasa alami, mesin \textit{rule-based query}, dan peramalan deret waktu, serta penentuan teknologi dan kerangka kerja yang akan digunakan.
+  \item Perancangan arsitektur sistem, yaitu penyusunan arsitektur berlapis yang mengintegrasikan \textit{chatbot}, pemrosesan bahasa alami, mesin \textit{rule-based query}, dan peramalan deret waktu, serta penentuan teknologi dan kerangka kerja yang akan digunakan.
   
-  \item \textbf{Perancangan modul \textit{chatbot}}, meliputi komponen pemahaman bahasa alami (\textit{Natural Language Understanding}), manajemen dialog (\textit{Dialogue Management}), pembangkitan bahasa alami (\textit{Natural Language Generation}), serta pendefinisian \textit{intent} dan entitas yang akan dikenali.
+  \item Perancangan modul \textit{chatbot}, meliputi komponen pemahaman bahasa alami (\textit{Natural Language Understanding}), manajemen dialog (\textit{Dialogue Management}), pembangkitan bahasa alami (\textit{Natural Language Generation}), serta pendefinisian \textit{intent} dan entitas yang akan dikenali.
   
-  \item \textbf{Pengimplementasian \textit{rule-based query}}, yaitu pendefinisian aturan untuk kueri terstruktur dan berulang serta pemetaan antara \textit{intent} dengan templat kueri.
+  \item Pengimplementasian \textit{rule-based query}, yaitu pendefinisian aturan untuk kueri terstruktur dan berulang serta pemetaan antara \textit{intent} dengan templat kueri.
   
-  \item \textbf{Perancangan model peramalan deret waktu}, meliputi penentuan variabel target, perancangan praolah data, pemilihan arsitektur model (ARIMA, Prophet, LSTM, dan GRU), perbandingan model statistik dengan model \textit{deep learning}, dan strategi evaluasi model.
+  \item Perancangan model peramalan deret waktu, meliputi penentuan variabel target, perancangan praolah data, pemilihan arsitektur model (ARIMA, Prophet, LSTM, dan GRU), perbandingan model statistik dengan model \textit{deep learning}, dan strategi evaluasi model.
   
-  \item \textbf{Perancangan basis data dan gudang data}, yaitu perancangan skema basis data untuk menyimpan data pelanggan, hasil prediksi, dan data pelatihan NLP, serta perancangan proses ETL\label{abbr:ETL} (\textit{Extract, Transform, Load}).
+  \item Perancangan basis data dan gudang data, yaitu perancangan skema basis data untuk menyimpan data pelanggan, hasil prediksi, dan data pelatihan NLP, serta perancangan proses ETL\label{abbr:ETL} (\textit{Extract, Transform, Load}).
   
-  \item \textbf{Perancangan antarmuka pengguna}, meliputi pembuatan \textit{wireframe} dan \textit{mockup} untuk antarmuka \textit{chatbot}.
+  \item Perancangan antarmuka pengguna, meliputi pembuatan \textit{wireframe} dan \textit{mockup} untuk antarmuka \textit{chatbot}.
 \end{enumerate}
 
 \subsection{Implementasi Sistem}
@@ -153,13 +153,13 @@ Tahapan ini meliputi perancangan arsitektur dan komponen sistem secara terperinc
 Tahapan ini meliputi pengembangan sistem berdasarkan rancangan yang telah ditetapkan, mencakup:
 
 \begin{enumerate}[label=\alph*.]
-  \item \textbf{Pengembangan \textit{backend}}, yaitu implementasi mesin \textit{rule-based query}, model NLP untuk klasifikasi \textit{intent} dan pengenalan entitas, model peramalan deret waktu, serta penyediaan API\label{abbr:API} \textit{backend}.
+  \item Pengembangan \textit{backend}, yaitu implementasi mesin \textit{rule-based query}, model NLP untuk klasifikasi \textit{intent} dan pengenalan entitas, model peramalan deret waktu, serta penyediaan API\label{abbr:API} \textit{backend}.
   
-  \item \textbf{Pengembangan \textit{frontend}}, meliputi implementasi antarmuka \textit{chatbot}.
+  \item Pengembangan \textit{frontend}, meliputi implementasi antarmuka \textit{chatbot}.
   
-  \item \textbf{Pengembangan basis data}, yaitu implementasi skema basis data, proses ETL untuk integrasi data, dan \textit{data pipeline} untuk pemrosesan data.
+  \item Pengembangan basis data, yaitu implementasi skema basis data, proses ETL untuk integrasi data, dan \textit{data pipeline} untuk pemrosesan data.
   
-  \item \textbf{Integrasi komponen}, meliputi integrasi \textit{chatbot} dengan mesin \textit{rule-based query} dan NLP, integrasi model peramalan dengan sistem BI, serta implementasi mekanisme tembolok (\textit{caching}) untuk performa.
+  \item Integrasi komponen, meliputi integrasi \textit{chatbot} dengan mesin \textit{rule-based query} dan NLP, integrasi model peramalan dengan sistem BI, serta implementasi mekanisme tembolok (\textit{caching}) untuk performa.
 \end{enumerate}
 
 \subsection{Pengujian dan Evaluasi}
@@ -167,13 +167,9 @@ Tahapan ini meliputi pengembangan sistem berdasarkan rancangan yang telah diteta
 Tahapan ini bertujuan menilai kinerja sistem secara menyeluruh, mencakup aspek fungsionalitas, akurasi, performa, dan kebergunaan.
 
 \begin{enumerate}[label=\alph*.]
-  \item \textbf{Pengujian unit}, yaitu setiap komponen diuji secara terpisah agar fungsinya terverifikasi dengan benar dan stabil.
-  \item \textbf{Pengujian integrasi}, yaitu Interaksi antarmodul diverifikasi melalui skenario ujung-ke-ujung, dari masukan percakapan hingga keluaran berupa kueri yang dieksekusi, prediksi, narasi, dan visualisasi.
-  \item \textbf{Pengujian fungsional}, yaitu Pemenuhan seluruh kebutuhan fungsional divalidasi menggunakan himpunan skenario representatif yang mencerminkan pertanyaan bisnis prioritas.
-  \item \textbf{Evaluasi model NLP (klasifikasi intent multi\-kelas, satu label per ujaran)}, yaitu hasil dilaporkan sebagai \textit{top-1} dan \textit{top-k} accuracy; \textit{precision}, \textit{recall}, dan \textit{F1-score} per kelas yang kemudian dirata-ratakan dengan pendekatan \textit{macro}, \textit{micro}, dan \textit{weighted}. Disajikan pula \textit{confusion matrix} berukuran $K\times K$, evaluasi ambang kepercayaan untuk mekanisme \textit{fallback}/\texttt{UNKNOWN}, serta ringkasan kalibrasi probabilitas.
-  \item \textbf{Evaluasi model peramalan deret waktu}, yaitu protokol yang digunakan ialah \textit{rolling-origin backtesting} pada beberapa horizon prediksi dengan \textit{seasonal naive} sebagai garis dasar. Laporan mencakup MAE\label{abbr:MAE}, RMSE\label{abbr:RMSE}, sMAPE\label{abbr:sMAPE}, dan MASE\label{abbr:MASE}, dilengkapi \textit{skill score} terhadap garis dasar. Hasil disajikan per horizon dan per entitas prioritas (median dan rentang antar kuartil).
-  \item \textbf{Evaluasi performa sistem}, yaitu waktu respons, \textit{throughput}, dan latensi diukur pada beban realistis; \textit{load testing} dilakukan untuk menilai skalabilitas.
-  \item \textbf{Evaluasi kebergunaan (\textit{usability})}, yaitu \textit{User Acceptance Testing} melibatkan sedikitnya 20–30 pengguna internal. Hasil dirangkum menggunakan skor \textit{System Usability Scale} (SUS)\label{abbr:SUS} dan umpan balik kualitatif terkait kemudahan, kejelasan, dan alur kerja.
+  \item Evaluasi pencocokan aturan (\textit{rule matching)}, yaitu evaluasi menggunakan \textit{confusion matrix} serta menghitung nilai akurasi, presisi, daya ingat (\textit{recall}), dan skor-F1 (\textit{F1-score}) per kelas yang kemudian diagregasi secara makro (\textit{macro}) dan mikro (\textit{micro}) pada sampel kueri uji. Turut dilakukan pula analisis nilai keyakinan (\textit{confidence score}) dan tingkat cakupan (\textit{coverage rate}).
+  \item Evaluasi model peramalan deret waktu, yaitu evaluasi menggunakan protokol \textit{walk-\-forward va\-li\-da\-tion} dengan \textit{seasonal naive} sebagai garis dasar. Kinerja model diukur menggunakan \textit{Mean Absolute Error} (MAE)\label{abbr:MAE}, \textit{Root Mean Squared Error} (RMSE)\label{abbr:RMSE}, \textit{symmetric Mean Absolute Percentage Error} (sMAPE)\label{abbr:sMAPE}, dan \textit{Mean Absolute Scaled Error} (MASE)\label{abbr:MASE}, dilengkapi \textit{skill score} terhadap garis dasar untuk kategorisasi status kelulusan model.
+  \item Evaluasi kinerja implementasi \textit{Natural Language Generation (NLG)}, yaitu evaluasi terhadap teks yang dihasilkan sistem yang mencakup dua aspek utama: akurasi faktual terhadap nilai perhitungan matematis pada \textit{backend}, serta evaluasi subjektif berbasis pengguna (\textit{human evaluation}) untuk menilai kelengkapan informasi, kemudahan pemahaman, kesesuaian narasi, dan kualitas tata bahasa.
 \end{enumerate}
 
 \subsection{Dokumentasi dan Penyusunan Laporan}
@@ -181,13 +177,13 @@ Tahapan ini bertujuan menilai kinerja sistem secara menyeluruh, mencakup aspek f
 Tahapan akhir meliputi dokumentasi dan penyusunan laporan tugas akhir, mencakup:
 
 \begin{enumerate}[label=\alph*.]
-  \item \textbf{Dokumentasi teknis}, yaitu penyusunan dokumentasi API, dokumentasi kode, panduan pengguna (\textit{user manual}), dan panduan penyebaran (\textit{deployment guide}).
+  \item Dokumentasi teknis, yaitu penyusunan dokumentasi API, dokumentasi kode, panduan pengguna (\textit{user manual}), dan panduan penyebaran (\textit{deployment guide}).
   
-  \item \textbf{Penyusunan laporan tugas akhir}, meliputi penulisan laporan sesuai format yang ditetapkan dengan penyuntingan dan pemeriksaan kelengkapan.
+  \item Penyusunan laporan tugas akhir, meliputi penulisan laporan sesuai format yang ditetapkan dengan penyuntingan dan pemeriksaan kelengkapan.
   
-  \item \textbf{Persiapan presentasi}, meliputi pembuatan \textit{slide} presentasi, penyusunan skenario demonstrasi sistem, dan kurasi materi pendukung.
+  \item Persiapan presentasi, meliputi pembuatan \textit{slide} presentasi, penyusunan skenario demonstrasi sistem, dan kurasi materi pendukung.
   
-  \item \textbf{Revisi dan finalisasi}, yaitu revisi berdasarkan masukan pembimbing, finalisasi laporan dan sistem, serta persiapan sidang tugas akhir.
+  \item Revisi dan finalisasi, yaitu revisi berdasarkan masukan pembimbing, finalisasi laporan dan sistem, serta persiapan sidang tugas akhir.
 \end{enumerate}
 
 Seluruh proses metodologi ini akan didokumentasikan dengan baik untuk keterbukaan, kemampuan direproduksi, dan akuntabilitas penelitian.
@@ -197,15 +193,15 @@ Seluruh proses metodologi ini akan didokumentasikan dengan baik untuk keterbukaa
 Laporan tugas akhir ini disusun dengan sistematika sebagai berikut.
 
 \begin{enumerate}
-  \item \textbf{Bab I Pendahuluan}: Berisi latar belakang, rumusan masalah, tujuan, batasan masalah, metodologi, dan sistematika penulisan laporan tugas akhir.
-  \item \textbf{Bab II Studi Literatur}: Berisi kajian pustaka yang relevan dengan topik tugas akhir, mencakup teori dan konsep \textit{Business Intelligence}, \textit{chatbot} berbasis aturan, pemrosesan bahasa alami, pembangkitan bahasa alami, serta metode peramalan deret waktu.
-  \item \textbf{Bab III Analisis}: Berisi analisis kebutuhan pengguna dan sistem, termasuk identifikasi pemangku kepentingan, kebutuhan fungsional dan non-fungsional, serta analisis data historis.
-  \item \textbf{Bab IV Perancangan}: Berisi perancangan arsitektur sistem, modul \textit{chatbot} berbasis aturan, model peramalan, basis data, antarmuka pengguna, serta rencana implementasi dan evaluasi.
-  \item \textbf{Bab V Implementasi}: Berisi penjelasan tentang proses implementasi seluruh komponen sistem, termasuk \textit{backend}, mesin aturan, klasifikasi maksud, pembangkitan bahasa alami, layanan \textit{machine learning}, \textit{frontend}, dan keamanan sistem.
-  \item \textbf{Bab VI Evaluasi}: Berisi hasil pengujian fungsional, evaluasi akurasi model peramalan, analisis performa sistem, dan penilaian kebergunaan oleh pengguna internal.
-  \item \textbf{Bab VII Kesimpulan dan Saran}: Berisi kesimpulan dari hasil pelaksanaan tugas akhir dan saran untuk pengembangan lebih lanjut.
-  \item \textbf{Daftar Pustaka}: Berisi daftar referensi yang digunakan dalam penyusunan laporan tugas akhir.
-  \item \textbf{Lampiran}: Berisi dokumen pendukung seperti transkrip wawancara, data pengujian, dan kode program.
+  \item Bab I Pendahuluan: Berisi latar belakang, rumusan masalah, tujuan, batasan masalah, metodologi, dan sistematika penulisan laporan tugas akhir.
+  \item Bab II Studi Literatur: Berisi kajian pustaka yang relevan dengan topik tugas akhir, mencakup teori dan konsep \textit{Business Intelligence}, \textit{chatbot} berbasis aturan, pemrosesan bahasa alami, pembangkitan bahasa alami, serta metode peramalan deret waktu.
+  \item Bab III Analisis Masalah: Berisi analisis kondisi sistem \textit{Business Intelligence} saat ini, identifikasi masalah pengguna, kebutuhan fungsional dan nonfungsional sistem, serta analisis pemilihan solusi teknologi yang paling tepat.
+  \item Bab IV Perancangan Sistem \textit{Business Intelligence Chatbot}: Berisi perancangan arsitektur sistem, perancangan layanan antarmuka percakapan (klasifikasi \textit{intent} dan mesin aturan), model peramalan deret waktu, modul pembangkitan bahasa alami (NLG), rancangan antarmuka pengguna, dan rancangan basis data.
+  \item Bab V Implementasi Sistem \textit{Business Intelligence Chatbot}: Berisi penjelasan tentang proses implementasi komponen sistem, termasuk sistem \textit{frontend}, \textit{backend}, layanan \textit{machine learning} (peramalan deret waktu), klasifikasi maksud pengguna, mesin aturan, pembangkitan bahasa alami, serta keamanan sistem.
+  \item Bab VI Evaluasi: Berisi hasil pengujian fungsional sistem, evaluasi performa modul pencocokan aturan (\textit{rule matching}), evaluasi kinerja model peramalan deret waktu, serta evaluasi kualitas pembangkitan bahasa alami.
+  \item Bab VII Penutup: Berisi kesimpulan dari hasil pelaksanaan tugas akhir dan saran untuk pengembangan lebih lanjut.
+  \item Daftar Pustaka: Berisi daftar referensi yang digunakan dalam penyusunan laporan tugas akhir.
+  \item Lampiran: Berisi dokumen pendukung seperti hasil wawancara, transkrip formulir evaluasi, dan tautan repositori kode sumber.
 \end{enumerate}
 
 

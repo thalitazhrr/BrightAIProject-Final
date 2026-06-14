@@ -103,7 +103,7 @@ module.exports = {
             -- Achievement calculation
             CASE 
                 WHEN SUM(TARGET) > 0 THEN 
-                    ROUND((SUM(REALISASI) * 100.0 / SUM(TARGET)), 2)
+                    ROUND((SUM(REALISASI) * 100.0 / NULLIF(SUM(TARGET), 0)), 2)
                 ELSE 0 
             END as ACHIEVEMENT_PCT,
             
@@ -111,17 +111,17 @@ module.exports = {
             SUM(REALISASI) - SUM(TARGET) as GAP_ABSOLUTE,
             CASE 
                 WHEN SUM(TARGET) > 0 THEN 
-                    ROUND(((SUM(REALISASI) - SUM(TARGET)) * 100.0 / SUM(TARGET)), 2)
+                    ROUND(((SUM(REALISASI) - SUM(TARGET)) * 100.0 / NULLIF(SUM(TARGET), 0)), 2)
                 ELSE 0 
             END as GAP_PCT,
             
             -- Performance categorization
             CASE 
                 WHEN SUM(TARGET) = 0 THEN 'NO_TARGET'
-                WHEN (SUM(REALISASI) * 100.0 / SUM(TARGET)) >= 110 THEN 'SANGAT_BAIK'
-                WHEN (SUM(REALISASI) * 100.0 / SUM(TARGET)) >= 100 THEN 'BAIK'
-                WHEN (SUM(REALISASI) * 100.0 / SUM(TARGET)) >= 90 THEN 'CUKUP'
-                WHEN (SUM(REALISASI) * 100.0 / SUM(TARGET)) >= 75 THEN 'KURANG'
+                WHEN (SUM(REALISASI) * 100.0 / NULLIF(SUM(TARGET), 0)) >= 110 THEN 'SANGAT_BAIK'
+                WHEN (SUM(REALISASI) * 100.0 / NULLIF(SUM(TARGET), 0)) >= 100 THEN 'BAIK'
+                WHEN (SUM(REALISASI) * 100.0 / NULLIF(SUM(TARGET), 0)) >= 90 THEN 'CUKUP'
+                WHEN (SUM(REALISASI) * 100.0 / NULLIF(SUM(TARGET), 0)) >= 75 THEN 'KURANG'
                 ELSE 'SANGAT_KURANG'
             END as KATEGORI_PERFORMANCE,
             
@@ -415,10 +415,10 @@ module.exports = {
             makna_bisnis: performance_assessment.unit_context.business_meaning
           },
           metrik_target: {
-            target: `${record.TOTAL_TARGET.toLocaleString('id-ID')} ${record.SATUAN}`,
-            realisasi: `${record.TOTAL_REALISASI.toLocaleString('id-ID')} ${record.SATUAN}`,
+            target: `${(record.TOTAL_TARGET || 0).toLocaleString('id-ID')} ${record.SATUAN}`,
+            realisasi: `${(record.TOTAL_REALISASI || 0).toLocaleString('id-ID')} ${record.SATUAN}`,
             pencapaian_persen: `${record.ACHIEVEMENT_PCT}%`,
-            gap_absolut: `${record.GAP_ABSOLUTE.toLocaleString('id-ID')} ${record.SATUAN}`,
+            gap_absolut: `${(record.GAP_ABSOLUTE || 0).toLocaleString('id-ID')} ${record.SATUAN}`,
             gap_persen: `${record.GAP_PCT}%`
           },
           evaluasi_performa: {
@@ -440,7 +440,7 @@ module.exports = {
       // Summary statistics
       const summary = {
         total_unit_analisis: data.length,
-        rata_rata_pencapaian: (data.reduce((sum, d) => sum + d.ACHIEVEMENT_PCT, 0) / data.length).toFixed(2) + '%',
+        rata_rata_pencapaian: (data.reduce((sum, d) => sum + d.ACHIEVEMENT_PCT, 0) / (data.length || 1)).toFixed(2) + '%',
         unit_capai_target: data.filter(d => d.IS_TARGET_ACHIEVED === 1).length,
         satuan_dominan: data.reduce((prev, current) => 
           (data.filter(d => d.SATUAN === prev.SATUAN).length > 

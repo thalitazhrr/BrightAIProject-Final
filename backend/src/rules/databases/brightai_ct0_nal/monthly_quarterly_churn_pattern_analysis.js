@@ -117,7 +117,7 @@ module.exports = {
             
         FROM DWH_MOIS.BRIGHTAI_CT0_NAL
         WHERE UPPER(PRODUK) = 'INTERNET'
-          AND (CITEM IS NULL OR NOT UPPER(CITEM) LIKE 'WM%')
+          AND (CITEM IS NULL OR NOT UPPER(CITEM) LIKE 'W%')
           AND PERIODE >= TO_CHAR(ADD_MONTHS(SYSDATE, -18), 'YYYYMM') -- 18 months for temporal analysis
           AND REGIONAL IS NOT NULL
           AND WITEL IS NOT NULL
@@ -146,7 +146,7 @@ module.exports = {
             -- Early churn temporal pattern
             COUNT(CASE WHEN masa_layanan_bulan <= 6 THEN 1 END) as early_churn_count,
             ROUND(
-                (COUNT(CASE WHEN masa_layanan_bulan <= 6 THEN 1 END) * 100.0 / COUNT(*)), 2
+                (COUNT(CASE WHEN masa_layanan_bulan <= 6 THEN 1 END) * 100.0 / NULLIF(COUNT(*), 0)), 2
             ) as early_churn_rate,
             
             -- Bandwidth distribution by period
@@ -274,13 +274,13 @@ module.exports = {
         -- Change percentages
         CASE 
             WHEN churn_tahun_sebelumnya IS NOT NULL AND churn_tahun_sebelumnya > 0 THEN 
-                ROUND(((total_churn_ct0 - churn_tahun_sebelumnya) * 100.0 / churn_tahun_sebelumnya), 2)
+                ROUND(((total_churn_ct0 - churn_tahun_sebelumnya) * 100.0 / NULLIF(churn_tahun_sebelumnya, 0)), 2)
             ELSE NULL
         END as perubahan_yoy_pct,
         
         CASE 
             WHEN churn_bulan_sebelumnya IS NOT NULL AND churn_bulan_sebelumnya > 0 THEN 
-                ROUND(((total_churn_ct0 - churn_bulan_sebelumnya) * 100.0 / churn_bulan_sebelumnya), 2)
+                ROUND(((total_churn_ct0 - churn_bulan_sebelumnya) * 100.0 / NULLIF(churn_bulan_sebelumnya, 0)), 2)
             ELSE NULL
         END as perubahan_mom_pct
         
@@ -393,8 +393,8 @@ module.exports = {
       const historical_pattern = Object.keys(monthlyData).map(month => ({
         bulan: parseInt(month),
         nama_bulan: monthlyData[month].nama_bulan,
-        rata_churn_historis: Math.round(monthlyData[month].total_churn / monthlyData[month].total_records),
-        kategori_historis: monthlyData[month].total_churn / monthlyData[month].total_records >= 100 ? 'TINGGI' : 'SEDANG'
+        rata_churn_historis: Math.round(monthlyData[month].total_churn / (monthlyData[month].total_records || 1)),
+        kategori_historis: monthlyData[month].total_churn / (monthlyData[month].total_records || 1) >= 100 ? 'TINGGI' : 'SEDANG'
       })).sort((a, b) => a.bulan - b.bulan);
       
       return historical_pattern;
@@ -433,9 +433,9 @@ module.exports = {
             regional: record.REGIONAL
           },
           metrik_churn: {
-            total_churn_ct0: record.TOTAL_CHURN_CT0.toLocaleString('id-ID'),
-            unique_customers_churn: record.UNIQUE_CUSTOMERS_CHURN.toLocaleString('id-ID'),
-            unique_internet_services: record.UNIQUE_INTERNET_SERVICES.toLocaleString('id-ID'),
+            total_churn_ct0: (record.TOTAL_CHURN_CT0 || 0).toLocaleString('id-ID'),
+            unique_customers_churn: (record.UNIQUE_CUSTOMERS_CHURN || 0).toLocaleString('id-ID'),
+            unique_internet_services: (record.UNIQUE_INTERNET_SERVICES || 0).toLocaleString('id-ID'),
             jumlah_witel_terdampak: record.JUMLAH_WITEL_TERDAMPAK,
             jumlah_sto_terdampak: record.JUMLAH_STO_TERDAMPAK,
             rata_masa_layanan: `${record.RATA_MASA_LAYANAN} bulan`,
