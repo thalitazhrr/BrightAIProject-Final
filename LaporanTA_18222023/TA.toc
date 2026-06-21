@@ -561,14 +561,14 @@
 \contentsline {section}{\numberline {IV.5}Kebutuhan Perangkat dan Lingkungan Sistem}{118}{section.4.5}%
 \contentsline {subsection}{\numberline {IV.5.1}Perangkat Lunak dan Teknologi}{118}{subsection.4.5.1}%
 \contentsline {subsection}{\numberline {IV.5.2}Kebutuhan Sumber Daya Komputasi}{121}{subsection.4.5.2}%
-\contentsline {section}{\numberline {IV.6}Desain Pengujian dan Evaluasi}{122}{section.4.6}%
+\contentsline {section}{\numberline {IV.6}Desain Pengujian dan Evaluasi}{121}{section.4.6}%
 \contentsline {subsection}{\numberline {IV.6.1}Evaluasi Klasifikasi Maksud Berbasis Pola}{122}{subsection.4.6.1}%
 \contentsline {subsubsection}{\numberline {IV.6.1.1}Metrik Evaluasi Klasifikasi \textit {Intent}}{122}{subsubsection.4.6.1.1}%
 \contentsline {subsubsection}{\numberline {IV.6.1.2}Analisis Nilai Keyakinan (\textit {Confidence Score})}{123}{subsubsection.4.6.1.2}%
 \contentsline {subsection}{\numberline {IV.6.2}Evaluasi Pembangkitan Bahasa Alami Berbasis Templat}{123}{subsection.4.6.2}%
 \contentsline {subsubsection}{\numberline {IV.6.2.1}Akurasi Faktual}{123}{subsubsection.4.6.2.1}%
 \contentsline {subsubsection}{\numberline {IV.6.2.2}Evaluasi Subjektif Berbasis Pengguna}{123}{subsubsection.4.6.2.2}%
-\contentsline {subsection}{\numberline {IV.6.3}Evaluasi Peramalan Deret Waktu}{124}{subsection.4.6.3}%
+\contentsline {subsection}{\numberline {IV.6.3}Evaluasi Peramalan Deret Waktu}{123}{subsection.4.6.3}%
 \contentsline {chapter}{\numberline {V}IMPLEMENTASI SISTEM \textit {BUSINESS INTELLIGENCE CHATBOT}}{125}{chapter.5}%
 \contentsline {section}{\numberline {V.1}Arsitektur Sistem Terimplementasi}{125}{section.5.1}%
 \contentsline {section}{\numberline {V.2}Implementasi \textit {Backend} (Node.js/Express)}{126}{section.5.2}%
