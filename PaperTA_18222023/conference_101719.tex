@@ -29,7 +29,7 @@ Bandung, Indonesia \\
 \maketitle
 
 \begin{abstract}
-The exponential growth of data in the telecommunications sector necessitates the development of agile and accessible Business Intelligence (BI) systems. Traditional BI dashboards, while comprehensive, often exhibit steep learning curves and lack seamlessly integrated predictive capabilities. This paper presents "BrightAI," a conversational Business Intelligence framework engineered to integrate a deterministic rule-based chatbot architecture with advanced Time Series Forecasting and Natural Language Generation (NLG). Designed to provide predictive analytics across core domains (sales, revenue, target realization, churn), the system employs a three-tier microservices architecture. The architecture comprises a React-based presentation layer, a Node.js application layer implementing a confidence-weighted Natural Language Understanding (NLU) rule engine, and a Python-based FastAPI analytical layer for predictive modeling. The analytical layer evaluates ARIMA, Prophet, LSTM, and GRU models. These models are rigorously validated against strict evaluation protocols utilizing metrics including MAE, RMSE, sMAPE, MASE, and Skill Score. Empirical results demonstrate that the implemented models satisfy predefined Key Performance Indicators (KPIs), achieving an sMAPE of $<30\%$ and a Skill Score of $>0.20$. Furthermore, the algorithmic NLG module accurately translates historical data and forecasted outcomes into coherent executive narratives, thereby significantly optimizing the data-driven decision-making lifecycle.
+The exponential growth of data in the telecommunications sector necessitates the development of agile and accessible Business Intelligence (BI) systems. Traditional BI dashboards, while comprehensive, often exhibit steep learning curves and lack seamlessly integrated predictive capabilities. This paper presents "BrightAI," a conversational Business Intelligence framework engineered to integrate a deterministic rule-based chatbot architecture with advanced Time Series Forecasting and Natural Language Generation (NLG). Designed to provide predictive analytics across core domains (sales, revenue, target realization, churn), the system employs a three-tier microservices architecture. The architecture comprises a React-based Frontend Layer, a Node.js Backend Layer implementing a confidence-weighted Natural Language Understanding (NLU) rule engine, and a Python-based FastAPI analytical layer for predictive modeling. The analytical layer evaluates ARIMA, Prophet, LSTM, and GRU models. These models are rigorously validated against strict evaluation protocols utilizing metrics including MAE, RMSE, sMAPE, MASE, and Skill Score. Empirical results demonstrate that the implemented models satisfy predefined Key Performance Indicators (KPIs), achieving an sMAPE of $<30\%$ and a Skill Score of $>0.20$. Furthermore, the algorithmic NLG module accurately translates historical data and forecasted outcomes into coherent executive narratives, thereby significantly optimizing the data-driven decision-making lifecycle.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -39,7 +39,7 @@ Business Intelligence, Chatbot, Time Series Forecasting, Natural Language Genera
 \section{Introduction}
 In contemporary enterprise environments, data constitutes a pivotal asset for strategic operational planning \cite{gul2023from}. Major telecommunications providers oversee vast, complex datasets pertaining to enterprise products, such as High-Speed Internet services. Extracting actionable intelligence from these massive Enterprise Data Warehouses (EDW) traditionally requires intricate Business Intelligence (BI) dashboards or specialized queries, leading to substantial latency.
 
-To maintain a competitive advantage, modern executive operations demand systems that provide not only retrospective data visualization but also proactive predictive forecasting within an intuitive interface. While conventional BI platforms aggregate historical metrics, they frequently lack the conversational interactivity and embedded machine learning necessary for rapid strategic assessments \cite{shah2025hybrid}.
+To maintain a competitive advantage, modern executive operations demand systems that provide not only retrospective data analysis for current data but also proactive predictive forecasting within an intuitive interface. While conventional BI platforms aggregate historical metrics, they frequently lack the conversational interactivity and embedded machine learning necessary for rapid strategic assessments \cite{shah2025hybrid}.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=\linewidth,height=4.8cm,keepaspectratio]{asis.png}}
@@ -48,7 +48,7 @@ To maintain a competitive advantage, modern executive operations demand systems 
 
 \end{figure}
 
-As illustrated in Fig.~\ref{fig:asis}, the existing ("As-Is") enterprise business process relies heavily on a fragmented methodology. Decision-makers must manually submit ad-hoc queries to data analysts, who then extract, transform, and visualize the data. This sequential dependency introduces substantial bottlenecks, hindering the rapid execution of real-time operational strategies.
+As illustrated in Fig.~\ref{fig:asis}, the existing ("As-Is") enterprise business process relies heavily on a fragmented methodology. Decision-makers must manually submit ad-hoc queries to data analysts, who then extract, transform, and process the data. This sequential dependency introduces substantial bottlenecks, hindering the rapid execution of real-time operational strategies.
 
 \begin{figure}[htbp]
 \centerline{\includegraphics[width=\linewidth,height=4.8cm,keepaspectratio]{tobe.png}}
@@ -72,7 +72,7 @@ To guarantee scalability and efficiency, BrightAI implements a modern three-tier
 As illustrated in Fig.~\ref{fig:ars1}, the overall system is structurally divided into three interoperable layers: the Frontend Layer, the Backend Layer, and the Database Layer. This separation ensures intensive predictive processes do not degrade interface responsiveness.
 
 \subsection{Frontend Layer}
-Developed utilizing React.js and the Vite build tool, the frontend serves as the primary user interface. It is architected to simulate a standard messaging application. It parses JSON payloads from the backend to generate interactive graphical representations using Recharts.
+Developed utilizing React.js and the Vite build tool, the frontend serves as the primary user interface. It is architected to simulate a standard messaging application. It parses JSON payloads from the backend to generate analysis representations.
 
 \subsection{Backend Layer}
 The backend layer is internally partitioned into three modular sublayers. The API Sublayer, engineered with Node.js and Express, functions as the secure entry point. 
