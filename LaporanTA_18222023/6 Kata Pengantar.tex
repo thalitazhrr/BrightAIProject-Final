@@ -1,25 +1,34 @@
 \chapter*{KATA PENGANTAR}
 \addcontentsline{toc}{chapter}{KATA PENGANTAR}
 
-Puji syukur penulis panjatkan ke hadirat Tuhan Yang Maha Esa atas segala limpahan rahmat dan karunia-Nya sehingga penulis dapat menyelesaikan Laporan Tugas Akhir yang berjudul ``Perancangan Sistem \textit{Business Intelligence} Berbasis \textit{Rule-Based Chatbot} dengan \textit{Time Series Forecasting} dan Teknologi Bahasa Alami untuk Analisis dan Prediksi Kinerja Bisnis''. Laporan ini disusun sebagai salah satu persyaratan untuk memperoleh gelar sarjana pada Program Studi Sistem dan Teknologi Informasi, Sekolah Teknik Elektro dan Informatika, Institut Teknologi Bandung. Penyusunan tugas akhir ini tidak terlepas dari bantuan, arahan, dan dukungan dari berbagai pihak. Oleh karena itu, penulis menyampaikan terima kasih kepada:
+Puji dan syukur yang tak terhingga penulis panjatkan ke hadirat Allah SWT, Tuhan semesta alam, karena hanya kepada-Nya lah penulis kembali, meminta petunjuk, dan terus berserah diri. Atas segala limpahan rahmat, karunia, serta kekuatan yang dianugerahkan-Nya, penulis dapat menjalankan dan menyelesaikan seluruh rangkaian Tugas Akhir yang berjudul ``Perancangan Sistem \textit{Business Intelligence} Berbasis \textit{Rule-Based Chatbot} dengan \textit{Time Series Forecasting} dan Teknologi Bahasa Alami untuk Analisis dan Prediksi Kinerja Bisnis''. 
+
+Laporan ini disusun sebagai salah satu persyaratan untuk memperoleh gelar sarjana pada Program Studi Sistem dan Teknologi Informasi, Sekolah Teknik Elektro dan Informatika, Institut Teknologi Bandung. Penyusunan tugas akhir ini dan seluruh perjalanan perkuliahan penulis tidak terlepas dari bantuan, doa, serta dukungan tanpa henti dari berbagai pihak. Oleh karena itu, dengan penuh kerendahan hati penulis menyampaikan ucapan terima kasih yang sebesar-besarnya kepada:
 
 \begin{enumerate}
-    \item Bapak Dr. Ir. Dimitri Mahayana, M.Eng., selaku dosen pembimbing tugas akhir, yang telah memberikan arahan, bimbingan, serta masukan yang sangat berarti bagi penulis selama proses pengerjaan tugas akhir ini.
-    
-    \item Kak Naufal Pandu Irsyadi, selaku asisten dosen pembimbing, yang telah memberikan bantuan, pandangan, dan saran teknis yang mendukung proses penyusunan tugas akhir.
-    
-    \item Bapak Renno Rifaldo, selaku \textit{Data Specialist} di Telkom Indonesia, dan Bapak Purwanto, selaku \textit{Manager Data Management} di Telkom Indonesia, yang telah memberikan kesempatan, pendampingan, serta dukungan kepada penulis selama pelaksanaan penelitian.
-    
-    \item Bapak I Gusti Bagus Baskara Nugraha, S.T., M.T., Ph.D., selaku Ketua Program Studi Sistem dan Teknologi Informasi Institut Teknologi Bandung, yang telah memberikan dukungan dalam penyelenggaraan kegiatan akademik dan pelaksanaan tugas akhir.
-    
-    \item Orang tua dan keluarga penulis yang senantiasa memberikan doa, kasih sayang, dorongan, serta dukungan baik secara moral maupun material selama penulis menempuh pendidikan hingga menyelesaikan tugas akhir ini.
-    
-    \item Sahabat-sahabat penulis selama menjalani perkuliahan di Institut Teknologi Bandung yang telah menjadi tempat berbagi cerita, memberikan semangat, serta menemani penulis dalam berbagai proses selama masa studi.
-    
-    \item Teman-teman Program Studi Sistem dan Teknologi Informasi angkatan 2022 serta teman-teman BYTE HMIF yang telah menjadi bagian dari perjalanan akademik penulis dan memberikan dukungan selama masa perkuliahan.
+    \item Kepada Tuhan, Allah SWT., yang telah memberikan penulis kekuatan dalam menjalankan seluruh hal, hanya kepada-Nya lah tempat penulis kembali, meminta petunjuk, dan terus berserah diri. Dengan keajaiban, Engkau telah membuat semua perjalanan ini menjadi mungkin. Terima kasih dan saya sangat bersyukur dengan segala hal yang Engkau berikan.
+    \item Bapak Dr. Ir. Dimitri Mahayana, M.Eng., selaku dosen pembimbing tugas akhir, yang telah meluangkan waktu untuk memberikan arahan, bimbingan, serta masukan yang sangat berarti bagi penulis selama proses pengerjaan tugas akhir ini.
+    \item Kak Naufal Pandu Irsyadi, selaku asisten dosen pembimbing, yang telah memberikan bantuan, pandangan, dan saran teknis yang sangat mendukung kelancaran proses penyusunan tugas akhir.
+    \item Bapak Renno Rifaldo, selaku \textit{Officer Data Mining and Processing} di Telkom Indonesia, dan Bapak Purwanto, selaku \textit{Manager Data Management} di Telkom Indonesia, yang telah memberikan kesempatan, pendampingan, serta dukungan tak terhingga kepada penulis selama pelaksanaan penelitian.
+    \item Bapak I Gusti Bagus Baskara Nugraha, S.T., M.T., Ph.D., selaku Ketua Program Studi Sistem dan Teknologi Informasi, Institut Teknologi Bandung, yang senantiasa memberikan dukungan dalam penyelenggaraan kegiatan akademik dan pelaksanaan tugas akhir.
+    \item Orang tua dan keluarga penulis yang tersayang, yang selalu memberikan doa yang tak pernah putus, kasih sayang, serta dukungan penuh baik secara mental maupun material selama penulis menempuh pendidikan hingga menyelesaikan tugas akhir ini. Tanpa semua hal yang kalian berikan, mungkin penulis tidak akan bisa beranjak di posisi ini. Seluruh hal yang telah penulis terima dari orang tua dan keluarga akan terus penulis syukuri.
+    \item \textbf{The DAIM} (Eleanor dan Marsya), dua orang yang paling menyemangati penulis. Untuk Elen yang selalu ada di samping penulis, menjadi orang pertama yang mengetahui segalanya tentang perjuangan penulis sejak hari pertama di ITB, tidak pernah lelah untuk selalu mengingatkan aku untuk semua hal, tempat aku berkeluh kesah setiap hari, bersedia ada bersamaku dan melalui seluruh hal bersama. Serta untuk Marsya, yang selalu memberikan semangat dan menemani perjalanan penulis sedari masa SMA hingga di penghujung perjalanan perkuliahan ini, dan yang terpenting selalu memberikan semangat dan kebahagiaan yang sama setiap kami bertemu.
+    \item Attara, yang senantiasa menjadi tempat keluh kesah dan cerita, serta selalu menyemangati, mendukung, dan menemani perjalanan penulis sejak masa TPB hingga titik ini, dan selalu berjuang bersama, baik dalam perlombaan maupun non-akademik, selalu ada bersama penulis.
+    \item Daryl, yang senantiasa selalu menemani penulis, mendukung penulis, dan benar-benar menyaksikan perjalanan penulis dari titik nol, selalu hadir untuk menanyakan kabar dan kesehatan penulis, selalu ada ketika dibutuhkan, dan menjadi penyemangat terbesar bagi penulis dalam keberjalanan TA dan ITB ini.
+    \item \textbf{The CTE} (Kak Cilla dan Eleanor), sebagai keluarga asuh yang telah mengenalkan penulis pada HMIF, dinamika STI, dan dunia perlombaan. Terima kasih atas panduan dan dukungannya; tanpa kalian, penulis mungkin tidak akan sampai pada tahap ini. Terima kasih juga kepada keluarga asuh lainnya (Kak Clara, Flori, Lidya, Arra, Cia) yang sangat berjasa dalam perjalanan akademik penulis.
+    \item \textbf{Ginjal+S} dan teman-teman yang menemani kisah STI penulis (Eleanor, Awa, Jihan, Firsa, Naomi, Syakira). Segala dukungan, waktu belajar bersama, dan cerita yang dibagikan sangat berharga bagi perjalanan penyusunan TA ini. Penulis banyak belajar dari teman-teman. Tanpa Ginjal+S, mungkin penulis tidak akan sampai pada tahap ini.
+    \item \textbf{The CADY} (Catherine dan Ody), adik-adik asuh penulis yang selalu ikut merayakan setiap pencapaian dan mengajarkan penulis banyak hal bermakna.
+    \item Maira, rekan \textit{intern} penulis, yang telah mendukung penuh perjuangan dalam mengembangkan BrightAI serta memastikan kelancaran TA ini. Terima kasih telah selalu peduli dan merayakan keberhasilan ini bersama.
+    \item Keluarga \textbf{ITBJazz} (BP ITBJazz \#JazzDoIt), yang selalu menyemangati dan mewarnai kehidupan penulis di ITB, termasuk teman baik penulis (Daryl, Marsya, Echa, Yasmin), serta keluarga \textbf{Jabejes} (Aliya, Mela, Ruth) yang senantiasa merayakan pencapaian penulis, dan seluruh pihak yang tidak dapat disebutkan satu per satu.
+    \item Keysha dan Alya, yang telah menjadi sumber semangat dan selalu hadir dalam hidup penulis semenjak masa SMP.
+    \item Sahabat-sahabat SMA penulis, \textbf{The ARMY dan The SQUIDWARD}, yang senantiasa mendukung perjalanan penulis hingga saat ini.
+    \item Keluarga \textbf{Besar Djarum Foundation}, yang telah menemani kisah TA ini seraya merajut pengalaman bersama dalam program beasiswa.
+    \item Keluarga \textbf{KSEP} (\textit{Galamoris}), yang turut mewarnai dan menemani perjalanan penulis selama berkuliah di ITB.
+    \item Seluruh teman-teman \textbf{HMIF 2022 (BYTE)}, yang telah bersama-sama melewati berbagai tugas besar dan tantangan yang tidak mudah, mulai dari TPB hingga saat ini.
+    \item Seluruh sahabat, kerabat, dan pihak-pihak lain yang tidak dapat penulis sebutkan satu per satu, namun telah memberikan kontribusi besar dalam menciptakan semangat dan membangun motivasi agar tugas akhir ini dapat diselesaikan dengan baik.
 \end{enumerate}
 
-Penulis menyadari bahwa laporan tugas akhir ini masih belum sempurna. Oleh karena itu, penulis terbuka terhadap kritik dan saran yang membangun sebagai bahan perbaikan di masa mendatang. Akhir kata, penulis berharap laporan ini dapat memberikan manfaat bagi pembaca serta memberikan kontribusi bagi pengembangan ilmu pengetahuan, khususnya pada bidang \textit{Business Intelligence}, kecerdasan buatan, dan peramalan deret waktu.
+Penulis menyadari bahwa laporan tugas akhir ini masih jauh dari kata sempurna. Oleh karena itu, penulis sangat terbuka terhadap segala kritik dan saran yang membangun sebagai bahan pembelajaran di masa mendatang. Akhir kata, penulis berharap laporan ini dapat memberikan manfaat yang nyata bagi para pembaca serta berkontribusi positif bagi pengembangan keilmuan, khususnya di bidang \textit{Business Intelligence}, \textit{artificial intelligence}, dan peramalan kinerja bisnis.
 
 \begin{flushright}
     Bandung, 8 Juni 2026\\[0.5cm]
